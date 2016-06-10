@@ -28,12 +28,19 @@ class UserStorage extends AbstractDataStorage
     /**
      * Returns a User entity identified by (unique) ID
      *
-     * @param int $id
+     * @param int $identifier
      * @return bool|UserEntity
      */
-    public function getUserById($id)
+    public function getUserById($identifier)
     {
-        return $this->getEntityByIdKey($id);
+        /** @var UserEntity $entity */
+        $entity = $this->createEntity();
+        $data = $this->getDataAdapter()->getData($identifier);
+
+        // todo use the entity setters to fill with data
+        $entity->setUserId($data['id_user']);
+
+        return $entity;
     }
 
     /**
@@ -44,8 +51,13 @@ class UserStorage extends AbstractDataStorage
      */
     public function getUserByEmail($email)
     {
-        $dataSet = $this->getEntityListByExpression(['email' => $email], 1);
+        $entity = false;
+        $dataList = $this->getDataAdapter()->getDataSet(['email' => $email], 1);
 
-        return isset($dataSet[0]) ? $dataSet[0] : false;
+        if ($dataList) {
+            $entity = $this->getUserById($dataList[0]['user_id']);
+        }
+
+        return $entity;
     }
 }

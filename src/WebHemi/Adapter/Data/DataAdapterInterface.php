@@ -49,10 +49,10 @@ interface DataAdapterInterface
     /**
      * Get exactly one "row" of data according to the expression.
      *
-     * @param mixed $id
+     * @param mixed $identifier
      * @return array
      */
-    public function getData($id);
+    public function getData($identifier);
 
     /**
      * Get a set of data according to the expression and the chunk.
@@ -75,17 +75,17 @@ interface DataAdapterInterface
     /**
      * Insert or update entity in the storage
      *
-     * @param mixed $id
+     * @param mixed $identifier
      * @param array $data
      * @return mixed The ID of the saved entity in the storage
      */
-    public function saveData($id, array $data);
+    public function saveData($identifier, array $data);
 
     /**
      * Removes an entity from the storage
      *
-     * @param int $id
+     * @param int $identifier
      * @return boolean
      */
-    public function deleteData($id);
+    public function deleteData($identifier);
 }

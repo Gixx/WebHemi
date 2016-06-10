@@ -24,32 +24,88 @@ use WebHemi\DataEntity\DataEntityInterface;
  */
 class UserMetaEntity implements DataEntityInterface
 {
+    /** @var  string */
+    private $userMetaId;
+    /** @var  string */
+    private $userId;
+    /** @var  string */
+    private $metaKey;
+    /** @var  string */
+    private $metaData;
+
     /**
-     * Exchange data to the entity.
-     * @param array $data
-     * @return UserMetaEntity
+     * @param mixed $userMetaId
+     * @return $this
      */
-    public function fromArray(array $data)
+    public function setUserMetaId($userMetaId)
     {
-        $this->userMetaId = isset($data['id_user_meta']) ? (int)$data['id_user_meta'] : null;
-        $this->userId     = isset($data['fk_user'])      ? (int)$data['fk_user']      : null;
-        $this->metaKey    = isset($data['meta_key'])     ? $data['meta_key']          : null;
-        $this->metaData   = isset($data['meta_data'])    ? $data['meta_data']         : null;
+        $this->userMetaId = $userMetaId;
 
         return $this;
     }
 
     /**
-     * Represents entity in array format.
-     * @return array
+     * @return string
      */
-    public function toArray()
+    public function getUserMetaId()
     {
-        return [
-            'id_user_meta' => $this->userMetaId,
-            'fk_user'      => $this->userId,
-            'meta_key'     => $this->metaKey,
-            'meta_data'    => $this->metaData,
-        ];
+        return $this->userMetaId;
+    }
+
+    /**
+     * @param mixed $userId
+     * @return $this
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param string $metaKey
+     * @return $this
+     */
+    public function setMetaKey($metaKey)
+    {
+        $this->metaKey = $metaKey;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKetaKey()
+    {
+        return $this->metaKey;
+    }
+
+    /**
+     * @param mixed $metaData
+     * @return $this
+     */
+    public function setMetaData($metaData)
+    {
+        $this->metaData = $metaData;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetaData()
+    {
+        return $this->metaData;
     }
 }
