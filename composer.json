@@ -1,0 +1,52 @@
+{
+  "name": "Gixx/WebHemi",
+  "type": "project",
+  "version": "4.0.0",
+  "description": "A simple blog engine",
+  "homepage": "http://www.gixx-web.com",
+  "keywords": ["blog", "engine", "cms"],
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gabor Ivan",
+      "email": "gixx@gixx-web.com",
+      "homepage": "http://www.gixx-web.com",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "WebHemi\\": "./src/WebHemi"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WebHemiTest\\": "./tests/WebHemiTest"
+    }
+  },
+  "require": {
+    "nikic/fast-route": "^1.0",
+    "guzzlehttp/psr7": "^1.3",
+    "rdlowrey/auryn": "^1.4",
+    "twig/twig": "^1.24"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.3.0",
+    "phpmd/phpmd": "^2.4.0",
+    "squizlabs/php_codesniffer": "^2.3",
+    "satooshi/php-coveralls": "^1.0"
+  },
+  "scripts": {
+    "check": [
+      "@md",
+      "@cs",
+      "@test"
+    ],
+    "md": "phpmd",
+    "cs": "phpcs",
+    "cs-fix": "phpcbf",
+    "server": "php -S 0.0.0.0:8080 -t public/ public/index.php",
+    "test": "phpunit"
+  }
+}
