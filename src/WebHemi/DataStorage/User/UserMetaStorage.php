@@ -12,7 +12,6 @@
 namespace WebHemi\DataStorage\User;
 
 use WebHemi\DataStorage\AbstractDataStorage;
-use WebHemi\DataEntity\User\UserMetaEntity;
 
 /**
  * Class UserMetaStorage
