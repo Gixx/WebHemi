@@ -1,0 +1,17 @@
+{
+  "legal": {
+    "title": "WebHemi Default Theme",
+    "description": "",
+    "version": "1.0",
+    "author": "Gabor Ivan <gixx@gixx-web.com>",
+    "homepage": "http://www.gixx-web.com",
+    "license": "MIT"
+  },
+  "options": {
+    "mdl_enabled": true,
+    "mdl_theme": "blue-grey-pink",
+    "admin_login_customized": true,
+    "admin_login_stylesheet": "style/login.css",
+    "admin_login_javascript": "script/login.js"
+  }
+}
