@@ -281,6 +281,7 @@ function init()
 # Main task
 function main()
 {
+    init
     # Quit if the commit is not executed from shell (but from some nested shells within an IDE)
     if [[ $SHLVL -lt "2" ]]; then
         exit;
@@ -292,7 +293,6 @@ function main()
     fi
 
     # Run tasks
-    init
     check_lint
     check_dump
     check_phpcs
