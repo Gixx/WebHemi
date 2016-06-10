@@ -24,7 +24,7 @@ class UserEntity implements DataEntityInterface
     /** @var  string */
     private $userId;
     /** @var  string */
-    private $username;
+    private $userName;
     /** @var  string */
     private $email;
     /** @var  string */
@@ -79,7 +79,7 @@ class UserEntity implements DataEntityInterface
      */
     public function getUserName()
     {
-        return $this->username;
+        return $this->userName;
     }
 
     /**

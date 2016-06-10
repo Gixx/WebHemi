@@ -32,13 +32,13 @@ class InMemoryAdapter implements DataAdapterInterface
      */
     public function __construct($dataStorage = null)
     {
-        $this->dataStorage = [];
+        $this->dataStorage = $dataStorage;
     }
 
     /**
      * Returns the Data Storage instance.
      *
-     * @return PDO
+     * @return mixed
      */
     public function getDataStorage()
     {
@@ -79,7 +79,7 @@ class InMemoryAdapter implements DataAdapterInterface
      */
     public function getData($identifier)
     {
-        $result = [];
+        $result = [$identifier];
 
         // todo implement SELECT query
 
@@ -96,7 +96,7 @@ class InMemoryAdapter implements DataAdapterInterface
      */
     public function getDataSet(array $expression, $limit = null, $offset = null)
     {
-        $entityList = [];
+        $entityList = [$expression, $limit, $offset];
 
         // todo implement SELECT query
 
@@ -125,7 +125,7 @@ class InMemoryAdapter implements DataAdapterInterface
      */
     public function saveData($identifier, array $data)
     {
-        $returnId = 0;
+        $returnId = [$identifier, $data];
 
         // todo implement INSERT / UPDATE queries
 
@@ -140,7 +140,7 @@ class InMemoryAdapter implements DataAdapterInterface
      */
     public function deleteData($identifier)
     {
-        $result = false;
+        $result = (bool)$identifier;
 
         // todo implement DELETE query
 

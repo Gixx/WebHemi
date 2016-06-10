@@ -72,7 +72,7 @@ class WebApplication implements ApplicationInterface
     }
 
     /**
-     * Sets application environments according to the superglobals. This is typically good to choose between
+     * Sets application environments according to the super globals. This is typically good to choose between
      * application modules, like 'Website' or 'Admin'.
      *
      * @param array $get
@@ -103,9 +103,9 @@ class WebApplication implements ApplicationInterface
      */
     public function run()
     {
-        // TODO create request, response, DI, templateing, routing, middleware pipelines
+        // TODO create request, response, DI, template, routing, middleware pipelines
         // TODO share Config in DI
 
-        echo '<H!>Hello world!</br>';
+        echo '<h1>Hello world!</h1>';
     }
 }

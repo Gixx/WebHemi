@@ -85,7 +85,7 @@ class UserMetaEntity implements DataEntityInterface
     /**
      * @return string
      */
-    public function getKetaKey()
+    public function getMetaKey()
     {
         return $this->metaKey;
     }

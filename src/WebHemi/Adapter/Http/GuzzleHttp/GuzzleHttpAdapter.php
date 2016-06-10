@@ -30,6 +30,8 @@ class GuzzleHttpAdapter implements AdapterInterface
     private $request;
     /** @var Response  */
     private $response;
+    /** @var  array */
+    private $files;
 
     /**
      * GuzzleHTTPAdapter constructor.
@@ -53,6 +55,7 @@ class GuzzleHttpAdapter implements AdapterInterface
             ->withQueryParams($get)
             ->withParsedBody($post);
         $this->response = new Response();
+        $this->files = $files;
     }
 
     /**

@@ -41,7 +41,7 @@ interface ApplicationInterface
     public function getConfig();
 
     /**
-     * Sets application environments according to the superglobals. This is typically good to choose between
+     * Sets application environments according to the super globals. This is typically good to choose between
      * application modules, like 'Website' or 'Admin'.
      *
      * @param array $get
