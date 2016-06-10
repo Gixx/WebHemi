@@ -18,60 +18,238 @@ use WebHemi\DataEntity\DataEntityInterface;
  * Class UserEntity
  * @package WebHemi\DataEntity\User
  *
- * @property int $userId
- * @property string $username
- * @property string $email
- * @property string $password
- * @property string $hash
- * @property string $lastIp
- * @property string $registerIp
- * @property bool $isActive
- * @property bool $isEnabled
- * @property DateTime $timeLogin
- * @property DateTime $timeRegister
  */
 class UserEntity implements DataEntityInterface
 {
+    /** @var  string */
+    private $userId;
+    /** @var  string */
+    private $username;
+    /** @var  string */
+    private $email;
+    /** @var  string */
+    private $password;
+    /** @var  string */
+    private $hash;
+    /** @var  string */
+    private $lastIp;
+    /** @var  string */
+    private $registerIp;
+    /** @var  bool */
+    private $isActive;
+    /** @var  bool */
+    private $isEnabled;
+    /** @var  DateTime */
+    private $timeLogin;
+    /** @var  DateTime */
+    private $timeRegister;
+
     /**
-     * Exchange data to the entity.
-     * @param array $data
-     * @return UserEntity
+     * @param mixed $userId
+     * @return $this
      */
-    public function fromArray(array $data)
+    public function setUserId($userId)
     {
-        $this->userId       = (isset($data['id_user']))       ? (int)$data['id_user']                : null;
-        $this->username     = (isset($data['username']))      ? $data['username']                    : null;
-        $this->email        = (isset($data['email']))         ? $data['email']                       : null;
-        $this->password     = (isset($data['password']))      ? $data['password']                    : null;
-        $this->hash         = (isset($data['hash']))          ? $data['hash']                        : null;
-        $this->lastIp       = (isset($data['last_ip']))       ? $data['last_ip']                     : null;
-        $this->registerIp   = (isset($data['register_ip']))   ? $data['register_ip']                 : null;
-        $this->isActive     = (isset($data['is_active']))     ? (bool)$data['is_active']             : null;
-        $this->isEnabled    = (isset($data['is_enabled']))    ? (bool)$data['is_enabled']            : null;
-        $this->timeLogin    = (isset($data['time_login']))    ? new DateTime($data['time_login'])    : null;
-        $this->timeRegister = (isset($data['time_register'])) ? new DateTime($data['time_register']) : null;
+        $this->userId = $userId;
 
         return $this;
     }
 
     /**
-     * Represents entity in array format.
-     * @return array
+     * @return string
      */
-    public function toArray()
+    public function getUserId()
     {
-        return [
-            'id_user'       => $this->userId,
-            'username'      => $this->username,
-            'email'         => $this->email,
-            'password'      => $this->password,
-            'hash'          => $this->hash,
-            'last_ip'       => $this->lastIp,
-            'register_ip'   => $this->registerIp,
-            'is_active'     => $this->isActive ? 1 : 0,
-            'is_enabled'    => $this->isEnabled ? 1 : 0,
-            'time_login'    => $this->timeLogin ? $this->timeLogin->format('Y-m-d H:i:s') : null,
-            'time_register' => $this->timeRegister ? $this->timeRegister->format('Y-m-d H:i:s') : null
-        ];
+        return $this->userId;
+    }
+
+    /**
+     * @param string $userName
+     * @return $this
+     */
+    public function setUserName($userName)
+    {
+        $this->userName = $userName;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string $email
+     * @return $this
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $password
+     * @return $this
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $hash
+     * @return $this
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHash()
+    {
+        return $this->hash;
+    }
+
+    /**
+     * @param string $lastIp
+     * @return $this
+     */
+    public function setLastIp($lastIp)
+    {
+        $this->lastIp = $lastIp;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastIp()
+    {
+        return $this->lastIp;
+    }
+
+    /**
+     * @param string $registerIp
+     * @return $this
+     */
+    public function setRegisterIp($registerIp)
+    {
+        $this->registerIp = $registerIp;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegisterIp()
+    {
+        return $this->registerIp;
+    }
+
+    /**
+     * @param bool $state
+     * @return $this
+     */
+    public function setActive($state)
+    {
+        $this->isActive = (bool)$state;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $state
+     * @return $this
+     */
+    public function setEnabled($state)
+    {
+        $this->isEnabled = (bool)$state;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * @param DateTime $timeLogin
+     * @return $this
+     */
+    public function setTimeLogin(DateTime $timeLogin)
+    {
+        $this->timeLogin = $timeLogin;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getTimeLogin()
+    {
+        return $this->timeLogin;
+    }
+
+    /**
+     * @param DateTime $timeRegister
+     * @return $this
+     */
+    public function setTimeRegister(DateTime $timeRegister)
+    {
+        $this->timeRegister = $timeRegister;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getTimeRegister()
+    {
+        return $this->timeRegister;
     }
 }

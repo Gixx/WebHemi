@@ -24,26 +24,4 @@ class UserMetaStorage extends AbstractDataStorage
     protected $dataGroup = 'user_meta';
     /** @var  string */
     protected $idKey = 'id_user_meta';
-
-    /**
-     * Returns a User Meta entity identified by ID.
-     *
-     * @param int $id
-     * @return UserMetaEntity
-     */
-    public function getUserMetaById($id)
-    {
-        return $this->getEntityByIdKey($id);
-    }
-
-    /**
-     * Returns all User Meta entity for a user identified by User ID.
-     *
-     * @param $userId
-     * @return UserMetaEntity[]
-     */
-    public function getUserMeta($userId)
-    {
-        return $this->getEntityListByExpression(['fk_user' => $userId]);
-    }
 }

@@ -83,43 +83,4 @@ abstract class AbstractDataStorage implements DataStorageInterface
     {
         return clone $this->entityPrototype;
     }
-
-    /**
-     * Returns a DataEntityInterface entity identified by ID key
-     *
-     * @param mixed $id
-     * @return DataEntityInterface
-     */
-    final public function getEntityByIdKey($id)
-    {
-        $entity = $this->createEntity();
-        $data = $this->getDataAdapter()->getData($id);
-
-        $entity->fromArray($data);
-
-        return $entity;
-    }
-
-    /**
-     * Returns a list of DataEntityInterface match against the expression.
-     *
-     * @param array $expression
-     * @param int $limit
-     * @param int $offset
-     * @return DataEntityInterface[]
-     */
-    final public function getEntityListByExpression(array $expression, $limit = null, $offset = null)
-    {
-        $dataList = $this->getDataAdapter()->getDataSet($expression, $limit, $offset);
-
-        $entityList = [];
-
-        foreach ($dataList as $data) {
-            $entity = $this->createEntity();
-            $entity->fromArray($data);
-            $entityList[] = $entity;
-        }
-
-        return $entityList;
-    }
 }

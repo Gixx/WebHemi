@@ -17,16 +17,5 @@ namespace WebHemi\DataEntity;
  */
 interface DataEntityInterface
 {
-    /**
-     * Exchange data to the entity.
-     * @param array $data
-     * @return DataEntityInterface
-     */
-    public function fromArray(array $data);
-
-    /**
-     * Represents entity in array format.
-     * @return array
-     */
-    public function toArray();
+    
 }

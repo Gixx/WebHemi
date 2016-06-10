@@ -106,13 +106,13 @@ class PDOAdapter implements DataAdapterInterface
     /**
      * Get exactly one "row" of data according to the expression.
      *
-     * @param int $id
+     * @param int $identifier
      * @return array
      */
-    public function getData($id)
+    public function getData($identifier)
     {
         $statement = $this->getDataStorage()->prepare("SELECT * FROM {$this->dataGroup} WHERE {$this->idKey}=?");
-        $statement->execute(array($id));
+        $statement->execute(array($identifier));
 
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
@@ -205,13 +205,13 @@ class PDOAdapter implements DataAdapterInterface
     /**
      * Insert or update entity in the storage
      *
-     * @param mixed $id
+     * @param mixed $identifier
      * @param array $data
      * @return mixed The ID of the saved entity in the storage
      */
-    public function saveData($id, array $data)
+    public function saveData($identifier, array $data)
     {
-        if (empty($id)) {
+        if (empty($identifier)) {
             $query = "INSERT INTO {$this->dataGroup}";
         } else {
             $query = "UPDATE {$this->dataGroup}";
@@ -227,9 +227,9 @@ class PDOAdapter implements DataAdapterInterface
 
         $query .= " SET " . implode(', ', $queryData);
 
-        if (!empty($id)) {
+        if (!empty($identifier)) {
             $query .= " WHERE {$this->idKey}=?";
-            $queryBind[] = $id;
+            $queryBind[] = $identifier;
         }
 
         $statement = $this->getDataStorage()->prepare($query);
@@ -248,18 +248,18 @@ class PDOAdapter implements DataAdapterInterface
 
         $statement->execute();
 
-        return empty($id) ? $this->getDataStorage()->lastInsertId() : $id;
+        return empty($identifier) ? $this->getDataStorage()->lastInsertId() : $identifier;
     }
 
     /**
      * Removes an entity from the storage
      *
-     * @param int $id
+     * @param int $identifier
      * @return boolean
      */
-    public function deleteData($id)
+    public function deleteData($identifier)
     {
         $statement = $this->getDataStorage()->prepare("DELETE FROM WHERE {$this->idKey}=?");
-        return $statement->execute(array($id));
+        return $statement->execute(array($identifier));
     }
 }
