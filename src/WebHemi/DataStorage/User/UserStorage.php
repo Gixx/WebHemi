@@ -11,6 +11,8 @@
 
 namespace WebHemi\DataStorage\User;
 
+use DateTime;
+use WebHemi\DataEntity\DataEntityInterface;
 use WebHemi\DataStorage\AbstractDataStorage;
 use WebHemi\DataEntity\User\UserEntity;
 
@@ -24,6 +26,48 @@ class UserStorage extends AbstractDataStorage
     protected $dataGroup = 'user';
     /** @var  string */
     protected $idKey = 'id_user';
+    /** @var  string */
+    private $userName = 'username';
+    /** @var  string */
+    private $email = 'email';
+    /** @var  string */
+    private $password = 'password';
+    /** @var  string */
+    private $hash = 'hash';
+    /** @var  string */
+    private $lastIp = 'last_ip';
+    /** @var  string */
+    private $registerIp = 'register_ip';
+    /** @var  string */
+    private $isActive = 'is_active';
+    /** @var  string */
+    private $isEnabled = 'is_enabled';
+    /** @var  string */
+    private $timeLogin = 'time_login';
+    /** @var  string */
+    private $timeRegister = 'time_register';
+
+    /**
+     * Populates an entity with storage data.
+     *
+     * @param DataEntityInterface $entity
+     * @param array $data
+     */
+    protected function populateEntity(DataEntityInterface &$entity, array $data)
+    {
+        /** @var UserEntity $entity */
+        $entity->setUserId($data[$this->idKey])
+            ->setUserName($data[$this->userName])
+            ->setEmail($data[$this->email])
+            ->setPassword($data[$this->password])
+            ->setHash($data[$this->hash])
+            ->setLastIp($data[$this->lastIp])
+            ->setRegisterIp($data[$this->registerIp])
+            ->setActive($data[$this->isActive])
+            ->setEnabled($data[$this->isEnabled])
+            ->setTimeLogin(new DateTime($data[$this->timeLogin]))
+            ->setTimeRegister(new DateTime($data[$this->timeRegister]));
+    }
 
     /**
      * Returns a User entity identified by (unique) ID
@@ -33,12 +77,13 @@ class UserStorage extends AbstractDataStorage
      */
     public function getUserById($identifier)
     {
-        /** @var UserEntity $entity */
-        $entity = $this->createEntity();
+        $entity = false;
         $data = $this->getDataAdapter()->getData($identifier);
 
-        // todo use the entity setters to fill with data
-        $entity->setUserId($data['id_user']);
+        if ($data) {
+            $entity = $this->createEntity();
+            $this->populateEntity($entity, $data);
+        }
 
         return $entity;
     }
@@ -52,10 +97,11 @@ class UserStorage extends AbstractDataStorage
     public function getUserByEmail($email)
     {
         $entity = false;
-        $dataList = $this->getDataAdapter()->getDataSet(['email' => $email], 1);
+        $dataList = $this->getDataAdapter()->getDataSet([$this->email => $email], 1);
 
         if ($dataList) {
-            $entity = $this->getUserById($dataList[0]['user_id']);
+            $entity = $this->createEntity();
+            $this->populateEntity($entity, $dataList[0]);
         }
 
         return $entity;

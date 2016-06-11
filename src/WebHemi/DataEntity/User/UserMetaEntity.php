@@ -16,11 +16,6 @@ use WebHemi\DataEntity\DataEntityInterface;
 /**
  * Class UserMetaEntity
  * @package WebHemi\DataEntity\User
- *
- * @property int $userMetaId
- * @property int $userId
- * @property string $metaKey
- * @property string $metaData
  */
 class UserMetaEntity implements DataEntityInterface
 {
