@@ -17,7 +17,6 @@ use WebHemi\DataEntity\DataEntityInterface;
 /**
  * Class UserEntity
  * @package WebHemi\DataEntity\User
- *
  */
 class UserEntity implements DataEntityInterface
 {

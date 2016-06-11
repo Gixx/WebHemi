@@ -83,4 +83,12 @@ abstract class AbstractDataStorage implements DataStorageInterface
     {
         return clone $this->entityPrototype;
     }
+
+    /**
+     * Populates an entity with storage data.
+     *
+     * @param DataEntityInterface $entity
+     * @param array $data
+     */
+    abstract protected function populateEntity(DataEntityInterface &$entity, array $data);
 }
