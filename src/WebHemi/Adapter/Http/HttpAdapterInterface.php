@@ -1,14 +1,14 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\Adapter\Http;
 
 use Psr\Http\Message\ResponseInterface;
@@ -16,11 +16,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * Interface AdapterInterface
- *
- * @package WebHemi\Adapter\Http
+ * Interface AdapterInterface.
  */
-interface AdapterInterface
+interface HttpAdapterInterface
 {
     /**
      * AdapterInterface constructor.

@@ -1,24 +1,24 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\Adapter\Data;
 
 /**
- * Interface DataAdapterInterface
- * @package WebHemi\Adapter\Data
+ * Interface DataAdapterInterface.
  */
 interface DataAdapterInterface
 {
     /**
      * PDOAdapter constructor.
+     *
      * @param mixed $dataStorage
      */
     public function __construct($dataStorage = null);
@@ -34,6 +34,7 @@ interface DataAdapterInterface
      * Set adapter data group. For Databases this can be the Tables.
      *
      * @param string $dataGroup
+     *
      * @return DataAdapterInterface
      */
     public function setDataGroup($dataGroup);
@@ -42,6 +43,7 @@ interface DataAdapterInterface
      * Set adapter ID key. For Databases this can be the Primary key. Only simple key is allowed.
      *
      * @param string $idKey
+     *
      * @return DataAdapterInterface
      */
     public function setIdKey($idKey);
@@ -50,6 +52,7 @@ interface DataAdapterInterface
      * Get exactly one "row" of data according to the expression.
      *
      * @param mixed $identifier
+     *
      * @return array
      */
     public function getData($identifier);
@@ -58,8 +61,9 @@ interface DataAdapterInterface
      * Get a set of data according to the expression and the chunk.
      *
      * @param array $expression
-     * @param int $limit
-     * @param int $offset
+     * @param int   $limit
+     * @param int   $offset
+     *
      * @return array
      */
     public function getDataSet(array $expression, $limit = null, $offset = null);
@@ -68,24 +72,27 @@ interface DataAdapterInterface
      * Get the number of matched data in the set according to the expression.
      *
      * @param array $expression
+     *
      * @return int
      */
     public function getDataCardinality(array $expression);
 
     /**
-     * Insert or update entity in the storage
+     * Insert or update entity in the storage.
      *
      * @param mixed $identifier
      * @param array $data
+     *
      * @return mixed The ID of the saved entity in the storage
      */
     public function saveData($identifier, array $data);
 
     /**
-     * Removes an entity from the storage
+     * Removes an entity from the storage.
      *
      * @param int $identifier
-     * @return boolean
+     *
+     * @return bool
      */
     public function deleteData($identifier);
 }

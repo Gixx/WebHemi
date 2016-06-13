@@ -1,40 +1,40 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\Application;
 
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 
 /**
- * Interface ApplicationInterface
- * @package WebHemi\Application'
+ * Interface ApplicationInterface.
  */
 interface ApplicationInterface
 {
     /**
      * ApplicationInterface constructor.
-     * @param DependencyInjectionAdapterInterface $container
+     *
+     * @param DependencyInjectionAdapterInterface  $container
      * @param \WebHemi\Application\ConfigInterface $config
      */
     public function __construct(DependencyInjectionAdapterInterface $container, ConfigInterface $config);
 
     /**
-     * Returns the DI Adapter instance
+     * Returns the DI Adapter instance.
      *
      * @return DependencyInjectionAdapterInterface
      */
     public function getContainer();
 
     /**
-     * Returns the Configuration
+     * Returns the Configuration.
      *
      * @return ConfigInterface
      */

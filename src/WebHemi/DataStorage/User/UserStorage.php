@@ -1,61 +1,60 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\DataStorage\User;
 
 use DateTime;
 use WebHemi\DataEntity\DataEntityInterface;
-use WebHemi\DataStorage\AbstractDataStorage;
 use WebHemi\DataEntity\User\UserEntity;
+use WebHemi\DataStorage\AbstractDataStorage;
 
 /**
- * Class UserStorage
- * @package WebHemi\DataStorage\User
+ * Class UserStorage.
  */
 class UserStorage extends AbstractDataStorage
 {
-    /** @var string  */
+    /** @var string */
     protected $dataGroup = 'user';
-    /** @var  string */
+    /** @var string */
     protected $idKey = 'id_user';
-    /** @var  string */
+    /** @var string */
     private $userName = 'username';
-    /** @var  string */
+    /** @var string */
     private $email = 'email';
-    /** @var  string */
+    /** @var string */
     private $password = 'password';
-    /** @var  string */
+    /** @var string */
     private $hash = 'hash';
-    /** @var  string */
+    /** @var string */
     private $lastIp = 'last_ip';
-    /** @var  string */
+    /** @var string */
     private $registerIp = 'register_ip';
-    /** @var  string */
+    /** @var string */
     private $isActive = 'is_active';
-    /** @var  string */
+    /** @var string */
     private $isEnabled = 'is_enabled';
-    /** @var  string */
+    /** @var string */
     private $timeLogin = 'time_login';
-    /** @var  string */
+    /** @var string */
     private $timeRegister = 'time_register';
 
     /**
      * Populates an entity with storage data.
      *
      * @param DataEntityInterface $entity
-     * @param array $data
+     * @param array               $data
      */
     protected function populateEntity(DataEntityInterface &$entity, array $data)
     {
-        /** @var UserEntity $entity */
+        /* @var UserEntity $entity */
         $entity->setUserId($data[$this->idKey])
             ->setUserName($data[$this->userName])
             ->setEmail($data[$this->email])
@@ -70,9 +69,10 @@ class UserStorage extends AbstractDataStorage
     }
 
     /**
-     * Returns a User entity identified by (unique) ID
+     * Returns a User entity identified by (unique) ID.
      *
      * @param int $identifier
+     *
      * @return bool|UserEntity
      */
     public function getUserById($identifier)
@@ -89,9 +89,10 @@ class UserStorage extends AbstractDataStorage
     }
 
     /**
-     * Returns a User entity identified by (unique) Email
+     * Returns a User entity identified by (unique) Email.
      *
      * @param $email
+     *
      * @return bool|UserEntity
      */
     public function getUserByEmail($email)
