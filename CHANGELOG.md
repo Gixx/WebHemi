@@ -1,6 +1,13 @@
 Change log
 ==========
 
+Version 4.0.0-0.4
+-----------------
+* Applied code style changes suggested by StyleCI
+* Fixed all PHP MD issues
+* Fix filename typo issues
+* Change the way of using the Entities
+
 Version 4.0.0-0.3
 -----------------
 * Add first/fake unit test
