@@ -1,14 +1,14 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\Application\Web;
 
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
@@ -16,31 +16,31 @@ use WebHemi\Application\ApplicationInterface;
 use WebHemi\Application\ConfigInterface;
 
 /**
- * Class WebApplication
- * @package WebHemi\Application\Web
+ * Class WebApplication.
  */
 class WebApplication implements ApplicationInterface
 {
-    /** @var DependencyInjectionAdapterInterface  */
+    /** @var DependencyInjectionAdapterInterface */
     private $container;
-    /** @var ConfigInterface  */
+    /** @var ConfigInterface */
     private $config;
-    /** @var  array */
+    /** @var array */
     protected $server;
-    /** @var  array */
+    /** @var array */
     protected $get;
-    /** @var  array */
+    /** @var array */
     protected $post;
-    /** @var  array */
+    /** @var array */
     protected $cookie;
-    /** @var  array */
+    /** @var array */
     protected $files;
-    /** @var  string */
+    /** @var string */
     protected $selectedModule;
 
     /**
      * ApplicationInterface constructor.
-     * @param DependencyInjectionAdapterInterface $container
+     *
+     * @param DependencyInjectionAdapterInterface  $container
      * @param \WebHemi\Application\ConfigInterface $config
      */
     public function __construct(DependencyInjectionAdapterInterface $container, ConfigInterface $config)

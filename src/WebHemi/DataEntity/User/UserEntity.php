@@ -1,50 +1,50 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\DataEntity\User;
 
 use DateTime;
 use WebHemi\DataEntity\DataEntityInterface;
 
 /**
- * Class UserEntity
- * @package WebHemi\DataEntity\User
+ * Class UserEntity.
  */
 class UserEntity implements DataEntityInterface
 {
-    /** @var  string */
+    /** @var string */
     private $userId;
-    /** @var  string */
+    /** @var string */
     private $userName;
-    /** @var  string */
+    /** @var string */
     private $email;
-    /** @var  string */
+    /** @var string */
     private $password;
-    /** @var  string */
+    /** @var string */
     private $hash;
-    /** @var  string */
+    /** @var string */
     private $lastIp;
-    /** @var  string */
+    /** @var string */
     private $registerIp;
-    /** @var  bool */
+    /** @var bool */
     private $isActive;
-    /** @var  bool */
+    /** @var bool */
     private $isEnabled;
-    /** @var  DateTime */
+    /** @var DateTime */
     private $timeLogin;
-    /** @var  DateTime */
+    /** @var DateTime */
     private $timeRegister;
 
     /**
      * @param mixed $userId
+     *
      * @return $this
      */
     public function setUserId($userId)
@@ -64,6 +64,7 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param string $userName
+     *
      * @return $this
      */
     public function setUserName($userName)
@@ -83,6 +84,7 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param string $email
+     *
      * @return $this
      */
     public function setEmail($email)
@@ -102,6 +104,7 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param string $password
+     *
      * @return $this
      */
     public function setPassword($password)
@@ -121,6 +124,7 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param string $hash
+     *
      * @return $this
      */
     public function setHash($hash)
@@ -140,6 +144,7 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param string $lastIp
+     *
      * @return $this
      */
     public function setLastIp($lastIp)
@@ -159,6 +164,7 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param string $registerIp
+     *
      * @return $this
      */
     public function setRegisterIp($registerIp)
@@ -178,11 +184,12 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param bool $state
+     *
      * @return $this
      */
     public function setActive($state)
     {
-        $this->isActive = (bool)$state;
+        $this->isActive = (bool) $state;
 
         return $this;
     }
@@ -197,11 +204,12 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param bool $state
+     *
      * @return $this
      */
     public function setEnabled($state)
     {
-        $this->isEnabled = (bool)$state;
+        $this->isEnabled = (bool) $state;
 
         return $this;
     }
@@ -216,6 +224,7 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param DateTime $timeLogin
+     *
      * @return $this
      */
     public function setTimeLogin(DateTime $timeLogin)
@@ -235,6 +244,7 @@ class UserEntity implements DataEntityInterface
 
     /**
      * @param DateTime $timeRegister
+     *
      * @return $this
      */
     public function setTimeRegister(DateTime $timeRegister)
