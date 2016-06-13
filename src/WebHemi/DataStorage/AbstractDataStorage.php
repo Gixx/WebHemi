@@ -1,14 +1,14 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\DataStorage;
 
 use WebHemi\Adapter\Data\DataAdapterInterface;
@@ -17,17 +17,16 @@ use WebHemi\DataEntity\DataEntityInterface;
 /**
  * Class AbstractDataStorage.
  * Suppose to hide DataAdapter and DataEntity instances from children Storage objects.
- * @package WebHemi\DataStorage
  */
 abstract class AbstractDataStorage implements DataStorageInterface
 {
-    /** @var DataAdapterInterface  */
+    /** @var DataAdapterInterface */
     private $defaultAdapter;
-    /** @var DataEntityInterface  */
+    /** @var DataEntityInterface */
     private $entityPrototype;
-    /** @var string  */
+    /** @var string */
     protected $dataGroup;
-    /** @var  string */
+    /** @var string */
     protected $idKey;
 
     /**
@@ -35,7 +34,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      * the same instance all the time.
      *
      * @param DataAdapterInterface $defaultAdapter
-     * @param DataEntityInterface $entityPrototype
+     * @param DataEntityInterface  $entityPrototype
      */
     final public function __construct(DataAdapterInterface $defaultAdapter, DataEntityInterface $entityPrototype)
     {
@@ -65,7 +64,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
     }
 
     /**
-     * Returns the DataAdapter instance
+     * Returns the DataAdapter instance.
      *
      * @return DataAdapterInterface
      */
@@ -88,7 +87,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      * Populates an entity with storage data.
      *
      * @param DataEntityInterface $entity
-     * @param array $data
+     * @param array               $data
      */
     abstract protected function populateEntity(DataEntityInterface &$entity, array $data);
 }

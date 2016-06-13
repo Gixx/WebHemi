@@ -1,39 +1,39 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\Adapter\Data\PDO;
 
 use PDO;
 use PDOStatement;
+use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Exception\InitException;
 use WebHemi\Adapter\Exception\InvalidArgumentException;
-use WebHemi\Adapter\Data\DataAdapterInterface;
 
 /**
- * Class PDOAdapter
- * @package WebHemi\Adapter\Data\PDO
+ * Class PDOAdapter.
  */
 class PDOAdapter implements DataAdapterInterface
 {
     /** @var PDO mixed */
     private $dataStorage;
-    /** @var  string */
+    /** @var string */
     protected $dataGroup = null;
-    /** @var null  */
+    /** @var null */
     protected $idKey = null;
 
     /**
      * PDOAdapter constructor.
      *
      * @param PDO $dataStorage
+     *
      * @throws InvalidArgumentException
      */
     public function __construct($dataStorage = null)
@@ -71,8 +71,10 @@ class PDOAdapter implements DataAdapterInterface
      * Set adapter data group. For Databases this can be the Tables.
      *
      * @param string $dataGroup
-     * @return PDOAdapter
+     *
      * @throws InitException
+     *
+     * @return PDOAdapter
      */
     public function setDataGroup($dataGroup)
     {
@@ -89,8 +91,10 @@ class PDOAdapter implements DataAdapterInterface
      * Set adapter ID key. For Databases this can be the Primary key. Only simple key is allowed.
      *
      * @param string $idKey
-     * @return PDOAdapter
+     *
      * @throws InitException
+     *
+     * @return PDOAdapter
      */
     public function setIdKey($idKey)
     {
@@ -107,12 +111,13 @@ class PDOAdapter implements DataAdapterInterface
      * Get exactly one "row" of data according to the expression.
      *
      * @param int $identifier
+     *
      * @return array
      */
     public function getData($identifier)
     {
         $statement = $this->getDataStorage()->prepare("SELECT * FROM {$this->dataGroup} WHERE {$this->idKey}=?");
-        $statement->execute(array($identifier));
+        $statement->execute([$identifier]);
 
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
@@ -121,8 +126,9 @@ class PDOAdapter implements DataAdapterInterface
      * Get a set of data according to the expression and the chunk.
      *
      * @param array $expression
-     * @param int $limit
-     * @param int $offset
+     * @param int   $limit
+     * @param int   $offset
+     *
      * @return array
      */
     public function getDataSet(array $expression, $limit = null, $offset = null)
@@ -137,6 +143,7 @@ class PDOAdapter implements DataAdapterInterface
      * Get the number of matched data in the set according to the expression.
      *
      * @param array $expression
+     *
      * @return int
      */
     public function getDataCardinality(array $expression)
@@ -151,8 +158,8 @@ class PDOAdapter implements DataAdapterInterface
      * Build query statement from the expression.
      *
      * @param array $expression
-     * @param null $limit
-     * @param null $offset
+     * @param null  $limit
+     * @param null  $offset
      *
      * @return PDOStatement
      */
@@ -164,7 +171,7 @@ class PDOAdapter implements DataAdapterInterface
 
         // Prepare WHERE expression.
         if (!empty($expression)) {
-            $query .= " WHERE ";
+            $query .= ' WHERE ';
 
             foreach ($expression as $column => $value) {
                 // allow special cases
@@ -173,7 +180,7 @@ class PDOAdapter implements DataAdapterInterface
                 $queryBind[] = $value;
             }
 
-            $query .= implode(" AND ", $queryParams);
+            $query .= implode(' AND ', $queryParams);
         }
 
         // Prepare LIMIT and OFFSET
@@ -203,10 +210,11 @@ class PDOAdapter implements DataAdapterInterface
     }
 
     /**
-     * Insert or update entity in the storage
+     * Insert or update entity in the storage.
      *
      * @param mixed $identifier
      * @param array $data
+     *
      * @return mixed The ID of the saved entity in the storage
      */
     public function saveData($identifier, array $data)
@@ -225,7 +233,7 @@ class PDOAdapter implements DataAdapterInterface
             $queryBind[] = $value;
         }
 
-        $query .= " SET " . implode(', ', $queryData);
+        $query .= ' SET '.implode(', ', $queryData);
 
         if (!empty($identifier)) {
             $query .= " WHERE {$this->idKey}=?";
@@ -252,14 +260,16 @@ class PDOAdapter implements DataAdapterInterface
     }
 
     /**
-     * Removes an entity from the storage
+     * Removes an entity from the storage.
      *
      * @param int $identifier
-     * @return boolean
+     *
+     * @return bool
      */
     public function deleteData($identifier)
     {
         $statement = $this->getDataStorage()->prepare("DELETE FROM WHERE {$this->idKey}=?");
-        return $statement->execute(array($identifier));
+
+        return $statement->execute([$identifier]);
     }
 }

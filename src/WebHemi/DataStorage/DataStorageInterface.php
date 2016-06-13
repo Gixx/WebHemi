@@ -1,22 +1,21 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\DataStorage;
 
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\DataEntity\DataEntityInterface;
 
 /**
- * Interface DataStorageInterface
- * @package WebHemi\DataStorage
+ * Interface DataStorageInterface.
  */
 interface DataStorageInterface
 {
@@ -25,7 +24,7 @@ interface DataStorageInterface
      * the same instance all the time.
      *
      * @param DataAdapterInterface $defaultAdapter
-     * @param DataEntityInterface $entityPrototype
+     * @param DataEntityInterface  $entityPrototype
      */
     public function __construct(DataAdapterInterface $defaultAdapter, DataEntityInterface $entityPrototype);
 
@@ -44,7 +43,7 @@ interface DataStorageInterface
     public function createEntity();
 
     /**
-     * Returns the DataAdapter instance
+     * Returns the DataAdapter instance.
      *
      * @return DataAdapterInterface
      */

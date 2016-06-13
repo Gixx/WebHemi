@@ -1,35 +1,35 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\DataEntity\User;
 
 use WebHemi\DataEntity\DataEntityInterface;
 
 /**
- * Class UserMetaEntity
- * @package WebHemi\DataEntity\User
+ * Class UserMetaEntity.
  */
 class UserMetaEntity implements DataEntityInterface
 {
-    /** @var  string */
+    /** @var string */
     private $userMetaId;
-    /** @var  string */
+    /** @var string */
     private $userId;
-    /** @var  string */
+    /** @var string */
     private $metaKey;
-    /** @var  string */
+    /** @var string */
     private $metaData;
 
     /**
      * @param mixed $userMetaId
+     *
      * @return $this
      */
     public function setUserMetaId($userMetaId)
@@ -49,6 +49,7 @@ class UserMetaEntity implements DataEntityInterface
 
     /**
      * @param mixed $userId
+     *
      * @return $this
      */
     public function setUserId($userId)
@@ -68,6 +69,7 @@ class UserMetaEntity implements DataEntityInterface
 
     /**
      * @param string $metaKey
+     *
      * @return $this
      */
     public function setMetaKey($metaKey)
@@ -87,6 +89,7 @@ class UserMetaEntity implements DataEntityInterface
 
     /**
      * @param mixed $metaData
+     *
      * @return $this
      */
     public function setMetaData($metaData)

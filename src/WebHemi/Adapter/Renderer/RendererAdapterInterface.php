@@ -1,19 +1,18 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\Adapter\Renderer;
 
 /**
- * Interface RendererAdapterInterface
- * @package WebHemi\Adapter\Renderer
+ * Interface RendererAdapterInterface.
  */
 interface RendererAdapterInterface
 {
@@ -21,7 +20,8 @@ interface RendererAdapterInterface
      * Renders the template for the output.
      *
      * @param string $template
-     * @param array $parameters
+     * @param array  $parameters
+     *
      * @return mixed
      */
     public function render($template, $parameters = []);
