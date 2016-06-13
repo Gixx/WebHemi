@@ -1,14 +1,14 @@
 <?php
 /**
- * WebHemi
+ * WebHemi.
  *
  * PHP version 5.6
  *
  * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\Adapter\Http\GuzzleHttp;
 
 use GuzzleHttp\Psr7\LazyOpenStream;
@@ -21,16 +21,15 @@ use Psr\Http\Message\StreamInterface;
 use WebHemi\Adapter\Http\AdapterInterface;
 
 /**
- * Class GuzzleHttpAdapter
- * @package WebHemi\Adapter\Http\GuzzleHttp
+ * Class GuzzleHttpAdapter.
  */
 class GuzzleHttpAdapter implements AdapterInterface
 {
-    /** @var ServerRequest  */
+    /** @var ServerRequest */
     private $request;
-    /** @var Response  */
+    /** @var Response */
     private $response;
-    /** @var  array */
+    /** @var array */
     private $files;
 
     /**
@@ -44,11 +43,11 @@ class GuzzleHttpAdapter implements AdapterInterface
      */
     public function __construct(array $server, array $get, array $post, array $cookie, array $files)
     {
-        $headers       = [];
-        $method        = $this->getRequestMethod($server);
-        $uri           = $this->getUri($server);
-        $protocol      = $this->getProtocol($server);
-        $body          = new LazyOpenStream('php://input', 'r+');
+        $headers = [];
+        $method = $this->getRequestMethod($server);
+        $uri = $this->getUri($server);
+        $protocol = $this->getProtocol($server);
+        $body = new LazyOpenStream('php://input', 'r+');
         $serverRequest = new ServerRequest($method, $uri, $headers, $body, $protocol, $server);
         $this->request = $serverRequest
             ->withCookieParams($cookie)
@@ -59,9 +58,10 @@ class GuzzleHttpAdapter implements AdapterInterface
     }
 
     /**
-     * Retrieve request method
+     * Retrieve request method.
      *
      * @param array $server
+     *
      * @return string
      */
     private function getRequestMethod(array $server)
@@ -70,9 +70,10 @@ class GuzzleHttpAdapter implements AdapterInterface
     }
 
     /**
-     * Retrieve URI object
+     * Retrieve URI object.
      *
      * @param array $server
+     *
      * @return Uri
      */
     private function getUri(array $server)
@@ -113,6 +114,7 @@ class GuzzleHttpAdapter implements AdapterInterface
      * Retrieve the server protocol.
      *
      * @param array $server
+     *
      * @return mixed|string
      */
     private function getProtocol(array $server)
