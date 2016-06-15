@@ -32,6 +32,7 @@ interface ConfigInterface
      * Checks whether the key-path does exist or not.
      *
      * @param string $path
+     *
      * @return bool
      */
     public function has($path);
@@ -40,7 +41,8 @@ interface ConfigInterface
      * Returns the configuration for a specific key.
      *
      * @param string $path
-     * @param int $returnType
+     * @param int    $returnType
+     *
      * @throws InvalidArgumentException
      *
      * @return array|Config
