@@ -11,8 +11,8 @@
  */
 namespace WebHemi\Application;
 
-use WebHemi\Config\ConfigInterface;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
+use WebHemi\Config\ConfigInterface;
 
 /**
  * Interface ApplicationInterface.
@@ -22,8 +22,8 @@ interface ApplicationInterface
     /**
      * ApplicationInterface constructor.
      *
-     * @param DependencyInjectionAdapterInterface  $container
-     * @param ConfigInterface $config
+     * @param DependencyInjectionAdapterInterface $container
+     * @param ConfigInterface                     $config
      */
     public function __construct(DependencyInjectionAdapterInterface $container, ConfigInterface $config);
 

@@ -11,11 +11,11 @@
  */
 namespace WebHemi\Adapter\DependencyInjection\Symfony;
 
-use WebHemi\Config\ConfigInterface;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
+use WebHemi\Config\ConfigInterface;
 
 /**
  * Class SymfonyAdapter.
@@ -45,7 +45,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     }
 
     /**
-     * Initializes the DI container from the config
+     * Initializes the DI container from the config.
      */
     private function initContainer()
     {
@@ -88,7 +88,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
             $setUpData[self::SERVICE_SHARE] = false;
         }
 
-        $definition->setShared((bool)$setUpData[self::SERVICE_SHARE]);
+        $definition->setShared((bool) $setUpData[self::SERVICE_SHARE]);
 
         // Register the service.
         $service = $this->container->setDefinition($identifier, $definition);
@@ -107,7 +107,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
                 $parameter = $this->getReferenceServiceIfAvailable($parameter);
 
                 $this->container->setParameter($normalizedName, $parameter);
-                $service->addArgument('%' . $normalizedName . '%');
+                $service->addArgument('%'.$normalizedName.'%');
             }
         }
 
@@ -128,6 +128,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * If possible create register the parameter as a service and give it back as a reference.
      *
      * @param mixed $classOrServiceName
+     *
      * @return mixed|Reference
      */
     private function getReferenceServiceIfAvailable($classOrServiceName)
@@ -163,14 +164,15 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      *
      * @param $className
      * @param $argumentName
+     *
      * @return string
      */
     private function getNormalizedName($className, $argumentName)
     {
-        $className = 'C_' . preg_replace('/[^a-z0-9]/', '', strtolower($className));
-        $argumentName = 'A_' . preg_replace('/[^a-z0-9]/', '', strtolower($argumentName));
+        $className = 'C_'.preg_replace('/[^a-z0-9]/', '', strtolower($className));
+        $argumentName = 'A_'.preg_replace('/[^a-z0-9]/', '', strtolower($argumentName));
 
-        return $className . '.' . $argumentName;
+        return $className.'.'.$argumentName;
     }
 
     /**

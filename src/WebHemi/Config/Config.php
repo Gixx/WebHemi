@@ -47,10 +47,10 @@ class Config implements ConfigInterface
         }
 
         foreach ($config as $key => $value) {
-            $this->pathMap[$path . $key] = $value;
+            $this->pathMap[$path.$key] = $value;
 
             if (is_array($value) && !empty($value)) {
-                $this->processConfig($path . $key . '/', $value);
+                $this->processConfig($path.$key.'/', $value);
             }
         }
     }
@@ -71,7 +71,8 @@ class Config implements ConfigInterface
      * Retrieves configuration for a specific key.
      *
      * @param string $path
-     * @param int $returnType
+     * @param int    $returnType
+     *
      * @throws InvalidArgumentException
      *
      * @return array|Config
