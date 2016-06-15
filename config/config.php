@@ -9,13 +9,12 @@
  *
  * @link      http://www.gixx-web.com
  */
-
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Data\PDO\PDOAdapter;
-use WebHemi\DataStorage\User\UserStorage;
-use WebHemi\DataStorage\User\UserMetaStorage;
 use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataEntity\User\UserMetaEntity;
+use WebHemi\DataStorage\User\UserMetaStorage;
+use WebHemi\DataStorage\User\UserStorage;
 
 $localConfig = require __DIR__.'/local.php';
 
@@ -26,31 +25,31 @@ return [
                 $localConfig['pdo']['dsn'],
                 $localConfig['pdo']['username'],
                 $localConfig['pdo']['password'],
-                $localConfig['pdo']['options']
+                $localConfig['pdo']['options'],
             ],
             'calls'     => ['setAttribute' => [\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION]],
-            'shared'    => true
+            'shared'    => true,
         ],
         DataAdapterInterface::class => [
             'class'     => PDOAdapter::class,
             'arguments' => [PDO::class],
-            'shared'    => true
+            'shared'    => true,
         ],
         UserStorage::class => [
-            'arguments' => [DataAdapterInterface::class, UserEntity::class]
+            'arguments' => [DataAdapterInterface::class, UserEntity::class],
         ],
         UserMetaStorage::class => [
-            'arguments' => [DataAdapterInterface::class, UserMetaEntity::class]
+            'arguments' => [DataAdapterInterface::class, UserMetaEntity::class],
         ],
-        UserEntity::class => [],
-        UserMetaEntity::class => []
+        UserEntity::class     => [],
+        UserMetaEntity::class => [],
     ],
     'modules' => [
         'Admin' => [
             'application' => [
                 // The default type is "subdir". "Subdomain" only when vhost supports it.
-                'type' => 'subdir',
-                'path' => 'admin',
+                'type'  => 'subdir',
+                'path'  => 'admin',
                 'theme' => 'default',
             ],
             'template_map' => [
@@ -58,24 +57,24 @@ return [
             ],
             'routing' => [
 
-            ]
+            ],
         ],
         'Website' => [
             'application' => [
                 // The only supported type for this application is "subdomain".
-                'type' => 'subdomain',
-                'path' => 'www',
+                'type'  => 'subdomain',
+                'path'  => 'www',
                 'theme' => 'default',
             ],
             'template_map' => [
 
             ],
             'routing' => [
-                'name' => 'index',
-                'path' => '/',
-                'middleware' => '',
+                'name'            => 'index',
+                'path'            => '/',
+                'middleware'      => '',
                 'allowed_methods' => ['GET'],
             ],
         ],
-    ]
+    ],
 ];

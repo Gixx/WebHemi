@@ -14,8 +14,8 @@ namespace WebHemi\Application\Web;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Application\ApplicationInterface;
 use WebHemi\Config\ConfigInterface;
-use WebHemi\DataStorage\User\UserStorage;
 use WebHemi\DataEntity\User\UserEntity;
+use WebHemi\DataStorage\User\UserStorage;
 
 /**
  * Class WebApplication.
@@ -42,8 +42,8 @@ class WebApplication implements ApplicationInterface
     /**
      * ApplicationInterface constructor.
      *
-     * @param DependencyInjectionAdapterInterface  $container
-     * @param ConfigInterface $config
+     * @param DependencyInjectionAdapterInterface $container
+     * @param ConfigInterface                     $config
      */
     public function __construct(DependencyInjectionAdapterInterface $container, ConfigInterface $config)
     {

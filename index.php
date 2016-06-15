@@ -10,8 +10,8 @@
  * @link      http://www.gixx-web.com
  */
 use WebHemi\Adapter\DependencyInjection\Symfony\SymfonyAdapter as DependencyInjectionAdapter;
-use WebHemi\Config\Config;
 use WebHemi\Application\Web\WebApplication as Application;
+use WebHemi\Config\Config;
 
 require_once __DIR__.'/vendor/autoload.php';
 
