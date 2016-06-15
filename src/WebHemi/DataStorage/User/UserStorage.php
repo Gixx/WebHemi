@@ -22,7 +22,7 @@ use WebHemi\DataStorage\AbstractDataStorage;
 class UserStorage extends AbstractDataStorage
 {
     /** @var string */
-    protected $dataGroup = 'user';
+    protected $dataGroup = 'webhemi_user';
     /** @var string */
     protected $idKey = 'id_user';
     /** @var string */
