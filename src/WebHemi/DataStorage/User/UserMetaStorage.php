@@ -21,7 +21,7 @@ use WebHemi\DataStorage\AbstractDataStorage;
 class UserMetaStorage extends AbstractDataStorage
 {
     /** @var string */
-    protected $dataGroup = 'user_meta';
+    protected $dataGroup = 'webhemi_user_meta';
     /** @var string */
     protected $idKey = 'id_user_meta';
     /** @var string */

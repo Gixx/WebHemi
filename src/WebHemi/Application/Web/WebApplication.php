@@ -13,7 +13,9 @@ namespace WebHemi\Application\Web;
 
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Application\ApplicationInterface;
-use WebHemi\Application\ConfigInterface;
+use WebHemi\Config\ConfigInterface;
+use WebHemi\DataStorage\User\UserStorage;
+use WebHemi\DataEntity\User\UserEntity;
 
 /**
  * Class WebApplication.
@@ -41,7 +43,7 @@ class WebApplication implements ApplicationInterface
      * ApplicationInterface constructor.
      *
      * @param DependencyInjectionAdapterInterface  $container
-     * @param \WebHemi\Application\ConfigInterface $config
+     * @param ConfigInterface $config
      */
     public function __construct(DependencyInjectionAdapterInterface $container, ConfigInterface $config)
     {
@@ -107,5 +109,12 @@ class WebApplication implements ApplicationInterface
         // TODO share Config in DI
 
         echo '<h1>Hello world!</h1>';
+
+        echo '<pre>';
+        /** @var UserStorage $userStorage */
+        $userStorage = $this->container->get(UserStorage::class);
+        /** @var UserEntity $entity */
+        $entity = $userStorage->getUserById(1);
+        var_dump($entity);
     }
 }

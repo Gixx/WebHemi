@@ -1,7 +1,7 @@
 WebHemi
 =======
 
-[![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--0.4-yellowgreen.svg)]()
+[![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--0.5-yellowgreen.svg)]()
 [![Minimum PHP Version](https://img.shields.io/badge/PHP-%3E%3D5.6-blue.svg)](https://php.net/)
 [![Build Status](https://travis-ci.org/Gixx/WebHemi.svg?branch=master)](https://travis-ci.org/Gixx/WebHemi)
 [![StyleCI](https://styleci.io/repos/60013198/shield)](https://styleci.io/repos/60013198)
