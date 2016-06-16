@@ -37,9 +37,11 @@ return [
         ],
         UserStorage::class => [
             'arguments' => [DataAdapterInterface::class, UserEntity::class],
+            'shared'    => true,
         ],
         UserMetaStorage::class => [
             'arguments' => [DataAdapterInterface::class, UserMetaEntity::class],
+            'shared'    => true,
         ],
         UserEntity::class     => [],
         UserMetaEntity::class => [],
