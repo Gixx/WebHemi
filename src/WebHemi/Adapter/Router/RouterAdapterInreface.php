@@ -15,14 +15,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use WebHemi\Routing\Result;
 
 /**
- * Interface RouterAdapterInterface
+ * Interface RouterAdapterInterface.
  */
-interface RouterAdapterInterface
+interface RouterAdapterInreface
 {
     /**
-     * Processes the Request and give a Result
+     * Processes the Request and give a Result.
      *
      * @param ServerRequestInterface $request
+     *
      * @return Result
      */
     public function match(ServerRequestInterface $request);
