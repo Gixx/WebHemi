@@ -52,10 +52,10 @@ return [
                 // The default type is "subdir". "Subdomain" only when vhost supports it.
                 'type'  => 'subdir',
                 'path'  => 'admin',
-                'theme' => 'default',
+                'theme' => 'default', // Allows JS and CSS customization only for the login page.
             ],
             'template_map' => [
-
+                // For Admin it is fixed since it cannot be changed by themes.
             ],
             'routing' => [
 
@@ -78,5 +78,8 @@ return [
                 'allowed_methods' => ['GET'],
             ],
         ],
+    ],
+    'applications' => [
+        // Custom applications using the "Website" module.
     ],
 ];
