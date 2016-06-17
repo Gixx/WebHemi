@@ -14,8 +14,6 @@ namespace WebHemi\Application\Web;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Application\ApplicationInterface;
 use WebHemi\Config\ConfigInterface;
-use WebHemi\DataEntity\User\UserEntity;
-use WebHemi\DataStorage\User\UserStorage;
 
 /**
  * Class WebApplication.
@@ -43,6 +41,7 @@ class WebApplication implements ApplicationInterface
     private $defaultModule = self::MODULE_SITE;
     /** @var string */
     private $selectedModule;
+
     /**
      * ApplicationInterface constructor.
      *

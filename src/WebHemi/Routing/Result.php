@@ -12,7 +12,7 @@
 namespace WebHemi\Routing;
 
 /**
- * Class Result
+ * Class Result.
  */
 class Result
 {
