@@ -22,23 +22,27 @@ use WebHemi\DataStorage\User\UserStorage;
  */
 class WebApplication implements ApplicationInterface
 {
+    const MODULE_ADMIN = 'Admin';
+    const MODULE_SITE = 'Website';
+
     /** @var DependencyInjectionAdapterInterface */
     private $container;
     /** @var ConfigInterface */
     private $config;
     /** @var array */
-    protected $server;
+    private $server;
     /** @var array */
-    protected $get;
+    private $get;
     /** @var array */
-    protected $post;
+    private $post;
     /** @var array */
-    protected $cookie;
+    private $cookie;
     /** @var array */
-    protected $files;
+    private $files;
     /** @var string */
-    protected $selectedModule;
-
+    private $defaultModule = self::MODULE_SITE;
+    /** @var string */
+    private $selectedModule;
     /**
      * ApplicationInterface constructor.
      *
@@ -69,13 +73,10 @@ class WebApplication implements ApplicationInterface
     public function getConfig()
     {
         return $this->config;
-
-        // TODO return data only for the 'core' and the selected 'module'
     }
 
     /**
-     * Sets application environments according to the super globals. This is typically good to choose between
-     * application modules, like 'Website' or 'Admin'.
+     * Sets application environments according to the super globals.
      *
      * @param array $get
      * @param array $post
@@ -92,29 +93,70 @@ class WebApplication implements ApplicationInterface
         $this->server = $server;
         $this->cookie = $cookie;
         $this->files = $files;
-
-        // TODO create module selection
     }
 
     /**
      * Runs the application. This is where the magic happens.
-     * For example for a web application this initializes the Request and Response objects, builds the middleware
-     * pipeline, applies the Routing and the Dispatch.
+     * According tho the environment settings this must build up the middleware pipeline and execute it.
+     *
+     * Pre-Routing Middleware can be; priority < 0:
+     *  - LockCheck - check if the client IP is banned > NULL|S403
+     *  - Auth - if the user is not logged in, but there's a "Remember me" cookie, then logs in > NULL
+     *
+     * Routing Middleware is fixed; priority = 0:
+     *  - A middleware that routes the incoming Request and delegates to the matched middleware. > NULL|S404|S405
+     *    The RouteResult should be attached to the Request.
+     *    If the Routing is not defined explicitly in the pipeline, then it will be injected with priority 0.
+     *
+     * Post-Routing Middleware can be; priority between 0 and 100:
+     *  - Acl - checks if the given route is available for the client. Also checks the auth > NULL|S401|S403
+     *  - CacheReader - checks if a suitable response body is cached. > NULL|S200
+     *
+     * Dispatcher Middleware is fixed; priority = 100:
+     *  - A middleware which gets the corresponding Action middleware and applies it > NULL|S500
+     *    If the Dispatcher is not defined explicitly in the pipeline, then it will be injected with priority 100.
+     *    The Dispatcher should not set the response Status Code to 200 to let Post-Dispatchers to be called.
+     *
+     * Post-Dispatch Middleware can be; priority > 100:
+     *  - CacheWriter - writes response body into DataStorage (DB, File etc.) > NULL
+     *
+     * Final Middleware is fixed:
+     *  - This middleware behaves a bit differently. It cannot be ordered, it's always the last called middleware:
+     *    - when the middleware pipeline reached its end (typically when the Status Code is empty)
+     *    - when one item of the middleware pipeline returns with response (status code is set)
+     *    - when during the pipeline process an Exception is thrown.
+     *
+     * When the middleware pipeline is finished the application prints the header and the output.
      *
      * @return void
      */
     public function run()
     {
-        // TODO create request, response, DI, template, routing, middleware pipelines
-        // TODO share Config in DI
+        /*  -- Pseudo code for the implementation
+
+            var request
+            var response
+            var pipeline
+            var finalMiddleware
+
+            FOR var middleware IN pipeline
+                response = CALL middleware WITH request, response
+
+                IF response.header.statusCode IS NOT NULL THEN
+                    BREAK
+                END IF
+            END FOR
+
+            response = CALL finalMiddleware WITH request, response
+
+            SEND response.header
+            PRINT response.body
+
+            EXIT
+
+         */
+
 
         echo '<h1>Hello world!</h1>';
-
-        echo '<pre>';
-        /** @var UserStorage $userStorage */
-        $userStorage = $this->container->get(UserStorage::class);
-        /** @var UserEntity $entity */
-        $entity = $userStorage->getUserById(1);
-        var_dump($entity);
     }
 }
