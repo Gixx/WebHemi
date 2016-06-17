@@ -17,13 +17,12 @@ use WebHemi\Routing\Result;
 /**
  * Interface RouterAdapterInterface.
  */
-interface RouterAdapterInreface
+interface RouterAdapterInterface
 {
     /**
      * Processes the Request and give a Result.
      *
      * @param ServerRequestInterface $request
-     *
      * @return Result
      */
     public function match(ServerRequestInterface $request);
