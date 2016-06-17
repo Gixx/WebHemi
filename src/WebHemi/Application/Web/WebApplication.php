@@ -37,11 +37,10 @@ class WebApplication implements ApplicationInterface
     private $cookie;
     /** @var array */
     private $files;
-    /** @var string */
-    private $defaultModule = self::MODULE_SITE;
-    /** @var string */
-    private $selectedModule;
-
+    ///** @var string */
+    //private $defaultModule = self::MODULE_SITE;
+    ///** @var string */
+    //private $selectedModule;
     /**
      * ApplicationInterface constructor.
      *
