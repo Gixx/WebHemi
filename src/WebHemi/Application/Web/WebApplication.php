@@ -11,7 +11,10 @@
  */
 namespace WebHemi\Application\Web;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
+use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\Application\ApplicationInterface;
 use WebHemi\Config\ConfigInterface;
 
@@ -28,19 +31,16 @@ class WebApplication implements ApplicationInterface
     /** @var ConfigInterface */
     private $config;
     /** @var array */
-    private $server;
+    private $server = [];
     /** @var array */
-    private $get;
+    private $get = [];
     /** @var array */
-    private $post;
+    private $post = [];
     /** @var array */
-    private $cookie;
+    private $cookie = [];
     /** @var array */
-    private $files;
-    ///** @var string */
-    //private $defaultModule = self::MODULE_SITE;
-    ///** @var string */
-    //private $selectedModule;
+    private $files = [];
+
     /**
      * ApplicationInterface constructor.
      *
@@ -98,30 +98,30 @@ class WebApplication implements ApplicationInterface
      * According tho the environment settings this must build up the middleware pipeline and execute it.
      *
      * Pre-Routing Middleware can be; priority < 0:
-     *  - LockCheck - check if the client IP is banned > NULL|S403
-     *  - Auth - if the user is not logged in, but there's a "Remember me" cookie, then logs in > NULL
+     *  - LockCheck - check if the client IP is banned > S102|S403
+     *  - Auth - if the user is not logged in, but there's a "Remember me" cookie, then logs in > S102
      *
      * Routing Middleware is fixed; priority = 0:
-     *  - A middleware that routes the incoming Request and delegates to the matched middleware. > NULL|S404|S405
+     *  - A middleware that routes the incoming Request and delegates to the matched middleware. > S102|S404|S405
      *    The RouteResult should be attached to the Request.
      *    If the Routing is not defined explicitly in the pipeline, then it will be injected with priority 0.
      *
      * Post-Routing Middleware can be; priority between 0 and 100:
-     *  - Acl - checks if the given route is available for the client. Also checks the auth > NULL|S401|S403
-     *  - CacheReader - checks if a suitable response body is cached. > NULL|S200
+     *  - Acl - checks if the given route is available for the client. Also checks the auth > S102|S401|S403
+     *  - CacheReader - checks if a suitable response body is cached. > S102|S200
      *
      * Dispatcher Middleware is fixed; priority = 100:
-     *  - A middleware which gets the corresponding Action middleware and applies it > NULL|S500
+     *  - A middleware which gets the corresponding Action middleware and applies it > S102|S500
      *    If the Dispatcher is not defined explicitly in the pipeline, then it will be injected with priority 100.
      *    The Dispatcher should not set the response Status Code to 200 to let Post-Dispatchers to be called.
      *
      * Post-Dispatch Middleware can be; priority > 100:
-     *  - CacheWriter - writes response body into DataStorage (DB, File etc.) > NULL
+     *  - CacheWriter - writes response body into DataStorage (DB, File etc.) > S102
      *
      * Final Middleware is fixed:
      *  - This middleware behaves a bit differently. It cannot be ordered, it's always the last called middleware:
-     *    - when the middleware pipeline reached its end (typically when the Status Code is empty)
-     *    - when one item of the middleware pipeline returns with response (status code is set)
+     *    - when the middleware pipeline reached its end (typically when the Status Code is still 102)
+     *    - when one item of the middleware pipeline returns with return response (status code is set to 200|40*|500)
      *    - when during the pipeline process an Exception is thrown.
      *
      * When the middleware pipeline is finished the application prints the header and the output.
@@ -130,6 +130,20 @@ class WebApplication implements ApplicationInterface
      */
     public function run()
     {
+        $this->container
+            ->setServiceArgument(HttpAdapterInterface::class, $this->server)
+            ->setServiceArgument(HttpAdapterInterface::class, $this->get)
+            ->setServiceArgument(HttpAdapterInterface::class, $this->post)
+            ->setServiceArgument(HttpAdapterInterface::class, $this->cookie)
+            ->setServiceArgument(HttpAdapterInterface::class, $this->files);
+
+        /** @var HttpAdapterInterface $httpAdapter */
+        $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
+        /** @var ServerRequestInterface $request */
+        $request = $httpAdapter->getRequest();
+        /** @var ResponseInterface $response */
+        $response = $httpAdapter->getResponse();
+
         /*  -- Pseudo code for the implementation
 
             var request
@@ -140,7 +154,7 @@ class WebApplication implements ApplicationInterface
             FOR var middleware IN pipeline
                 response = CALL middleware WITH request, response
 
-                IF response.header.statusCode IS NOT NULL THEN
+                IF response.header.statusCode IS NOT 102 THEN
                     BREAK
                 END IF
             END FOR
@@ -154,7 +168,8 @@ class WebApplication implements ApplicationInterface
 
          */
 
-
         echo '<h1>Hello world!</h1>';
+        echo $request->getMethod();
+        echo $response->getBody();
     }
 }
