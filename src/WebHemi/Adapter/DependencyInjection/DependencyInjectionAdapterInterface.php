@@ -60,7 +60,7 @@ interface DependencyInjectionAdapterInterface
      * Sets service argument.
      *
      * @param string $identifier
-     * @param mixed $parameter
+     * @param mixed  $parameter
      *
      * @return DependencyInjectionAdapterInterface
      */
