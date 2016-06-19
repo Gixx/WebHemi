@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
+use WebHemi\Adapter\Exception\InitException;
 use WebHemi\Config\ConfigInterface;
 
 /**
@@ -96,18 +97,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         // Add arguments.
         if (isset($setUpData[self::SERVICE_ARGUMENTS])) {
             foreach ($setUpData[self::SERVICE_ARGUMENTS] as $parameter) {
-                // Create a normalized name for the argument.
-                if (!is_scalar($parameter)) {
-                    $normalizedName = $this->getNormalizedName($serviceClass, self::$parameterIndex++);
-                } else {
-                    $normalizedName = $this->getNormalizedName($serviceClass, $parameter);
-                }
-
-                // Check if the parameter is a service.
-                $parameter = $this->getReferenceServiceIfAvailable($parameter);
-
-                $this->container->setParameter($normalizedName, $parameter);
-                $service->addArgument('%'.$normalizedName.'%');
+                $this->setServiceArgument($service, $parameter);
             }
         }
 
@@ -197,5 +187,43 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     public function has($identifier)
     {
         return $this->container->has($identifier);
+    }
+
+    /**
+     * Sets service argument.
+     *
+     * @param string|Definition $service
+     * @param mixed             $parameter
+     *
+     * @throws InitException
+     *
+     * @return DependencyInjectionAdapterInterface
+     */
+    public function setServiceArgument($service, $parameter)
+    {
+        if ($this->container->initialized($service)) {
+            throw new InitException('Cannot add argument to an already initialized service.');
+        }
+
+        if (!$service instanceof Definition) {
+            $service = $this->container->getDefinition($service);
+        }
+
+        $serviceClass = $service->getClass();
+
+        // Create a normalized name for the argument.
+        if (!is_scalar($parameter)) {
+            $normalizedName = $this->getNormalizedName($serviceClass, self::$parameterIndex++);
+        } else {
+            $normalizedName = $this->getNormalizedName($serviceClass, $parameter);
+        }
+
+        // Check if the parameter is a service.
+        $parameter = $this->getReferenceServiceIfAvailable($parameter);
+
+        $this->container->setParameter($normalizedName, $parameter);
+        $service->addArgument('%'.$normalizedName.'%');
+
+        return $this;
     }
 }

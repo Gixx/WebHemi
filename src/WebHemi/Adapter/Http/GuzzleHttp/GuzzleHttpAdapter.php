@@ -18,12 +18,12 @@ use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
-use WebHemi\Adapter\Http\AdapterInterface;
+use WebHemi\Adapter\Http\HttpAdapterInterface;
 
 /**
  * Class GuzzleHttpAdapter.
  */
-class GuzzleHttpAdapter implements AdapterInterface
+class GuzzleHttpAdapter implements HttpAdapterInterface
 {
     /** @var ServerRequest */
     private $request;
@@ -53,7 +53,8 @@ class GuzzleHttpAdapter implements AdapterInterface
             ->withCookieParams($cookie)
             ->withQueryParams($get)
             ->withParsedBody($post);
-        $this->response = new Response();
+        // Create a Response with HTTP 102 - Processing.
+        $this->response = new Response(102);
         $this->files = $files;
     }
 

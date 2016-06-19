@@ -11,6 +11,8 @@
  */
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Data\PDO\PDOAdapter;
+use WebHemi\Adapter\Http\HttpAdapterInterface;
+use WebHemi\Adapter\Http\GuzzleHttp\GuzzleHttpAdapter;
 use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataEntity\User\UserMetaEntity;
 use WebHemi\DataStorage\User\UserMetaStorage;
@@ -27,7 +29,15 @@ return [
                 $localConfig['pdo']['password'],
                 $localConfig['pdo']['options'],
             ],
-            'calls'     => ['setAttribute' => [\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION]],
+            'calls'     => ['setAttribute' => [PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION]],
+            'shared'    => true,
+        ],
+        HttpAdapterInterface::class =>[
+            'class'     => GuzzleHttpAdapter::class,
+            'arguments' => [
+                // This class requires arguments. The ApplicationInterface implementation must inject into it before
+                // instantiates it.
+            ],
             'shared'    => true,
         ],
         DataAdapterInterface::class => [

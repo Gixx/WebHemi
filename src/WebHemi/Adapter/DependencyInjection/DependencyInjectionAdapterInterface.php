@@ -55,4 +55,14 @@ interface DependencyInjectionAdapterInterface
      * @return bool
      */
     public function has($identifier);
+
+    /**
+     * Sets service argument.
+     *
+     * @param string $identifier
+     * @param mixed $parameter
+     *
+     * @return DependencyInjectionAdapterInterface
+     */
+    public function setServiceArgument($identifier, $parameter);
 }
