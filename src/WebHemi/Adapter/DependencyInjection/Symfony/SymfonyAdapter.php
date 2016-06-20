@@ -97,20 +97,12 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         $service = $this->container->setDefinition($identifier, $definition);
 
         // Add arguments.
-        if (!is_array($setUpData[self::SERVICE_ARGUMENTS])) {
-            $setUpData[self::SERVICE_ARGUMENTS] = [$setUpData[self::SERVICE_ARGUMENTS]];
-        }
-
-        foreach ($setUpData[self::SERVICE_ARGUMENTS] as $parameter) {
+        foreach ((array) $setUpData[self::SERVICE_ARGUMENTS] as $parameter) {
             $this->setServiceArgument($service, $parameter);
         }
 
         // Register method callings.
-        if (!is_array($setUpData[self::SERVICE_METHOD_CALL])) {
-            $setUpData[self::SERVICE_METHOD_CALL] = [$setUpData[self::SERVICE_METHOD_CALL]];
-        }
-
-        foreach ($setUpData[self::SERVICE_METHOD_CALL] as $method => $parameterList) {
+        foreach ((array) $setUpData[self::SERVICE_METHOD_CALL] as $method => $parameterList) {
             // Check the parameter list for reference services
             foreach ($parameterList as &$parameter) {
                 $parameter = $this->getReferenceServiceIfAvailable($parameter);
