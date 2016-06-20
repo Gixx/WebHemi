@@ -1,18 +1,8 @@
 filter:
-  excluded_paths:
-    - 'vendor/*'
-    - 'tests/*'
-    - 'bin/*'
-
+    paths: [src/*]
 checks:
-  php: true
-    code_rating: true
-    duplication: true
-
-  javascript: true
-
-coding_style:
-  php:
-    spaces:
-      around_operators:
-        bitwise: false
+    php:
+        code_rating: true
+        duplication: true
+tools:
+    external_code_coverage: true
