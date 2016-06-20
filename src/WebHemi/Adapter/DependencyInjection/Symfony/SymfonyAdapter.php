@@ -201,7 +201,6 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      */
     public function setServiceArgument($service, $parameter)
     {
-
         if (!$service instanceof Definition) {
             $service = $this->container->getDefinition($service);
         }
