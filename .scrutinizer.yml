@@ -1,15 +1,18 @@
 filter:
-    excluded_paths:
-        - 'vendor/*'
-        - 'tests/*'
-        - 'bin/*'
+  excluded_paths:
+    - 'vendor/*'
+    - 'tests/*'
+    - 'bin/*'
+
 checks:
-    php: true
-        code_rating: true
-        duplication: true
-    javascript: true
+  php: true
+    code_rating: true
+    duplication: true
+
+  javascript: true
+
 coding_style:
-    php:
-        spaces:
-            around_operators:
-                bitwise: false
+  php:
+    spaces:
+      around_operators:
+        bitwise: false
