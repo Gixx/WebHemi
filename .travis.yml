@@ -12,3 +12,5 @@ script:
   - vendor/bin/phpcs --standard=PSR2 src/
 after_success:
   - vendor/bin/coveralls
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
