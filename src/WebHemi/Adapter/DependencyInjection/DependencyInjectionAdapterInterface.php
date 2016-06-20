@@ -21,7 +21,7 @@ interface DependencyInjectionAdapterInterface
     const SERVICE_CLASS = 'class';
     const SERVICE_ARGUMENTS = 'arguments';
     const SERVICE_METHOD_CALL = 'calls';
-    const SERVICE_SHARE = 'share';
+    const SERVICE_SHARE = 'shared';
 
     /**
      * DependencyInjectionAdapterInterface constructor.
