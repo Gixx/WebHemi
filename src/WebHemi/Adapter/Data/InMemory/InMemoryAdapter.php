@@ -18,11 +18,11 @@ use WebHemi\Adapter\Data\DataAdapterInterface;
  */
 class InMemoryAdapter implements DataAdapterInterface
 {
-    /** @var array mixed */
+    /** @var mixed */
     private $dataStorage;
     /** @var string */
     protected $dataGroup = null;
-    /** @var null */
+    /** @var string */
     protected $idKey = null;
 
     /**
@@ -141,7 +141,7 @@ class InMemoryAdapter implements DataAdapterInterface
     /**
      * Removes an entity from the storage.
      *
-     * @param int $identifier
+     * @param mixed $identifier
      *
      * @return bool
      */
