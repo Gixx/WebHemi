@@ -25,9 +25,9 @@ class PDOAdapter implements DataAdapterInterface
     /** @var PDO */
     private $dataStorage;
     /** @var string */
-    protected $dataGroup = null;
+    private $dataGroup = null;
     /** @var string */
-    protected $idKey = null;
+    private $idKey = null;
 
     /**
      * PDOAdapter constructor.
@@ -163,7 +163,7 @@ class PDOAdapter implements DataAdapterInterface
      *
      * @return PDOStatement
      */
-    protected function getStatementForExpression(array $expression, $limit = null, $offset = null)
+    private function getStatementForExpression(array $expression, $limit = null, $offset = null)
     {
         $query = "SELECT * FROM {$this->dataGroup}";
         $queryParams = [];
@@ -193,18 +193,7 @@ class PDOAdapter implements DataAdapterInterface
         }
 
         $statement = $this->getDataStorage()->prepare($query);
-
-        foreach ($queryBind as $index => $data) {
-            $paramType = PDO::PARAM_STR;
-
-            if (is_null($data)) {
-                $paramType = PDO::PARAM_NULL;
-            } elseif (is_numeric($data)) {
-                $paramType = PDO::PARAM_INT;
-            }
-
-            $statement->bindValue($index + 1, $data, $paramType);
-        }
+        $this->bindValuesToStatement($statement, $queryBind);
 
         return $statement;
     }
@@ -241,7 +230,20 @@ class PDOAdapter implements DataAdapterInterface
         }
 
         $statement = $this->getDataStorage()->prepare($query);
+        $this->bindValuesToStatement($statement, $queryBind);
+        $statement->execute();
 
+        return empty($identifier) ? $this->getDataStorage()->lastInsertId() : $identifier;
+    }
+
+    /**
+     * Binds values to the statement.
+     *
+     * @param PDOStatement $statement
+     * @param array        $queryBind
+     */
+    private function bindValuesToStatement(PDOStatement &$statement, array $queryBind)
+    {
         foreach ($queryBind as $index => $data) {
             $paramType = PDO::PARAM_STR;
 
@@ -253,10 +255,6 @@ class PDOAdapter implements DataAdapterInterface
 
             $statement->bindValue($index + 1, $data, $paramType);
         }
-
-        $statement->execute();
-
-        return empty($identifier) ? $this->getDataStorage()->lastInsertId() : $identifier;
     }
 
     /**

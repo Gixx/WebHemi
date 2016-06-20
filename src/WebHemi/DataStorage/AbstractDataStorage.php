@@ -40,15 +40,6 @@ abstract class AbstractDataStorage implements DataStorageInterface
     {
         // Every Storage object MUST have unique adapter instance to avoid override private properties like "dataGroup"
         $this->defaultAdapter = clone $defaultAdapter;
-
-        if (!empty($this->dataGroup)) {
-            $this->defaultAdapter->setDataGroup($this->dataGroup);
-        }
-
-        if (!empty($this->idKey)) {
-            $this->defaultAdapter->setIdKey($this->idKey);
-        }
-
         $this->entityPrototype = $entityPrototype;
         $this->init();
     }
@@ -60,6 +51,14 @@ abstract class AbstractDataStorage implements DataStorageInterface
      */
     public function init()
     {
+        if (!empty($this->dataGroup)) {
+            $this->defaultAdapter->setDataGroup($this->dataGroup);
+        }
+
+        if (!empty($this->idKey)) {
+            $this->defaultAdapter->setIdKey($this->idKey);
+        }
+
         return $this;
     }
 

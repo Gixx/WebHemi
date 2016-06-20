@@ -21,9 +21,9 @@ class InMemoryAdapter implements DataAdapterInterface
     /** @var mixed */
     private $dataStorage;
     /** @var string */
-    protected $dataGroup = null;
+    private $dataGroup = null;
     /** @var string */
-    protected $idKey = null;
+    private $idKey = null;
 
     /**
      * PDOAdapter constructor.
