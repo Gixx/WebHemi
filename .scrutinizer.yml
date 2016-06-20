@@ -1,0 +1,15 @@
+filter:
+    excluded_paths:
+        - 'vendor/*'
+        - 'tests/*'
+        - 'bin/*'
+checks:
+    php: true
+        code_rating: true
+        duplication: true
+    javascript: true
+coding_style:
+    php:
+        spaces:
+            around_operators:
+                bitwise: false

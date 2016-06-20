@@ -3,9 +3,13 @@ WebHemi
 
 [![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--0.5-yellowgreen.svg)]()
 [![Minimum PHP Version](https://img.shields.io/badge/PHP-%3E%3D5.6-blue.svg)](https://php.net/)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build Status](https://travis-ci.org/Gixx/WebHemi.svg?branch=master)](https://travis-ci.org/Gixx/WebHemi)
 [![StyleCI](https://styleci.io/repos/60013198/shield)](https://styleci.io/repos/60013198)
 [![Coverage Status](https://coveralls.io/repos/github/Gixx/WebHemi/badge.svg?branch=master)](https://coveralls.io/github/Gixx/WebHemi?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Gixx/WebHemi/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Gixx/WebHemi/?branch=master)
+
+[![Email](https://img.shields.io/badge/email-navig80@gmail.com-blue.svg?style=flat-square)](mailto:navig80@gmail.com)
 
 Introduction
 ------------
