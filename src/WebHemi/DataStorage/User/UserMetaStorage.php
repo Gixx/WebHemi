@@ -58,7 +58,7 @@ class UserMetaStorage extends AbstractDataStorage
         $entity = false;
         $data = $this->getDataAdapter()->getData($identifier);
 
-        if ($data) {
+        if (!empty($data)) {
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
         }
@@ -78,7 +78,7 @@ class UserMetaStorage extends AbstractDataStorage
         $entityList = false;
         $dataList = $this->getDataAdapter()->getDataSet([$this->userId => $userId]);
 
-        if ($dataList) {
+        if (!empty($dataList)) {
             foreach ($dataList as $metaData) {
                 /** @var UserMetaEntity $entity */
                 $entity = $this->createEntity();

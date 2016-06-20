@@ -80,7 +80,7 @@ class UserStorage extends AbstractDataStorage
         $entity = false;
         $data = $this->getDataAdapter()->getData($identifier);
 
-        if ($data) {
+        if (!empty($data)) {
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
         }
@@ -100,7 +100,7 @@ class UserStorage extends AbstractDataStorage
         $entity = false;
         $dataList = $this->getDataAdapter()->getDataSet([$this->email => $email], 1);
 
-        if ($dataList) {
+        if (!empty($dataList)) {
             $entity = $this->createEntity();
             $this->populateEntity($entity, $dataList[0]);
         }

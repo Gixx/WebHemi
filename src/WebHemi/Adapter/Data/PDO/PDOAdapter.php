@@ -22,11 +22,11 @@ use WebHemi\Adapter\Exception\InvalidArgumentException;
  */
 class PDOAdapter implements DataAdapterInterface
 {
-    /** @var PDO mixed */
+    /** @var PDO */
     private $dataStorage;
     /** @var string */
     protected $dataGroup = null;
-    /** @var null */
+    /** @var string */
     protected $idKey = null;
 
     /**
@@ -110,7 +110,7 @@ class PDOAdapter implements DataAdapterInterface
     /**
      * Get exactly one "row" of data according to the expression.
      *
-     * @param int $identifier
+     * @param mixed $identifier
      *
      * @return array
      */
@@ -158,8 +158,8 @@ class PDOAdapter implements DataAdapterInterface
      * Build query statement from the expression.
      *
      * @param array $expression
-     * @param null  $limit
-     * @param null  $offset
+     * @param int   $limit
+     * @param int   $offset
      *
      * @return PDOStatement
      */
@@ -262,7 +262,7 @@ class PDOAdapter implements DataAdapterInterface
     /**
      * Removes an entity from the storage.
      *
-     * @param int $identifier
+     * @param mixed $identifier
      *
      * @return bool
      */

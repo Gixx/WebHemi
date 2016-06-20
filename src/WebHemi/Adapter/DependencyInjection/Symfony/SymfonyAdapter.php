@@ -201,15 +201,16 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      */
     public function setServiceArgument($service, $parameter)
     {
-        if ($this->container->initialized($service)) {
-            throw new InitException('Cannot add argument to an already initialized service.');
-        }
 
         if (!$service instanceof Definition) {
             $service = $this->container->getDefinition($service);
         }
 
         $serviceClass = $service->getClass();
+
+        if ($this->container->initialized($serviceClass)) {
+            throw new InitException('Cannot add argument to an already initialized service.');
+        }
 
         // Create a normalized name for the argument.
         if (!is_scalar($parameter)) {
