@@ -27,7 +27,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
 {
     /** @var ServerRequest */
     private $request;
-    /** @var Response */
+    /** @var ResponseInterface */
     private $response;
     /** @var array */
     private $files;
