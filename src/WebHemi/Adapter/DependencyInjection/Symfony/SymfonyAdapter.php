@@ -79,38 +79,35 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
             return;
         }
 
-        $setUpData = $this->configuration[$identifier];
-
+        // Init settings.
+        $setUpData = [
+            self::SERVICE_CLASS       => $serviceClass,
+            self::SERVICE_ARGUMENTS   => [],
+            self::SERVICE_METHOD_CALL => [],
+            // By default the Symfony DI shares all services. In WebHemi by default nothing is shared.
+            self::SERVICE_SHARE       => false,
+        ];
+        // Override settings from the configuration.
+        $setUpData = array_merge($setUpData, $this->configuration[$identifier]);
         // Create the definition.
         $definition = new Definition($serviceClass);
-
-        // By default the Symfony DI shares all services. In WebHemi by default nothing is shared.
-        if (!isset($setUpData[self::SERVICE_SHARE])) {
-            $setUpData[self::SERVICE_SHARE] = false;
-        }
-
         $definition->setShared((bool) $setUpData[self::SERVICE_SHARE]);
-
         // Register the service.
         $service = $this->container->setDefinition($identifier, $definition);
 
         // Add arguments.
-        if (isset($setUpData[self::SERVICE_ARGUMENTS])) {
-            foreach ($setUpData[self::SERVICE_ARGUMENTS] as $parameter) {
-                $this->setServiceArgument($service, $parameter);
-            }
+        foreach ($setUpData[self::SERVICE_ARGUMENTS] as $parameter) {
+            $this->setServiceArgument($service, $parameter);
         }
 
         // Register method callings.
-        if (isset($setUpData[self::SERVICE_METHOD_CALL])) {
-            foreach ($setUpData[self::SERVICE_METHOD_CALL] as $method => $parameterList) {
-                // Check the parameter list for reference services
-                foreach ($parameterList as &$parameter) {
-                    $parameter = $this->getReferenceServiceIfAvailable($parameter);
-                }
-
-                $service->addMethodCall($method, $parameterList);
+        foreach ($setUpData[self::SERVICE_METHOD_CALL] as $method => $parameterList) {
+            // Check the parameter list for reference services
+            foreach ($parameterList as &$parameter) {
+                $parameter = $this->getReferenceServiceIfAvailable($parameter);
             }
+
+            $service->addMethodCall($method, $parameterList);
         }
     }
 
