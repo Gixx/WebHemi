@@ -89,6 +89,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         ];
         // Override settings from the configuration.
         $setUpData = array_merge($setUpData, $this->configuration[$identifier]);
+
         // Create the definition.
         $definition = new Definition($serviceClass);
         $definition->setShared((bool) $setUpData[self::SERVICE_SHARE]);
@@ -96,11 +97,19 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         $service = $this->container->setDefinition($identifier, $definition);
 
         // Add arguments.
+        if (!is_array($setUpData[self::SERVICE_ARGUMENTS])) {
+            $setUpData[self::SERVICE_ARGUMENTS] = [$setUpData[self::SERVICE_ARGUMENTS]];
+        }
+
         foreach ($setUpData[self::SERVICE_ARGUMENTS] as $parameter) {
             $this->setServiceArgument($service, $parameter);
         }
 
         // Register method callings.
+        if (!is_array($setUpData[self::SERVICE_METHOD_CALL])) {
+            $setUpData[self::SERVICE_METHOD_CALL] = [$setUpData[self::SERVICE_METHOD_CALL]];
+        }
+
         foreach ($setUpData[self::SERVICE_METHOD_CALL] as $method => $parameterList) {
             // Check the parameter list for reference services
             foreach ($parameterList as &$parameter) {
