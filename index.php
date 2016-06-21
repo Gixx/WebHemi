@@ -19,5 +19,9 @@ $config = new Config(require __DIR__.'/config/config.php');
 $diAdapter = new DependencyInjectionAdapter($config->get('dependencies', Config::CONFIG_AS_OBJECT));
 
 $app = new Application($diAdapter, $config);
-$app->setEnvironmentFromGlobals($_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
-$app->run();
+$app->setEnvironmentData('GET', $_GET)
+    ->setEnvironmentData('POST', $_POST)
+    ->setEnvironmentData('SERVER', $_SERVER)
+    ->setEnvironmentData('COOKIE', $_COOKIE)
+    ->setEnvironmentData('FILES', $_FILES)
+    ->run();

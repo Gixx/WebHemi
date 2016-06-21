@@ -13,6 +13,7 @@ namespace WebHemi\Application;
 
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Config\ConfigInterface;
+use InvalidArgumentException;
 
 /**
  * Interface ApplicationInterface.
@@ -42,18 +43,16 @@ interface ApplicationInterface
     public function getConfig();
 
     /**
-     * Sets application environments according to the super globals. This is typically good to choose between
-     * application modules, like 'Website' or 'Admin'.
+     * Sets application environments according to the super globals.
      *
-     * @param array $get
-     * @param array $post
-     * @param array $server
-     * @param array $cookie
-     * @param array $files
+     * @param string $key
+     * @param array  $data
+     *
+     * @throws InvalidArgumentException
      *
      * @return ApplicationInterface
      */
-    public function setEnvironmentFromGlobals(array $get, array $post, array $server, array $cookie, array $files);
+    public function setEnvironmentData($key, array $data);
 
     /**
      * Runs the application. This is where the magic happens.

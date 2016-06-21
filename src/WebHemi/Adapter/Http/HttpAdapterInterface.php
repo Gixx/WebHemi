@@ -13,7 +13,6 @@ namespace WebHemi\Adapter\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
 
 /**
  * Interface AdapterInterface.

@@ -17,7 +17,6 @@ use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 
 /**
@@ -95,7 +94,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
      * @param string $keyName
      * @param mixed  $defaultValue
      *
-     * @return mixed|null
+     * @return string
      */
     private function getServerData($keyName, $defaultValue = '')
     {
@@ -103,7 +102,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
             $defaultValue = $this->server[$keyName];
         }
 
-        return $defaultValue;
+        return (string) $defaultValue;
     }
 
     /**
@@ -137,7 +136,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
             $host = $name;
         }
 
-        return preg_replace('/:[0-9]+$/', '', $host);
+        return (string) preg_replace('/:[0-9]+$/', '', $host);
     }
 
     /**
@@ -149,7 +148,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     {
         $requestUri = $this->getServerData('REQUEST_URI', '/');
 
-        return current(explode('?', $requestUri));
+        return (string) current(explode('?', $requestUri));
     }
 
     /**
@@ -166,7 +165,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
             $protocol = str_replace('HTTP/', '', $serverProtocol);
         }
 
-        return $protocol;
+        return (string) $protocol;
     }
 
     /**
