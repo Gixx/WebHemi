@@ -130,7 +130,6 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
      */
     private function getHost()
     {
-
         $host = $this->getServerData('HTTP_HOST');
         $name = $this->getServerData('SERVER_NAME');
 
