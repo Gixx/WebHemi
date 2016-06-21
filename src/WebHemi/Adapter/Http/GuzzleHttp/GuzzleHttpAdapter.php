@@ -29,6 +29,15 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     private $request;
     /** @var ResponseInterface */
     private $response;
+
+    /** @var array */
+    private $server;
+    /** @var array */
+    private $get;
+    /** @var array */
+    private $post;
+    /** @var array */
+    private $cookie;
     /** @var array */
     private $files;
 
@@ -43,84 +52,122 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
      */
     public function __construct(array $server, array $get, array $post, array $cookie, array $files)
     {
-        $headers = [];
-        $method = $this->getRequestMethod($server);
-        $uri = $this->getUri($server);
-        $protocol = $this->getProtocol($server);
-        $body = new LazyOpenStream('php://input', 'r+');
-        $serverRequest = new ServerRequest($method, $uri, $headers, $body, $protocol, $server);
-        $this->request = $serverRequest
-            ->withCookieParams($cookie)
-            ->withQueryParams($get)
-            ->withParsedBody($post);
-        // Create a Response with HTTP 102 - Processing.
-        $this->response = new Response(102);
+        $this->server = $server;
+        $this->get = $get;
+        $this->post = $post;
+        $this->cookie = $cookie;
         $this->files = $files;
+
+        $this->initialize();
     }
 
     /**
-     * Retrieve request method.
+     * Initialize adapter: create the ServerRequest and Response instances.
+     */
+    private function initialize()
+    {
+        $uri = new Uri('');
+        $uri = $uri->withScheme($this->getScheme())
+            ->withHost($this->getHost())
+            ->withPort($this->getServerData('SERVER_PORT', 80))
+            ->withPath($this->getRequestUri())
+            ->withQuery($this->getServerData('QUERY_STRING', ''));
+
+        $serverRequest = new ServerRequest(
+            $this->getServerData('REQUEST_METHOD', 'GET'),
+            $uri,
+            [],
+            new LazyOpenStream('php://input', 'r+'),
+            $this->getProtocol(),
+            $this->server
+        );
+        $this->request = $serverRequest
+            ->withCookieParams($this->cookie)
+            ->withQueryParams($this->get)
+            ->withParsedBody($this->post);
+        // Create a Response with HTTP 102 - Processing.
+        $this->response = new Response(102);
+    }
+
+    /**
+     * Gets the specific server data, or a default value if not present.
      *
-     * @param array $server
+     * @param string $keyName
+     * @param mixed  $defaultValue
+     *
+     * @return mixed|null
+     */
+    private function getServerData($keyName, $defaultValue = '')
+    {
+        if (isset($this->server[$keyName])) {
+            $defaultValue = $this->server[$keyName];
+        }
+
+        return $defaultValue;
+    }
+
+    /**
+     * Gets server scheme.
      *
      * @return string
      */
-    private function getRequestMethod(array $server)
+    private function getScheme()
     {
-        return isset($server['REQUEST_METHOD']) ? $server['REQUEST_METHOD'] : 'GET';
+        $scheme = 'http';
+        $https = $this->getServerData('HTTPS', 'off');
+
+        if ($https == 'on') {
+            $scheme = 'https';
+        }
+
+        return $scheme;
     }
 
     /**
-     * Retrieve URI object.
+     * Gets the server host name.
      *
-     * @param array $server
-     *
-     * @return Uri
+     * @return string
      */
-    private function getUri(array $server)
+    private function getHost()
     {
-        /** @var URI $uri */
-        $uri = new Uri('');
 
-        if (isset($server['HTTPS'])) {
-            $uri = $uri->withScheme($server['HTTPS'] == 'on' ? 'https' : 'http');
-        } else {
-            $uri = $uri->withScheme('http');
+        $host = $this->getServerData('HTTP_HOST');
+        $name = $this->getServerData('SERVER_NAME');
+
+        if (empty($host) && !empty($name)) {
+            $host = $name;
         }
 
-        $server['HTTP_HOST'] = preg_replace('/:[0-9]+$/', '', $server['HTTP_HOST']);
-
-        if (isset($server['HTTP_HOST'])) {
-            $uri = $uri->withHost($server['HTTP_HOST']);
-        } elseif (isset($server['SERVER_NAME'])) {
-            $uri = $uri->withHost($server['SERVER_NAME']);
-        }
-
-        if (isset($server['SERVER_PORT'])) {
-            $uri = $uri->withPort($server['SERVER_PORT']);
-        }
-
-        if (isset($server['REQUEST_URI'])) {
-            $uri = $uri->withPath(current(explode('?', $server['REQUEST_URI'])));
-        }
-
-        if (isset($server['QUERY_STRING'])) {
-            $uri = $uri->withQuery($server['QUERY_STRING']);
-        }
-
-        return $uri;
+        return preg_replace('/:[0-9]+$/', '', $host);
     }
 
     /**
-     * Retrieve the server protocol.
+     * Gets the server request uri.
      *
-     * @param array $server
-     *
-     * @return mixed|string
+     * @return string
      */
-    private function getProtocol(array $server)
+    private function getRequestUri()
     {
-        return isset($server['SERVER_PROTOCOL']) ? str_replace('HTTP/', '', $server['SERVER_PROTOCOL']) : '1.1';
+        $requestUri = $this->getServerData('REQUEST_URI', '/');
+
+        return current(explode('?', $requestUri));
+    }
+
+    /**
+     * Gets the server protocol.
+     *
+     * @return string
+     */
+    private function getProtocol()
+    {
+        $protocol = '1.1';
+        $serverProtocol = $this->getServerData('SERVER_PROTOCOL');
+
+        if (!empty($serverProtocol)) {
+            $protocol = str_replace('HTTP/', '', $serverProtocol);
+        }
+
+        return $protocol;
     }
 
     /**
@@ -141,27 +188,5 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     public function getResponse()
     {
         return $this->response;
-    }
-
-    /**
-     * Override the response being sent out.
-     *
-     * @param ResponseInterface $response
-     */
-    public function overrideResponse(ResponseInterface $response)
-    {
-        $this->response = $response;
-    }
-
-    /**
-     * Create a stream for a response from a string.
-     *
-     * @param string $string
-     *
-     * @return StreamInterface
-     */
-    public function getStringStream($string)
-    {
-        return \GuzzleHttp\Psr7\stream_for($string);
     }
 }
