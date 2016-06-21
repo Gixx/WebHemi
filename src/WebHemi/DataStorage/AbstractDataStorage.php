@@ -28,6 +28,8 @@ abstract class AbstractDataStorage implements DataStorageInterface
     protected $dataGroup;
     /** @var string */
     protected $idKey;
+    /** @var bool */
+    protected $initialized = false;
 
     /**
      * UserMetaStorage constructor. The DataEntity SHOULD not be used directly unless it is required to represent
@@ -51,15 +53,25 @@ abstract class AbstractDataStorage implements DataStorageInterface
      */
     public function init()
     {
-        if (!empty($this->dataGroup)) {
+        // They always walk in pair.
+        if (!empty($this->dataGroup) && !empty($this->idKey)) {
             $this->defaultAdapter->setDataGroup($this->dataGroup);
-        }
-
-        if (!empty($this->idKey)) {
             $this->defaultAdapter->setIdKey($this->idKey);
+
+            $this->initialized = true;
         }
 
         return $this;
+    }
+
+    /**
+     * Checks if the storage is initialized.
+     *
+     * @return bool
+     */
+    final public function initialized()
+    {
+        return $this->initialized;
     }
 
     /**
