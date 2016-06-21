@@ -17,6 +17,7 @@ use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\Application\ApplicationInterface;
 use WebHemi\Config\ConfigInterface;
+use InvalidArgumentException;
 
 /**
  * Class WebApplication.
@@ -30,16 +31,14 @@ class WebApplication implements ApplicationInterface
     private $container;
     /** @var ConfigInterface */
     private $config;
-    /** @var array */
-    private $server = [];
-    /** @var array */
-    private $get = [];
-    /** @var array */
-    private $post = [];
-    /** @var array */
-    private $cookie = [];
-    /** @var array */
-    private $files = [];
+    /** @var array  */
+    private $environmentData = [
+        'GET'    => [],
+        'POST'   => [],
+        'SERVER' => [],
+        'COOKIE' => [],
+        'FILES'  => [],
+    ];
 
     /**
      * ApplicationInterface constructor.
@@ -76,21 +75,22 @@ class WebApplication implements ApplicationInterface
     /**
      * Sets application environments according to the super globals.
      *
-     * @param array $get
-     * @param array $post
-     * @param array $server
-     * @param array $cookie
-     * @param array $files
+     * @param string $key
+     * @param array  $data
      *
-     * @return ApplicationInterface
+     * @throws InvalidArgumentException
+     *
+     * @return $this
      */
-    public function setEnvironmentFromGlobals(array $get, array $post, array $server, array $cookie, array $files)
+    public function setEnvironmentData($key, array $data)
     {
-        $this->get = $get;
-        $this->post = $post;
-        $this->server = $server;
-        $this->cookie = $cookie;
-        $this->files = $files;
+        if (!isset($this->environmentData[$key])) {
+            throw new InvalidArgumentException(sprintf('The key "%s" is not a valid superglobal name.', $key));
+        }
+
+        $this->environmentData[$key] = $data;
+
+        return $this;
     }
 
     /**
@@ -131,11 +131,11 @@ class WebApplication implements ApplicationInterface
     public function run()
     {
         $this->container
-            ->setServiceArgument(HttpAdapterInterface::class, $this->server)
-            ->setServiceArgument(HttpAdapterInterface::class, $this->get)
-            ->setServiceArgument(HttpAdapterInterface::class, $this->post)
-            ->setServiceArgument(HttpAdapterInterface::class, $this->cookie)
-            ->setServiceArgument(HttpAdapterInterface::class, $this->files);
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['SERVER'])
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['GET'])
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['POST'])
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['COOKIE'])
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['FILES']);
 
         /** @var HttpAdapterInterface $httpAdapter */
         $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
