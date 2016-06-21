@@ -56,6 +56,9 @@ return [
         UserEntity::class     => [],
         UserMetaEntity::class => [],
     ],
+    'middleware_pipeline' => [
+
+    ],
     'modules' => [
         'Admin' => [
             'application' => [
