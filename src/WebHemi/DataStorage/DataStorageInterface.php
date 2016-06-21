@@ -36,6 +36,13 @@ interface DataStorageInterface
     public function init();
 
     /**
+     * Checks if the storage is initialized.
+     *
+     * @return bool
+     */
+    public function initialized();
+
+    /**
      * Creates an empty entity.
      *
      * @return DataEntityInterface
