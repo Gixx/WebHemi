@@ -44,20 +44,4 @@ interface HttpAdapterInterface
      * @return ResponseInterface
      */
     public function getResponse();
-
-    /**
-     * Override the response being sent out.
-     *
-     * @param ResponseInterface $response
-     */
-    public function overrideResponse(ResponseInterface $response);
-
-    /**
-     * Create a stream for a response from a string.
-     *
-     * @param string $string
-     *
-     * @return StreamInterface
-     */
-    public function getStringStream($string);
 }
