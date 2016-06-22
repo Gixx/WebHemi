@@ -42,7 +42,7 @@ class EmptyStorage extends AbstractDataStorage
     /**
      * Sets id key fir the storage. Only for unit test.
      *
-     * @param dtring $idKey
+     * @param string $idKey
      *
      * @return $this
      */

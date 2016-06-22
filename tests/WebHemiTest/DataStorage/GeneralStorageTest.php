@@ -35,6 +35,7 @@ class GeneralStorageTest extends TestCase
 
         $dataEntity = new EmptyEntity();
 
+        /** @var DataAdapterInterface $defaultAdapterInstance */
         $defaultAdapterInstance = $defaultAdapter->reveal();
 
         $storage = new EmptyStorage($defaultAdapterInstance, $dataEntity);
