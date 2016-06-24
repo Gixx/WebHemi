@@ -20,8 +20,8 @@ use WebHemi\Adapter\Exception\InvalidArgumentException;
  */
 class InMemoryAdapter implements DataAdapterInterface
 {
-    const EXPRESSION_IN_ARRAY = 'in';
-    const EXPRESSION_WILDCARD = 'like';
+    const EXPRESSION_IN_ARRAY = 'IN';
+    const EXPRESSION_WILDCARD = 'LIKE';
 
     /** @var array */
     private $dataStorage;
@@ -181,39 +181,14 @@ class InMemoryAdapter implements DataAdapterInterface
 
         foreach ($expression as $pattern => $subject) {
             $dataKey = '';
+            $expressionType = $this->getExpressionType($pattern, $dataKey);
 
-            switch ($this->getExpressionType($pattern, $dataKey)) {
-                case self::EXPRESSION_WILDCARD:
-                    $subject = str_replace('%', '.*', $subject);
-                    $match = preg_match('/^' . $subject . '$/', $data[$dataKey]);
-                    break;
-
-                case self::EXPRESSION_IN_ARRAY:
-                    $match = in_array($data[$dataKey], (array)$subject);
-                    break;
-
-                case '<':
-                    $match = $data[$dataKey] < $subject;
-                    break;
-
-                case '<=':
-                    $match = $data[$dataKey] <= $subject;
-                    break;
-
-                case '>':
-                    $match = $data[$dataKey] > $subject;
-                    break;
-
-                case '>=':
-                    $match = $data[$dataKey] >= $subject;
-                    break;
-
-                case '<>':
-                    $match = $data[$dataKey] != $subject;
-                    break;
-
-                default:
-                    $match = $data[$dataKey] == $subject;
+            if ($expressionType == self::EXPRESSION_WILDCARD) {
+                $match = $this->checkWildcardMatch($data[$dataKey], $subject);
+            } elseif ($expressionType == self::EXPRESSION_IN_ARRAY) {
+                $match = $this->checkInArrayMatch($data[$dataKey], $subject);
+            } else {
+                $match = $this->checkRelation($expressionType, $data[$dataKey], $subject);
             }
 
             // First false means some expression is failing for the data row, so the whole expression set is failing.
@@ -223,6 +198,50 @@ class InMemoryAdapter implements DataAdapterInterface
         }
 
         return (bool)$match;
+    }
+
+    /**
+     * @param mixed $data
+     * @param mixed $subject
+     *
+     * @return bool
+     */
+    private function checkWildcardMatch($data, $subject)
+    {
+        $subject = str_replace('%', '.*', $subject);
+        return preg_match('/^' . $subject . '$/', $data);
+    }
+
+    /**
+     * @param mixed $data
+     * @param mixed $subject
+     *
+     * @return bool
+     */
+    private function checkInArrayMatch($data, $subject)
+    {
+        return in_array($data, (array)$subject);
+    }
+
+    /**
+     * @param string $relation
+     * @param mixed  $data
+     * @param mixed  $subject
+     *
+     * @return bool
+     */
+    private function checkRelation($relation, $data, $subject)
+    {
+        $expressionMap = [
+            '<'  => $data < $subject,
+            '<=' => $data <= $subject,
+            '>'  => $data > $subject,
+            '>=' => $data >= $subject,
+            '<>' => $data != $subject,
+            '='  => $data == $subject
+        ];
+
+        return $expressionMap[$relation];
     }
 
     /**
@@ -237,17 +256,21 @@ class InMemoryAdapter implements DataAdapterInterface
     {
         $type = '=';
         $subject = $pattern;
-        $matches = [];
 
-        if (preg_match('/^(?P<subject>[^\s]+)\s+(?P<relation>(\<\>|\<=|\>=|=|\<|\>))\s+\?$/', $pattern, $matches)) {
-            $type = $matches['relation'];
-            $subject = $matches['subject'];
-        } elseif (preg_match('/^(?P<subject>[^\s]+)\s+(?P<relation>LIKE)\s+\?$/', $pattern, $matches)) {
-            $type = self::EXPRESSION_WILDCARD;
-            $subject = $matches['subject'];
-        } elseif (preg_match('/^(?P<subject>[^\s]+)\s+(?P<relation>IN)\s?\(?\?\)?$/', $pattern, $matches)) {
-            $type = self::EXPRESSION_IN_ARRAY;
-            $subject = $matches['subject'];
+        $regularExpressions = [
+            '/^(?P<subject>[^\s]+)\s+(?P<relation>(\<\>|\<=|\>=|=|\<|\>))\s+\?$/',
+            '/^(?P<subject>[^\s]+)\s+(?P<relation>LIKE)\s+\?$/',
+            '/^(?P<subject>[^\s]+)\s+(?P<relation>IN)\s?\(?\?\)?$/'
+        ];
+
+        foreach ($regularExpressions as $regexPattern) {
+            $matches = [];
+
+            if (preg_match($regexPattern, $subject, $matches)) {
+                $type = $matches['relation'];
+                $subject = $matches['subject'];
+                break;
+            }
         }
 
         return $type;
