@@ -113,6 +113,8 @@ class PDOAdapter implements DataAdapterInterface
      * @param mixed $identifier
      *
      * @return array
+     *
+     * @codeCoverageIgnore Don't test external library.
      */
     public function getData($identifier)
     {
@@ -130,6 +132,8 @@ class PDOAdapter implements DataAdapterInterface
      * @param int   $offset
      *
      * @return array
+     *
+     * @codeCoverageIgnore Don't test external library.
      */
     public function getDataSet(array $expression, $limit = null, $offset = null)
     {
@@ -145,6 +149,8 @@ class PDOAdapter implements DataAdapterInterface
      * @param array $expression
      *
      * @return int
+     *
+     * @codeCoverageIgnore Don't test external library.
      */
     public function getDataCardinality(array $expression)
     {
@@ -162,6 +168,8 @@ class PDOAdapter implements DataAdapterInterface
      * @param int   $offset
      *
      * @return PDOStatement
+     *
+     * @codeCoverageIgnore Don't test external library.
      */
     private function getStatementForExpression(array $expression, $limit = null, $offset = null)
     {
@@ -205,6 +213,8 @@ class PDOAdapter implements DataAdapterInterface
      * @param array $data
      *
      * @return mixed The ID of the saved entity in the storage
+     *
+     * @codeCoverageIgnore Don't test external library.
      */
     public function saveData($identifier, array $data)
     {
@@ -241,6 +251,8 @@ class PDOAdapter implements DataAdapterInterface
      *
      * @param PDOStatement $statement
      * @param array        $queryBind
+     *
+     * @codeCoverageIgnore Don't test external library.
      */
     private function bindValuesToStatement(PDOStatement &$statement, array $queryBind)
     {
@@ -263,6 +275,8 @@ class PDOAdapter implements DataAdapterInterface
      * @param mixed $identifier
      *
      * @return bool
+     *
+     * @codeCoverageIgnore Don't test external library.
      */
     public function deleteData($identifier)
     {
