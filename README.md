@@ -1,7 +1,7 @@
 WebHemi
 =======
 
-[![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--0.5-blue.svg)]()
+[![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--1.0-blue.svg)]()
 [![Minimum PHP Version](https://img.shields.io/badge/PHP-%3E%3D5.6-blue.svg)](https://php.net/)
 [![Email](https://img.shields.io/badge/email-navig80@gmail.com-blue.svg?style=flat-square)](mailto:navig80@gmail.com)
 
@@ -14,9 +14,9 @@ WebHemi
 Introduction
 ------------
 
-After many years of [endless development of a big, robust, super-universal blog engine](https://github.com/Gixx/WebHemi-legacy-v2) 
-which was suppose to build on a well known framework, I decided to re-think my goals and the way I want to reach them. 
-With the very helpful guidance of the [owner](https://github.com/janoszen) of the [refaktormagazin/blog](https://github.com/refaktormagazin/blog) 
+After many years of [endless development of a big, robust, super-universal blog engine](https://github.com/Gixx/WebHemi-legacy-v2)
+which was suppose to build on a well known framework, I decided to re-think my goals and the way I want to reach them.
+With the very helpful guidance of the [owner](https://github.com/janoszen) of the [refaktormagazin/blog](https://github.com/refaktormagazin/blog)
 repository, now I try to create a small, fast and 'only as much as necessary', clean-code blog engine.
 
 **BE AWARE! THIS IS ONLY AN EXPERIMENTAL PROJECT WITH LIMITED TIME, RESOURCE AND SUPPORT CAPABILITIES.**
