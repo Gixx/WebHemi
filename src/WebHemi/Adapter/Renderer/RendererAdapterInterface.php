@@ -11,6 +11,8 @@
  */
 namespace WebHemi\Adapter\Renderer;
 
+use Psr\Http\Message\StreamInterface;
+
 /**
  * Interface RendererAdapterInterface.
  */
@@ -22,7 +24,7 @@ interface RendererAdapterInterface
      * @param string $template
      * @param array  $parameters
      *
-     * @return mixed
+     * @return StreamInterface
      */
     public function render($template, $parameters = []);
 }
