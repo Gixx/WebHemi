@@ -123,7 +123,8 @@ class WebApplication implements ApplicationInterface
         $this->container
             ->setServiceArgument(FinalMiddleware::class, $moduleConfig);
 
-        $pipelineConfig = $this->config->get('middleware_pipeline');
+        /** @var array $pipelineConfig */
+        $pipelineConfig = (array)$this->config->get('middleware_pipeline');
 
         foreach ($pipelineConfig as $middlewareData) {
             if (!isset($middlewareData['priority'])) {
