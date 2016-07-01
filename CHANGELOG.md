@@ -1,6 +1,15 @@
 Change log
 ==========
 
+Version 4.0.0-1.0
+-----------------
+* Plan, document and implement Middleware Pipeline system
+* Define and implement base middleware classes: Routing-, Dispatcher-, FinalMiddleware
+* Add InMemoryAdapter implementation
+* Connect repository to Scrutinizer CI and improve code quality
+* Add Unit tests, improve code coverage
+* Minor changes in code
+
 Version 4.0.0-0.5
 -----------------
 * According to a [DI benchmark](https://github.com/TomBZombie/php-dependency-injection-benchmarks) switched to SymfonyDI
