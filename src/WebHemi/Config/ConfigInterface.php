@@ -45,7 +45,7 @@ interface ConfigInterface
      *
      * @throws InvalidArgumentException
      *
-     * @return array|Config
+     * @return array|string|Config
      */
     public function get($path, $returnType = self::CONFIG_AS_ARRAY);
 

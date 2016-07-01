@@ -28,7 +28,8 @@ class FakeRouter implements RouterAdapterInterface
      */
     public function match(ServerRequestInterface $request)
     {
-        $routeResult = new Result($request);
+        $routeResult = new Result();
+        $routeResult->request = $request;
 
         return $routeResult;
     }

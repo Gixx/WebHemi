@@ -17,4 +17,5 @@ namespace WebHemi\Routing;
 class Result
 {
     // Todo implement
+    public $request; // TEST
 }

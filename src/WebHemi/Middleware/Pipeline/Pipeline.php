@@ -130,7 +130,7 @@ class Pipeline implements MiddlewarePipelineInterface
     {
         $interfaces = class_implements($middleWareClass);
 
-        if ($interfaces && !in_array(MiddlewareInterface::class, $interfaces)) {
+        if (!empty($interfaces) && !in_array(MiddlewareInterface::class, $interfaces)) {
             throw new InvalidArgumentException(
                 sprintf('The class "%s" does not implement MiddlewareInterface.', $middleWareClass)
             );

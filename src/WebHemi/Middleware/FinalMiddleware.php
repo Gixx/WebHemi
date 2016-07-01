@@ -57,7 +57,7 @@ class FinalMiddleware implements MiddlewareInterface
 
         // Handle errors here.
         if ($response->getStatusCode() !== 200) {
-            $errorTemplate = $this->templateConfig->get('template_map/error' . $response->getStatusCode());
+            $errorTemplate = (string)$this->templateConfig->get('template_map/error' . $response->getStatusCode());
             $error = $request->getAttribute('exception');
             $content = $this->templateRenderer->render($errorTemplate, ['exception' => $error]);
         }
