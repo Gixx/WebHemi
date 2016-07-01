@@ -10,6 +10,9 @@
  * @link      http://www.gixx-web.com
  */
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 return [
     'pdo' => [
         'dsn'      => 'mysql:dbname=webhemi;charset=utf8;hostname=127.0.0.1',

@@ -87,8 +87,10 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
             // By default the Symfony DI shares all services. In WebHemi by default nothing is shared.
             self::SERVICE_SHARE       => false,
         ];
-        // Override settings from the configuration.
-        $setUpData = array_merge($setUpData, $this->configuration[$identifier]);
+        // Override settings from the configuration if exists.
+        if (isset($this->configuration[$identifier])) {
+            $setUpData = array_merge($setUpData, $this->configuration[$identifier]);
+        }
 
         // Create the definition.
         $definition = new Definition($serviceClass);
@@ -164,7 +166,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     }
 
     /**
-     * Gets a service.
+     * Gets a service. It also tries to register the one without arguments which not yet registered.
      *
      * @param string $identifier
      *
@@ -172,6 +174,10 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      */
     public function get($identifier)
     {
+        if (!$this->container->has($identifier) && class_exists($identifier)) {
+            $this->registerService($identifier, $identifier);
+        }
+
         return $this->container->get($identifier);
     }
 
@@ -203,18 +209,20 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
             $service = $this->container->getDefinition($service);
         }
 
+        $parameterName = $parameter;
         $serviceClass = $service->getClass();
 
         if ($this->container->initialized($serviceClass)) {
             throw new InitException('Cannot add argument to an already initialized service.');
         }
 
-        // Create a normalized name for the argument.
-        if (!is_scalar($parameter)) {
-            $normalizedName = $this->getNormalizedName($serviceClass, self::$parameterIndex++);
-        } else {
-            $normalizedName = $this->getNormalizedName($serviceClass, $parameter);
+
+        if (!is_scalar($parameterName)) {
+            $parameterName = self::$parameterIndex++;
         }
+
+        // Create a normalized name for the argument.
+        $normalizedName = $this->getNormalizedName($serviceClass, $parameterName);
 
         // Check if the parameter is a service.
         $parameter = $this->getReferenceServiceIfAvailable($parameter);

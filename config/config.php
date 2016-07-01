@@ -11,12 +11,17 @@
  */
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Data\PDO\PDOAdapter;
+use WebHemi\Adapter\Renderer\RendererAdapterInterface;
+use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Adapter\Http\GuzzleHttp\GuzzleHttpAdapter;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataEntity\User\UserMetaEntity;
 use WebHemi\DataStorage\User\UserMetaStorage;
 use WebHemi\DataStorage\User\UserStorage;
+use WebHemi\Middleware\FinalMiddleware;
+use WebHemi\Middleware\DispatcherMiddleware;
+use WebHemi\Middleware\RoutingMiddleware;
 
 $localConfig = require __DIR__.'/local.php';
 
@@ -35,15 +40,37 @@ return [
         HttpAdapterInterface::class => [
             'class'     => GuzzleHttpAdapter::class,
             'arguments' => [
-                // This class requires arguments. The ApplicationInterface implementation must inject into it before
-                // instantiates it.
+                // This class requires arguments. The ApplicationInterface implementation must inject into it.
             ],
+            'shared'    => true,
+        ],
+        RouterAdapterInterface::class => [
+            'class'     => \WebHemi\Adapter\Router\FakeRouter::class, // TEST
+            'shared'    => true,
+        ],
+        RendererAdapterInterface::class => [
+            'class'     => \WebHemi\Adapter\Renderer\FakeRenderer::class, // TEST
             'shared'    => true,
         ],
         DataAdapterInterface::class => [
             'class'     => PDOAdapter::class,
             'arguments' => [PDO::class],
             'shared'    => true,
+        ],
+        RoutingMiddleware::class => [
+            'arguments' => [RouterAdapterInterface::class]
+        ],
+        DispatcherMiddleware::class => [
+            'arguments' => [
+                RendererAdapterInterface::class,
+                // This class requires additional argument. The ApplicationInterface implementation must inject into it.
+            ]
+        ],
+        FinalMiddleware::class => [
+            'arguments' => [
+                RendererAdapterInterface::class,
+                // This class requires additional argument. The ApplicationInterface implementation must inject into it.
+            ]
         ],
         UserStorage::class => [
             'arguments' => [DataAdapterInterface::class, UserEntity::class],
@@ -53,11 +80,12 @@ return [
             'arguments' => [DataAdapterInterface::class, UserMetaEntity::class],
             'shared'    => true,
         ],
+        // Classes without any aliases, arguments or sharing options are optional to present here.
         UserEntity::class     => [],
         UserMetaEntity::class => [],
     ],
     'middleware_pipeline' => [
-
+        ['class' => \WebHemi\Middleware\Action\FakeAction::class], // TEST
     ],
     'modules' => [
         'Admin' => [
@@ -82,7 +110,7 @@ return [
                 'theme' => 'default',
             ],
             'template_map' => [
-
+                'error500' => ''
             ],
             'routing' => [
                 'name'            => 'index',

@@ -11,13 +11,18 @@
  */
 namespace WebHemi\Application\Web;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\Application\ApplicationInterface;
 use WebHemi\Config\ConfigInterface;
-use InvalidArgumentException;
+use WebHemi\Middleware\DispatcherMiddleware;
+use WebHemi\Middleware\MiddlewareInvokerInterface;
+use WebHemi\Middleware\FinalMiddleware;
+use WebHemi\Middleware\MiddlewareInterface;
+use WebHemi\Middleware\Pipeline\MiddlewarePipelineInterface;
 
 /**
  * Class WebApplication.
@@ -31,6 +36,8 @@ class WebApplication implements ApplicationInterface
     private $container;
     /** @var ConfigInterface */
     private $config;
+    /** @var MiddlewarePipelineInterface */
+    private $pipeline;
     /** @var array  */
     private $environmentData = [
         'GET'    => [],
@@ -39,17 +46,24 @@ class WebApplication implements ApplicationInterface
         'COOKIE' => [],
         'FILES'  => [],
     ];
+    /** @var string */
+    private $selectedModule = self::MODULE_SITE;
 
     /**
      * ApplicationInterface constructor.
      *
      * @param DependencyInjectionAdapterInterface $container
      * @param ConfigInterface                     $config
+     * @param MiddlewarePipelineInterface         $pipeline
      */
-    public function __construct(DependencyInjectionAdapterInterface $container, ConfigInterface $config)
-    {
+    public function __construct(
+        DependencyInjectionAdapterInterface $container,
+        ConfigInterface $config,
+        MiddlewarePipelineInterface $pipeline
+    ) {
         $this->container = $container;
         $this->config = $config;
+        $this->pipeline = $pipeline;
     }
 
     /**
@@ -85,7 +99,7 @@ class WebApplication implements ApplicationInterface
     public function setEnvironmentData($key, array $data)
     {
         if (!isset($this->environmentData[$key])) {
-            throw new InvalidArgumentException(sprintf('The key "%s" is not a valid superglobal name.', $key));
+            throw new InvalidArgumentException(sprintf('The key "%s" is not a valid super global key.', $key));
         }
 
         $this->environmentData[$key] = $data;
@@ -94,41 +108,9 @@ class WebApplication implements ApplicationInterface
     }
 
     /**
-     * Runs the application. This is where the magic happens.
-     * According tho the environment settings this must build up the middleware pipeline and execute it.
-     *
-     * Pre-Routing Middleware can be; priority < 0:
-     *  - LockCheck - check if the client IP is banned > S102|S403
-     *  - Auth - if the user is not logged in, but there's a "Remember me" cookie, then logs in > S102
-     *
-     * Routing Middleware is fixed; priority = 0:
-     *  - A middleware that routes the incoming Request and delegates to the matched middleware. > S102|S404|S405
-     *    The RouteResult should be attached to the Request.
-     *    If the Routing is not defined explicitly in the pipeline, then it will be injected with priority 0.
-     *
-     * Post-Routing Middleware can be; priority between 0 and 100:
-     *  - Acl - checks if the given route is available for the client. Also checks the auth > S102|S401|S403
-     *  - CacheReader - checks if a suitable response body is cached. > S102|S200
-     *
-     * Dispatcher Middleware is fixed; priority = 100:
-     *  - A middleware which gets the corresponding Action middleware and applies it > S102|S500
-     *    If the Dispatcher is not defined explicitly in the pipeline, then it will be injected with priority 100.
-     *    The Dispatcher should not set the response Status Code to 200 to let Post-Dispatchers to be called.
-     *
-     * Post-Dispatch Middleware can be; priority > 100:
-     *  - CacheWriter - writes response body into DataStorage (DB, File etc.) > S102
-     *
-     * Final Middleware is fixed:
-     *  - This middleware behaves a bit differently. It cannot be ordered, it's always the last called middleware:
-     *    - when the middleware pipeline reached its end (typically when the Status Code is still 102)
-     *    - when one item of the middleware pipeline returns with return response (status code is set to 200|40*|500)
-     *    - when during the pipeline process an Exception is thrown.
-     *
-     * When the middleware pipeline is finished the application prints the header and the output.
-     *
-     * @return void
+     * Get ready to run the application: set final data for specific services.
      */
-    public function run()
+    private function prepare()
     {
         $this->container
             ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['SERVER'])
@@ -137,6 +119,62 @@ class WebApplication implements ApplicationInterface
             ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['COOKIE'])
             ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['FILES']);
 
+        $moduleConfig = $this->config->get('modules/' . $this->selectedModule, ConfigInterface::CONFIG_AS_OBJECT);
+        $this->container
+            ->setServiceArgument(FinalMiddleware::class, $moduleConfig);
+
+        $pipelineConfig = $this->config->get('middleware_pipeline');
+
+        foreach ($pipelineConfig as $middlewareData) {
+            if (!isset($middlewareData['priority'])) {
+                $middlewareData['priority'] = 50;
+            }
+            $this->pipeline->queueMiddleware($middlewareData['class'], $middlewareData['priority']);
+        }
+    }
+
+    /**
+     * Runs the application. This is where the magic happens.
+     * According tho the environment settings this must build up the middleware pipeline and execute it.
+     *
+     * a Pre-Routing Middleware can be; priority < 0:
+     *  - LockCheck - check if the client IP is banned > S102|S403
+     *  - Auth - if the user is not logged in, but there's a "Remember me" cookie, then logs in > S102
+     *
+     * Routing Middleware is fixed (RoutingMiddleware::class); priority = 0:
+     *  - A middleware that routes the incoming Request and delegates to the matched middleware. > S102|S404|S405
+     *    The RouteResult should be attached to the Request.
+     *    If the Routing is not defined explicitly in the pipeline, then it will be injected with priority 0.
+     *
+     * a Post-Routing Middleware can be; priority between 0 and 100:
+     *  - Acl - checks if the given route is available for the client. Also checks the auth > S102|S401|S403
+     *  - CacheReader - checks if a suitable response body is cached. > S102|S200
+     *
+     * Dispatcher Middleware is fixed (DispatcherMiddleware::class); priority = 100:
+     *  - A middleware which gets the corresponding Action middleware and applies it > S102
+     *    If the Dispatcher is not defined explicitly in the pipeline, then it will be injected with priority 100.
+     *    The Dispatcher should not set the response Status Code to 200 to let Post-Dispatchers to be called.
+     *
+     * a Post-Dispatch Middleware can be; priority > 100:
+     *  - CacheWriter - writes response body into DataStorage (DB, File etc.) > S102
+     *
+     * Final Middleware is fixed (FinalMiddleware:class):
+     *  - This middleware behaves a bit differently. It cannot be ordered, it's always the last called middleware:
+     *    - when the middleware pipeline reached its end (typically when the Status Code is still 102)
+     *    - when one item of the middleware pipeline returns with return response (status code is set to 200|40*|500)
+     *    - when during the pipeline process an Exception is thrown.
+     *
+     * When the middleware pipeline is finished the application prints the header and the output.
+     *
+     * If a middleware other than the Routing, Dispatcher and Final Middleware has no priority set, it will be
+     * considered to have priority = 50.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $this->prepare();
+
         /** @var HttpAdapterInterface $httpAdapter */
         $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
         /** @var ServerRequestInterface $request */
@@ -144,32 +182,45 @@ class WebApplication implements ApplicationInterface
         /** @var ResponseInterface $response */
         $response = $httpAdapter->getResponse();
 
-        /*  -- Pseudo code for the implementation
+        $middlewareClass = $this->pipeline->start();
 
-            var request
-            var response
-            var pipeline
-            var finalMiddleware
+        while ($middlewareClass !== null) {
+            try {
+                /** @var MiddlewareInterface $middleware */
+                $middleware = $this->container->get($middlewareClass);
 
-            FOR var middleware IN pipeline
-                response = CALL middleware WITH request, response
+                $requestAttributes = $request->getAttributes();
+                // As an extra step if the action middleware is resolved, it is invoked right before the dispatcher.
+                if ($middleware instanceof DispatcherMiddleware
+                    && isset($requestAttributes['resolvedActionMiddleware'])
+                ) {
+                    /** @var MiddlewareInterface $actionMiddleware */
+                    $actionMiddleware = $this->container->get($requestAttributes['resolvedActionMiddleware']);
+                    $response = $actionMiddleware($request, $response);
+                }
 
-                IF response.header.statusCode IS NOT 102 THEN
-                    BREAK
-                END IF
-            END FOR
+                $response = $middleware($request, $response);
+            } catch (\Exception $exception) {
+                $response = $response->withStatus(500);
+                $request = $request->withAttribute('exception', $exception);
+            }
 
-            response = CALL finalMiddleware WITH request, response
+            if ($response->getStatusCode() != 102) {
+                break;
+            }
 
-            SEND response.header
-            PRINT response.body
+            $middlewareClass = $this->pipeline->next();
+        };
 
-            EXIT
+        // If there was no error, we mark as ready for output.
+        if ($response->getStatusCode() == 102) {
+            $response = $response->withStatus(200);
+        }
 
-         */
+        /** @var FinalMiddleware $finalMiddleware */
+        $finalMiddleware = $this->container->get(FinalMiddleware::class);
 
-        echo '<h1>Hello world!</h1>';
-        echo $request->getMethod();
-        echo $response->getBody();
+        // Send out headers and content.
+        $finalMiddleware($request, $response);
     }
 }

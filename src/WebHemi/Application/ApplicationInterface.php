@@ -11,9 +11,10 @@
  */
 namespace WebHemi\Application;
 
+use InvalidArgumentException;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Config\ConfigInterface;
-use InvalidArgumentException;
+use WebHemi\Middleware\Pipeline\MiddlewarePipelineInterface;
 
 /**
  * Interface ApplicationInterface.
@@ -25,8 +26,13 @@ interface ApplicationInterface
      *
      * @param DependencyInjectionAdapterInterface $container
      * @param ConfigInterface                     $config
+     * @param MiddlewarePipelineInterface         $pipeline
      */
-    public function __construct(DependencyInjectionAdapterInterface $container, ConfigInterface $config);
+    public function __construct(
+        DependencyInjectionAdapterInterface $container,
+        ConfigInterface $config,
+        MiddlewarePipelineInterface $pipeline
+    );
 
     /**
      * Returns the DI Adapter instance.
