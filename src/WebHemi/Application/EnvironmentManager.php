@@ -281,7 +281,7 @@ class EnvironmentManager
                 )
             ) {
                 $this->selectedModule = $applicationData['module'];
-                $this->selectedApplication = $applicationName;
+                $this->selectedApplication = (string)$applicationName;
                 $this->selectedTheme = $applicationData['theme'];
 
                 // It's not the environment ma
