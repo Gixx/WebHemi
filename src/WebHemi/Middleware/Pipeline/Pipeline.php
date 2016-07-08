@@ -80,6 +80,15 @@ class Pipeline implements MiddlewarePipelineInterface
         }
     }
 
+    /**
+     * Checks the given class against Middleware Criterias.
+     *
+     * @param $middleWareClass
+     *
+     * @throws RuntimeException
+     *
+     * @return bool
+     */
     private function checkMiddleware($middleWareClass)
     {
         if (isset($this->index)) {
@@ -121,8 +130,6 @@ class Pipeline implements MiddlewarePipelineInterface
             // Don't throw error if the user defines the default middleware classes.
             return $this;
         }
-
-
 
         if ($priority === 0 || $priority == 100) {
             $priority++;
