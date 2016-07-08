@@ -99,9 +99,9 @@ class EnvironmentManager
         $this->selectedThemeResourcePath = self::DEFAULT_THEME_RESOURCE_PATH;
         $this->selectedApplicationUri = self::DEFAULT_APPLICATION_URI;
 
-        $this->secureSession();
-        $this->setDomain();
-        $this->selectModuleApplicationAndTheme();
+        $this->secureSession()
+            ->setDomain()
+            ->selectModuleApplicationAndTheme();
     }
 
     /**
@@ -195,6 +195,8 @@ class EnvironmentManager
      * Overwrite PHP settings to be more secure
      *
      * @codeCoverageIgnore
+     *
+     * @return $this
      */
     private function secureSession()
     {
@@ -210,10 +212,14 @@ class EnvironmentManager
         session_name(self::COOKIE_SESSION_PREFIX.'-'.bin2hex(self::SESSION_SALT));
         // set session lifetime to 1 hour
         session_set_cookie_params(3600);
+
+        return $this;
     }
 
     /**
      * Parses server data and tries to set domain information.
+     *
+     * @return $this
      */
     private function setDomain()
     {
@@ -242,12 +248,14 @@ class EnvironmentManager
         $this->subDomain = $subDomain;
         $this->mainDomain = $domain;
         $this->applicationDomain = $this->subDomain.'.'. $this->mainDomain;
+
+        return $this;
     }
 
     /**
      * From the parsed domain data, selects the application, module and theme.
      *
-     * It's the user's and the application's responsi
+     * @return $this
      */
     private function selectModuleApplicationAndTheme()
     {
@@ -268,30 +276,55 @@ class EnvironmentManager
             // Don't risk, fix.
             $applicationData = array_merge($applicationDataFixture, $applicationData);
 
-            if ((
-                    $this->subDomain == 'www' &&
-                    $applicationData['type'] == self::APPLICATION_TYPE_DIRECTORY &&
-                    $applicationData['path'] == $subDirectory &&
-                    !empty($subDirectory)
-                ) ||
-                (
-                    $this->subDomain != 'www' &&
-                    $applicationData['type'] == self::APPLICATION_TYPE_DOMAIN &&
-                    $applicationData['path'] == $this->subDomain
-                )
+            if ($this->checkDirectoryIsValid($applicationData['type'], $applicationData['path'], $subDirectory)
+                || $this->checkDomainIsValid($applicationData['type'], $applicationData['path'])
             ) {
                 $this->selectedModule = $applicationData['module'];
                 $this->selectedApplication = (string)$applicationName;
                 $this->selectedTheme = $applicationData['theme'];
 
-                // It's not the environment ma
-                if ($this->selectedTheme !== self::DEFAULT_THEME) {
-                    $this->selectedThemeResourcePath = '/resources/vendor_themes/'.$this->selectedTheme;
-                }
-
                 $this->selectedApplicationUri = '/'.$subDirectory;
                 break;
             }
         }
+
+        // It's not the environment ma
+        if ($this->selectedTheme !== self::DEFAULT_THEME) {
+            $this->selectedThemeResourcePath = '/resources/vendor_themes/'.$this->selectedTheme;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Checks from type, path it the current URI segment is valid.
+     *
+     * @param string $type
+     * @param string $path
+     * @param string $subDirectory
+     *
+     * @return bool
+     */
+    private function checkDirectoryIsValid($type, $path, $subDirectory)
+    {
+        return $this->subDomain == 'www'
+            && !empty($subDirectory)
+            && $type == self::APPLICATION_TYPE_DIRECTORY
+            && $path == $subDirectory;
+    }
+
+    /**
+     * Checks from type and path if the domain is valid.
+     *
+     * @param string $type
+     * @param string $path
+     *
+     * @return bool
+     */
+    private function checkDomainIsValid($type, $path)
+    {
+        return $this->subDomain != 'www'
+            && $type == self::APPLICATION_TYPE_DOMAIN
+            && $path == $this->subDomain;
     }
 }
