@@ -1,14 +1,5 @@
 <?php
-/**
- * WebHemi.
- *
- * PHP version 5.6
- *
- * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
- * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
- *
- * @link      http://www.gixx-web.com
- */
+
 namespace WebHemi\Middleware\Action;
 
 use Psr\Http\Message\ResponseInterface;
@@ -19,8 +10,33 @@ class FakeAction implements MiddlewareInterface
 {
     public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
     {
-        $request = $request->withAttribute('template', 'no')
-            ->withAttribute('data', ['<h2>This is the test action, buddy!</h2>']);
+        $template = 'blog-list';
+        $data = [
+            'blogPosts' => [
+                [
+                    'title'       => 'Fake test 1',
+                    'slug'        => 'fake_1',
+                    'publishedAt' => time(),
+                    'author'      => [
+                        'name' => 'John Doe'
+                    ],
+                    'content'     => 'Lorem ipsum dolor sit amet...'
+                ],
+                [
+                    'title'       => 'Fake test 2',
+                    'slug'        => 'fake_2',
+                    'publishedAt' => time(),
+                    'author'      => [
+                        'name' => 'Jane Doe'
+                    ],
+                    'content'     => 'Lorem ipsum dolor sit amet...'
+                ]
+            ]
+        ];
+
+        $request = $request
+            ->withAttribute('template', $template)
+            ->withAttribute('data', $data);
 
         return $response;
     }

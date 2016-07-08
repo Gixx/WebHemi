@@ -18,9 +18,6 @@ use InvalidArgumentException;
  */
 interface ConfigInterface
 {
-    const CONFIG_AS_OBJECT = 1;
-    const CONFIG_AS_ARRAY = 2;
-
     /**
      * ConfigInterface constructor.
      *
@@ -38,16 +35,27 @@ interface ConfigInterface
     public function has($path);
 
     /**
-     * Returns the configuration for a specific key.
+     * Returns the configuration data for a specific key.
      *
      * @param string $path
-     * @param int    $returnType
      *
      * @throws InvalidArgumentException
      *
-     * @return array|string|Config
+     * @return mixed
      */
-    public function get($path, $returnType = self::CONFIG_AS_ARRAY);
+    public function getData($path);
+
+    /**
+     * Returns the configuration instance for a specific key. Also add the possibility to merge additional information
+     * into it.
+     *
+     * @param string $path
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return mixed
+     */
+    public function getConfig($path);
 
     /**
      * Returns the stored raw config array.

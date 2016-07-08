@@ -1,6 +1,15 @@
 Change log
 ==========
 
+Version 4.0.0-1.1
+-----------------
+* Add RouterAdapter implemtation
+* Add RendererAdapterInterface implementation
+* Add Environment management
+* Clean up configuration
+* Add theme custom support
+* Add application support for both sub-domain and sub-directory types
+
 Version 4.0.0-1.0
 -----------------
 * Plan, document and implement Middleware Pipeline system

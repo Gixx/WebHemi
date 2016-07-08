@@ -11,9 +11,7 @@
  */
 namespace WebHemi\Application;
 
-use InvalidArgumentException;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
-use WebHemi\Config\ConfigInterface;
 use WebHemi\Middleware\Pipeline\MiddlewarePipelineInterface;
 
 /**
@@ -25,12 +23,12 @@ interface ApplicationInterface
      * ApplicationInterface constructor.
      *
      * @param DependencyInjectionAdapterInterface $container
-     * @param ConfigInterface                     $config
+     * @param EnvironmentManager                  $environmentManager
      * @param MiddlewarePipelineInterface         $pipeline
      */
     public function __construct(
         DependencyInjectionAdapterInterface $container,
-        ConfigInterface $config,
+        EnvironmentManager $environmentManager,
         MiddlewarePipelineInterface $pipeline
     );
 
@@ -40,25 +38,6 @@ interface ApplicationInterface
      * @return DependencyInjectionAdapterInterface
      */
     public function getContainer();
-
-    /**
-     * Returns the Configuration.
-     *
-     * @return ConfigInterface
-     */
-    public function getConfig();
-
-    /**
-     * Sets application environments according to the super globals.
-     *
-     * @param string $key
-     * @param array  $data
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return ApplicationInterface
-     */
-    public function setEnvironmentData($key, array $data);
 
     /**
      * Runs the application. This is where the magic happens.

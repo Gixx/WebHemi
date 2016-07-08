@@ -22,13 +22,13 @@ interface HttpAdapterInterface
     /**
      * AdapterInterface constructor.
      *
-     * @param array $server
      * @param array $get
      * @param array $post
+     * @param array $server
      * @param array $cookie
      * @param array $files
      */
-    public function __construct(array $server, array $get, array $post, array $cookie, array $files);
+    public function __construct(array $get, array $post, array $server, array $cookie, array $files);
 
     /**
      * Returns the HTTP request.

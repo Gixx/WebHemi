@@ -30,11 +30,11 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     private $response;
 
     /** @var array */
-    private $server;
-    /** @var array */
     private $get;
     /** @var array */
     private $post;
+    /** @var array */
+    private $server;
     /** @var array */
     private $cookie;
     /** @var array */
@@ -43,17 +43,17 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     /**
      * GuzzleHTTPAdapter constructor.
      *
-     * @param array $server
      * @param array $get
      * @param array $post
+     * @param array $server
      * @param array $cookie
      * @param array $files
      */
-    public function __construct(array $server, array $get, array $post, array $cookie, array $files)
+    public function __construct(array $get, array $post, array $server, array $cookie, array $files)
     {
-        $this->server = $server;
         $this->get = $get;
         $this->post = $post;
+        $this->server = $server;
         $this->cookie = $cookie;
         $this->files = $files;
 

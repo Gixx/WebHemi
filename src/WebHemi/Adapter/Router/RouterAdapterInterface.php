@@ -12,6 +12,7 @@
 namespace WebHemi\Adapter\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
+use WebHemi\Config\ConfigInterface;
 use WebHemi\Routing\Result;
 
 /**
@@ -19,6 +20,15 @@ use WebHemi\Routing\Result;
  */
 interface RouterAdapterInterface
 {
+    /**
+     * FastRouteAdapter constructor.
+     *
+     * @param Result          $routeResult
+     * @param ConfigInterface $routeConfig
+     * @param string          $applicationPath
+     */
+    public function __construct(Result $routeResult, ConfigInterface $routeConfig, $applicationPath = '/');
+
     /**
      * Processes the Request and give a Result.
      *

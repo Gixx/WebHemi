@@ -11,15 +11,15 @@
  */
 namespace WebHemi\Application\Web;
 
-use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
+use WebHemi\Adapter\Renderer\RendererAdapterInterface;
+use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Application\ApplicationInterface;
-use WebHemi\Config\ConfigInterface;
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Middleware\DispatcherMiddleware;
-use WebHemi\Middleware\MiddlewareInvokerInterface;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\MiddlewareInterface;
 use WebHemi\Middleware\Pipeline\MiddlewarePipelineInterface;
@@ -29,40 +29,28 @@ use WebHemi\Middleware\Pipeline\MiddlewarePipelineInterface;
  */
 class WebApplication implements ApplicationInterface
 {
-    const MODULE_ADMIN = 'Admin';
-    const MODULE_SITE = 'Website';
-
     /** @var DependencyInjectionAdapterInterface */
     private $container;
-    /** @var ConfigInterface */
-    private $config;
+    /** @var EnvironmentManager */
+    private $environmentManager;
     /** @var MiddlewarePipelineInterface */
     private $pipeline;
-    /** @var array  */
-    private $environmentData = [
-        'GET'    => [],
-        'POST'   => [],
-        'SERVER' => [],
-        'COOKIE' => [],
-        'FILES'  => [],
-    ];
-    /** @var string */
-    private $selectedModule = self::MODULE_SITE;
+
 
     /**
      * ApplicationInterface constructor.
      *
      * @param DependencyInjectionAdapterInterface $container
-     * @param ConfigInterface                     $config
+     * @param EnvironmentManager                  $environmentManager
      * @param MiddlewarePipelineInterface         $pipeline
      */
     public function __construct(
         DependencyInjectionAdapterInterface $container,
-        ConfigInterface $config,
+        EnvironmentManager $environmentManager,
         MiddlewarePipelineInterface $pipeline
     ) {
         $this->container = $container;
-        $this->config = $config;
+        $this->environmentManager = $environmentManager;
         $this->pipeline = $pipeline;
     }
 
@@ -77,61 +65,36 @@ class WebApplication implements ApplicationInterface
     }
 
     /**
-     * Returns the Configuration.
-     *
-     * @return ConfigInterface
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * Sets application environments according to the super globals.
-     *
-     * @param string $key
-     * @param array  $data
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return $this
-     */
-    public function setEnvironmentData($key, array $data)
-    {
-        if (!isset($this->environmentData[$key])) {
-            throw new InvalidArgumentException(sprintf('The key "%s" is not a valid super global key.', $key));
-        }
-
-        $this->environmentData[$key] = $data;
-
-        return $this;
-    }
-
-    /**
      * Get ready to run the application: set final data for specific services.
      */
     private function prepare()
     {
         $this->container
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['SERVER'])
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['GET'])
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['POST'])
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['COOKIE'])
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentData['FILES']);
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('GET'))
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('POST'))
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('SERVER'))
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('COOKIE'))
+            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('FILES'));
 
-        $moduleConfig = $this->config->get('modules/' . $this->selectedModule, ConfigInterface::CONFIG_AS_OBJECT);
         $this->container
-            ->setServiceArgument(FinalMiddleware::class, $moduleConfig);
+            ->setServiceArgument(
+                RendererAdapterInterface::class,
+                $this->environmentManager->getApplicationTemplateSettings()
+            )
+            ->setServiceArgument(
+                RendererAdapterInterface::class,
+                $this->environmentManager->getResourcePath()
+            );
 
-        /** @var array $pipelineConfig */
-        $pipelineConfig = (array)$this->config->get('middleware_pipeline');
-
-        foreach ($pipelineConfig as $middlewareData) {
-            if (!isset($middlewareData['priority'])) {
-                $middlewareData['priority'] = 50;
-            }
-            $this->pipeline->queueMiddleware($middlewareData['class'], $middlewareData['priority']);
-        }
+        $this->container
+            ->setServiceArgument(
+                RouterAdapterInterface::class,
+                $this->environmentManager->getModuleRouteSettings()
+            )
+            ->setServiceArgument(
+                RouterAdapterInterface::class,
+                $this->environmentManager->getSelectedApplicationUri()
+            );
     }
 
     /**
