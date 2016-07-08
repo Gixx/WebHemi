@@ -13,6 +13,7 @@ namespace WebHemi\Middleware\Pipeline;
 
 use InvalidArgumentException;
 use RuntimeException;
+use WebHemi\Config\ConfigInterface;
 use WebHemi\Middleware\MiddlewareInterface;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\FinalMiddleware;
@@ -23,6 +24,8 @@ use WebHemi\Middleware\RoutingMiddleware;
  */
 class Pipeline implements MiddlewarePipelineInterface
 {
+    /** @var ConfigInterface */
+    private $config;
     /** @var array */
     private $priorityList;
     /** @var array */
@@ -34,9 +37,13 @@ class Pipeline implements MiddlewarePipelineInterface
 
     /**
      * Pipeline constructor.
+     *
+     * @param ConfigInterface $pipelineConfig
      */
-    public function __construct()
+    public function __construct(ConfigInterface $pipelineConfig)
     {
+        $this->config = $pipelineConfig;
+
         $this->keyMiddlewareList = [
             RoutingMiddleware::class,
             DispatcherMiddleware::class,
@@ -53,6 +60,47 @@ class Pipeline implements MiddlewarePipelineInterface
             RoutingMiddleware::class,
             DispatcherMiddleware::class,
         ];
+
+        $this->buildPipeline();
+    }
+
+    /**
+     * Add middleware definitions to the pipeline.
+     */
+    private function buildPipeline()
+    {
+        $pipelineConfig = $this->config->toArray();
+
+        foreach ($pipelineConfig as $middlewareData) {
+            if (!isset($middlewareData['priority'])) {
+                $middlewareData['priority'] = 50;
+            }
+
+            $this->queueMiddleware($middlewareData['class'], $middlewareData['priority']);
+        }
+    }
+
+    private function checkMiddleware($middleWareClass)
+    {
+        if (isset($this->index)) {
+            throw new RuntimeException('You are forbidden to add new middleware after start.');
+        }
+
+        if (in_array($middleWareClass, $this->pipelineList)) {
+            throw new RuntimeException(
+                sprintf('The class "%s" is already added to the pipeline.', $middleWareClass)
+            );
+        }
+
+        $interfaces = class_implements($middleWareClass);
+
+        if (empty($interfaces) || !in_array(MiddlewareInterface::class, $interfaces)) {
+            throw new RuntimeException(
+                sprintf('The class "%s" does not implement MiddlewareInterface.', $middleWareClass)
+            );
+        }
+
+        return true;
     }
 
     /**
@@ -67,14 +115,14 @@ class Pipeline implements MiddlewarePipelineInterface
      */
     public function queueMiddleware($middleWareClass, $priority = 50)
     {
+        $this->checkMiddleware($middleWareClass);
+
         if (in_array($middleWareClass, $this->keyMiddlewareList)) {
             // Don't throw error if the user defines the default middleware classes.
             return $this;
         }
 
-        $this->checkPipelineIsStarted();
-        $this->checkDuplicates($middleWareClass);
-        $this->checkClassType($middleWareClass);
+
 
         if ($priority === 0 || $priority == 100) {
             $priority++;
@@ -89,52 +137,6 @@ class Pipeline implements MiddlewarePipelineInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Checks if the pipline is already being processed.
-     *
-     * @throws RuntimeException
-     */
-    private function checkPipelineIsStarted()
-    {
-        if (isset($this->index)) {
-            throw new RuntimeException('You are forbidden to add new middleware after start.');
-        }
-    }
-
-    /**
-     * Checks if the given middleware is already added to the list.
-     *
-     * @param string $middleWareClass
-     *
-     * @throws RuntimeException
-     */
-    private function checkDuplicates($middleWareClass)
-    {
-        if (in_array($middleWareClass, $this->pipelineList)) {
-            throw new InvalidArgumentException(
-                sprintf('The class "%s" is already added to the pipeline.', $middleWareClass)
-            );
-        }
-    }
-
-    /**
-     * Checks if the given class is a middleware.
-     *
-     * @param string $middleWareClass
-     *
-     * @throws RuntimeException
-     */
-    private function checkClassType($middleWareClass)
-    {
-        $interfaces = class_implements($middleWareClass);
-
-        if (!empty($interfaces) && !in_array(MiddlewareInterface::class, $interfaces)) {
-            throw new InvalidArgumentException(
-                sprintf('The class "%s" does not implement MiddlewareInterface.', $middleWareClass)
-            );
-        }
     }
 
     /**

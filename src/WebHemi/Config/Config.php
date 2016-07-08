@@ -68,28 +68,40 @@ class Config implements ConfigInterface
     }
 
     /**
-     * Retrieves configuration for a specific key.
+     * Retrieves configuration data for a specific key.
      *
      * @param string $path
-     * @param int    $returnType
      *
      * @throws InvalidArgumentException
      *
-     * @return array|Config
+     * @return mixed
      */
-    public function get($path, $returnType = self::CONFIG_AS_ARRAY)
+    public function getData($path)
     {
         if (!$this->has($path)) {
             throw new InvalidArgumentException(sprintf('Configuration for path "%s" not found', $path));
         }
 
-        $config = $this->pathMap[$path];
+        return $this->pathMap[$path];
+    }
 
-        if (self::CONFIG_AS_OBJECT == $returnType) {
-            $config = new self($config);
+    /**
+     * Returns the configuration instance for a specific key. Also add the possibility to merge additional information
+     * into it.
+     *
+     * @param string $path
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return mixed
+     */
+    public function getConfig($path)
+    {
+        if (!$this->has($path)) {
+            throw new InvalidArgumentException(sprintf('Configuration for path "%s" not found', $path));
         }
 
-        return $config;
+        return new self($this->getData($path));
     }
 
     /**

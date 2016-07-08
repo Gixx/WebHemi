@@ -11,11 +11,20 @@
  */
 namespace WebHemi\Middleware\Pipeline;
 
+use WebHemi\Config\ConfigInterface;
+
 /**
  * Interface MiddlewarePipelineInterface.
  */
 interface MiddlewarePipelineInterface
 {
+    /**
+     * Pipeline constructor.
+     *
+     * @param ConfigInterface $pipelineConfig
+     */
+    public function __construct(ConfigInterface $pipelineConfig);
+
     /**
      * Adds a new middleware to the pipeline queue.
      *

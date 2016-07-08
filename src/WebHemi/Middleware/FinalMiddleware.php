@@ -14,7 +14,6 @@ namespace WebHemi\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
-use WebHemi\Config\ConfigInterface;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 
 /**
@@ -24,19 +23,15 @@ class FinalMiddleware implements MiddlewareInterface
 {
     /** @var RendererAdapterInterface */
     private $templateRenderer;
-    /** @var ConfigInterface */
-    private $templateConfig;
 
     /**
      * FinalMiddleware constructor.
      *
      * @param RendererAdapterInterface $templateRenderer
-     * @param ConfigInterface          $templateConfig
      */
-    public function __construct(RendererAdapterInterface $templateRenderer, ConfigInterface $templateConfig)
+    public function __construct(RendererAdapterInterface $templateRenderer)
     {
         $this->templateRenderer = $templateRenderer;
-        $this->templateConfig = $templateConfig;
     }
 
     /**
@@ -57,7 +52,7 @@ class FinalMiddleware implements MiddlewareInterface
 
         // Handle errors here.
         if ($response->getStatusCode() !== 200) {
-            $errorTemplate = (string)$this->templateConfig->get('template_map/error' . $response->getStatusCode());
+            $errorTemplate = 'error-' . $response->getStatusCode();
             $error = $request->getAttribute('exception');
             $content = $this->templateRenderer->render($errorTemplate, ['exception' => $error]);
         }
@@ -76,11 +71,7 @@ class FinalMiddleware implements MiddlewareInterface
             $name  = $this->filterHeaderName($headerName);
             $first = true;
             foreach ($values as $value) {
-                header(sprintf(
-                    '%s: %s',
-                    $name,
-                    $value
-                ), $first);
+                header(sprintf('%s: %s', $name, $value), $first);
                 $first = false;
             }
         }

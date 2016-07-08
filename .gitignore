@@ -1,5 +1,6 @@
 /composer.lock
-/config/local.php
+/config/local.*
+!/config/*.template
 /vendor/*
 !/vendor/.gitkeep
 /build/logs/*

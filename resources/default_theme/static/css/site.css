@@ -7,3 +7,15 @@
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  * @link      http://www.gixx-web.com
  */
+body {
+    background-color: #f7ecb5;
+}
+
+a {
+    color: #1b6d85;
+}
+
+a:visited {
+    color: #1b6d85;
+    text-decoration: none;
+}

@@ -10,6 +10,7 @@
  * @link      http://www.gixx-web.com
  */
 use WebHemi\Adapter\DependencyInjection\Symfony\SymfonyAdapter as DependencyInjectionAdapter;
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Application\Web\WebApplication as Application;
 use WebHemi\Config\Config;
 use WebHemi\Middleware\Pipeline\Pipeline;
@@ -17,13 +18,9 @@ use WebHemi\Middleware\Pipeline\Pipeline;
 require_once __DIR__.'/vendor/autoload.php';
 
 $config = new Config(require __DIR__.'/config/config.php');
-$diAdapter = new DependencyInjectionAdapter($config->get('dependencies', Config::CONFIG_AS_OBJECT));
-$pipeline = new Pipeline();
+$diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+$environmentManager = new EnvironmentManager($config, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
+$pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
 
-$app = new Application($diAdapter, $config, $pipeline);
-$app->setEnvironmentData('GET', $_GET)
-    ->setEnvironmentData('POST', $_POST)
-    ->setEnvironmentData('SERVER', $_SERVER)
-    ->setEnvironmentData('COOKIE', $_COOKIE)
-    ->setEnvironmentData('FILES', $_FILES)
-    ->run();
+$app = new Application($diAdapter, $environmentManager, $pipeline);
+$app->run();
