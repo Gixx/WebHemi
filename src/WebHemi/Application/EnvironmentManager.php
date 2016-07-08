@@ -89,9 +89,9 @@ class EnvironmentManager
 
         $isHttps = isset($this->environmentData['SERVER']['HTTPS']) && $this->environmentData['SERVER']['HTTPS'];
         $this->url = 'http'.($isHttps ? 's' : '').'://'
-            . $this->environmentData['SERVER']['HTTP_HOST']
-            . $this->environmentData['SERVER']['REQUEST_URI']
-            . $this->environmentData['SERVER']['QUERY_STRING'];
+            .$this->environmentData['SERVER']['HTTP_HOST']
+            .$this->environmentData['SERVER']['REQUEST_URI']
+            .$this->environmentData['SERVER']['QUERY_STRING'];
 
         $this->selectedModule = self::DEFAULT_MODULE;
         $this->selectedApplication = self::DEFAULT_APPLICATION;
@@ -207,7 +207,7 @@ class EnvironmentManager
         ini_set('session.cookie_httponly', '1');
 
         // hide session name
-        session_name(self::COOKIE_SESSION_PREFIX . '-' . bin2hex(self::SESSION_SALT));
+        session_name(self::COOKIE_SESSION_PREFIX.'-'.bin2hex(self::SESSION_SALT));
         // set session lifetime to 1 hour
         session_set_cookie_params(3600);
     }

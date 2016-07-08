@@ -52,7 +52,7 @@ class FinalMiddleware implements MiddlewareInterface
 
         // Handle errors here.
         if ($response->getStatusCode() !== 200) {
-            $errorTemplate = 'error-' . $response->getStatusCode();
+            $errorTemplate = 'error-'.$response->getStatusCode();
             $error = $request->getAttribute('exception');
             $content = $this->templateRenderer->render($errorTemplate, ['exception' => $error]);
         }
@@ -64,7 +64,7 @@ class FinalMiddleware implements MiddlewareInterface
             'HTTP/%s %d%s',
             $response->getProtocolVersion(),
             $response->getStatusCode(),
-            ($reasonPhrase ? ' ' . $reasonPhrase : '')
+            ($reasonPhrase ? ' '.$reasonPhrase : '')
         ));
 
         foreach ($response->getHeaders() as $headerName => $values) {

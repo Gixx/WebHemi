@@ -209,7 +209,7 @@ class InMemoryAdapter implements DataAdapterInterface
     private function checkWildcardMatch($data, $subject)
     {
         $subject = str_replace('%', '.*', $subject);
-        return preg_match('/^' . $subject . '$/', $data);
+        return preg_match('/^'.$subject.'$/', $data);
     }
 
     /**
@@ -315,7 +315,7 @@ class InMemoryAdapter implements DataAdapterInterface
             if (is_numeric($maxKey)) {
                 $identifier = (int) $maxKey + 1;
             } else {
-                $identifier = $maxKey . '_1';
+                $identifier = $maxKey.'_1';
             }
         }
 
