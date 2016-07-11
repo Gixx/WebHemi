@@ -11,6 +11,7 @@
  */
 namespace WebHemi\Application\Web;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
@@ -76,14 +77,23 @@ class WebApplication implements ApplicationInterface
             ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('COOKIE'))
             ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('FILES'));
 
+        try {
+            $theme = $this->environmentManager
+                ->getApplicationTemplateSettings($this->environmentManager->getSelectedTheme());
+            $themeResourcePath = $this->environmentManager->getResourcePath();
+        } catch (InvalidArgumentException $e) {
+            $theme = $this->environmentManager->getApplicationTemplateSettings(EnvironmentManager::DEFAULT_THEME);
+            $themeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
+        }
+
         $this->container
             ->setServiceArgument(
                 RendererAdapterInterface::class,
-                $this->environmentManager->getApplicationTemplateSettings()
+                $theme
             )
             ->setServiceArgument(
                 RendererAdapterInterface::class,
-                $this->environmentManager->getResourcePath()
+                $themeResourcePath
             );
 
         $this->container
@@ -145,22 +155,23 @@ class WebApplication implements ApplicationInterface
         $request = $httpAdapter->getRequest();
         /** @var ResponseInterface $response */
         $response = $httpAdapter->getResponse();
-
         $middlewareClass = $this->pipeline->start();
 
         while ($middlewareClass !== null) {
             try {
                 /** @var MiddlewareInterface $middleware */
                 $middleware = $this->container->get($middlewareClass);
-
                 $requestAttributes = $request->getAttributes();
+
                 // As an extra step if the action middleware is resolved, it is invoked right before the dispatcher.
+                // Only the container knows how to instantiate it in the right way, and the container must not be
+                // injected into anz other classes. It seems like a hack but it is by purpose.
                 if ($middleware instanceof DispatcherMiddleware
                     && isset($requestAttributes['resolvedActionMiddleware'])
                 ) {
                     /** @var MiddlewareInterface $actionMiddleware */
                     $actionMiddleware = $this->container->get($requestAttributes['resolvedActionMiddleware']);
-                    $response = $actionMiddleware($request, $response);
+                    $request = $request->withAttribute('actionMiddleware', $actionMiddleware);
                 }
 
                 $response = $middleware($request, $response);

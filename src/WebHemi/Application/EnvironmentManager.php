@@ -174,11 +174,13 @@ class EnvironmentManager
     /**
      * Gets the template settings for a specific theme.
      *
+     * @param string $theme
+     *
      * @return ConfigInterface
      */
-    public function getApplicationTemplateSettings()
+    public function getApplicationTemplateSettings($theme = self::DEFAULT_THEME)
     {
-        return $this->config->getConfig('themes/'.$this->getSelectedTheme());
+        return $this->config->getConfig('themes/'.$theme);
     }
 
     /**

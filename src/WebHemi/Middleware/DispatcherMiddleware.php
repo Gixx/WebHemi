@@ -44,11 +44,21 @@ class DispatcherMiddleware implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
     {
-        $template = $request->getAttribute('template');
-        $data = $request->getAttribute('data');
-        /** @var StreamInterface $body */
-        $body = $this->templateRenderer->render($template, $data);
-        $response = $response->withBody($body);
+        /** @var MiddlewareInterface $actionMiddleware */
+        $actionMiddleware = $request->getAttribute('actionMiddleware');
+
+        // If there is a valid action Middleware, then dispatch it.
+        if (!is_null($actionMiddleware) && $actionMiddleware instanceof MiddlewareInterface) {
+            $response = $actionMiddleware($request, $response);
+
+            /** @var string $template */
+            $template = $request->getAttribute('template');
+            /** @var array $data */
+            $data = $request->getAttribute('data');
+            /** @var StreamInterface $body */
+            $body = $this->templateRenderer->render($template, $data);
+            $response = $response->withBody($body);
+        }
 
         return $response;
     }
