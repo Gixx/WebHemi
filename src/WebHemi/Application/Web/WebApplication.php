@@ -67,6 +67,8 @@ class WebApplication implements ApplicationInterface
 
     /**
      * Get ready to run the application: set final data for specific services.
+     *
+     * @codeCoverageIgnore - Check the EnvironmentManager and Container adapter tests.
      */
     private function prepare()
     {

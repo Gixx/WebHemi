@@ -42,10 +42,6 @@ class Config implements ConfigInterface
      */
     private function processConfig($path, $config)
     {
-        if (!is_array($config)) {
-            return;
-        }
-
         foreach ($config as $key => $value) {
             $this->pathMap[$path.$key] = $value;
 
