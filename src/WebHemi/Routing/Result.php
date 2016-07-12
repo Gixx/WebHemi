@@ -11,6 +11,8 @@
  */
 namespace WebHemi\Routing;
 
+use InvalidArgumentException;
+
 /**
  * Class Result.
  */
@@ -26,8 +28,8 @@ class Result
     private $matchedMiddleware;
     /** @var array */
     private $statusReason = [
-        self::CODE_FOUND => 'Resource found.',
-        self::CODE_NOT_FOUND => 'The requested resource cannot be found.',
+        self::CODE_FOUND      => 'Resource found.',
+        self::CODE_NOT_FOUND  => 'The requested resource cannot be found.',
         self::CODE_BAD_METHOD => 'Bad request method was used by the client.'
     ];
 
@@ -35,10 +37,20 @@ class Result
      * Sets status code.
      *
      * @param int $status
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return $this
      */
     public function setStatus($status)
     {
+        if (!isset($this->statusReason[$status])) {
+            throw new InvalidArgumentException(sprintf('The parameter "%s" is not a valid routing status.', $status));
+        }
+
         $this->status = $status;
+
+        return $this;
     }
 
     /**
@@ -51,9 +63,14 @@ class Result
         return $this->status;
     }
 
+    /**
+     * Gets reason for the status set.
+     *
+     * @return false|string
+     */
     public function getStatusReason()
     {
-        return $this->statusReason[$this->status];
+        return isset($this->statusReason[$this->status]) ? $this->statusReason[$this->status] : false;
     }
 
     /**

@@ -176,6 +176,8 @@ class EnvironmentManager
      *
      * @param string $theme
      *
+     * @codeCoverageIgnore - @see \WebHemiTest\Config\ConfigTest
+     *
      * @return ConfigInterface
      */
     public function getApplicationTemplateSettings($theme = self::DEFAULT_THEME)
@@ -185,6 +187,8 @@ class EnvironmentManager
 
     /**
      * Gets the routing settings for the selected module.
+     *
+     * @codeCoverageIgnore - @see \WebHemiTest\Config\ConfigTest
      *
      * @return ConfigInterface
      */
@@ -196,7 +200,7 @@ class EnvironmentManager
     /**
      * Overwrite PHP settings to be more secure
      *
-     * @codeCoverageIgnore
+     * @codeCoverageIgnore - Core functions.
      *
      * @return $this
      */
@@ -265,7 +269,7 @@ class EnvironmentManager
         $applications = $this->config->getData('applications');
 
         // Only the first segment is important (if exists).
-        list($subDirectory) = explode('/', ltrim($urlParts['path'], '/'), 1);
+        list($subDirectory) = explode('/', ltrim($urlParts['path'], '/'), 2);
 
         $applicationDataFixture = [
             'type' => self::APPLICATION_TYPE_DIRECTORY,
@@ -279,7 +283,7 @@ class EnvironmentManager
             $applicationData = array_merge($applicationDataFixture, $applicationData);
 
             if ($this->checkDirectoryIsValid($applicationData['type'], $applicationData['path'], $subDirectory)
-                || $this->checkDomainIsValid($applicationData['type'], $applicationData['path'])
+                || $this->checkDomainIsValid($applicationData['type'], $applicationData['path'], $subDirectory)
             ) {
                 $this->selectedModule = $applicationData['module'];
                 $this->selectedApplication = (string)$applicationName;
@@ -290,7 +294,6 @@ class EnvironmentManager
             }
         }
 
-        // It's not the environment ma
         if ($this->selectedTheme !== self::DEFAULT_THEME) {
             $this->selectedThemeResourcePath = '/resources/vendor_themes/'.$this->selectedTheme;
         }
@@ -316,17 +319,26 @@ class EnvironmentManager
     }
 
     /**
-     * Checks from type and path if the domain is valid.
+     * Checks from type and path if the domain is valid. If so, it sets the $subDirectory to the default.
      *
      * @param string $type
      * @param string $path
+     * @param string $subDirectory
      *
      * @return bool
      */
-    private function checkDomainIsValid($type, $path)
+    private function checkDomainIsValid($type, $path, &$subDirectory)
     {
-        return $this->subDomain != 'www'
+        $isSubdomain = $this->subDomain != 'www'
             && $type == self::APPLICATION_TYPE_DOMAIN
             && $path == $this->subDomain;
+
+        // If this method get called and will return TRUE, it means the $subDirectory paramtere will be used only for
+        // setting the right selectedApplicationUri. To avoid complexity, we change it here. Doesn't matter.
+        if ($isSubdomain) {
+            $subDirectory = '';
+        }
+
+        return $isSubdomain;
     }
 }
