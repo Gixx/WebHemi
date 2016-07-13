@@ -16,6 +16,7 @@ use WebHemi\Adapter\Data\InMemory\InMemoryAdapter;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Exception\InitException;
 use WebHemi\Adapter\Exception\InvalidArgumentException;
+use WebHemiTest\AssertTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -24,6 +25,8 @@ use PHPUnit_Framework_TestCase as TestCase;
 class InMemoryAdapterTest extends TestCase
 {
     protected $arrayDatabase;
+
+    use AssertTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -341,19 +344,5 @@ class InMemoryAdapterTest extends TestCase
         $expression = ['id_user_meta <> ?' => 2];
         $actualData = $adapter->getDataSet($expression);
         $this->assertArraysAreSimilar($actualData, $expectedData);
-    }
-
-    /**
-     * Compares two arrays.
-     *
-     * @param array $arrayOne
-     * @param array $arrayTwo
-     *
-     * @return bool
-     */
-    protected function assertArraysAreSimilar(array $arrayOne, array $arrayTwo)
-    {
-        $result = strcmp(serialize($arrayOne), serialize($arrayTwo));
-        $this->assertSame($result, 0);
     }
 }

@@ -13,6 +13,7 @@ namespace WebHemiTest\Config;
 
 use InvalidArgumentException;
 use WebHemi\Config\Config;
+use WebHemiTest\AssertTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -24,6 +25,8 @@ class ConfigTest extends TestCase
     protected $testConfig;
     /** @var  array */
     protected $processedConfig;
+
+    use AssertTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -152,19 +155,5 @@ class ConfigTest extends TestCase
         $config = new Config($this->testConfig);
 
         $this->assertFalse($config->getConfig('NonExistingKey'));
-    }
-
-    /**
-     * Compares two arrays.
-     *
-     * @param array $arrayOne
-     * @param array $arrayTwo
-     *
-     * @return bool
-     */
-    protected function assertArraysAreSimilar(array $arrayOne, array $arrayTwo)
-    {
-        $result = strcmp(serialize($arrayOne), serialize($arrayTwo));
-        $this->assertSame($result, 0);
     }
 }
