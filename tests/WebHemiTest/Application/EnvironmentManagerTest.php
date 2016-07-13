@@ -14,6 +14,7 @@ namespace WebHemiTest\Config;
 use InvalidArgumentException;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\Config;
+use WebHemiTest\AssertTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -33,6 +34,8 @@ class EnvironmentManagerTest extends TestCase
     protected $cookie = [];
     /** @var array */
     protected $files = [];
+
+    use AssertTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -180,19 +183,5 @@ class EnvironmentManagerTest extends TestCase
         $this->assertEquals('TestApplication', $testObj->getSelectedApplication());
         $this->assertEquals('/', $testObj->getSelectedApplicationUri());
         $this->assertEquals('/resources/vendor_themes/test_theme', $testObj->getResourcePath());
-    }
-
-    /**
-     * Compares two arrays.
-     *
-     * @param array $arrayOne
-     * @param array $arrayTwo
-     *
-     * @return bool
-     */
-    protected function assertArraysAreSimilar(array $arrayOne, array $arrayTwo)
-    {
-        $result = strcmp(serialize($arrayOne), serialize($arrayTwo));
-        $this->assertSame($result, 0);
     }
 }

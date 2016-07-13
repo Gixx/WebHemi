@@ -1,9 +1,22 @@
 filter:
     paths: [src/*]
+    excluded_paths:
+        - 'vendor/*'
+        - 'tests/*'
+        - 'bin/*'
 checks:
     php:
         code_rating: true
         duplication: true
+        overriding_parameter: false
+    javascript: true
+
+coding_style:
+    php:
+        spaces:
+            around_operators:
+                bitwise: false
+
 tools:
     external_code_coverage:
         timeout: 1200
