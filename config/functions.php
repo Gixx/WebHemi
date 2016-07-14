@@ -127,3 +127,30 @@ function get_theme_config()
     closedir($handle);
     return $themeConfig;
 }
+
+/**
+ * Reads the module config directory and returns the config.
+ *
+ * @return array
+ */
+function get_module_config()
+{
+    $moduleConfig = [];
+
+    $moduleConfigPath = realpath(__DIR__.'/modules');
+    $handle = opendir($moduleConfigPath);
+
+    if (!$handle) {
+        return $moduleConfig;
+    }
+
+    while (false !== ($entry = readdir($handle))) {
+        if (is_file($moduleConfigPath.'/'.$entry)) {
+            $config = require $moduleConfigPath.'/'.$entry;
+            $moduleName = key($config);
+            $moduleConfig[$moduleName] = current($config);
+        }
+    }
+    closedir($handle);
+    return $moduleConfig;
+}

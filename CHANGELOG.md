@@ -7,7 +7,7 @@ Version 4.0.0-1.1
 * Add RendererAdapterInterface implementation
 * Add Environment management
 * Clean up configuration
-* Add theme custom support
+* Add custom theme support
 * Add application support for both sub-domain and sub-directory types
 
 Version 4.0.0-1.0

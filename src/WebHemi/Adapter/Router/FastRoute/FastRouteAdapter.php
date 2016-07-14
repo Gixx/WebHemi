@@ -47,6 +47,7 @@ class FastRouteAdapter implements RouterAdapterInterface
 
         $routes = $this->config->toArray();
 
+        /** @var Dispatcher\GroupCountBase adapter */
         $this->adapter = \FastRoute\simpleDispatcher(
             function (RouteCollector $routeCollector) use ($routes) {
                 foreach ($routes as $route) {
@@ -70,12 +71,8 @@ class FastRouteAdapter implements RouterAdapterInterface
     {
         $uri = $request->getUri()->getPath();
 
-        if (strpos($uri, $this->applicationPath) === 0) {
-            $uri = ltrim($uri, $this->applicationPath);
-        }
-
-        if (empty($uri)) {
-            $uri = '/';
+        if ($this->applicationPath != '/' && strpos($uri, $this->applicationPath) === 0) {
+            $uri = substr($uri, strlen($this->applicationPath));
         }
 
         return $uri;

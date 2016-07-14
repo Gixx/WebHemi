@@ -30,13 +30,14 @@ require_once __DIR__.'/functions.php';
 
 return [
     'applications' => get_application_config(),
+    'modules' => get_module_config(),
     'themes' => get_theme_config(),
     'middleware_pipeline' => [
-//        ['class' => LockCheckMiddleware::class, 'priority' => -10],
-//        ['class' => AuthMiddleware::class, 'priority' => -5],
-//        ['class' => AclMiddleware::class, 'priority' => 10],
-//        ['class' => CacheReaderMiddleware::class, 'priority' => 20],
-//        ['class' => CacheWriterMiddleware::class, 'priority' => 110],
+//        ['class' => LockCheckMiddleware::class, 'priority' => -100],
+//        ['class' => AuthMiddleware::class, 'priority' => -50],
+//        ['class' => AclMiddleware::class, 'priority' => 33],
+//        ['class' => CacheReaderMiddleware::class, 'priority' => 66],
+//        ['class' => CacheWriterMiddleware::class, 'priority' => 150],
     ],
     'dependencies' => [
         // Library
@@ -109,25 +110,5 @@ return [
         // Classes without any aliases, arguments or sharing options are optional to present here.
         UserEntity::class     => [],
         UserMetaEntity::class => [],
-    ],
-    'modules' => [
-        'Admin' => [
-            'routing' => [
-                'index' => [
-                    'path'            => '/',
-                    'middleware'      => \WebHemi\Middleware\Action\FakeAction::class,
-                    'allowed_methods' => ['POST'],
-                ]
-            ],
-        ],
-        'Website' => [
-            'routing' => [
-                'index' => [
-                    'path'            => '/',
-                    'middleware'      => \WebHemi\Middleware\Action\FakeAction::class,
-                    'allowed_methods' => ['GET'],
-                ]
-            ],
-        ],
     ],
 ];
