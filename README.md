@@ -1,9 +1,10 @@
 WebHemi
 =======
 
-[![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--1.1-blue.svg)]()
+[![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--1.1-blue.svg)](https://github.com/Gixx/WebHemi)
 [![Minimum PHP Version](https://img.shields.io/badge/PHP-%3E%3D5.6-blue.svg)](https://php.net/)
 [![Email](https://img.shields.io/badge/email-navig80@gmail.com-blue.svg?style=flat-square)](mailto:navig80@gmail.com)
+[![Packagist](https://img.shields.io/badge/packagist-download-blue.svg)](https://packagist.org/packages/gixx/web-hemi)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build Status](https://travis-ci.org/Gixx/WebHemi.svg?branch=master)](https://travis-ci.org/Gixx/WebHemi)

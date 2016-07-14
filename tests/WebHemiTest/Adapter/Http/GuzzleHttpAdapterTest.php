@@ -9,16 +9,17 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTest\Config;
+namespace WebHemiTest\Adapter\Http;
 
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
+use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\Adapter\Http\GuzzleHttp\GuzzleHttpAdapter;
 use WebHemiTest\InvokePrivateMethodTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
- * Class EnvironmentManagerTest.
+ * Class GuzzleHttpAdapterTest.
  */
 class GuzzleHttpAdapterTest extends TestCase
 {
@@ -64,7 +65,7 @@ class GuzzleHttpAdapterTest extends TestCase
             $this->files
         );
 
-        $this->assertInstanceOf(GuzzleHttpAdapter::class, $testObj);
+        $this->assertInstanceOf(HttpAdapterInterface::class, $testObj);
         $this->assertInstanceOf(ServerRequest::class, $testObj->getRequest());
         $this->assertInstanceOf(Response::class, $testObj->getResponse());
     }

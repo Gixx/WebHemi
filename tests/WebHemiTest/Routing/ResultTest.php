@@ -16,7 +16,7 @@ use WebHemi\Routing\Result;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
- * Class ResultTest
+ * Class ResultTest.
  */
 class ResultTest extends TestCase
 {
