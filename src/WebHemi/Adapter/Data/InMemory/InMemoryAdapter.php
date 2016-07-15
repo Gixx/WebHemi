@@ -141,7 +141,7 @@ class InMemoryAdapter implements DataAdapterInterface
      *
      * @return array
      */
-    public function getDataSet(array $expression, $limit = null, $offset = null)
+    public function getDataSet(array $expression, $limit = self::DATA_SET_RECORD_LIMIT, $offset = 0)
     {
         $result = [];
 
@@ -150,15 +150,19 @@ class InMemoryAdapter implements DataAdapterInterface
         $offsetCounter = 0;
 
         foreach ($dataStorage as $data) {
-            if ($this->isExpressionMatch($expression, $data)) {
-                if (!is_null($limit) && $limitCounter >= $limit) {
-                    break;
-                }
+            $match = $this->isExpressionMatch($expression, $data);
+            $offsetReached = $offsetCounter >= $offset;
 
-                if (!is_null($offset) && $offsetCounter++ < $offset) {
-                    continue;
-                }
+            if ($limitCounter >= $limit) {
+                break;
+            }
 
+            if ($match && !$offsetReached) {
+                $offsetCounter++;
+                continue;
+            }
+
+            if ($match) {
                 $limitCounter++;
                 $result[] = $data;
             }
@@ -177,27 +181,41 @@ class InMemoryAdapter implements DataAdapterInterface
      */
     private function isExpressionMatch(array $expression, array $data)
     {
-        $match = true;
-
         foreach ($expression as $pattern => $subject) {
             $dataKey = '';
             $expressionType = $this->getExpressionType($pattern, $dataKey);
 
-            if ($expressionType == self::EXPRESSION_WILDCARD) {
-                $match = $this->checkWildcardMatch($data[$dataKey], $subject);
-            } elseif ($expressionType == self::EXPRESSION_IN_ARRAY) {
-                $match = $this->checkInArrayMatch($data[$dataKey], $subject);
-            } else {
-                $match = $this->checkRelation($expressionType, $data[$dataKey], $subject);
-            }
-
             // First false means some expression is failing for the data row, so the whole expression set is failing.
-            if (!$match) {
-                break;
+            if (!$this->match($expressionType, $data[$dataKey], $subject)) {
+                return false;
             }
         }
 
-        return (bool)$match;
+        return true;
+    }
+
+    /**
+     * Matches data against the subject according to the expression type.
+     *
+     * @param string $expressionType
+     * @param mixed  $data
+     * @param mixed $subject
+     *
+     * @todo handle 'NOT IN' and 'NOT LIKE' expressions too.
+     *
+     * @return bool
+     */
+    private function match($expressionType, $data, $subject)
+    {
+        if ($expressionType == self::EXPRESSION_WILDCARD) {
+            $match = $this->checkWildcardMatch($data, $subject);
+        } elseif ($expressionType == self::EXPRESSION_IN_ARRAY) {
+            $match = $this->checkInArrayMatch($data, $subject);
+        } else {
+            $match = $this->checkRelation($expressionType, $data, $subject);
+        }
+
+        return $match;
     }
 
     /**

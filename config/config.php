@@ -92,6 +92,11 @@ return [
                 RendererAdapterInterface::class,
             ]
         ],
+        \WebHemi\Middleware\Action\FakeAction::class => [
+            'arguments' => [
+                UserStorage::class
+            ]
+        ],
         // Storage
         UserStorage::class => [
             'arguments' => [

@@ -13,11 +13,12 @@ namespace WebHemiTest\Adapter\Data;
 
 use PDO;
 use DateTime;
-use Prophecy\Argument;
 use WebHemi\Adapter\Data\PDO\PDOAdapter;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Exception\InitException;
 use WebHemi\Adapter\Exception\InvalidArgumentException;
+use WebHemiTest\AssertTrait;
+use WebHemiTest\InvokePrivateMethodTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -27,6 +28,9 @@ class PDOAdapterTest extends TestCase
 {
     /** @var PDO */
     protected $pdo;
+
+    use AssertTrait;
+    use InvokePrivateMethodTrait;
 
     /**
      * Check requirements - also checks SQLite availability.
@@ -66,7 +70,7 @@ class PDOAdapterTest extends TestCase
         $this->assertAttributeEmpty('idKey', $adapter);
 
         $this->setExpectedException(InvalidArgumentException::class);
-        $adapter = new PDOAdapter(new DateTime());
+        new PDOAdapter(new DateTime());
     }
 
     /**
@@ -116,5 +120,117 @@ class PDOAdapterTest extends TestCase
 
         $this->setExpectedException(InitException::class);
         $adapter->setIdKey('shouldBeBad');
+    }
+
+    /**
+     * Data provider for the Query test.
+     *
+     * @return array
+     */
+    public function sqlQueryDataProvider()
+    {
+        return [
+            [
+                [],
+                'aTable',
+                1,
+                5,
+                'SELECT * FROM aTable LIMIT 1 OFFSET 5',
+                []
+            ],
+            [
+                ['A' => 5],
+                'bTable',
+                11,
+                20,
+                'SELECT * FROM bTable WHERE A=? LIMIT 11 OFFSET 20',
+                [5]
+            ],
+            [
+                ['A' => 10, 'B LIKE ?' => 'someData%'],
+                'cTable',
+                null,
+                null,
+                'SELECT * FROM cTable WHERE A=? AND B LIKE ? LIMIT '.PDOAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
+                [10, 'someData%']
+            ]
+        ];
+    }
+
+    /**
+     * Tests WHERE expression generator.
+     *
+     * @param array  $expression
+     * @param string $dataGroup
+     * @param int    $limit
+     * @param int    $offset
+     * @param string $expectedQuery
+     * @param array  $expectedQueryBind
+     *
+     * @dataProvider sqlQueryDataProvider
+     */
+    public function testGetQueryForExpression(
+        $expression,
+        $dataGroup,
+        $limit,
+        $offset,
+        $expectedQuery,
+        $expectedQueryBind
+    ) {
+        $queryBind = [];
+
+        $adapter = new PDOAdapter($this->pdo);
+        $adapter->setDataGroup($dataGroup);
+
+        if (!is_null($limit)) {
+            $resultQuery = $this->invokePrivateMethod(
+                $adapter,
+                'getSelectQueryForExpression',
+                [$expression, &$queryBind, $limit, $offset]
+            );
+        } else {
+            $resultQuery = $this->invokePrivateMethod(
+                $adapter,
+                'getSelectQueryForExpression',
+                [$expression, &$queryBind]
+            );
+        }
+
+        $this->assertEquals($expectedQuery, $resultQuery);
+        $this->assertArraysAreSimilar($expectedQueryBind, $queryBind);
+    }
+
+    /**
+     * Data provider for the WHERE expression test.
+     *
+     * @return array
+     */
+    public function whereExpressionDataProvider()
+    {
+        return [
+            [[], '', []],
+            [['A' => 5], ' WHERE A=?', [5]],
+            [['A' => 10, 'B LIKE ?' => 'someData%'], ' WHERE A=? AND B LIKE ?', [10, 'someData%']]
+        ];
+    }
+
+    /**
+     * Tests WHERE expression generator.
+     *
+     * @param array  $expression
+     * @param string $expectedExpression
+     * @param array  $expectedQueryBind
+     *
+     * @dataProvider whereExpressionDataProvider
+     */
+    public function testGetWhereExpression($expression, $expectedExpression, $expectedQueryBind)
+    {
+        $queryBind = [];
+
+        $adapter = new PDOAdapter($this->pdo);
+        $resultExpression = $this->invokePrivateMethod($adapter, 'getWhereExpression', [$expression, &$queryBind]);
+
+        $this->assertEquals($expectedExpression, $resultExpression);
+        $this->assertArraysAreSimilar($expectedQueryBind, $queryBind);
     }
 }

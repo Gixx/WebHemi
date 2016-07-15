@@ -118,8 +118,12 @@ class PDOAdapter implements DataAdapterInterface
      */
     public function getData($identifier)
     {
-        $statement = $this->getDataStorage()->prepare("SELECT * FROM {$this->dataGroup} WHERE {$this->idKey}=?");
-        $statement->execute([$identifier]);
+        $queryBind = [];
+
+        $query = $this->getSelectQueryForExpression([$this->idKey => $identifier], $queryBind, 1, 0);
+        $statement = $this->getDataStorage()->prepare($query);
+        $this->bindValuesToStatement($statement, $queryBind);
+        $statement->execute();
 
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
@@ -135,9 +139,13 @@ class PDOAdapter implements DataAdapterInterface
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function getDataSet(array $expression, $limit = null, $offset = null)
+    public function getDataSet(array $expression, $limit = PHP_INT_MAX, $offset = 0)
     {
-        $statement = $this->getStatementForExpression($expression, $limit, $offset);
+        $queryBind = [];
+
+        $query = $this->getSelectQueryForExpression($expression, $queryBind, $limit, $offset);
+        $statement = $this->getDataStorage()->prepare($query);
+        $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -154,56 +162,70 @@ class PDOAdapter implements DataAdapterInterface
      */
     public function getDataCardinality(array $expression)
     {
-        $statement = $this->getStatementForExpression($expression);
+        $queryBind = [];
+
+        $query = $this->getSelectQueryForExpression($expression, $queryBind);
+        $statement = $this->getDataStorage()->prepare($query);
+        $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
         return $statement->rowCount();
     }
 
     /**
-     * Build query statement from the expression.
+     * Builds SQL query from the expression.
      *
      * @param array $expression
+     * @param array $queryBind
      * @param int   $limit
      * @param int   $offset
      *
-     * @return PDOStatement
-     *
-     * @codeCoverageIgnore Don't test external library.
+     * @return string
      */
-    private function getStatementForExpression(array $expression, $limit = null, $offset = null)
-    {
+    private function getSelectQueryForExpression(
+        array $expression,
+        array &$queryBind,
+        $limit = self::DATA_SET_RECORD_LIMIT,
+        $offset = 0
+    ) {
         $query = "SELECT * FROM {$this->dataGroup}";
-        $queryParams = [];
-        $queryBind = [];
 
         // Prepare WHERE expression.
         if (!empty($expression)) {
-            $query .= ' WHERE ';
-
-            foreach ($expression as $column => $value) {
-                // allow special cases
-                // @example  ['my_column LIKE ?' => 'some value%']
-                $queryParams[] = strpos($column, '?') === false ? "{$column}=?" : $column;
-                $queryBind[] = $value;
-            }
-
-            $query .= implode(' AND ', $queryParams);
+            $query .= $this->getWhereExpression($expression, $queryBind);
         }
 
-        // Prepare LIMIT and OFFSET
-        if (!empty($limit)) {
-            $query .= " LIMIT {$limit}";
+        $query .= " LIMIT {$limit}";
+        $query .= " OFFSET {$offset}";
 
-            if (!is_null($offset)) {
-                $query .= " OFFSET {$offset}";
-            }
+        return $query;
+    }
+
+    /**
+     * Creates a WHERE expression for the SQL query.
+     *
+     * @param array $expression
+     * @param array $queryBind
+     *
+     * @return string
+     */
+    private function getWhereExpression(array $expression, array &$queryBind)
+    {
+        $whereExpression = '';
+        $queryParams = [];
+
+        foreach ($expression as $column => $value) {
+            // allow special cases
+            // @example  ['my_column LIKE ?' => 'some value%']
+            $queryParams[] = strpos($column, '?') === false ? "{$column}=?" : $column;
+            $queryBind[] = $value;
         }
 
-        $statement = $this->getDataStorage()->prepare($query);
-        $this->bindValuesToStatement($statement, $queryBind);
+        if (!empty($queryParams)) {
+            $whereExpression = ' WHERE ' . implode(' AND ', $queryParams);
+        }
 
-        return $statement;
+        return $whereExpression;
     }
 
     /**
