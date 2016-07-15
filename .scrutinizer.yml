@@ -19,4 +19,4 @@ coding_style:
 
 tools:
     external_code_coverage:
-        timeout: 1200
+        timeout: 3600
