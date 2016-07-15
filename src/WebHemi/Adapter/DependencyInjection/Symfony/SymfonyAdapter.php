@@ -29,6 +29,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     private $configuration;
     /** @var array */
     private $servicesToDefine = [];
+    /** @var array */
+    private $instantiatedSharedServices = [];
     /** @var int */
     private static $parameterIndex = 0;
 
@@ -74,7 +76,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      */
     public function registerService($identifier, $serviceClass)
     {
-        // Do nothing if the service has been already registered.
+        // Do nothing if the service has been already registered with the same alias.
+        // It is allowed to register the same service multiple times with different aliases.
         if ($this->has($identifier)) {
             return;
         }
@@ -94,9 +97,15 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
 
         // Create the definition.
         $definition = new Definition($serviceClass);
-        $definition->setShared((bool) $setUpData[self::SERVICE_SHARE]);
+
+        $sharedService = (bool) $setUpData[self::SERVICE_SHARE];
+        $definition->setShared($sharedService);
+
         // Register the service.
         $service = $this->container->setDefinition($identifier, $definition);
+        if ($sharedService) {
+            $this->instantiatedSharedServices[$service->getClass()] = false;
+        }
 
         // Add arguments.
         foreach ((array) $setUpData[self::SERVICE_ARGUMENTS] as $parameter) {
@@ -105,13 +114,25 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
 
         // Register method callings.
         foreach ((array) $setUpData[self::SERVICE_METHOD_CALL] as $method => $parameterList) {
-            // Check the parameter list for reference services
-            foreach ($parameterList as &$parameter) {
-                $parameter = $this->getReferenceServiceIfAvailable($parameter);
-            }
-
-            $service->addMethodCall($method, $parameterList);
+            $this->addMethodCall($service, $method, $parameterList);
         }
+    }
+
+    /**
+     * Adds a method call for the service. It will be triggered as soon as the service had been initialized.
+     *
+     * @param Definition $service
+     * @param string     $method
+     * @param array      $parameterList
+     */
+    private function addMethodCall(Definition $service, $method, $parameterList = [])
+    {
+        // Check the parameter list for reference services
+        foreach ($parameterList as &$parameter) {
+            $parameter = $this->getReferenceServiceIfAvailable($parameter);
+        }
+
+        $service->addMethodCall($method, $parameterList);
     }
 
     /**
@@ -126,24 +147,25 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         $reference = $classOrServiceName;
 
         // Check string parameter if it is a valid service or class name.
-        if (is_string($classOrServiceName)) {
-            if ($this->has($classOrServiceName)) {
-                // The parameter is a registered service.
-                $reference = new Reference($classOrServiceName);
-            } elseif (isset($this->servicesToDefine[$classOrServiceName])) {
-                // The parameter is defined as a service but it is not yet registered; alias is given.
-                $this->registerService($classOrServiceName, $this->servicesToDefine[$classOrServiceName]);
-                $reference = new Reference($classOrServiceName);
-            } elseif (in_array($classOrServiceName, $this->servicesToDefine)) {
-                // The parameter is defined as a service but it is not yet registered; real class is given.
-                $referenceAlias = array_search($classOrServiceName, $this->servicesToDefine);
-                $this->registerService($referenceAlias, $this->servicesToDefine[$referenceAlias]);
-                $reference = new Reference($referenceAlias);
-            } elseif (class_exists($classOrServiceName)) {
-                // The parameter is not a service, but it is a class that can be instantiated. e.g.: DateTime::class
-                $this->container->register($classOrServiceName, $classOrServiceName);
-                $reference = new Reference($classOrServiceName);
-            }
+        if (!is_string($classOrServiceName)) {
+            return $reference;
+        }
+
+        if (isset($this->servicesToDefine[$classOrServiceName])) {
+            // The parameter is defined as a service but it is not yet registered; alias is given.
+            $this->registerService($classOrServiceName, $this->servicesToDefine[$classOrServiceName]);
+        } elseif (in_array($classOrServiceName, $this->servicesToDefine)) {
+            // The parameter is defined as a service but it is not yet registered; real class is given.
+            $referenceAlias = array_search($classOrServiceName, $this->servicesToDefine);
+            $this->registerService($referenceAlias, $this->servicesToDefine[$referenceAlias]);
+            $classOrServiceName = $referenceAlias;
+        } elseif (class_exists($classOrServiceName)) {
+            // The parameter is not a service, but it is a class that can be instantiated. e.g.: DateTime::class
+            $this->container->register($classOrServiceName, $classOrServiceName);
+        }
+
+        if ($this->has($classOrServiceName)) {
+            $reference = new Reference($classOrServiceName);
         }
 
         return $reference;
@@ -178,7 +200,14 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
             $this->registerService($identifier, $identifier);
         }
 
-        return $this->container->get($identifier);
+        $service = $this->container->get($identifier);
+        $serviceClass = get_class($service);
+
+        if (isset($this->instantiatedSharedServices[$serviceClass])) {
+            $this->instantiatedSharedServices[$serviceClass] = true;
+        }
+
+        return $service;
     }
 
     /**
@@ -212,7 +241,9 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         $parameterName = $parameter;
         $serviceClass = $service->getClass();
 
-        if ($this->container->initialized($serviceClass)) {
+        if (isset($this->instantiatedSharedServices[$serviceClass])
+            && $this->instantiatedSharedServices[$serviceClass] === true
+        ) {
             throw new InitException('Cannot add argument to an already initialized service.');
         }
 
