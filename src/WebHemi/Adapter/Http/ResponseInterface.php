@@ -1,0 +1,26 @@
+<?php
+/**
+ * WebHemi.
+ *
+ * PHP version 5.6
+ *
+ * @copyright 2012 - 2016 Gixx-web (http://www.gixx-web.com)
+ * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
+ * @link      http://www.gixx-web.com
+ */
+namespace WebHemi\Adapter\Http;
+
+use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
+
+/**
+ * Interface ResponseInterface.
+ */
+interface ResponseInterface extends PsrResponseInterface
+{
+    const STATUS_PROCESSING = 102;
+
+    const STATUS_OK = 200;
+
+    const STATUS_INTERNAL_SERVER_ERROR = 500;
+}

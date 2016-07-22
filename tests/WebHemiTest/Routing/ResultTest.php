@@ -13,6 +13,7 @@ namespace WebHemiTest\Routing;
 
 use InvalidArgumentException;
 use WebHemi\Routing\Result;
+use WebHemiTest\AssertTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -20,6 +21,8 @@ use PHPUnit_Framework_TestCase as TestCase;
  */
 class ResultTest extends TestCase
 {
+    use AssertTrait;
+
     /**
      * Test general usage.
      */
@@ -30,6 +33,14 @@ class ResultTest extends TestCase
 
         $result->setMatchedMiddleware('Some data');
         $this->assertEquals($result->getMatchedMiddleware(), 'Some data');
+
+        $testParam = [
+            'param_1' => 'data 1',
+            'param_2' => 'data 2'
+        ];
+
+        $result->setParameters($testParam);
+        $this->assertArraysAreSimilar($testParam, $result->getParameters());
 
         $result->setStatus(200);
         $this->assertEquals($result->getStatus(), Result::CODE_FOUND);

@@ -11,13 +11,13 @@
  */
 namespace WebHemiTest\Adapter\Data;
 
+use InvalidArgumentException;
+use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
+use RuntimeException;
 use WebHemi\Adapter\Data\InMemory\InMemoryAdapter;
 use WebHemi\Adapter\Data\DataAdapterInterface;
-use WebHemi\Adapter\Exception\InitException;
-use WebHemi\Adapter\Exception\InvalidArgumentException;
 use WebHemiTest\AssertTrait;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class InMemoryAdapterTest.
@@ -103,7 +103,7 @@ class InMemoryAdapterTest extends TestCase
     /**
      * Tests the setDataGroup method.
      *
-     * @throws InitException
+     * @throws RuntimeException
      */
     public function testSetDataGroup()
     {
@@ -132,14 +132,14 @@ class InMemoryAdapterTest extends TestCase
         $this->assertAttributeEquals('notDefault', 'dataGroup', $adapter);
         $this->assertArraysAreSimilar($adapter->getDataStorage(), $expectedChanged);
 
-        $this->setExpectedException(InitException::class);
+        $this->setExpectedException(RuntimeException::class);
         $adapter->setDataGroup('shouldBeBad');
     }
 
     /**
      * Tests setIdKey method.
      *
-     * @throws InitException
+     * @throws RuntimeException
      */
     public function testSetIdKey()
     {
@@ -151,7 +151,7 @@ class InMemoryAdapterTest extends TestCase
         $adapter->setIdKey('someOtherId');
         $this->assertAttributeEquals('someOtherId', 'idKey', $adapter);
 
-        $this->setExpectedException(InitException::class);
+        $this->setExpectedException(RuntimeException::class);
         $adapter->setIdKey('shouldBeBad');
     }
 
@@ -283,6 +283,9 @@ class InMemoryAdapterTest extends TestCase
         $this->assertArraysAreSimilar($actualData, $expectedData);
     }
 
+    /**
+     * Tests list and count functions with various relational expressions.
+     */
     public function testDataSetExpressions()
     {
         $adapter = new InMemoryAdapter();

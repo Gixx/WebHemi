@@ -13,7 +13,7 @@ namespace WebHemi\Adapter\Router\FastRoute;
 
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
-use Psr\Http\Message\ServerRequestInterface;
+use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Config\ConfigInterface;
 use WebHemi\Routing\Result;
@@ -75,7 +75,7 @@ class FastRouteAdapter implements RouterAdapterInterface
             $uri = substr($uri, strlen($this->applicationPath));
         }
 
-        return $uri;
+        return empty($uri) ? '/' : $uri;
     }
 
     /**
@@ -95,6 +95,7 @@ class FastRouteAdapter implements RouterAdapterInterface
             case Dispatcher::FOUND:
                 $this->result->setStatus(Result::CODE_FOUND);
                 $this->result->setMatchedMiddleware($routeInfo[1]);
+                $this->result->setParameters($routeInfo[2]);
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
                 $this->result->setStatus(Result::CODE_BAD_METHOD);

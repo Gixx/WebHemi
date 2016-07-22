@@ -101,14 +101,6 @@ class Pipeline implements MiddlewarePipelineInterface
             );
         }
 
-        $interfaces = class_implements($middleWareClass);
-
-        if (empty($interfaces) || !in_array(MiddlewareInterface::class, $interfaces)) {
-            throw new RuntimeException(
-                sprintf('The class "%s" does not implement MiddlewareInterface.', $middleWareClass)
-            );
-        }
-
         return true;
     }
 
@@ -184,5 +176,15 @@ class Pipeline implements MiddlewarePipelineInterface
         }
 
         return isset($this->pipelineList[$this->index]) ? $this->pipelineList[$this->index++] : null;
+    }
+
+    /**
+     * Gets the full pipeline list.
+     *
+     * @return array
+     */
+    public function getPipelineList()
+    {
+        return $this->pipelineList;
     }
 }

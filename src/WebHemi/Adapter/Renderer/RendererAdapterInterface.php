@@ -24,8 +24,9 @@ interface RendererAdapterInterface
      *
      * @param ConfigInterface $templateConfig
      * @param string          $templatePath
+     * @param string          $applicationBaseUri
      */
-    public function __construct(ConfigInterface $templateConfig, $templatePath);
+    public function __construct(ConfigInterface $templateConfig, $templatePath, $applicationBaseUri);
 
     /**
      * Renders the template for the output.

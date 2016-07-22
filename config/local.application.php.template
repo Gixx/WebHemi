@@ -1,16 +1,18 @@
 <?php
 
 return [
-    'website' => [
-        'title'       => 'My Custom Website Title',
-        'description' => 'My custom description for the website.',
-        'theme'       => 'default',
-    ],
-    'my_sub-application' => [
-        'title'       => 'My Sub-Application',
-        'description' => 'A sub application within the website.',
-        'type'        => 'directory',
-        'path'        => 'sub-app',
-        'theme'       => 'default',
+    'applications' => [
+        'website' => [
+            'title'       => 'My Custom Website Title',
+            'description' => 'My custom description for the website.',
+            'theme'       => 'default',
+        ],
+        'my_sub-application' => [
+            'title'       => 'My Sub-Application',
+            'description' => 'A sub application within the website.',
+            'type'        => 'directory',
+            'path'        => 'sub-app',
+            'theme'       => 'default',
+        ]
     ]
 ];

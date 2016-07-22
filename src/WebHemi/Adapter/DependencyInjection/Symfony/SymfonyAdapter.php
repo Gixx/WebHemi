@@ -11,11 +11,11 @@
  */
 namespace WebHemi\Adapter\DependencyInjection\Symfony;
 
+use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
-use WebHemi\Adapter\Exception\InitException;
 use WebHemi\Config\ConfigInterface;
 
 /**
@@ -228,7 +228,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * @param string|Definition $service
      * @param mixed             $parameter
      *
-     * @throws InitException
+     * @throws RuntimeException
      *
      * @return DependencyInjectionAdapterInterface
      */
@@ -244,9 +244,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         if (isset($this->instantiatedSharedServices[$serviceClass])
             && $this->instantiatedSharedServices[$serviceClass] === true
         ) {
-            throw new InitException('Cannot add argument to an already initialized service.');
+            throw new RuntimeException('Cannot add argument to an already initialized service.');
         }
-
 
         if (!is_scalar($parameterName)) {
             $parameterName = self::$parameterIndex++;
@@ -255,8 +254,13 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         // Create a normalized name for the argument.
         $normalizedName = $this->getNormalizedName($serviceClass, $parameterName);
 
-        // Check if the parameter is a service.
-        $parameter = $this->getReferenceServiceIfAvailable($parameter);
+        // If the parameter marked as to be used as a scalar
+        if (is_scalar($parameter) && strpos((string)$parameter, '!:') === 0) {
+            $parameter = substr((string)$parameter, 2);
+        } else {
+            // Otherwise check if the parameter is a service.
+            $parameter = $this->getReferenceServiceIfAvailable($parameter);
+        }
 
         $this->container->setParameter($normalizedName, $parameter);
         $service->addArgument('%'.$normalizedName.'%');

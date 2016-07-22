@@ -15,11 +15,11 @@ use ArrayIterator;
 use ArrayObject;
 use DateTime;
 use DateTimeZone;
+use RuntimeException;
 use stdClass;
 use Symfony\Component\DependencyInjection\Reference;
 use WebHemi\Adapter\DependencyInjection\Symfony\SymfonyAdapter;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
-use WebHemi\Adapter\Exception\InitException;
 use WebHemi\Config\Config;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
@@ -190,7 +190,7 @@ class SymfonyAdapterTest extends TestCase
 
         // Set a new parameter after instantiate is forbidden.
         $timeZone = new DateTimeZone('Europe/London');
-        $this->setExpectedException(InitException::class);
+        $this->setExpectedException(RuntimeException::class);
         $adapter->setServiceArgument('alias', $timeZone);
     }
 }

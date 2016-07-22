@@ -11,9 +11,9 @@
  */
 namespace WebHemi\Middleware;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
+use WebHemi\Adapter\Http\ResponseInterface;
+use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 
 /**
@@ -51,10 +51,10 @@ class FinalMiddleware implements MiddlewareInterface
         $content = $response->getBody();
 
         // Handle errors here.
-        if ($response->getStatusCode() !== 200) {
+        if ($response->getStatusCode() !== ResponseInterface::STATUS_OK) {
             $errorTemplate = 'error-'.$response->getStatusCode();
-            $error = $request->getAttribute('exception');
-            $content = $this->templateRenderer->render($errorTemplate, ['exception' => $error]);
+            $exception = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
+            $content = $this->templateRenderer->render($errorTemplate, ['exception' => $exception]);
         }
 
         $response = $this->injectContentLength($response);

@@ -32,6 +32,8 @@ class Result
         self::CODE_NOT_FOUND  => 'The requested resource cannot be found.',
         self::CODE_BAD_METHOD => 'Bad request method was used by the client.'
     ];
+    /** @var array */
+    private $parameters;
 
     /**
      * Sets status code.
@@ -77,10 +79,14 @@ class Result
      * Sets matched middleware.
      *
      * @param string $matchedMiddleware
+     *
+     * @return $this
      */
     public function setMatchedMiddleware($matchedMiddleware)
     {
         $this->matchedMiddleware = $matchedMiddleware;
+
+        return $this;
     }
 
     /**
@@ -91,5 +97,29 @@ class Result
     public function getMatchedMiddleware()
     {
         return $this->matchedMiddleware;
+    }
+
+    /**
+     * Sets the parameters.
+     *
+     * @param array $parameters
+     *
+     * @return $this
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * Gets the parameters.
+     *
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 }

@@ -28,10 +28,10 @@ use WebHemi\Routing\Result;
 
 require_once __DIR__.'/functions.php';
 
-return [
-    'applications' => get_application_config(),
-    'modules' => get_module_config(),
-    'themes' => get_theme_config(),
+$config = [
+    'applications' => [],
+    'modules' => [],
+    'themes' => [],
     'middleware_pipeline' => [
 //        ['class' => LockCheckMiddleware::class, 'priority' => -100],
 //        ['class' => AuthMiddleware::class, 'priority' => -50],
@@ -42,7 +42,7 @@ return [
     'dependencies' => [
         // Library
         PDO::class => [
-            'arguments' => get_database_config(),
+            'arguments' => get_pdo_config(),
             'calls'     => ['setAttribute' => [PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION]],
             'shared'    => true,
         ],
@@ -92,11 +92,6 @@ return [
                 RendererAdapterInterface::class,
             ]
         ],
-        \WebHemi\Middleware\Action\FakeAction::class => [
-            'arguments' => [
-                UserStorage::class
-            ]
-        ],
         // Storage
         UserStorage::class => [
             'arguments' => [
@@ -117,3 +112,5 @@ return [
         UserMetaEntity::class => [],
     ],
 ];
+
+return merge_array_overwrite($config, get_module_config(), get_application_config(), get_theme_config());

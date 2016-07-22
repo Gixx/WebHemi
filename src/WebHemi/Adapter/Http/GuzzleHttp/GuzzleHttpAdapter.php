@@ -12,11 +12,7 @@
 namespace WebHemi\Adapter\Http\GuzzleHttp;
 
 use GuzzleHttp\Psr7\LazyOpenStream;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 
 /**
@@ -85,7 +81,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
             ->withQueryParams($this->get)
             ->withParsedBody($this->post);
         // Create a Response with HTTP 102 - Processing.
-        $this->response = new Response(102);
+        $this->response = new Response(Response::STATUS_PROCESSING);
     }
 
     /**
@@ -171,7 +167,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     /**
      * Returns the HTTP request.
      *
-     * @return ServerRequestInterface
+     * @return ServerRequest
      */
     public function getRequest()
     {
@@ -181,7 +177,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     /**
      * Returns the response being sent.
      *
-     * @return ResponseInterface
+     * @return Response
      */
     public function getResponse()
     {

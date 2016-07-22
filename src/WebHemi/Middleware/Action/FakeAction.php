@@ -2,13 +2,13 @@
 
 namespace WebHemi\Middleware\Action;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use WebHemi\Adapter\Http\ResponseInterface;
+use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataStorage\User\UserStorage;
-use WebHemi\Middleware\MiddlewareInterface;
+use WebHemi\Middleware\AbstractMiddlewareAction;
 
-class FakeAction implements MiddlewareInterface
+class FakeAction extends AbstractMiddlewareAction
 {
     /** @var UserStorage */
     private $userStorage;
@@ -18,13 +18,17 @@ class FakeAction implements MiddlewareInterface
         $this->userStorage = $userStorage;
     }
 
-    public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
+    public function getTemplateName()
+    {
+        return 'blog-list';
+    }
+
+    public function getTemplateData()
     {
         /** @var UserEntity $userEntity */
         $userEntity = $this->userStorage->getUserById(1);
 
-        $template = 'blog-list';
-        $data = [
+        return [
             'blogPosts' => [
                 [
                     'title'       => 'Fake test 1',
@@ -46,11 +50,5 @@ class FakeAction implements MiddlewareInterface
                 ]
             ]
         ];
-
-        $request = $request
-            ->withAttribute('template', $template)
-            ->withAttribute('data', $data);
-
-        return $response;
     }
 }

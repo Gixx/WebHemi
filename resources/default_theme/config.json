@@ -16,6 +16,7 @@
   },
   "map": {
     "blog-list": "blog/index.twig",
+    "blog-post": "blog/post.twig",
     "error-404": "error/404.twig",
     "error-405": "error/405.twig",
     "error-500": "error/500.twig"

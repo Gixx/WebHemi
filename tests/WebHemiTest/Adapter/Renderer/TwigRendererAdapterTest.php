@@ -53,8 +53,7 @@ class TwigRendererAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $resultObj = new TwigRendererAdapter($this->templateConfig, $this->templatePath);
-
+        $resultObj = new TwigRendererAdapter($this->templateConfig, $this->templatePath, '/');
         $this->assertInstanceOf(RendererAdapterInterface::class, $resultObj);
         $this->assertAttributeInstanceOf(\Twig_Environment::class, 'adapter', $resultObj);
     }
@@ -64,7 +63,7 @@ class TwigRendererAdapterTest extends TestCase
      */
     public function testRenderer()
     {
-        $adapterObj = new TwigRendererAdapter($this->templateConfig, $this->templatePath);
+        $adapterObj = new TwigRendererAdapter($this->templateConfig, $this->templatePath, '/');
 
         $result = $adapterObj->render('test-page');
         $resultData = json_decode($result, true);

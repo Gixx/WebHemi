@@ -55,7 +55,7 @@ function merge_array_overwrite()
  *
  * @return array
  */
-function get_database_config()
+function get_pdo_config()
 {
     $databaseConfig = [];
 
@@ -77,14 +77,20 @@ function get_application_config()
 {
     $defaultApplicationConfig = require __DIR__.'/global.application.php';
     $localApplicationConfig = [];
+    $readOnlyApplications = [
+        'admin',
+        'website'
+    ];
     $readOnlyApplicationConfig = [
-        'admin' => [
-            'module'      => 'Admin',
-        ],
-        'website' => [
-            'module'      => 'Website',
-            'type'        => 'domain',
-            'path'        => 'www',
+        'applications' => [
+            'admin' => [
+                'module'      => 'Admin',
+            ],
+            'website' => [
+                'module'      => 'Website',
+                'type'        => 'domain',
+                'path'        => 'www',
+            ],
         ],
     ];
 
@@ -92,11 +98,20 @@ function get_application_config()
         $localApplicationConfig = require __DIR__.'/local.application.php';
     }
 
-    return merge_array_overwrite(
+    $applicationConfig = merge_array_overwrite(
         $defaultApplicationConfig,
         $localApplicationConfig,
         $readOnlyApplicationConfig
     );
+
+    // ensure that nobody plays with the modules
+    foreach ($applicationConfig['applications'] as $application => &$settings) {
+        if (!in_array($application, $readOnlyApplications)) {
+            $settings['module'] = 'Website';
+        }
+    }
+
+    return $applicationConfig;
 }
 
 /**
@@ -106,10 +121,12 @@ function get_application_config()
  */
 function get_theme_config()
 {
-    $themeConfig = [];
+    $themeConfig = [
+        'themes' => []
+    ];
     $defaultThemeConfig = file_get_contents(__DIR__.'/../resources/default_theme/config.json');
 
-    $themeConfig['default'] = json_decode($defaultThemeConfig, true);
+    $themeConfig['themes']['default'] = json_decode($defaultThemeConfig, true);
 
     $vendorThemePath = realpath(__DIR__.'/../resources/vendor_themes');
     $handle = opendir($vendorThemePath);
@@ -121,7 +138,7 @@ function get_theme_config()
     while (false !== ($entry = readdir($handle))) {
         if (is_dir($vendorThemePath.'/'.$entry) && file_exists($vendorThemePath.'/'.$entry.'/config.json')) {
             $vendorThemeConfig = file_get_contents($vendorThemePath.'/'.$entry.'/config.json');
-            $themeConfig[$entry] = @json_decode($vendorThemeConfig, true);
+            $themeConfig['themes'][$entry] = @json_decode($vendorThemeConfig, true);
         }
     }
     closedir($handle);
@@ -147,8 +164,8 @@ function get_module_config()
     while (false !== ($entry = readdir($handle))) {
         if (is_file($moduleConfigPath.'/'.$entry)) {
             $config = require $moduleConfigPath.'/'.$entry;
-            $moduleName = key($config);
-            $moduleConfig[$moduleName] = current($config);
+
+            $moduleConfig = merge_array_overwrite($moduleConfig, $config);
         }
     }
     closedir($handle);
