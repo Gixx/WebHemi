@@ -11,8 +11,8 @@
  */
 namespace WebHemi\Middleware;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use WebHemi\Adapter\Http\ResponseInterface;
+use WebHemi\Adapter\Http\ServerRequestInterface;
 
 /**
  * Interface MiddlewareInterface.

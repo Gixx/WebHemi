@@ -11,9 +11,11 @@
  */
 namespace WebHemi\Middleware;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Exception;
+use WebHemi\Adapter\Http\ResponseInterface;
+use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
+use WebHemi\Application\ApplicationInterface;
 use WebHemi\Routing\Result;
 
 /**
@@ -48,10 +50,20 @@ class RoutingMiddleware implements MiddlewareInterface
 
         if ($routeResult->getStatus() !== Result::CODE_FOUND) {
             $response = $response->withStatus($routeResult->getStatus());
-            $request  = $request->withAttribute('exception', new \Exception($routeResult->getStatusReason()));
+            $request  = $request->withAttribute(
+                ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION,
+                new Exception($routeResult->getStatusReason())
+            );
         } else {
             $request = $request
-                ->withAttribute('resolvedActionMiddleware', $routeResult->getMatchedMiddleware());
+                ->withAttribute(
+                    ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS,
+                    $routeResult->getMatchedMiddleware()
+                )
+                ->withAttribute(
+                    ServerRequestInterface::REQUEST_ATTR_ROUTING_PARAMETERS,
+                    $routeResult->getParameters()
+                );
         }
 
         return $response;

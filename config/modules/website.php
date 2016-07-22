@@ -10,14 +10,35 @@
  * @link      http://www.gixx-web.com
  */
 
+use WebHemi\DataStorage\User\UserStorage;
+
 return [
-    'Website' => [
-        'routing' => [
-            'index' => [
-                'path'            => '/',
-                'middleware'      => \WebHemi\Middleware\Action\FakeAction::class,
-                'allowed_methods' => ['GET'],
-            ]
+    'modules' => [
+        'Website' => [
+            'routing' => [
+                'index' => [
+                    'path'            => '/',
+                    'middleware'      => \WebHemi\Middleware\Action\FakeAction::class,
+                    'allowed_methods' => ['GET'],
+                ],
+                'view' => [
+                    'path'            => '/view/{id:.*}',
+                    'middleware'      => \WebHemi\Middleware\Action\FakeViewAction::class,
+                    'allowed_methods' => ['GET'],
+                ]
+            ],
         ],
     ],
+    'dependencies' => [
+        \WebHemi\Middleware\Action\FakeAction::class => [
+            'arguments' => [
+                UserStorage::class
+            ]
+        ],
+        \WebHemi\Middleware\Action\FakeViewAction::class => [
+            'arguments' => [
+                UserStorage::class
+            ]
+        ],
+    ]
 ];

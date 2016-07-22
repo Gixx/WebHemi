@@ -11,7 +11,7 @@
  */
 namespace WebHemi\Adapter\Router;
 
-use Psr\Http\Message\ServerRequestInterface;
+use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Config\ConfigInterface;
 use WebHemi\Routing\Result;
 

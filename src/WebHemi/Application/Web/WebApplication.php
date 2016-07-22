@@ -12,9 +12,9 @@
 namespace WebHemi\Application\Web;
 
 use InvalidArgumentException;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
+use WebHemi\Adapter\Http\ResponseInterface;
+use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
@@ -96,6 +96,10 @@ class WebApplication implements ApplicationInterface
             ->setServiceArgument(
                 RendererAdapterInterface::class,
                 $themeResourcePath
+            )
+            ->setServiceArgument(
+                RendererAdapterInterface::class,
+                $this->environmentManager->getSelectedApplicationUri()
             );
 
         $this->container
@@ -150,7 +154,6 @@ class WebApplication implements ApplicationInterface
     public function run()
     {
         $this->prepare();
-
         /** @var HttpAdapterInterface $httpAdapter */
         $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
         /** @var ServerRequestInterface $request */
@@ -159,39 +162,43 @@ class WebApplication implements ApplicationInterface
         $response = $httpAdapter->getResponse();
         $middlewareClass = $this->pipeline->start();
 
-        while ($middlewareClass !== null) {
+        while ($middlewareClass !== null
+            && $response->getStatusCode() == ResponseInterface::STATUS_PROCESSING
+        ) {
             try {
                 /** @var MiddlewareInterface $middleware */
                 $middleware = $this->container->get($middlewareClass);
                 $requestAttributes = $request->getAttributes();
-
                 // As an extra step if the action middleware is resolved, it is invoked right before the dispatcher.
                 // Only the container knows how to instantiate it in the right way, and the container must not be
                 // injected into anz other classes. It seems like a hack but it is by purpose.
+
                 if ($middleware instanceof DispatcherMiddleware
-                    && isset($requestAttributes['resolvedActionMiddleware'])
+                    && isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
                 ) {
                     /** @var MiddlewareInterface $actionMiddleware */
-                    $actionMiddleware = $this->container->get($requestAttributes['resolvedActionMiddleware']);
-                    $request = $request->withAttribute('actionMiddleware', $actionMiddleware);
+                    $actionMiddleware = $this->container
+                        ->get($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS]);
+                    $request = $request->withAttribute(
+                        ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE,
+                        $actionMiddleware
+                    );
                 }
-
                 $response = $middleware($request, $response);
             } catch (\Exception $exception) {
-                $response = $response->withStatus(500);
-                $request = $request->withAttribute('exception', $exception);
-            }
-
-            if ($response->getStatusCode() != 102) {
-                break;
+                $response = $response->withStatus(ResponseInterface::STATUS_INTERNAL_SERVER_ERROR);
+                $request = $request->withAttribute(
+                    ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION,
+                    $exception
+                );
             }
 
             $middlewareClass = $this->pipeline->next();
         };
 
         // If there was no error, we mark as ready for output.
-        if ($response->getStatusCode() == 102) {
-            $response = $response->withStatus(200);
+        if ($response->getStatusCode() == ResponseInterface::STATUS_PROCESSING) {
+            $response = $response->withStatus(ResponseInterface::STATUS_OK);
         }
 
         /** @var FinalMiddleware $finalMiddleware */

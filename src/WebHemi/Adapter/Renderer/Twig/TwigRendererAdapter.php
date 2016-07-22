@@ -31,18 +31,22 @@ class TwigRendererAdapter implements RendererAdapterInterface
     private $templateViewPath;
     /** @var string */
     private $templateResourcePath;
+    /** @var string */
+    private $applicationBaseUri;
 
     /**
      * RendererAdapterInterface constructor.
      *
      * @param ConfigInterface $templateConfig
      * @param string          $templatePath
+     * @param string          $applicationBaseUri
      */
-    public function __construct(ConfigInterface $templateConfig, $templatePath)
+    public function __construct(ConfigInterface $templateConfig, $templatePath, $applicationBaseUri)
     {
         $this->config = $templateConfig;
         $this->templateViewPath = realpath(__DIR__.'/../../../../../').$templatePath.'/view';
         $this->templateResourcePath = $templatePath.'/static';
+        $this->applicationBaseUri = $applicationBaseUri;
 
         $loader = new Twig_Loader_Filesystem($this->templateViewPath);
         $this->adapter = new Twig_Environment($loader, array('debug' => true));
@@ -71,6 +75,7 @@ class TwigRendererAdapter implements RendererAdapterInterface
 
         // Tell the template where the resources are.
         $parameters['template_resource_path'] = $this->templateResourcePath;
+        $parameters['application_base_uri'] = $this->applicationBaseUri;
 
         $output = $this->adapter->render($template, $parameters);
 

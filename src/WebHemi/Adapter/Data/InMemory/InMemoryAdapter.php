@@ -11,9 +11,9 @@
  */
 namespace WebHemi\Adapter\Data\InMemory;
 
+use InvalidArgumentException;
+use RuntimeException;
 use WebHemi\Adapter\Data\DataAdapterInterface;
-use WebHemi\Adapter\Exception\InitException;
-use WebHemi\Adapter\Exception\InvalidArgumentException;
 
 /**
  * Class InMemoryAdapter.
@@ -71,7 +71,7 @@ class InMemoryAdapter implements DataAdapterInterface
      *
      * @param string $dataGroup
      *
-     * @throws InitException
+     * @throws RuntimeException
      *
      * @return InMemoryAdapter
      */
@@ -79,7 +79,7 @@ class InMemoryAdapter implements DataAdapterInterface
     {
         // Allow to change only once.
         if ($this->dataGroup !== 'default') {
-            throw new InitException('Can\'t re-initialize dataGroup property. Property is already set.');
+            throw new RuntimeException('Can\'t re-initialize dataGroup property. Property is already set.');
         }
 
         $this->dataGroup = $dataGroup;
@@ -96,7 +96,7 @@ class InMemoryAdapter implements DataAdapterInterface
      *
      * @param string $idKey
      *
-     * @throws InitException
+     * @throws RuntimeException
      *
      * @return $this
      */
@@ -104,7 +104,7 @@ class InMemoryAdapter implements DataAdapterInterface
     {
         // Allow to change only once.
         if ($this->idKey !== 'id') {
-            throw new InitException('Can\'t re-initialize idKey property. Property is already set.');
+            throw new RuntimeException('Can\'t re-initialize idKey property. Property is already set.');
         }
 
         $this->idKey = $idKey;

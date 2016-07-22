@@ -9,7 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTest\Config;
+namespace WebHemiTest\Application;
 
 use InvalidArgumentException;
 use WebHemi\Application\EnvironmentManager;
@@ -22,7 +22,7 @@ use PHPUnit_Framework_TestCase as TestCase;
  */
 class EnvironmentManagerTest extends TestCase
 {
-    /** @var Config */
+    /** @var array */
     protected $config;
     /** @var array */
     protected $get = [];

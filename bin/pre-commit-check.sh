@@ -114,9 +114,9 @@ function run_unit_tests()
     echo -e "\n$MAGENTA  Run PHPUnit tests for changed module files $NORMAL"
 
     # Get the changed test files
-    test_files="$(echo -e "$FILES_NAME_TO_CHECK" | egrep "test/" | egrep ".*Test\.php")"
+    test_files="$(echo -e "$FILES_NAME_TO_CHECK" | egrep "tests/" | egrep ".*Test\.php")"
     # Get the changed module files and generate the UnitTest pair of them
-    module_files="$(echo -e "$FILES_NAME_TO_CHECK" | egrep "src/" | sed 's/src\/WebHemi\//test\/WebHemiTest\//' | sed 's/.php/Test.php/') "
+    module_files="$(echo -e "$FILES_NAME_TO_CHECK" | egrep "src/" | sed 's/src\/WebHemi\//tests\/WebHemiTest\//' | sed 's/.php/Test.php/') "
     # Sort and remove duplicates
     watched_files="$(echo -e "$test_files\n$module_files" | sort -u)"
 

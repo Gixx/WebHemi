@@ -18,7 +18,7 @@ use WebHemi\DataEntity\User\UserMetaEntity;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
- * Class GeneralStorageTest. It tests the AbstractDataStorage's methods mostly.
+ * Class UserMetaStorageTest.
  */
 class UserMetaStorageTest extends TestCase
 {

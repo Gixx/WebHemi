@@ -11,15 +11,15 @@
  */
 namespace WebHemiTest\Adapter\Data;
 
-use PDO;
 use DateTime;
+use InvalidArgumentException;
+use PDO;
+use PHPUnit_Framework_TestCase as TestCase;
+use RuntimeException;
 use WebHemi\Adapter\Data\PDO\PDOAdapter;
 use WebHemi\Adapter\Data\DataAdapterInterface;
-use WebHemi\Adapter\Exception\InitException;
-use WebHemi\Adapter\Exception\InvalidArgumentException;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class PDOAdapterTest.
@@ -89,7 +89,7 @@ class PDOAdapterTest extends TestCase
     /**
      * Tests the setDataGroup method.
      *
-     * @throws InitException
+     * @throws RuntimeException
      */
     public function testSetDataGroup()
     {
@@ -100,14 +100,14 @@ class PDOAdapterTest extends TestCase
         $this->assertInstanceOf(DataAdapterInterface::class, $result);
         $this->assertTrue($adapter === $result);
 
-        $this->setExpectedException(InitException::class);
+        $this->setExpectedException(RuntimeException::class);
         $adapter->setDataGroup('shouldBeBad');
     }
 
     /**
      * Tests setIdKey method.
      *
-     * @throws InitException
+     * @throws RuntimeException
      */
     public function testSetIdKey()
     {
@@ -118,7 +118,7 @@ class PDOAdapterTest extends TestCase
         $this->assertInstanceOf(DataAdapterInterface::class, $result);
         $this->assertTrue($adapter === $result);
 
-        $this->setExpectedException(InitException::class);
+        $this->setExpectedException(RuntimeException::class);
         $adapter->setIdKey('shouldBeBad');
     }
 

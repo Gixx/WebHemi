@@ -11,11 +11,11 @@
  */
 namespace WebHemi\Adapter\Data\PDO;
 
+use InvalidArgumentException;
 use PDO;
 use PDOStatement;
+use RuntimeException;
 use WebHemi\Adapter\Data\DataAdapterInterface;
-use WebHemi\Adapter\Exception\InitException;
-use WebHemi\Adapter\Exception\InvalidArgumentException;
 
 /**
  * Class PDOAdapter.
@@ -72,14 +72,14 @@ class PDOAdapter implements DataAdapterInterface
      *
      * @param string $dataGroup
      *
-     * @throws InitException
+     * @throws RuntimeException
      *
      * @return PDOAdapter
      */
     public function setDataGroup($dataGroup)
     {
         if (!empty($this->dataGroup)) {
-            throw new InitException('Can\'t re-initialize dataGroup property. Property is already set.');
+            throw new RuntimeException('Can\'t re-initialize dataGroup property. Property is already set.');
         }
 
         $this->dataGroup = $dataGroup;
@@ -92,14 +92,14 @@ class PDOAdapter implements DataAdapterInterface
      *
      * @param string $idKey
      *
-     * @throws InitException
+     * @throws RuntimeException
      *
      * @return PDOAdapter
      */
     public function setIdKey($idKey)
     {
         if (!empty($this->idKey)) {
-            throw new InitException('Can\'t re-initialize idKey property. Property is already set.');
+            throw new RuntimeException('Can\'t re-initialize idKey property. Property is already set.');
         }
 
         $this->idKey = $idKey;

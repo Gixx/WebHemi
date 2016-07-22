@@ -12,16 +12,15 @@
 namespace WebHemiTest\Adapter\Router;
 
 use FastRoute\Dispatcher;
-use GuzzleHttp\Psr7\ServerRequest;
+use WebHemi\Adapter\Http\GuzzleHttp\ServerRequest;
 use InvalidArgumentException;
-use Psr\Http\Message\ServerRequestInterface;
+use PHPUnit_Framework_TestCase as TestCase;
 use WebHemi\Config\Config;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Adapter\Router\FastRoute\FastRouteAdapter;
 use WebHemi\Routing\Result;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class FastRouterAdapterTest.
