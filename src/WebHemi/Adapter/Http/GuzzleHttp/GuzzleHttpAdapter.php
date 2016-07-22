@@ -22,7 +22,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
 {
     /** @var ServerRequest */
     private $request;
-    /** @var ResponseInterface */
+    /** @var Response */
     private $response;
 
     /** @var array */

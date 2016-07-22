@@ -8,6 +8,11 @@ use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataStorage\User\UserStorage;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
+/**
+ * Class FakeViewAction
+ *
+ * @codeCoverageIgnore - only for test purposes
+ */
 class FakeViewAction extends AbstractMiddlewareAction
 {
     /** @var UserStorage */
