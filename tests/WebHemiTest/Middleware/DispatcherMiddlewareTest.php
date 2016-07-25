@@ -24,9 +24,9 @@ use WebHemiTest\Fixtures\TestMiddleware;
 use WebHemiTest\Fixtures\TestActionMiddleware;
 
 /**
- * Class DispatcherAdapterTest.
+ * Class DispatcherMiddlewareTest.
  */
-class DispatcherAdapterTest extends TestCase
+class DispatcherMiddlewareTest extends TestCase
 {
     /**
      * Tears down the fixture, for example, close a network connection.

@@ -117,9 +117,9 @@ return [
         ],
     ],
     'middleware_pipeline' => [
-        ['class' => 'pipe1', 'priority' => 66],
-        ['class' => 'pipe2', 'priority' => -20],
-        ['class' => 'pipe3'],
-        ['class' => 'pipe4', 'priority' => 120],
+        ['service' => 'pipe1', 'priority' => 66],
+        ['service' => 'pipe2', 'priority' => -20],
+        ['service' => 'pipe3'],
+        ['service' => 'pipe4', 'priority' => 120],
     ]
 ];

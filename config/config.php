@@ -33,11 +33,12 @@ $config = [
     'modules' => [],
     'themes' => [],
     'middleware_pipeline' => [
-//        ['class' => LockCheckMiddleware::class, 'priority' => -100],
-//        ['class' => AuthMiddleware::class, 'priority' => -50],
-//        ['class' => AclMiddleware::class, 'priority' => 33],
-//        ['class' => CacheReaderMiddleware::class, 'priority' => 66],
-//        ['class' => CacheWriterMiddleware::class, 'priority' => 150],
+//        ['service' => LockCheckMiddleware::class, 'priority' => -100],
+//        ['service' => AuthMiddleware::class, 'priority' => -50],
+//        ['service' => AclMiddleware::class, 'priority' => 33],
+//        ['service' => CacheReaderMiddleware::class, 'priority' => 66],
+//        ['service' => CacheWriterMiddleware::class, 'priority' => 150],
+//        ['service' => 'SomeCustomServiceAlias', 'priority' => 200],
     ],
     'dependencies' => [
         // Library
