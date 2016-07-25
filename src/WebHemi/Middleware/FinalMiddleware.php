@@ -44,9 +44,11 @@ class FinalMiddleware implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
     {
-        if (headers_sent()) {
+        // @codeCoverageIgnoreStart
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && headers_sent()) {
             throw new RuntimeException('Unable to emit response; headers already sent');
         }
+        // @codeCoverageIgnoreEnd
 
         $content = $response->getBody();
 
@@ -59,24 +61,30 @@ class FinalMiddleware implements MiddlewareInterface
 
         $response = $this->injectContentLength($response);
 
-        $reasonPhrase = $response->getReasonPhrase();
-        header(sprintf(
-            'HTTP/%s %d%s',
-            $response->getProtocolVersion(),
-            $response->getStatusCode(),
-            ($reasonPhrase ? ' '.$reasonPhrase : '')
-        ));
+        // Skip sending output when PHP Unit is running.
+        // @codeCoverageIgnoreStart
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            $reasonPhrase = $response->getReasonPhrase();
+            header(sprintf(
+                'HTTP/%s %d%s',
+                $response->getProtocolVersion(),
+                $response->getStatusCode(),
+                ($reasonPhrase ? ' '.$reasonPhrase : '')
+            ));
 
-        foreach ($response->getHeaders() as $headerName => $values) {
-            $name  = $this->filterHeaderName($headerName);
-            $first = true;
-            foreach ($values as $value) {
-                header(sprintf('%s: %s', $name, $value), $first);
-                $first = false;
+            foreach ($response->getHeaders() as $headerName => $values) {
+                $name  = $this->filterHeaderName($headerName);
+                $first = true;
+                foreach ($values as $value) {
+                    header(sprintf('%s: %s', $name, $value), $first);
+                    $first = false;
+                }
             }
-        }
 
-        echo $content;
+            echo $content;
+        }
+        // @codeCoverageIgnoreEnd
+
         return $response;
     }
 

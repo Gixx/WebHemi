@@ -183,4 +183,83 @@ class WebapplicationTest extends TestCase
         $this->assertSame(500, TestMiddleware::$responseStatus);
         $this->assertEmpty(TestMiddleware::$responseBody);
     }
+
+    /**
+     * Test run with error 2.
+     */
+    public function testRunForNonExistsPage()
+    {
+        $this->server = [
+            'HTTP_HOST'    => 'unittest.dev',
+            'SERVER_NAME'  => 'unittest.dev',
+            'REQUEST_URI'  => '/page-not-exists/',
+            'QUERY_STRING' => '',
+        ];
+
+        $config = new Config($this->config);
+
+        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+        $environmentManager = new EnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+
+        $app = new Application($diAdapter, $environmentManager, $pipeline);
+        $app->run();
+
+        $expectedPipelineTrace = [
+            'pipe2',
+            'final'
+        ];
+
+        $this->assertSame(count($expectedPipelineTrace), TestMiddleware::$counter);
+        $this->assertArraysAreSimilar($expectedPipelineTrace, TestMiddleware::$trace);
+        $this->assertSame(404, TestMiddleware::$responseStatus);
+        $this->assertEmpty(TestMiddleware::$responseBody);
+    }
+
+    /**
+     * Test run with bad method request.
+     */
+    public function testRunForBadMethod()
+    {
+        $this->server = [
+            'HTTP_HOST'      => 'unittest.dev',
+            'SERVER_NAME'    => 'unittest.dev',
+            'REQUEST_URI'    => '/',
+            'REQUEST_METHOD' => 'POST',
+            'QUERY_STRING'   => '',
+        ];
+
+        $config = new Config($this->config);
+
+        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+        $environmentManager = new EnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+
+        $app = new Application($diAdapter, $environmentManager, $pipeline);
+        $app->run();
+
+        $expectedPipelineTrace = [
+            'pipe2',
+            'final'
+        ];
+
+        $this->assertSame(count($expectedPipelineTrace), TestMiddleware::$counter);
+        $this->assertArraysAreSimilar($expectedPipelineTrace, TestMiddleware::$trace);
+        $this->assertSame(405, TestMiddleware::$responseStatus);
+        $this->assertEmpty(TestMiddleware::$responseBody);
+    }
 }

@@ -11,10 +11,8 @@
  */
 namespace WebHemi\Middleware\Pipeline;
 
-use InvalidArgumentException;
 use RuntimeException;
 use WebHemi\Config\ConfigInterface;
-use WebHemi\Middleware\MiddlewareInterface;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\RoutingMiddleware;
@@ -43,7 +41,6 @@ class Pipeline implements MiddlewarePipelineInterface
     public function __construct(ConfigInterface $pipelineConfig)
     {
         $this->config = $pipelineConfig;
-
         $this->keyMiddlewareList = [
             RoutingMiddleware::class,
             DispatcherMiddleware::class,
@@ -76,7 +73,7 @@ class Pipeline implements MiddlewarePipelineInterface
                 $middlewareData['priority'] = 50;
             }
 
-            $this->queueMiddleware($middlewareData['class'], $middlewareData['priority']);
+            $this->queueMiddleware($middlewareData['service'], $middlewareData['priority']);
         }
     }
 
@@ -97,7 +94,7 @@ class Pipeline implements MiddlewarePipelineInterface
 
         if (in_array($middleWareClass, $this->pipelineList)) {
             throw new RuntimeException(
-                sprintf('The class "%s" is already added to the pipeline.', $middleWareClass)
+                sprintf('The service "%s" is already added to the pipeline.', $middleWareClass)
             );
         }
 
@@ -131,8 +128,9 @@ class Pipeline implements MiddlewarePipelineInterface
             $this->priorityList[$priority] = [];
         }
 
-        if (!in_array($middleWareClass, $this->priorityList[$priority])) {
+        if (!in_array($middleWareClass, $this->pipelineList)) {
             $this->priorityList[$priority][] = $middleWareClass;
+            $this->pipelineList[] = $middleWareClass;
         }
 
         return $this;

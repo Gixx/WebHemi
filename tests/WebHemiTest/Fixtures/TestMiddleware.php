@@ -56,7 +56,7 @@ class TestMiddleware implements MiddlewareInterface
     {
         self::$counter++;
 
-        if ($request->getMethod() == 'GET' && $this->isFinalMiddleware) {
+        if (in_array($request->getMethod(), ['GET', 'POST']) && $this->isFinalMiddleware) {
             self::$responseStatus = $response->getStatusCode();
             self::$responseBody = $response->getBody()->__toString();
         }
