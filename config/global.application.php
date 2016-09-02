@@ -16,15 +16,11 @@
 return [
     'applications' => [
         'admin' => [
-            'title'       => 'WebHemi Administration',
-            'description' => 'A simple content management area for authorized persons only.',
             'type'        => 'directory',
             'path'        => 'admin',
             'theme'       => 'default',
         ],
         'website' => [
-            'title'       => 'WebHemi Blog',
-            'description' => 'A web application for those who likes simplicity and for developers who like clean code.',
             'theme'       => 'default',
         ],
     ]

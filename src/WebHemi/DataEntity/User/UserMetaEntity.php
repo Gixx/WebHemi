@@ -30,7 +30,7 @@ class UserMetaEntity implements DataEntityInterface
     /**
      * @param mixed $userMetaId
      *
-     * @return $this
+     * @return UserMetaEntity
      */
     public function setUserMetaId($userMetaId)
     {
@@ -50,7 +50,7 @@ class UserMetaEntity implements DataEntityInterface
     /**
      * @param mixed $userId
      *
-     * @return $this
+     * @return UserMetaEntity
      */
     public function setUserId($userId)
     {
@@ -70,7 +70,7 @@ class UserMetaEntity implements DataEntityInterface
     /**
      * @param string $metaKey
      *
-     * @return $this
+     * @return UserMetaEntity
      */
     public function setMetaKey($metaKey)
     {
@@ -90,7 +90,7 @@ class UserMetaEntity implements DataEntityInterface
     /**
      * @param mixed $metaData
      *
-     * @return $this
+     * @return UserMetaEntity
      */
     public function setMetaData($metaData)
     {
