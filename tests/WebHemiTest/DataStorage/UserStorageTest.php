@@ -76,12 +76,10 @@ class UserStorageTest extends TestCase
             'email' => 'test.address@foo.org',
             'password' => md5('testPassword'),
             'hash' => null,
-            'last_ip' => '127.0.0.1',
-            'register_ip' => '127.0.0.1',
             'is_active' => true,
             'is_enabled' => true,
-            'time_login' => '2016-03-29 07:24:11',
-            'time_register' =>  '2016-03-24 16:25:12',
+            'date_created' =>  '2016-03-24 16:25:12',
+            'date_modified' =>  null,
         ];
 
         $this->defaultAdapter
@@ -108,7 +106,7 @@ class UserStorageTest extends TestCase
         $actualResult = $storage->getUserById(1);
         $this->assertInstanceOf(UserEntity::class, $actualResult);
         $this->assertFalse($dataEntity === $actualResult);
-        $this->assertInstanceOf(DateTime::class, $actualResult->getTimeLogin());
+        $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
         $this->assertEquals($data['password'], $actualResult->getPassword());
         $this->assertSame(true, $actualResult->getEnabled());
     }
@@ -124,12 +122,10 @@ class UserStorageTest extends TestCase
             'email' => 'test.address@foo.org',
             'password' => md5('testPassword'),
             'hash' => null,
-            'last_ip' => '127.0.0.1',
-            'register_ip' => '127.0.0.1',
             'is_active' => true,
             'is_enabled' => true,
-            'time_login' => '2016-03-29 07:24:11',
-            'time_register' =>  '2016-03-24 16:25:12',
+            'date_created' =>  '2016-03-24 16:25:12',
+            'date_modified' =>  null,
         ];
 
         $this->defaultAdapter
@@ -155,7 +151,7 @@ class UserStorageTest extends TestCase
         $actualResult = $storage->getUserByEmail('test.address@foo.org');
         $this->assertInstanceOf(UserEntity::class, $actualResult);
         $this->assertFalse($dataEntity === $actualResult);
-        $this->assertInstanceOf(DateTime::class, $actualResult->getTimeLogin());
+        $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
         $this->assertEquals($data['password'], $actualResult->getPassword());
         $this->assertSame(true, $actualResult->getEnabled());
     }

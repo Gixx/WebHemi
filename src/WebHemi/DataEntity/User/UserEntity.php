@@ -29,23 +29,19 @@ class UserEntity implements DataEntityInterface
     private $password;
     /** @var string */
     private $hash;
-    /** @var string */
-    private $lastIp;
-    /** @var string */
-    private $registerIp;
     /** @var bool */
     private $isActive;
     /** @var bool */
     private $isEnabled;
     /** @var DateTime */
-    private $timeLogin;
+    private $dateCreated;
     /** @var DateTime */
-    private $timeRegister;
+    private $dateModified;
 
     /**
      * @param mixed $userId
      *
-     * @return $this
+     * @return UserEntity
      */
     public function setUserId($userId)
     {
@@ -65,7 +61,7 @@ class UserEntity implements DataEntityInterface
     /**
      * @param string $userName
      *
-     * @return $this
+     * @return UserEntity
      */
     public function setUserName($userName)
     {
@@ -85,7 +81,7 @@ class UserEntity implements DataEntityInterface
     /**
      * @param string $email
      *
-     * @return $this
+     * @return UserEntity
      */
     public function setEmail($email)
     {
@@ -105,7 +101,7 @@ class UserEntity implements DataEntityInterface
     /**
      * @param string $password
      *
-     * @return $this
+     * @return UserEntity
      */
     public function setPassword($password)
     {
@@ -125,7 +121,7 @@ class UserEntity implements DataEntityInterface
     /**
      * @param string $hash
      *
-     * @return $this
+     * @return UserEntity
      */
     public function setHash($hash)
     {
@@ -143,49 +139,9 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @param string $lastIp
-     *
-     * @return $this
-     */
-    public function setLastIp($lastIp)
-    {
-        $this->lastIp = $lastIp;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastIp()
-    {
-        return $this->lastIp;
-    }
-
-    /**
-     * @param string $registerIp
-     *
-     * @return $this
-     */
-    public function setRegisterIp($registerIp)
-    {
-        $this->registerIp = $registerIp;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRegisterIp()
-    {
-        return $this->registerIp;
-    }
-
-    /**
      * @param bool $state
      *
-     * @return $this
+     * @return UserEntity
      */
     public function setActive($state)
     {
@@ -205,7 +161,7 @@ class UserEntity implements DataEntityInterface
     /**
      * @param bool $state
      *
-     * @return $this
+     * @return UserEntity
      */
     public function setEnabled($state)
     {
@@ -223,13 +179,13 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @param DateTime $timeLogin
+     * @param DateTime $dateCreated
      *
-     * @return $this
+     * @return UserEntity
      */
-    public function setTimeLogin(DateTime $timeLogin)
+    public function setDateCreated(DateTime $dateCreated)
     {
-        $this->timeLogin = $timeLogin;
+        $this->dateCreated = $dateCreated;
 
         return $this;
     }
@@ -237,19 +193,19 @@ class UserEntity implements DataEntityInterface
     /**
      * @return DateTime
      */
-    public function getTimeLogin()
+    public function getDateCreated()
     {
-        return $this->timeLogin;
+        return $this->dateCreated;
     }
 
     /**
-     * @param DateTime $timeRegister
+     * @param DateTime $dateModified
      *
-     * @return $this
+     * @return UserEntity
      */
-    public function setTimeRegister(DateTime $timeRegister)
+    public function setDateModified(DateTime $dateModified)
     {
-        $this->timeRegister = $timeRegister;
+        $this->dateModified = $dateModified;
 
         return $this;
     }
@@ -257,8 +213,8 @@ class UserEntity implements DataEntityInterface
     /**
      * @return DateTime
      */
-    public function getTimeRegister()
+    public function getDateModified()
     {
-        return $this->timeRegister;
+        return $this->dateModified;
     }
 }

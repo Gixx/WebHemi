@@ -41,7 +41,7 @@ class PDOAdapterTest extends TestCase
             $this->markTestSkipped('No SQLite Available');
         }
 
-        return parent::checkRequirements();
+        parent::checkRequirements();
     }
 
     /**
@@ -52,7 +52,7 @@ class PDOAdapterTest extends TestCase
     {
         parent::setUp();
 
-        $databaseFile = realpath(__DIR__ . '/../../Fixtures/database.sqlite3');
+        $databaseFile = realpath(__DIR__ . '/../../../../build/webhemi_schema.sqlite3');
 
         $this->pdo = new PDO('sqlite:' . $databaseFile);
     }

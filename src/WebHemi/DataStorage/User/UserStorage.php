@@ -33,18 +33,14 @@ class UserStorage extends AbstractDataStorage
     private $password = 'password';
     /** @var string */
     private $hash = 'hash';
-    /** @var string */
-    private $lastIp = 'last_ip';
-    /** @var string */
-    private $registerIp = 'register_ip';
-    /** @var string */
+    /** @var int */
     private $isActive = 'is_active';
-    /** @var string */
+    /** @var int */
     private $isEnabled = 'is_enabled';
     /** @var string */
-    private $timeLogin = 'time_login';
+    private $dateCreated = 'date_created';
     /** @var string */
-    private $timeRegister = 'time_register';
+    private $dateModified = 'date_modified';
 
     /**
      * Populates an entity with storage data.
@@ -60,12 +56,10 @@ class UserStorage extends AbstractDataStorage
             ->setEmail($data[$this->email])
             ->setPassword($data[$this->password])
             ->setHash($data[$this->hash])
-            ->setLastIp($data[$this->lastIp])
-            ->setRegisterIp($data[$this->registerIp])
             ->setActive($data[$this->isActive])
             ->setEnabled($data[$this->isEnabled])
-            ->setTimeLogin(new DateTime($data[$this->timeLogin]))
-            ->setTimeRegister(new DateTime($data[$this->timeRegister]));
+            ->setDateCreated(new DateTime($data[$this->dateCreated]))
+            ->setDateModified(new DateTime($data[$this->dateModified]));
     }
 
     /**
