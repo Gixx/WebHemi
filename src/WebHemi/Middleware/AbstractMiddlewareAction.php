@@ -13,10 +13,6 @@ namespace WebHemi\Middleware;
 
 use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\ServerRequestInterface;
-use WebHemi\DataEntity\User\UserEntity;
-use WebHemi\DataStorage\User\UserStorage;
-use WebHemi\Middleware\MiddlewareInterface;
-use WebHemi\Middleware\MiddlewareActionInterface;
 
 /**
  * Class AbstractMiddlewareAction.
