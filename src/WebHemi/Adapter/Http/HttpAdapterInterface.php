@@ -11,9 +11,6 @@
  */
 namespace WebHemi\Adapter\Http;
 
-use WebHemi\Adapter\Http\ResponseInterface;
-use WebHemi\Adapter\Http\ServerRequestInterface;
-
 /**
  * Interface AdapterInterface.
  */
