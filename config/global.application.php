@@ -15,12 +15,12 @@
  */
 return [
     'applications' => [
+        'website' => [
+            'theme'       => 'default',
+        ],
         'admin' => [
             'type'        => 'directory',
             'path'        => 'admin',
-            'theme'       => 'default',
-        ],
-        'website' => [
             'theme'       => 'default',
         ],
     ]

@@ -83,13 +83,13 @@ function get_application_config()
     ];
     $readOnlyApplicationConfig = [
         'applications' => [
-            'admin' => [
-                'module'      => 'Admin',
-            ],
             'website' => [
                 'module'      => 'Website',
                 'type'        => 'domain',
                 'path'        => 'www',
+            ],
+            'admin' => [
+                'module'      => 'Admin',
             ],
         ],
     ];
@@ -110,6 +110,9 @@ function get_application_config()
             $settings['module'] = 'Website';
         }
     }
+
+    // It is important that the custom application should be checked first, then the 'admin', and the 'website' last.
+    $applicationConfig['applications'] = array_reverse($applicationConfig['applications']);
 
     return $applicationConfig;
 }
