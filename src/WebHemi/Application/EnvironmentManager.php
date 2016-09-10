@@ -282,8 +282,8 @@ class EnvironmentManager
             // Don't risk, fix.
             $applicationData = array_merge($applicationDataFixture, $applicationData);
 
-            if ($this->checkDirectoryIsValid($applicationData['type'], $applicationData['path'], $subDirectory)
-                || $this->checkDomainIsValid($applicationData['type'], $applicationData['path'], $subDirectory)
+            if ($this->checkDirectoryIsValid($applicationName, $applicationData, $subDirectory)
+                || $this->checkDomainIsValid($applicationName, $applicationData, $subDirectory)
             ) {
                 $this->selectedModule = $applicationData['module'];
                 $this->selectedApplication = (string)$applicationName;
@@ -304,34 +304,38 @@ class EnvironmentManager
     /**
      * Checks from type, path it the current URI segment is valid.
      *
-     * @param string $type
-     * @param string $path
+     * @param string $applicationName
+     * @param array  $applicationData
      * @param string $subDirectory
      *
      * @return bool
      */
-    private function checkDirectoryIsValid($type, $path, $subDirectory)
+    private function checkDirectoryIsValid($applicationName, $applicationData, $subDirectory)
     {
         return $this->subDomain == 'www'
+            && $applicationName != 'website'
             && !empty($subDirectory)
-            && $type == self::APPLICATION_TYPE_DIRECTORY
-            && $path == $subDirectory;
+            && $applicationData['type'] == self::APPLICATION_TYPE_DIRECTORY
+            && $applicationData['path'] == $subDirectory;
     }
 
     /**
      * Checks from type and path if the domain is valid. If so, it sets the $subDirectory to the default.
      *
-     * @param string $type
-     * @param string $path
+     * @param string $applicationName
+     * @param array  $applicationData
      * @param string $subDirectory
      *
      * @return bool
      */
-    private function checkDomainIsValid($type, $path, &$subDirectory)
+    private function checkDomainIsValid($applicationName, $applicationData, &$subDirectory)
     {
-        $isSubdomain = $this->subDomain != 'www'
-            && $type == self::APPLICATION_TYPE_DOMAIN
-            && $path == $this->subDomain;
+        $isSubdomain = $applicationName == 'website'
+            || (
+                $this->subDomain != 'www'
+                && $applicationData['type'] == self::APPLICATION_TYPE_DOMAIN
+                && $applicationData['path'] == $this->subDomain
+            );
 
         // If this method get called and will return TRUE, it means the $subDirectory paramtere will be used only for
         // setting the right selectedApplicationUri. To avoid complexity, we change it here. Doesn't matter.
