@@ -32,8 +32,6 @@ class FakeAction extends AbstractMiddlewareAction
         /** @var UserEntity $userEntity */
         $userEntity = $this->userStorage->getUserById(1);
 
-        var_dump($_POST);
-
         return [
             'blogPosts' => [
                 [
@@ -55,6 +53,7 @@ class FakeAction extends AbstractMiddlewareAction
                     'content'     => 'Lorem ipsum dolor sit amet...'
                 ]
             ],
+            'postData' => var_export($this->request->getParsedBody(), true),
             'loginForm' => new LoginForm('test')
         ];
     }

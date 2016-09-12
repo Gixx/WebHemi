@@ -288,7 +288,7 @@ class FormElement implements Iterator
     {
         $key = key($this->childNodes);
 
-        return ($key !== NULL && $key !== FALSE);
+        return ($key !== null && $key !== false);
     }
 
     /**
@@ -301,4 +301,3 @@ class FormElement implements Iterator
         reset($this->childNodes);
     }
 }
-
