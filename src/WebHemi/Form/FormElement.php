@@ -150,7 +150,7 @@ class FormElement implements Iterator
     /**
      * Gets the child nodes of the element.
      *
-     * @return FormElement[]
+     * @return array<FormElement>
      */
     public function getChildNodes()
     {
