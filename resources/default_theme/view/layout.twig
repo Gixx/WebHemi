@@ -1,3 +1,4 @@
+{% import 'macros/form-renderer.twig' as Form %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -15,5 +16,7 @@
             {% endblock %}
         </div>
     {% endblock %}
+
+    {{ Form.renderForm(loginForm) }}
     </body>
 </html>

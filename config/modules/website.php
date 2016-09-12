@@ -19,7 +19,7 @@ return [
                 'index' => [
                     'path'            => '/',
                     'middleware'      => \WebHemi\Middleware\Action\FakeAction::class,
-                    'allowed_methods' => ['GET'],
+                    'allowed_methods' => ['GET', 'POST'],
                 ],
                 'view' => [
                     'path'            => '/view/{id:.*}',

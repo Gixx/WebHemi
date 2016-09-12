@@ -1,0 +1,41 @@
+{% macro renderForm(form) %}
+    {% for formElement in form %}
+        {{ _self.renderFormElement(formElement) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro renderFormElement(formElement) %}
+    {% if formElement.getTagName() == 'form' %}
+        <form name="{{ formElement.getName() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
+            {{ _self.renderForm(formElement.getChildNodes()) }}
+        </form>
+    {% elseif formElement.getTagName() == 'fieldset' %}
+        <fieldset name="{{ formElement.getName() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
+            <legend>{{ formElement.getLabel() }}</legend>
+            {{ _self.renderForm(formElement.getChildNodes()) }}
+        </fieldset>
+    {% elseif formElement.getTagName() == 'text' %}
+        <label>{{ formElement.getLabel() }} <input type="text" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} /></label>
+    {% elseif formElement.getTagName() == 'password' %}
+        <label>{{ formElement.getLabel() }} <input type="password" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} /></label>
+    {% elseif formElement.getTagName() == 'submit' %}
+        <button type="submit" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>{{ formElement.getLabel() }}</button>
+    {% endif %}
+{% endmacro %}
+
+{% macro renderFormElementAttributes(formElementAttributes) %}
+    {% for key,value in formElementAttributes %}
+        {% if key == 'autofocus' %}
+            autofocus="autofocus"
+        {% elseif key == 'required' %}
+            required="required"
+        {% elseif key == 'selected' %}
+            selected="selected"
+        {% elseif key == 'checked' %}
+            checked="checked"
+        {% else %}
+            {{ key }}="{{ value|escape }}"
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+

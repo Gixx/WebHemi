@@ -45,11 +45,13 @@ class TwigRendererAdapter implements RendererAdapterInterface
     {
         $this->config = $templateConfig;
         $this->templateViewPath = realpath(__DIR__.'/../../../../../').$templatePath.'/view';
+        $this->builtInMacroPath = realpath(__DIR__.'/../../../../../resources/default_theme/view/macros');
         $this->templateResourcePath = $templatePath.'/static';
         $this->applicationBaseUri = $applicationBaseUri;
 
         $loader = new Twig_Loader_Filesystem($this->templateViewPath);
-        $this->adapter = new Twig_Environment($loader, array('debug' => true));
+        $loader->addPath($this->builtInMacroPath, 'WebHemi');
+        $this->adapter = new Twig_Environment($loader, array('debug' => true, 'cache' => false));
         $this->adapter->addExtension(new Twig_Extension_Debug());
     }
 

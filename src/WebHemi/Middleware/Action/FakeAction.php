@@ -4,6 +4,7 @@ namespace WebHemi\Middleware\Action;
 
 use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataStorage\User\UserStorage;
+use WebHemi\Form\LoginForm;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
 /**
@@ -31,6 +32,8 @@ class FakeAction extends AbstractMiddlewareAction
         /** @var UserEntity $userEntity */
         $userEntity = $this->userStorage->getUserById(1);
 
+        var_dump($_POST);
+
         return [
             'blogPosts' => [
                 [
@@ -51,7 +54,8 @@ class FakeAction extends AbstractMiddlewareAction
                     ],
                     'content'     => 'Lorem ipsum dolor sit amet...'
                 ]
-            ]
+            ],
+            'loginForm' => new LoginForm('test')
         ];
     }
 }
