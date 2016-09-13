@@ -23,12 +23,14 @@ class LoginForm extends AbstractForm
      */
     protected function initForm()
     {
-        $fieldset = new FormElement(FormElement::TAG_FIELDSET, 'info', 'Login information');
+        $fieldset = new FormElement(FormElement::TAG_FIELDSET, 'info');
 
+        $legend = new FormElement(FormElement::TAG_LEGEND, 'info', 'Login information 2');
         $loginname = new FormElement(FormElement::TAG_INPUT_TEXT, 'username', 'Username');
         $password = new FormElement(FormElement::TAG_INPUT_PASSWORD, 'password', 'Password');
 
-        $fieldset->addChildNode($loginname)
+        $fieldset->addChildNode($legend)
+            ->addChildNode($loginname)
             ->addChildNode($password);
 
         $submit = new FormElement(FormElement::TAG_BUTTON_SUBMIT, 'submit', 'Login');

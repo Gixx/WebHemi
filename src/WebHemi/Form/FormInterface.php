@@ -28,7 +28,7 @@ interface FormInterface
     /**
      * Gets the form elements.
      *
-     * @return FormElement[];
+     * @return array<FormElement>
      */
     public function getChildNodes();
 

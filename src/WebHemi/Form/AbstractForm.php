@@ -15,7 +15,7 @@ use Iterator;
 
 abstract class AbstractForm implements FormInterface, Iterator
 {
-    /** @var FormElement[] */
+    /** @var array<FormElement> */
     protected $form;
 
     /**
@@ -31,7 +31,7 @@ abstract class AbstractForm implements FormInterface, Iterator
         $form->setAttribute('action', $action)
             ->setAttribute('method', strtoupper($method));
 
-        // for simplicity, we store it in an array.
+        // for simplicity in rendering (twig macro), we store it in an array.
         $this->form[0] = $form;
 
         $this->initForm();
@@ -62,7 +62,7 @@ abstract class AbstractForm implements FormInterface, Iterator
     /**
      * Gets the form elements.
      *
-     * @return FormElement[];
+     * @return array<FormElement>
      */
     public function getChildNodes()
     {

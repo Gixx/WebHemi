@@ -1,19 +1,26 @@
 {% macro renderForm(form) %}
+    {% if form.current().getTagName() == 'form' %}
+        {{ _self.renderSubForm(form) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro renderSubForm(form) %}
     {% for formElement in form %}
-        {{ _self.renderFormElement(formElement) }}
+        {{ _self.renderElement(formElement) }}
     {% endfor %}
 {% endmacro %}
 
-{% macro renderFormElement(formElement) %}
+{% macro renderElement(formElement) %}
     {% if formElement.getTagName() == 'form' %}
         <form name="{{ formElement.getName() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
-            {{ _self.renderForm(formElement.getChildNodes()) }}
+            {{ _self.renderSubForm(formElement.getChildNodes()) }}
         </form>
     {% elseif formElement.getTagName() == 'fieldset' %}
         <fieldset name="{{ formElement.getName() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
-            <legend>{{ formElement.getLabel() }}</legend>
-            {{ _self.renderForm(formElement.getChildNodes()) }}
+            {{ _self.renderSubForm(formElement.getChildNodes()) }}
         </fieldset>
+    {% elseif formElement.getTagName() == 'legend' %}
+        <legend>{{ formElement.getLabel() }}</legend>
     {% elseif formElement.getTagName() == 'text' %}
         <label>{{ formElement.getLabel() }} <input type="text" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} /></label>
     {% elseif formElement.getTagName() == 'password' %}
@@ -33,9 +40,14 @@
             selected="selected"
         {% elseif key == 'checked' %}
             checked="checked"
+        {% elseif key == 'autocomplete' %}
+            {% if (value == 1) or (value == true) or (value == 'on') %}
+                autocomplete="on"
+            {% else %}
+                autocomplete="off"
+            {% endif %}
         {% else %}
             {{ key }}="{{ value|escape }}"
         {% endif %}
     {% endfor %}
 {% endmacro %}
-
