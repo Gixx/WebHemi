@@ -10,26 +10,6 @@
     {% endfor %}
 {% endmacro %}
 
-{% macro renderElement(formElement) %}
-    {% if formElement.getTagName() == 'form' %}
-        <form name="{{ formElement.getName() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
-            {{ _self.renderSubForm(formElement.getChildNodes()) }}
-        </form>
-    {% elseif formElement.getTagName() == 'fieldset' %}
-        <fieldset name="{{ formElement.getName() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
-            {{ _self.renderSubForm(formElement.getChildNodes()) }}
-        </fieldset>
-    {% elseif formElement.getTagName() == 'legend' %}
-        <legend>{{ formElement.getLabel() }}</legend>
-    {% elseif formElement.getTagName() == 'text' %}
-        <label>{{ formElement.getLabel() }} <input type="text" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} /></label>
-    {% elseif formElement.getTagName() == 'password' %}
-        <label>{{ formElement.getLabel() }} <input type="password" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} /></label>
-    {% elseif formElement.getTagName() == 'submit' %}
-        <button type="submit" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>{{ formElement.getLabel() }}</button>
-    {% endif %}
-{% endmacro %}
-
 {% macro renderFormElementAttributes(formElementAttributes) %}
     {% for key,value in formElementAttributes %}
         {% if key == 'autofocus' %}
@@ -50,4 +30,159 @@
             {{ key }}="{{ value|escape }}"
         {% endif %}
     {% endfor %}
+{% endmacro %}
+
+{% macro renderElement(formElement) %}
+    {% if formElement.getTagName() == 'form' %}
+        <form name="{{ formElement.getName() }}" {{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
+            {{ _self.renderSubForm(formElement.getChildNodes()) }}
+        </form>
+    {% elseif formElement.getTagName() == 'checkbox' %}
+        <div class="element checkbox">
+            {% if formElement.hasOptions() %}
+                <fieldset>
+                    <legend>{{ formElement.getLabel }}</legend>
+                    {% for label, option in formElement.getOptions() %}
+                        <label>
+                            <input type="hidden" name="{{ formElement.getName() }}[{{ option.value }}]" value="0" />
+                            <input type="checkbox" name="{{ formElement.getName() }}[{{ option.value }}]" value="1"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}{% if option.checked %}checked="checked"{% endif %} />
+                            {{ label }}
+                        </label>
+                    {% endfor %}
+                </fieldset>
+            {% else %}
+                <input type="hidden" name="{{ formElement.getName() }}" value="0" />
+                <input type="checkbox" id="{{ formElement.getName() }}" name="{{ formElement.getName() }}" value="1" {{ _self.renderFormElementAttributes(formElement.getAttributes()) }}{% if formElement.getValue() %} checked="checked"{% endif %} />
+                <label for="{{ formElement.getName() }}">{{ formElement.getLabel() }}</label>
+            {% endif %}
+        </div>
+
+    {% elseif formElement.getTagName() == 'color' %}
+        <div class="element input color">            *TBD*        </div>
+
+    {% elseif formElement.getTagName() == 'date' %}
+        <div class="element input date">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'datetime' %}
+        <div class="element input datetime">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'datetime-local' %}
+        <div class="element input datetime-local">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'email' %}
+        <div class="element input email">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'file' %}
+        <div class="element input file">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'hidden' %}
+        <div class="element hidden">
+            <input type="hidden" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
+        </div>
+
+    {% elseif formElement.getTagName() == 'image' %}
+        <div class="element input image">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'month' %}
+        <div class="element input month">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'number' %}
+        <div class="element input number">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'password' %}
+        <div class="element input password">
+            <label for="{{ formElement.getName() }}">{{ formElement.getLabel() }}</label>
+            <input type="password" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
+        </div>
+
+    {% elseif formElement.getTagName() == 'radio' %}
+        <div class="element radio">
+            {% if formElement.hasOptions() %}
+                <fieldset>
+                    <legend>{{ formElement.getLabel }}</legend>
+                    {% for label, option in formElement.getOptions() %}
+                        <label>
+                            <input type="radio" name="{{ formElement.getName() }}" value="{{ option.value }}" {{ _self.renderFormElementAttributes(formElement.getAttributes()) }}{% if option.value == formElement.getValue() %} checked="checked"{% endif %} />
+                            {{ label }}
+                        </label>
+                    {% endfor %}
+                </fieldset>
+            {% else %}
+                <input type="radio" id="{{ formElement.getName() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}" {{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
+                <label for="{{ formElement.getName() }}">{{ formElement.getLabel() }}</label>
+            {% endif %}
+        </div>
+
+    {% elseif formElement.getTagName() == 'range' %}
+        <div class="element input range">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'search' %}
+        <div class="element input search">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'tel' %}
+        <div class="element input tel">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'text' %}
+        <div class="element input text">
+            <label for="{{ formElement.getName() }}">{{ formElement.getLabel() }}</label>
+            <input type="text" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
+        </div>
+
+    {% elseif formElement.getTagName() == 'time' %}
+        <div class="element input time">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'url' %}
+        <div class="element input url">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'week' %}
+        <div class="element input week">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'textarea' %}
+        <div class="element textarea">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'fieldset' %}
+        <fieldset name="{{ formElement.getName() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
+            {{ _self.renderSubForm(formElement.getChildNodes()) }}
+        </fieldset>
+
+    {% elseif formElement.getTagName() == 'legend' %}
+        <legend>{{ formElement.getLabel() }}</legend>
+
+    {% elseif formElement.getTagName() == 'label' %}
+        <label for="{{ formElement.getName() }}">{{ formElement.getLabel() }}</label>
+
+    {% elseif formElement.getTagName() == 'submit' %}
+        <div class="element button submit">
+            <button type="submit" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>{{ formElement.getLabel() }}</button>
+        </div>
+
+    {% elseif formElement.getTagName() == 'reset' %}
+        <div class="element button reset">
+            <button type="reset" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>{{ formElement.getLabel() }}</button>
+        </div>
+
+    {% elseif formElement.getTagName() == 'button' %}
+        <div class="element button button">
+            <button type="button" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>{{ formElement.getLabel() }}</button>
+        </div>
+
+    {% elseif formElement.getTagName() == 'datalist' %}
+        <div class="element datalist">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'select' %}
+        <div class="element select">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'optgroup' %}
+        <div class="element optgroup">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'option' %}
+        <div class="element option">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'keygen' %}
+        <div class="element keygen">             *TBD*         </div>
+
+    {% elseif formElement.getTagName() == 'output' %}
+        <div class="element output">             *TBD*         </div>
+
+    {% endif %}
 {% endmacro %}

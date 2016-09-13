@@ -68,6 +68,8 @@ final class FormElement implements Iterator
     /** @var mixed */
     private $value;
     /** @var array */
+    private $options = [];
+    /** @var array */
     private $attributes;
     /** @var FormElement */
     private $parentNode;
@@ -89,6 +91,13 @@ final class FormElement implements Iterator
         self::TAG_OPTION_GROUP => [
             self::TAG_SELECT
         ],
+    ];
+    /** @var array */
+    private $multiOptionTags = [
+        self::TAG_SELECT,
+        self::TAG_INPUT_RADIO,
+        self::TAG_INPUT_CHECKBOX,
+        self::TAG_DATALIST
     ];
 
     /**
@@ -120,6 +129,7 @@ final class FormElement implements Iterator
      * Sets parent element name
      *
      * @param FormElement $formElement
+     * @throws RuntimeException
      * @return FormElement
      */
     public function setParentNode(FormElement $formElement)
@@ -150,11 +160,20 @@ final class FormElement implements Iterator
      */
     public function getName()
     {
+        $name = $this->name;
+
         if (isset($this->parentNode)) {
-            return $this->parentNode->getName() . '[' . $this->name . ']';
+            $name = $this->parentNode->getName() . '[' . $this->name . ']';
         }
 
-        return $this->name;
+        if (count($this->options) > 1
+            && $this->tagName  == self::TAG_SELECT
+            && !empty($this->attributes['multiple'])
+        ) {
+            $name .= '[]';
+        }
+
+        return $name;
     }
 
     /**
@@ -188,6 +207,67 @@ final class FormElement implements Iterator
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Set label-value options for the element.
+     *
+     * @param array $options
+     * @throws RuntimeException
+     * @return FormElement
+     */
+    public function setOptions(array $options)
+    {
+        foreach ($options as $option) {
+            $checked = !empty($option['checked']);
+            $this->setOption($option['label'], $option['value'], $checked);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets label-value option for the element.
+     *
+     * @param string  $label
+     * @param string  $value
+     * @param boolean $checked
+     * @return FormElement
+     */
+    public function setOption($label, $value, $checked = false)
+    {
+        if (!in_array($this->tagName, $this->multiOptionTags)) {
+            throw new RuntimeException(sprintf('Cannot set value options for `%s` element.', $this->tagName));
+        }
+
+        // The label should be unique.
+        $this->options[$label] = [
+            'label' => $label,
+            'value' => $value,
+            'checked' => $checked
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Checks if the element has value options.
+     *
+     * @return bool
+     */
+    public function hasOptions()
+    {
+        return !empty($this->options);
+    }
+
+    /**
+     * Gets element value options.
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**
@@ -262,7 +342,7 @@ final class FormElement implements Iterator
     public function getAttribute($name)
     {
         if (!isset($this->attributes[$name])) {
-            throw new RuntimeException('Invalid attribute: "' . $name . '"');
+            throw new RuntimeException(sprintf('Invalid attribute: `%s`', $name));
         }
 
         return $this->attributes[$name];
