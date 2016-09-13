@@ -19,14 +19,43 @@ use WebHemi\Form\Validator\FormValidatorInterface;
 /**
  * Class FormElement
  */
-class FormElement implements Iterator
+final class FormElement implements Iterator
 {
-    const TAG_INPUT_TEXT = 'text';
+    /** HTML5 form elements */
+    const TAG_FORM = 'form';
+    const TAG_INPUT_CHECKBOX = 'checkbox';
+    const TAG_INPUT_COLOR = 'color';
+    const TAG_INPUT_DATA = 'date';
+    const TAG_INPUT_DATETIME = 'datetime';
+    const TAG_INPUT_DATETIME_LOCAL = 'datetime-local';
+    const TAG_INPUT_EMAIL = 'email';
+    const TAG_INPUT_FILE = 'file';
+    const TAG_INPUT_HIDDEN = 'hidden';
+    const TAG_INPUT_IMAGE = 'image';
+    const TAG_INPUT_MONTH = 'month';
+    const TAG_INPUT_NUMBER = 'number';
     const TAG_INPUT_PASSWORD = 'password';
+    const TAG_INPUT_RADIO = 'radio';
+    const TAG_INPUT_RANGE = 'range';
+    const TAG_INPUT_SEARCH = 'search';
+    const TAG_INPUT_TEL = 'tel';
+    const TAG_INPUT_TEXT = 'text';
+    const TAG_INPUT_TIME = 'time';
+    const TAG_INPUT_URL = 'url';
+    const TAG_INPUT_WEEK = 'week';
+    const TAG_TEXTAREA = 'textarea';
     const TAG_FIELDSET = 'fieldset';
+    const TAG_LEGEND = 'legend';
+    const TAG_LABEL = 'label';
     const TAG_BUTTON_SUBMIT = 'submit';
     const TAG_BUTTON_RESET = 'reset';
     const TAG_BUTTON = 'button';
+    const TAG_DATALIST = 'datalist';
+    const TAG_SELECT = 'select';
+    const TAG_OPTION_GROUP = 'optgroup';
+    const TAG_OPTION = 'option';
+    const TAG_KEYGEN = 'keygen';
+    const TAG_OUTPUT = 'output';
 
     /** @var int */
     protected static $tabIndex = 1;
@@ -42,10 +71,25 @@ class FormElement implements Iterator
     private $attributes;
     /** @var FormElement */
     private $parentNode;
-    /** @var FormElement[] */
+    /** @var array<FormElement> */
     private $childNodes;
-    /** @var FormValidatorInterface[] */
+    /** @var array<FormValidatorInterface> */
     private $validators;
+    /** @var array */
+    private $mandatoryTagParents = [
+        self::TAG_FORM => [],
+        self::TAG_LEGEND => [
+            self::TAG_FIELDSET
+        ],
+        self::TAG_OPTION => [
+            self::TAG_DATALIST,
+            self::TAG_OPTION_GROUP,
+            self::TAG_SELECT
+        ],
+        self::TAG_OPTION_GROUP => [
+            self::TAG_SELECT
+        ],
+    ];
 
     /**
      * FormElement constructor.
@@ -80,6 +124,20 @@ class FormElement implements Iterator
      */
     public function setParentNode(FormElement $formElement)
     {
+        $parentTagName = $formElement->getTagName();
+
+        if (isset($this->mandatoryTagParents[$this->tagName])
+            && !in_array($parentTagName, $this->mandatoryTagParents[$this->tagName])
+        ) {
+            throw new RuntimeException(
+                sprintf(
+                    'Cannot set `%s` as child element of `%s`.',
+                    $this->tagName,
+                    $parentTagName
+                )
+            );
+        }
+
         $this->parentNode = $formElement;
 
         return $this;

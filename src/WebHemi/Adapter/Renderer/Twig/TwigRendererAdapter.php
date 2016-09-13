@@ -32,6 +32,8 @@ class TwigRendererAdapter implements RendererAdapterInterface
     /** @var string */
     private $templateResourcePath;
     /** @var string */
+    private $builtInMacroPath;
+    /** @var string */
     private $applicationBaseUri;
 
     /**

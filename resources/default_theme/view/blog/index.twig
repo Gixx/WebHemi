@@ -1,4 +1,5 @@
 {% extends "layout.twig" %}
+
 {% block content %}
     <pre>{{ postData }}</pre>
     {% for blogPost in blogPosts %}
@@ -6,4 +7,6 @@
         <p>On {{ blogPost.publishedAt.format('Y-m-d') }} by {{ blogPost.author.name }}</p>
         <p>{{ blogPost.content }}</p>
     {% endfor %}
+
+    {{ Form.renderForm(loginForm) }}
 {% endblock %}
