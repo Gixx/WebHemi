@@ -64,11 +64,15 @@ final class FormElement implements Iterator
     /** @var string */
     private $name;
     /** @var string */
+    private $uniqueFormNamePostfix = '';
+    /** @var string */
     private $label;
     /** @var mixed */
     private $value;
     /** @var array */
     private $options = [];
+    /** @var array */
+    private $optionGroups = [];
     /** @var array */
     private $attributes;
     /** @var FormElement */
@@ -99,6 +103,35 @@ final class FormElement implements Iterator
         self::TAG_INPUT_CHECKBOX,
         self::TAG_DATALIST
     ];
+    /** @var array */
+    private $tabIndexableTags = [
+        self::TAG_INPUT_CHECKBOX,
+        self::TAG_INPUT_COLOR,
+        self::TAG_INPUT_DATA,
+        self::TAG_INPUT_DATETIME,
+        self::TAG_INPUT_DATETIME_LOCAL,
+        self::TAG_INPUT_EMAIL,
+        self::TAG_INPUT_FILE,
+        self::TAG_INPUT_IMAGE,
+        self::TAG_INPUT_MONTH,
+        self::TAG_INPUT_NUMBER,
+        self::TAG_INPUT_PASSWORD,
+        self::TAG_INPUT_RADIO,
+        self::TAG_INPUT_RANGE,
+        self::TAG_INPUT_SEARCH,
+        self::TAG_INPUT_TEL,
+        self::TAG_INPUT_TEXT,
+        self::TAG_INPUT_TIME,
+        self::TAG_INPUT_URL,
+        self::TAG_INPUT_WEEK,
+        self::TAG_TEXTAREA,
+        self::TAG_BUTTON_SUBMIT,
+        self::TAG_BUTTON_RESET,
+        self::TAG_BUTTON,
+        self::TAG_DATALIST,
+        self::TAG_SELECT,
+        self::TAG_KEYGEN,
+    ];
 
     /**
      * FormElement constructor.
@@ -110,9 +143,29 @@ final class FormElement implements Iterator
     public function __construct($tagName, $name, $label = '')
     {
         $this->tagName = $tagName;
-        $this->name = $name;
+        $this->name = preg_replace('/[^a-z0-9]/', '_', strtolower($name));
         $this->label = $label;
-        $this->attributes['tabindex'] = self::$tabIndex++;
+
+        if (in_array($tagName, $this->tabIndexableTags)) {
+            $this->attributes['tabindex'] = self::$tabIndex++;
+        }
+    }
+
+    /**
+     * Set unique identifier for the form.
+     *
+     * @param string $uniqueFormNamePostfix
+     * @return FormElement
+     */
+    public function setUniqueFormNamePostfix($uniqueFormNamePostfix)
+    {
+        if ($this->tagName != self::TAG_FORM) {
+            throw new RuntimeException('This method can be applied only fot the <form> element.');
+        }
+
+        $this->uniqueFormNamePostfix = $uniqueFormNamePostfix;
+
+        return $this;
     }
 
     /**
@@ -164,6 +217,8 @@ final class FormElement implements Iterator
 
         if (isset($this->parentNode)) {
             $name = $this->parentNode->getName() . '[' . $this->name . ']';
+        } elseif (!empty($this->uniqueFormNamePostfix)) {
+            $name .= '_' . $this->uniqueFormNamePostfix;
         }
 
         if (count($this->options) > 1
@@ -174,6 +229,16 @@ final class FormElement implements Iterator
         }
 
         return $name;
+    }
+
+    /**
+     * Gets element Id.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return 'id_' . trim(preg_replace('/[^a-z0-9]/', '_', $this->getName()), '_');
     }
 
     /**
@@ -220,7 +285,8 @@ final class FormElement implements Iterator
     {
         foreach ($options as $option) {
             $checked = !empty($option['checked']);
-            $this->setOption($option['label'], $option['value'], $checked);
+            $group = !empty($option['group']) ? $option['group'] : 'Default';
+            $this->setOption($option['label'], $option['value'], $checked, $group);
         }
 
         return $this;
@@ -232,16 +298,29 @@ final class FormElement implements Iterator
      * @param string  $label
      * @param string  $value
      * @param boolean $checked
+     * @param string  $group
      * @return FormElement
      */
-    public function setOption($label, $value, $checked = false)
+    public function setOption($label, $value, $checked = false, $group = 'Default')
     {
         if (!in_array($this->tagName, $this->multiOptionTags)) {
             throw new RuntimeException(sprintf('Cannot set value options for `%s` element.', $this->tagName));
         }
 
-        // The label should be unique.
-        $this->options[$label] = [
+        $option = &$this->options;
+
+        // For <select> tag, the option groupping is allowed.
+        if ($this->tagName == self::TAG_SELECT) {
+            if (!isset($this->options[$group])) {
+                $this->options[$group] = [];
+            }
+
+            $option = &$this->options[$group];
+
+            $this->optionGroups[$group] = $group;
+        }
+
+        $option[$label] = [
             'label' => $label,
             'value' => $value,
             'checked' => $checked
@@ -258,6 +337,16 @@ final class FormElement implements Iterator
     public function hasOptions()
     {
         return !empty($this->options);
+    }
+
+    /**
+     * Checks if the Select box has groupped options.
+     *
+     * @return bool
+     */
+    public function isGrouppedSelect()
+    {
+        return count($this->optionGroups) > 1;
     }
 
     /**
@@ -307,6 +396,10 @@ final class FormElement implements Iterator
     {
         if ($key == 'name') {
             throw new InvalidArgumentException('Cannot change element name after it has been initialized.');
+        }
+
+        if ($key == 'id') {
+            throw new InvalidArgumentException('Element ID is generated from name. Call $element->getId();');
         }
 
         if (!is_scalar($value)) {

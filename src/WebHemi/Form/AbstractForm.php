@@ -45,6 +45,71 @@ abstract class AbstractForm implements FormInterface, Iterator
     abstract protected function initForm();
 
     /**
+     * Set unique identifier for the form.
+     *
+     * @param string $uniqueFormNamePostfix
+     * @return AbstractForm
+     */
+    protected function setUniqueFormNamePostfix($uniqueFormNamePostfix)
+    {
+        $this->form[0]->setUniqueFormNamePostfix($uniqueFormNamePostfix);
+
+        return $this;
+    }
+
+    /**
+     * Sets form action.
+     *
+     * @param string $action
+     * @return AbstractForm
+     */
+    protected function setAction($action)
+    {
+        $this->form[0]->setAttribute('action', $action);
+
+        return $this;
+    }
+
+    /**
+     * Sets form submit.
+     *
+     * @param string $method
+     * @return AbstractForm
+     */
+    protected function setMethod($method = 'POST')
+    {
+        $this->form[0]->setAttribute('method', $method);
+
+        return $this;
+    }
+
+    /**
+     * Sets form autocomplete option.
+     *
+     * @param bool $autocomplete
+     * @return AbstractForm
+     */
+    protected function setAutocomplete($autocomplete = true)
+    {
+        $this->form[0]->setAttribute('autocomplete', $autocomplete);
+
+        return $this;
+    }
+
+    /**
+     * Sets form encryption type.
+     *
+     * @param string $enctype
+     * @return AbstractForm
+     */
+    protected function setEnctype($enctype = 'application/x-www-form-urlencoded')
+    {
+        $this->form[0]->setAttribute('enctype', $enctype);
+
+        return $this;
+    }
+
+    /**
      * Adds a form element to the form.
      *
      * @param FormElement $formElement
