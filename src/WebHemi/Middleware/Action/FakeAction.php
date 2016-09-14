@@ -4,7 +4,7 @@ namespace WebHemi\Middleware\Action;
 
 use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataStorage\User\UserStorage;
-use WebHemi\Form\LoginForm;
+use WebHemi\Form\TestForm;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
 /**
@@ -54,7 +54,7 @@ class FakeAction extends AbstractMiddlewareAction
                 ]
             ],
             'postData' => var_export($this->request->getParsedBody(), true),
-            'loginForm' => new LoginForm('test')
+            'loginForm' => new TestForm('test', '', 'POST')
         ];
     }
 }

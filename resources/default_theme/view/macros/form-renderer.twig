@@ -20,6 +20,8 @@
             selected="selected"
         {% elseif key == 'checked' %}
             checked="checked"
+        {% elseif key == 'multiple' %}
+            multiple="multiple"
         {% elseif key == 'autocomplete' %}
             {% if (value == 1) or (value == true) or (value == 'on') %}
                 autocomplete="on"
@@ -34,13 +36,15 @@
 
 {% macro renderElement(formElement) %}
     {% if formElement.getTagName() == 'form' %}
-        <form name="{{ formElement.getName() }}" {{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
+        <form id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
+            <input type="hidden" name="form_base_name" value="{{  formElement.getName() }}" />
             {{ _self.renderSubForm(formElement.getChildNodes()) }}
         </form>
+
     {% elseif formElement.getTagName() == 'checkbox' %}
         <div class="element checkbox">
             {% if formElement.hasOptions() %}
-                <fieldset>
+                <fieldset name="{{ formElement.getName() }}">
                     <legend>{{ formElement.getLabel }}</legend>
                     {% for label, option in formElement.getOptions() %}
                         <label>
@@ -52,8 +56,8 @@
                 </fieldset>
             {% else %}
                 <input type="hidden" name="{{ formElement.getName() }}" value="0" />
-                <input type="checkbox" id="{{ formElement.getName() }}" name="{{ formElement.getName() }}" value="1" {{ _self.renderFormElementAttributes(formElement.getAttributes()) }}{% if formElement.getValue() %} checked="checked"{% endif %} />
-                <label for="{{ formElement.getName() }}">{{ formElement.getLabel() }}</label>
+                <input type="checkbox" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="1" {{ _self.renderFormElementAttributes(formElement.getAttributes()) }}{% if formElement.getValue() %} checked="checked"{% endif %} />
+                <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
             {% endif %}
         </div>
 
@@ -91,14 +95,14 @@
 
     {% elseif formElement.getTagName() == 'password' %}
         <div class="element input password">
-            <label for="{{ formElement.getName() }}">{{ formElement.getLabel() }}</label>
-            <input type="password" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
+            <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+            <input type="password" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
         </div>
 
     {% elseif formElement.getTagName() == 'radio' %}
         <div class="element radio">
             {% if formElement.hasOptions() %}
-                <fieldset>
+                <fieldset name="{{ formElement.getName() }}">
                     <legend>{{ formElement.getLabel }}</legend>
                     {% for label, option in formElement.getOptions() %}
                         <label>
@@ -108,8 +112,8 @@
                     {% endfor %}
                 </fieldset>
             {% else %}
-                <input type="radio" id="{{ formElement.getName() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}" {{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
-                <label for="{{ formElement.getName() }}">{{ formElement.getLabel() }}</label>
+                <input type="radio" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}" {{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
+                <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
             {% endif %}
         </div>
 
@@ -124,8 +128,8 @@
 
     {% elseif formElement.getTagName() == 'text' %}
         <div class="element input text">
-            <label for="{{ formElement.getName() }}">{{ formElement.getLabel() }}</label>
-            <input type="text" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
+            <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+            <input type="text" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
         </div>
 
     {% elseif formElement.getTagName() == 'time' %}
@@ -170,7 +174,27 @@
         <div class="element datalist">             *TBD*         </div>
 
     {% elseif formElement.getTagName() == 'select' %}
-        <div class="element select">             *TBD*         </div>
+        <div class="element select">
+            <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+            <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }}>
+            {% if formElement.hasOptions() %}
+                {% set elementOptions = formElement.getOptions() %}
+                {% if formElement.isGrouppedSelect() %}
+                    {% for groupName, groupOptions in elementOptions %}
+                        <optgroup label="{{ groupName }}">
+                            {% for option in groupOptions %}
+                                <option value="{{ option.value }}"{% if option.checked %} selected="selected"{% endif %}>{{ option.label }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endfor %}
+                {% else %}
+                    {% for option in elementOptions['Default'] %}
+                        <option value="{{ option.value }}"{% if option.checked %} selected="selected"{% endif %}>{{ option.label }}</option>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+            </select>
+        </div>
 
     {% elseif formElement.getTagName() == 'optgroup' %}
         <div class="element optgroup">             *TBD*         </div>
