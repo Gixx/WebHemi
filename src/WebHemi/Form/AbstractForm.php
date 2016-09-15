@@ -158,7 +158,7 @@ abstract class AbstractForm implements FormInterface, Iterator
     {
         // TODO: TBD
 
-        // fake cotent to avoid phpmd warning until the real function logic is created...
+        // content to avoid phpmd warning until the real function logic is created...
         if (!empty($data)) {
             $this->isValid();
         }

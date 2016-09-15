@@ -1,0 +1,21 @@
+<div class="element select">
+    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
+        {% if formElement.hasOptions() %}
+            {% set elementOptions = formElement.getOptions() %}
+            {% if formElement.isGrouppedSelect() %}
+                {% for groupName, groupOptions in elementOptions %}
+                    <optgroup label="{{ groupName }}">
+                        {% for option in groupOptions %}
+                            <option value="{{ option.value }}"{% if option.checked %} selected="selected"{% endif %}>{{ option.label }}</option>
+                        {% endfor %}
+                    </optgroup>
+                {% endfor %}
+            {% else %}
+                {% for option in elementOptions['Default'] %}
+                    <option value="{{ option.value }}"{% if option.checked %} selected="selected"{% endif %}>{{ option.label }}</option>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+    </select>
+</div>

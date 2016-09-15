@@ -16,6 +16,7 @@ use Psr\Http\Message\StreamInterface;
 use Twig_Environment;
 use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
+use Twig_SimpleFunction;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Config\ConfigInterface;
 
@@ -28,11 +29,11 @@ class TwigRendererAdapter implements RendererAdapterInterface
     /** @var ConfigInterface */
     private $config;
     /** @var string */
+    private $defaultViewPath;
+    /** @var string */
     private $templateViewPath;
     /** @var string */
     private $templateResourcePath;
-    /** @var string */
-    private $builtInMacroPath;
     /** @var string */
     private $applicationBaseUri;
 
@@ -46,15 +47,23 @@ class TwigRendererAdapter implements RendererAdapterInterface
     public function __construct(ConfigInterface $templateConfig, $templatePath, $applicationBaseUri)
     {
         $this->config = $templateConfig;
-        $this->templateViewPath = realpath(__DIR__.'/../../../../../').$templatePath.'/view';
-        $this->builtInMacroPath = realpath(__DIR__.'/../../../../../resources/default_theme/view/macros');
+        $this->defaultViewPath = realpath(__DIR__.'/../../../../../resources/default_theme/view');
+        $this->templateViewPath = realpath(__DIR__.'/../../../../../'.$templatePath.'/view');
         $this->templateResourcePath = $templatePath.'/static';
         $this->applicationBaseUri = $applicationBaseUri;
 
         $loader = new Twig_Loader_Filesystem($this->templateViewPath);
-        $loader->addPath($this->builtInMacroPath, 'WebHemi');
+        $loader->addPath($this->defaultViewPath, 'WebHemi');
+        $loader->addPath($this->templateViewPath, 'Theme');
         $this->adapter = new Twig_Environment($loader, array('debug' => true, 'cache' => false));
         $this->adapter->addExtension(new Twig_Extension_Debug());
+
+        $viewPath = $this->templateViewPath;
+        $function = new Twig_SimpleFunction('defined', function ($fileName) use ($viewPath) {
+            $fileName = str_replace('@Theme', $viewPath, $fileName);
+            return file_exists($fileName);
+        });
+        $this->adapter->addFunction($function);
     }
 
     /**

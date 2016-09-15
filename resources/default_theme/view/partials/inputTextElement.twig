@@ -1,0 +1,4 @@
+<div class="element input text">
+    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    <input type="text" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _self.renderFormElementAttributes(formElement.getAttributes()) }} />
+</div>

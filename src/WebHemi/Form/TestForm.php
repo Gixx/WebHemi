@@ -13,6 +13,8 @@ namespace WebHemi\Form;
 
 /**
  * Class TestForm
+ *
+ * @codeCoverageIgnore - only for test purposes
  */
 class TestForm extends AbstractForm
 {
