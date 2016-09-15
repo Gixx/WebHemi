@@ -1,0 +1,264 @@
+{% macro renderForm(form) %}
+    {% if form.current().getTagName() == 'form' %}
+        {{ _self.renderSubForm(form) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro renderSubForm(form) %}
+    {% for formElement in form %}
+        {{ _self.renderElement(formElement) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro renderFormElementAttributes(formElementAttributes) %}
+    {% for key,value in formElementAttributes %}
+        {% if key == 'autofocus' %}
+            autofocus="autofocus"
+        {% elseif key == 'required' %}
+            required="required"
+        {% elseif key == 'selected' %}
+            selected="selected"
+        {% elseif key == 'checked' %}
+            checked="checked"
+        {% elseif key == 'multiple' %}
+            multiple="multiple"
+        {% elseif key == 'autocomplete' %}
+            {% if (value == 1) or (value == true) or (value == 'on') %}
+                autocomplete="on"
+            {% else %}
+                autocomplete="off"
+            {% endif %}
+        {% else %}
+            {{ key }}="{{ value|escape }}"
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro renderElement(formElement) %}
+    {% if formElement.getTagName() == 'form' %}
+        {% if defined('@Theme/partials/formBlock.twig') %}
+            {% include '@Theme/partials/formBlock.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/formBlock.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'checkbox' %}
+        {% if defined('@Theme/partials/checkboxElement.twig') %}
+            {% include '@Theme/partials/checkboxElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/checkboxElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'color' %}
+        {% if defined('@Theme/partials/inputColorElement.twig') %}
+            {% include '@Theme/partials/inputColorElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputColorElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+
+    {% elseif formElement.getTagName() == 'date' %}
+        {% if defined('@Theme/partials/inputDateElement.twig') %}
+            {% include '@Theme/partials/inputDateElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputDateElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'datetime' %}
+        {% if defined('@Theme/partials/inputDateTimeElement.twig') %}
+            {% include '@Theme/partials/inputDateTimeElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputDateTimeElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'datetime-local' %}
+        {% if defined('@Theme/partials/inputDateTimeLocalElement.twig') %}
+            {% include '@Theme/partials/inputDateTimeLocalElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputDateTimeLocalElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'email' %}
+        {% if defined('@Theme/partials/inputEmailElement.twig') %}
+            {% include '@Theme/partials/inputEmailElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputEmailElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'file' %}
+        {% if defined('@Theme/partials/fileElement.twig') %}
+            {% include '@Theme/partials/fileElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/fileElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'hidden' %}
+        {% if defined('@Theme/partials/hiddenElement.twig') %}
+            {% include '@Theme/partials/hiddenElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/hiddenElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'image' %}
+        {% if defined('@Theme/partials/inputImageElement.twig') %}
+            {% include '@Theme/partials/inputImageElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputImageElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'month' %}
+        {% if defined('@Theme/partials/inputMonthElement.twig') %}
+            {% include '@Theme/partials/inputMonthElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputMonthElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'number' %}
+        {% if defined('@Theme/partials/inputNumberElement.twig') %}
+            {% include '@Theme/partials/inputNumberElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputNumberElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'password' %}
+        {% if defined('@Theme/partials/inputPasswordElement.twig') %}
+            {% include '@Theme/partials/inputPasswordElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputPasswordElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'radio' %}
+        {% if defined('@Theme/partials/radioGroupElement.twig') %}
+            {% include '@Theme/partials/radioGroupElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/radioGroupElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'range' %}
+        {% if defined('@Theme/partials/inputRangeElement.twig') %}
+            {% include '@Theme/partials/inputRangeElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputRangeElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'search' %}
+        {% if defined('@Theme/partials/inputSearchElement.twig') %}
+            {% include '@Theme/partials/inputSearchElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputSearchElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'tel' %}
+        {% if defined('@Theme/partials/inputTelElement.twig') %}
+            {% include '@Theme/partials/inputTelElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputTelElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'text' %}
+        {% if defined('@Theme/partials/inputTextElement.twig') %}
+            {% include '@Theme/partials/inputTextElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputTextElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'time' %}
+        {% if defined('@Theme/partials/inputTimeElement.twig') %}
+            {% include '@Theme/partials/inputTimeElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputTimeElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'url' %}
+        {% if defined('@Theme/partials/inputUrlElement.twig') %}
+            {% include '@Theme/partials/inputUrlElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputUrlElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'week' %}
+        {% if defined('@Theme/partials/inputWeekElement.twig') %}
+            {% include '@Theme/partials/inputWeekElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/inputWeekElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'textarea' %}
+        {% if defined('@Theme/partials/textareaElement.twig') %}
+            {% include '@Theme/partials/textareaElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/textareaElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'fieldset' %}
+        {% if defined('@Theme/partials/fieldsetElement.twig') %}
+            {% include '@Theme/partials/fieldsetElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/fieldsetElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'legend' %}
+        {% if defined('@Theme/partials/legendElement.twig') %}
+            {% include '@Theme/partials/legendElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/legendElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'label' %}
+        {% if defined('@Theme/partials/labelElement.twig') %}
+            {% include '@Theme/partials/labelElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/labelElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'submit' %}
+        {% if defined('@Theme/partials/submitElement.twig') %}
+            {% include '@Theme/partials/submitElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/submitElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'reset' %}
+        {% if defined('@Theme/partials/resetElement.twig') %}
+            {% include '@Theme/partials/resetElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/resetElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'button' %}
+        {% if defined('@Theme/partials/buttonElement.twig') %}
+            {% include '@Theme/partials/buttonElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/buttonElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'datalist' %}
+        {% if defined('@Theme/partials/datalistElement.twig') %}
+            {% include '@Theme/partials/datalistElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/datalistElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'select' %}
+        {% if defined('@Theme/partials/selectElement.twig') %}
+            {% include '@Theme/partials/selectElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/selectElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'keygen' %}
+        {% if defined('@Theme/partials/keygenElement.twig') %}
+            {% include '@Theme/partials/keygenElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/keygenElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'output' %}
+        {% if defined('@Theme/partials/outputElement.twig') %}
+            {% include '@Theme/partials/outputElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/outputElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% endif %}
+{% endmacro %}

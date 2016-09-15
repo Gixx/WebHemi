@@ -388,7 +388,7 @@ final class FormElement implements Iterator
      * Sets element attribute.
      *
      * @param string $key
-     * @param string $value
+     * @param mixed $value
      * @throws InvalidArgumentException
      * @return FormElement
      */

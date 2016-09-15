@@ -1,0 +1,18 @@
+<div class="element checkbox">
+    {% if formElement.hasOptions() %}
+        <fieldset name="{{ formElement.getName() }}">
+            <legend>{{ formElement.getLabel }}</legend>
+            {% for label, option in formElement.getOptions() %}
+                <label>
+                    <input type="hidden" name="{{ formElement.getName() }}[{{ option.value }}]" value="0" />
+                    <input type="checkbox" name="{{ formElement.getName() }}[{{ option.value }}]" value="1"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}{% if option.checked %}checked="checked"{% endif %} />
+                    {{ label }}
+                </label>
+            {% endfor %}
+        </fieldset>
+    {% else %}
+        <input type="hidden" name="{{ formElement.getName() }}" value="0" />
+        <input type="checkbox" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="1" {{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}{% if formElement.getValue() %} checked="checked"{% endif %} />
+        <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    {% endif %}
+</div>
