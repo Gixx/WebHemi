@@ -1,1 +1,4 @@
-<div class="element textarea">             *TBD*         </div>
+<div class="element input textarea">
+    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    <textarea id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>{{ formElement.getValue() }}</textarea>
+</div>

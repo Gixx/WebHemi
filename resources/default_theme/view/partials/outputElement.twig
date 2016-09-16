@@ -1,1 +1,4 @@
-<div class="element output">             *TBD*         </div>
+<div class="element output">
+    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    <output id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}></output>
+</div>

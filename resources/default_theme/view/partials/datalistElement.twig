@@ -1,1 +1,12 @@
-<div class="element datalist">             *TBD*         </div>
+<div class="element datalist">
+    <datalist id="{{ formElement.getId() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
+        {% if formElement.hasOptions() %}
+            {% set elementOptions = formElement.getOptions() %}
+            {% for option in elementOptions['Default'] %}
+                <option value="{{ option.value }}">{{ option.label }}</option>
+            {% endfor %}
+        {% elseif formElement.hasChildNodes() %}
+            {{ _FORM.renderSubForm(formElement.getChildNodes()) }}
+        {% endif %}
+    </datalist>
+</div>

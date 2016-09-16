@@ -36,10 +36,10 @@
 
 {% macro renderElement(formElement) %}
     {% if formElement.getTagName() == 'form' %}
-        {% if defined('@Theme/partials/formBlock.twig') %}
-            {% include '@Theme/partials/formBlock.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% if defined('@Theme/partials/formElement.twig') %}
+            {% include '@Theme/partials/formElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
         {% else %}
-            {% include '@WebHemi/partials/formBlock.twig' with {'_FORM': _self, 'formElement': formElement} %}
+            {% include '@WebHemi/partials/formElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
         {% endif %}
 
     {% elseif formElement.getTagName() == 'checkbox' %}
@@ -244,6 +244,20 @@
             {% include '@Theme/partials/selectElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
         {% else %}
             {% include '@WebHemi/partials/selectElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'option' %}
+        {% if defined('@Theme/partials/optionElement.twig') %}
+            {% include '@Theme/partials/optionElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/optionElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% endif %}
+
+    {% elseif formElement.getTagName() == 'optgroup' %}
+        {% if defined('@Theme/partials/optionGroupElement.twig') %}
+            {% include '@Theme/partials/optionGroupElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
+        {% else %}
+            {% include '@WebHemi/partials/optionGroupElement.twig' with {'_FORM': _self, 'formElement': formElement} %}
         {% endif %}
 
     {% elseif formElement.getTagName() == 'keygen' %}

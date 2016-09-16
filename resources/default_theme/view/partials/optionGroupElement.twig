@@ -1,0 +1,5 @@
+<optgroup label="{{ formElement.getLabel() }}">
+    {% if formElement.hasChildNodes() %}
+        {{ _FORM.renderSubForm(formElement.getChildNodes()) }}
+    {% endif %}
+</optgroup>

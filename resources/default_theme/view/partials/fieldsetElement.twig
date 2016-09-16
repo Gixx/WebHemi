@@ -1,3 +1,5 @@
-<fieldset name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
-    {{ _FORM.renderSubForm(formElement.getChildNodes()) }}
+<fieldset name="{{ formElement.getName() }}" id="{{ formElement.getId() }}" {{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
+    {% if formElement.hasChildNodes() %}
+        {{ _FORM.renderSubForm(formElement.getChildNodes()) }}
+    {% endif %}
 </fieldset>

@@ -23,4 +23,11 @@ interface FormValidatorInterface
      * @return boolean
      */
     public function validate($data);
+
+    /**
+     * Gets error from validation.
+     *
+     * @return mixed
+     */
+    public function getError();
 }

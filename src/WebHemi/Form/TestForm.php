@@ -11,6 +11,8 @@
  */
 namespace WebHemi\Form;
 
+use WebHemi\Form\Element\FormElement;
+
 /**
  * Class TestForm
  *
@@ -26,7 +28,7 @@ class TestForm extends AbstractForm
     protected function initForm()
     {
         // The best way to avoid autocomplete fields is to give unique name to the fields on every page load.
-        $this->setUniqueFormNamePostfix(md5(time()));
+        $this->setNameSalt(time());
         // Change some default attributes.
         $this->setAutocomplete(false);
 
@@ -59,7 +61,8 @@ class TestForm extends AbstractForm
         // Fieldset
         $fieldset = new FormElement(FormElement::TAG_FIELDSET, 'info');
         // Legend for the fieldset.
-        $legend = new FormElement(FormElement::TAG_LEGEND, 'info', 'Login form');
+        $legend = new FormElement(FormElement::TAG_LEGEND);
+        $legend->setLabel('Login form');
 
         // Text input with custom attribute
         $loginname = new FormElement(FormElement::TAG_INPUT_TEXT, 'username', 'Username');
@@ -115,7 +118,8 @@ class TestForm extends AbstractForm
         // Fieldset
         $fieldset = new FormElement(FormElement::TAG_FIELDSET, 'location');
         // Legend for the fieldset.
-        $legend = new FormElement(FormElement::TAG_LEGEND, 'location', 'Location');
+        $legend = new FormElement(FormElement::TAG_LEGEND);
+        $legend->setLabel('Location');
 
         // Select box with no multi selection and with no option groups
         $select1 = new FormElement(FormElement::TAG_SELECT, 'country', 'I live in:');
@@ -143,22 +147,48 @@ class TestForm extends AbstractForm
             ]
         );
 
-        // Select box WITH multi selection.
+        // Select box WITH multi selection. The element is build with constructors.
         $select3 = new FormElement(FormElement::TAG_SELECT, 'past', 'I\'ve already lived in:');
-        $select3->setOptions(
-            [
-                ['label' => 'Hungary', 'value' => 'hu', 'group' => 'Europe', 'checked' => true],
-                ['label' => 'USA', 'value' => 'us', 'group' => 'America'],
-                ['label' => 'Germany', 'value' => 'de', 'group' => 'Europe', 'checked' => true],
-                ['label' => 'Austria', 'value' => 'at', 'group' => 'Europe'],
-                ['label' => 'Canada', 'value' => 'ca', 'group' => 'America'],
-                ['label' => 'Switzerland', 'value' => 'ch', 'group' => 'Europe'],
-                ['label' => 'France', 'value' => 'fr', 'group' => 'Europe'],
-                ['label' => 'Spain', 'value' => 'es', 'group' => 'Europe'],
-            ]
-        )
-            ->setAttribute('multiple', true)
+        $select3->setAttribute('multiple', true)
             ->setAttribute('size', 10);
+
+        $select3Group1 = new FormElement(FormElement::TAG_OPTION_GROUP);
+        $select3Group1->setLabel('Europe');
+
+        $option1 = new FormElement(FormElement::TAG_OPTION);
+        $option1->setValue('hu')->setLabel('Hungary')->setAttribute('selected', true);
+
+        $option2 = new FormElement(FormElement::TAG_OPTION);
+        $option2->setValue('de')->setLabel('Germany')->setAttribute('selected', true);
+
+        $option3 = new FormElement(FormElement::TAG_OPTION);
+        $option3->setValue('ch')->setLabel('Switzerland');
+
+        $option4 = new FormElement(FormElement::TAG_OPTION);
+        $option4->setValue('fr')->setLabel('France');
+
+        $select3Group1->setChildNodes([$option1, $option2, $option3, $option4]);
+
+        $select3Group2 = new FormElement(FormElement::TAG_OPTION_GROUP);
+        $select3Group2->setLabel('America');
+
+        $option5 = new FormElement(FormElement::TAG_OPTION);
+        $option5->setValue('us')->setLabel('USA');
+
+        $option6 = new FormElement(FormElement::TAG_OPTION);
+        $option6->setValue('ca')->setLabel('Canada');
+
+        $select3Group2->setChildNodes([$option5, $option6]);
+
+        $select3Group3 = new FormElement(FormElement::TAG_OPTION_GROUP);
+        $select3Group3->setLabel('Asia');
+
+        $option7 = new FormElement(FormElement::TAG_OPTION);
+        $option7->setValue('jp')->setLabel('Japan');
+
+        $select3Group3->setChildNodes([$option7]);
+
+        $select3->setChildNodes([$select3Group1, $select3Group2, $select3Group3]);
 
         // Assign elements to the fieldset
         $fieldset->addChildNode($legend)
