@@ -1,4 +1,6 @@
     <form id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
         <input type="hidden" name="form_base_name" value="{{  formElement.getName() }}" />
-        {{ _FORM.renderSubForm(formElement.getChildNodes()) }}
+        {% if formElement.hasChildNodes() %}
+            {{ _FORM.renderSubForm(formElement.getChildNodes()) }}
+        {% endif %}
     </form>

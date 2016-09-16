@@ -16,6 +16,8 @@
                     <option value="{{ option.value }}"{% if option.checked %} selected="selected"{% endif %}>{{ option.label }}</option>
                 {% endfor %}
             {% endif %}
+        {% elseif formElement.hasChildNodes() %}
+            {{ _FORM.renderSubForm(formElement.getChildNodes()) }}
         {% endif %}
     </select>
 </div>

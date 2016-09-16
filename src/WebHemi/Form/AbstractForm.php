@@ -12,20 +12,33 @@
 namespace WebHemi\Form;
 
 use Iterator;
+use WebHemi\Form\Element\FormElement;
 
+/**
+ * Class AbstractForm
+ */
 abstract class AbstractForm implements FormInterface, Iterator
 {
     /** @var array<FormElement> */
     protected $form;
+    /** @var string */
+    protected $name;
+    /** @var string */
+    protected $action;
+    /** @var string */
+    protected $method;
+
+    /** @var string */
+    protected $uniqueFormNamePostfix = '';
 
     /**
-     * FormInterface constructor. Creates <FORM> element automatically.
+     * AbstractForm constructor. Should creates <FORM> element automatically.
      *
      * @param string $name
      * @param string $action
      * @param string $method
      */
-    public function __construct($name, $action = '', $method = 'POST')
+    final public function __construct($name, $action = '', $method = 'POST')
     {
         $form = new FormElement('form', $name);
         $form->setAttribute('action', $action)
@@ -47,12 +60,13 @@ abstract class AbstractForm implements FormInterface, Iterator
     /**
      * Set unique identifier for the form.
      *
-     * @param string $uniqueFormNamePostfix
+     * @param string $salt
      * @return AbstractForm
      */
-    protected function setUniqueFormNamePostfix($uniqueFormNamePostfix)
+    protected function setNameSalt($salt)
     {
-        $this->form[0]->setUniqueFormNamePostfix($uniqueFormNamePostfix);
+        $name = $this->form[0]->getName();
+        $this->form[0]->setName($name.'_'.md5($salt));
 
         return $this;
     }
@@ -141,11 +155,7 @@ abstract class AbstractForm implements FormInterface, Iterator
      */
     public function isValid()
     {
-        $valid = true;
-
-        // TODO: TBD
-
-        return $valid;
+        return $this->form[0]->isValid();
     }
 
     /**
@@ -173,8 +183,7 @@ abstract class AbstractForm implements FormInterface, Iterator
      */
     public function getData()
     {
-        // TODO: TBD
-        return [];
+        return $this->form[0]->getValue();
     }
 
     /**

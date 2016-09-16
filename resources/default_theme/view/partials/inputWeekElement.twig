@@ -1,1 +1,4 @@
-<div class="element input week">             *TBD*         </div>
+<div class="element input week">
+    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    <input type="week" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
+</div>

@@ -1,1 +1,4 @@
-<div class="element input file">             *TBD*         </div>
+<div class="element file">
+    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    <input type="file" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
+</div>

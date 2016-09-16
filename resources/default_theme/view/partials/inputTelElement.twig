@@ -1,1 +1,4 @@
-<div class="element input tel">             *TBD*         </div>
+<div class="element input tel">
+    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    <input type="tel" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
+</div>

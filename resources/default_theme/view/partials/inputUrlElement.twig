@@ -1,1 +1,4 @@
-<div class="element input url">             *TBD*         </div>
+<div class="element input url">
+    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    <input type="url" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
+</div>
