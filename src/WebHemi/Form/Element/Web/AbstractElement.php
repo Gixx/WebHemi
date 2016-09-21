@@ -17,7 +17,7 @@ use RuntimeException;
 use WebHemi\Form\Element\FormElementInterface;
 use WebHemi\Form\Element\NestedElementInterface;
 use WebHemi\Form\Element\Traits\IteratorTrait;
-use WebHemi\Form\Validator\FormValidatorInterface;
+use WebHemi\Validator\ValidatorInterface;
 
 /**
  * Class AbstractElement
@@ -35,7 +35,7 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     protected $value;
     /** @var array */
     protected $attributes = [];
-    /** @var array<FormValidatorInterface> */
+    /** @var array<ValidatorInterface> */
     protected $validators = [];
     /** @var array */
     protected $errors = [];
@@ -265,7 +265,7 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     /**
      * Sets the element validators.
      *
-     * @param array<FormValidatorInterface> $validators
+     * @param array<ValidatorInterface> $validators
      * @return FormElementInterface
      */
     public function setValidators(array $validators)
@@ -282,10 +282,10 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     /**
      * Adds validator to the form.
      *
-     * @param FormValidatorInterface $validator
+     * @param ValidatorInterface $validator
      * @return AbstractElement
      */
-    protected function addValidator(FormValidatorInterface $validator)
+    protected function addValidator(ValidatorInterface $validator)
     {
         $this->validators[] = $validator;
 
@@ -295,7 +295,7 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     /**
      * Gets the element validators.
      *
-     * @return array<FormValidatorInterface>
+     * @return array<ValidatorInterface>
      */
     public function getValidators()
     {
@@ -313,7 +313,7 @@ abstract class AbstractElement implements FormElementInterface, Iterator
         if ($reValidate) {
             $this->errors = [];
 
-            /** @var FormValidatorInterface $validator */
+            /** @var ValidatorInterface $validator */
             foreach ($this->validators as $validator) {
                 if (!$validator->validate($this->value)) {
                     $this->errors[] = $validator->getError();

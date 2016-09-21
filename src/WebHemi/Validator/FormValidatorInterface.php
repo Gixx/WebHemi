@@ -9,12 +9,12 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\Form\Validator;
+namespace WebHemi\Validator;
 
 /**
- * Interface FormValidatorInterface
+ * Interface ValidatorInterface
  */
-interface FormValidatorInterface
+interface ValidatorInterface
 {
     /**
      * Validates data.
