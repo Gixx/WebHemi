@@ -1,4 +1,7 @@
-<div class="element input datetime-local">
+<div class="element input datetime-local{% if formElement.hasErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     <input type="datetime-local" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
+    {% if formElement.hasErrors() %}
+        {% include '@WebHemi/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
+    {% endif %}
 </div>

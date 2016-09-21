@@ -1,4 +1,7 @@
-<div class="element input renage">
+<div class="element input range{% if formElement.hasErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     <input type="range" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
+    {% if formElement.hasErrors() %}
+        {% include '@WebHemi/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
+    {% endif %}
 </div>

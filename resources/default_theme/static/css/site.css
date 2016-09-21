@@ -19,3 +19,7 @@ a:visited {
     color: #1b6d85;
     text-decoration: none;
 }
+
+.element.error {
+    background: red;
+}

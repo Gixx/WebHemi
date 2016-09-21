@@ -3,4 +3,7 @@
         {% if formElement.hasNodes() %}
             {{ _FORM.renderSubForm(formElement.getNodes()) }}
         {% endif %}
+        {% if formElement.hasErrors() %}
+            {% include '@WebHemi/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
+        {% endif %}
     </form>

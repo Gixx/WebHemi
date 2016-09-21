@@ -132,6 +132,13 @@ interface FormElementInterface
     public function setErrors(array $errors);
 
     /**
+     * Checks if there are error messages set.
+     *
+     * @return boolean
+     */
+    public function hasErrors();
+
+    /**
      * Gets the element error messages.
      *
      * @return array

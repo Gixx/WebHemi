@@ -253,6 +253,16 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     }
 
     /**
+     * Checks if there are error messages set.
+     *
+     * @return boolean
+     */
+    public function hasErrors()
+    {
+        return !empty($this->errors);
+    }
+
+    /**
      * Gets validation errors.
      *
      * @return array

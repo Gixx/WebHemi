@@ -1,4 +1,7 @@
-<div class="element input keygen">
+<div class="element input keygen{% if formElement.hasErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     <input type="keygen" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
+    {% if formElement.hasErrors() %}
+        {% include '@WebHemi/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
+    {% endif %}
 </div>
