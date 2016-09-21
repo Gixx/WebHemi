@@ -1,4 +1,4 @@
-<div class="element radio">
+<div class="element radio{% if formElement.hasErrors() %} error{% endif %}">
     {% if formElement.hasOptions() %}
         <fieldset name="{{ formElement.getName() }}">
             <legend>{{ formElement.getLabel() }}</legend>
@@ -12,5 +12,8 @@
     {% else %}
         <input type="radio" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}" {{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
         <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
+    {% endif %}
+    {% if formElement.hasErrors() %}
+        {% include '@WebHemi/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
     {% endif %}
 </div>

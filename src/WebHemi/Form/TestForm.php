@@ -100,6 +100,11 @@ EOH;
 
         // Password input
         $password = new Web\PasswordElement('password', 'Password');
+        $password->setErrors(
+            [
+                'It just doesn\'t work, buddy...'
+            ]
+        );
 
         // HTML5 email input
         $email = new Web\InputElement('email', 'Email');
@@ -180,7 +185,13 @@ EOH;
                 ['label' => 'Spain', 'value' => 'es', 'group' => 'Europe'],
                 ['label' => 'Japan', 'value' => 'jp', 'group' => 'Asia'],
             ]
-        );
+        )
+            ->setErrors(
+                [
+                    'This has some errors.',
+                    'And also has a major problem.'
+                ]
+            );
 
         // Select box WITH multi selection.
         $select3 = new Web\SelectElement('past', 'I\'ve already lived in:');
