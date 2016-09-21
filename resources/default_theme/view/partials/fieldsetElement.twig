@@ -1,5 +1,9 @@
 <fieldset name="{{ formElement.getName() }}" id="{{ formElement.getId() }}" {{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
-    {% if formElement.hasChildNodes() %}
-        {{ _FORM.renderSubForm(formElement.getChildNodes()) }}
+    {% set label = formElement.getLabel() %}
+    {% if label is not empty %}
+    <legend>{{ formElement.getLabel() }}</legend>
+    {% endif %}
+    {% if formElement.hasNodes() %}
+        {{ _FORM.renderSubForm(formElement.getNodes()) }}
     {% endif %}
 </fieldset>

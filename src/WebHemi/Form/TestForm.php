@@ -11,7 +11,7 @@
  */
 namespace WebHemi\Form;
 
-use WebHemi\Form\Element\FormElement;
+use WebHemi\Form\Element\Web;
 
 /**
  * Class TestForm
@@ -20,6 +20,19 @@ use WebHemi\Form\Element\FormElement;
  */
 class TestForm extends AbstractForm
 {
+    /** @var  Web\FormElement */
+    protected $form;
+
+    /**
+     * Returns the form container element. E.g.: for HTML forms it is the <form> tag.
+     *
+     * @return Web\FormElement
+     */
+    protected function getFormContainer()
+    {
+        return new Web\FormElement();
+    }
+
     /**
      * Initialize form.
      *
@@ -27,68 +40,88 @@ class TestForm extends AbstractForm
      */
     protected function initForm()
     {
-        // The best way to avoid autocomplete fields is to give unique name to the fields on every page load.
-        $this->setNameSalt(time());
-        // Change some default attributes.
-        $this->setAutocomplete(false);
-
-
         // Hidden field.
-        $hiddenCsrf = new FormElement(FormElement::TAG_INPUT_HIDDEN, 'csrf');
-        $hiddenCsrf->setValue('Some CSRF test value');
+        $hiddenCSRF = new Web\HiddenElement('csrf');
+        $hiddenCSRF->setValue('Some CSRF test value');
 
-        // Fieldsets
-        $fieldset1 = $this->getMainFieldset();
-        $fieldset2 = $this->getLocationFieldset();
+        $xContent = <<<EOH
+<h2>This is a static content</h2>
+<p>
+    Veritus invenire mei ne. No nam nullam probatus, mea te nostro delicatissimi. Ea deserunt pericula cum, no eos 
+    tation rationibus scriptorem. Mel ut verterem invenire. Eu vim aperiam nonumes sententiae, ex quas sapientem has. 
+    Mea autem adolescens ea, ea ridens oportere sit, ex dicta tacimates nec. Scaevola complectitur ad sed, ne ius 
+    praesent argumentum.
+</p>
+<p>
+    Pro no dicam aliquid bonorum. Inimicus imperdiet mei et. Ut hendrerit adversarium sed. Te cum everti delicata, 
+    quis utamur argumentum pri id, oratio exerci everti eam te.
+</p>
+<p>
+    No meliore deterruisset nec. An eros electram constituto duo, has reque corrumpit at. Nihil aperiri liberavisse in 
+    has, eu qui nonumy nusquam. Mazim salutatus te nam, nobis putent mentitum mea ne. Mundi denique at ius, 
+    illum quaestio vix id.
+</p>
+EOH;
+        $fieldSetX = new Web\StaticContentElement('notice', 'Please Note');
+        $fieldSetX->setValue($xContent);
+
+        // Field sets
+        $fieldSet1 = $this->getMainFieldSet();
+        $fieldSet2 = $this->getLocationFieldSet();
 
         // Submit button.
-        $submit = new FormElement(FormElement::TAG_BUTTON_SUBMIT, 'submit', 'Login');
+        $submit = new Web\SubmitElement('submit', 'Login');
 
-        // Assign elements and the fieldset to the form
-        $this->addChildNode($hiddenCsrf)
-            ->addChildNode($fieldset1)
-            ->addChildNode($fieldset2)
-            ->addChildNode($submit);
+        // Assign elements and the field sets to the form
+        $this->setNodes(
+            [
+                $hiddenCSRF,
+                $fieldSet1,
+                $fieldSetX,
+                $fieldSet2,
+                $submit
+            ]
+        );
     }
 
     /**
-     * Gets main fieldset
+     * Gets main field set
      *
-     * @return FormElement
+     * @return Web\FieldSetElement
      */
-    private function getMainFieldset()
+    private function getMainFieldSet()
     {
-        // Fieldset
-        $fieldset = new FormElement(FormElement::TAG_FIELDSET, 'info');
-        // Legend for the fieldset.
-        $legend = new FormElement(FormElement::TAG_LEGEND);
-        $legend->setLabel('Login form');
+        // Field set
+        $fieldSet = new Web\FieldSetElement('info', 'Login form');
 
         // Text input with custom attribute
-        $loginname = new FormElement(FormElement::TAG_INPUT_TEXT, 'username', 'Username');
-        $loginname->setAttribute('placeholder', 'Your login name');
+        $loginname = new Web\TextElement('username', 'Username');
+        $loginname->setAttributes(['placeholder' => 'Your login name']);
 
         // Password input
-        $password = new FormElement(FormElement::TAG_INPUT_PASSWORD, 'password', 'Password');
+        $password = new Web\PasswordElement('password', 'Password');
+
+        // HTML5 email input
+        $email = new Web\InputElement('email', 'Email');
+        $email->setType('email');
 
         // Single-option checkbox.
         // For single-option radio boxes the ->setValue(1) is equals to this: ->setAttribute('checked', true);
-        $checkboxRememberMe = new FormElement(FormElement::TAG_INPUT_CHECKBOX, 'remember_me', 'Remember Me');
-        $checkboxRememberMe->setValue(1);
+        $checkboxRememberMe = new Web\CheckboxElement('remember_me', 'Remember Me');
+        $checkboxRememberMe->setValue('1');
 
         // Radio group.
-        $radioLanguage = new FormElement(FormElement::TAG_INPUT_RADIO, 'language', 'Select language');
-        $radioLanguage->setValue('es')
-            ->setOptions(
-                [
-                    ['label' => 'English', 'value' => 'en'],
-                    ['label' => 'German', 'value' => 'de'],
-                    ['label' => 'Spanish', 'value' => 'es'],
-                ]
-            );
+        $radioLanguage = new Web\RadioElement('language', 'Select language');
+        $radioLanguage->setOptions(
+            [
+                ['label' => 'English', 'value' => 'en', 'checked' => true],
+                ['label' => 'German', 'value' => 'de', 'checked' => true],
+                ['label' => 'Spanish', 'value' => 'es', 'checked' => true],
+            ]
+        );
 
         // Checkbox group.
-        $checkboxTerms = new FormElement(FormElement::TAG_INPUT_CHECKBOX, 'terms', 'Terms and conditions');
+        $checkboxTerms = new Web\CheckboxElement('terms', 'Terms and conditions');
         $checkboxTerms->setOptions(
             [
                 ['label' => 'I am human.', 'value' => 'human'],
@@ -97,32 +130,33 @@ class TestForm extends AbstractForm
             ]
         );
 
-        // Assign elements to the fieldset
-        $fieldset->addChildNode($legend)
-            ->addChildNode($loginname)
-            ->addChildNode($password)
-            ->addChildNode($checkboxRememberMe)
-            ->addChildNode($radioLanguage)
-            ->addChildNode($checkboxTerms);
+        // Assign elements to the field set
+        $fieldSet->setNodes(
+            [
+                $loginname,
+                $password,
+                $email,
+                $checkboxRememberMe,
+                $radioLanguage,
+                $checkboxTerms
+            ]
+        );
 
-        return $fieldset;
+        return $fieldSet;
     }
 
     /**
-     * Gets location fieldset.
+     * Gets location field set.
      *
-     * @return FormElement
+     * @return Web\FieldSetElement
      */
-    private function getLocationFieldset()
+    private function getLocationFieldSet()
     {
-        // Fieldset
-        $fieldset = new FormElement(FormElement::TAG_FIELDSET, 'location');
-        // Legend for the fieldset.
-        $legend = new FormElement(FormElement::TAG_LEGEND);
-        $legend->setLabel('Location');
+        // Field set
+        $fieldSet = new Web\FieldSetElement('location', 'Location');
 
         // Select box with no multi selection and with no option groups
-        $select1 = new FormElement(FormElement::TAG_SELECT, 'country', 'I live in:');
+        $select1 = new Web\SelectElement('country', 'I live in:');
         $select1->setOptions(
             [
                 ['label' => 'Hungary', 'value' => 'hu'],
@@ -132,7 +166,7 @@ class TestForm extends AbstractForm
         );
 
         // Select box with no multi selection and WITH option groups
-        $select2 = new FormElement(FormElement::TAG_SELECT, 'dream', 'I\'d like live in:');
+        $select2 = new Web\SelectElement('dream', 'I\'d like live in:');
         $select2->setOptions(
             [
                 ['label' => 'Anywhere', 'value' => '*'],
@@ -144,58 +178,41 @@ class TestForm extends AbstractForm
                 ['label' => 'Switzerland', 'value' => 'ch', 'group' => 'Europe', 'checked' => true],
                 ['label' => 'France', 'value' => 'fr', 'group' => 'Europe'],
                 ['label' => 'Spain', 'value' => 'es', 'group' => 'Europe'],
+                ['label' => 'Japan', 'value' => 'jp', 'group' => 'Asia'],
             ]
         );
 
-        // Select box WITH multi selection. The element is build with constructors.
-        $select3 = new FormElement(FormElement::TAG_SELECT, 'past', 'I\'ve already lived in:');
-        $select3->setAttribute('multiple', true)
-            ->setAttribute('size', 10);
+        // Select box WITH multi selection.
+        $select3 = new Web\SelectElement('past', 'I\'ve already lived in:');
+        $select3->setOptions(
+            [
+                ['label' => 'Hungary', 'value' => 'hu', 'group' => 'Europe', 'checked' => true],
+                ['label' => 'USA', 'value' => 'us', 'group' => 'America'],
+                ['label' => 'Germany', 'value' => 'de', 'group' => 'Europe', 'checked' => true],
+                ['label' => 'Austria', 'value' => 'at', 'group' => 'Europe'],
+                ['label' => 'Canada', 'value' => 'ca', 'group' => 'America'],
+                ['label' => 'Switzerland', 'value' => 'ch', 'group' => 'Europe'],
+                ['label' => 'France', 'value' => 'fr', 'group' => 'Europe'],
+                ['label' => 'Spain', 'value' => 'es', 'group' => 'Europe'],
+                ['label' => 'Japan', 'value' => 'jp', 'group' => 'Asia'],
+            ]
+        )
+            ->setAttributes(
+                [
+                    'multiple' => true,
+                    'size' => 10
+                ]
+            );
 
-        $select3Group1 = new FormElement(FormElement::TAG_OPTION_GROUP);
-        $select3Group1->setLabel('Europe');
+        // Assign elements to the field set
+        $fieldSet->setNodes(
+            [
+                $select1,
+                $select2,
+                $select3
+            ]
+        );
 
-        $option1 = new FormElement(FormElement::TAG_OPTION);
-        $option1->setValue('hu')->setLabel('Hungary')->setAttribute('selected', true);
-
-        $option2 = new FormElement(FormElement::TAG_OPTION);
-        $option2->setValue('de')->setLabel('Germany')->setAttribute('selected', true);
-
-        $option3 = new FormElement(FormElement::TAG_OPTION);
-        $option3->setValue('ch')->setLabel('Switzerland');
-
-        $option4 = new FormElement(FormElement::TAG_OPTION);
-        $option4->setValue('fr')->setLabel('France');
-
-        $select3Group1->setChildNodes([$option1, $option2, $option3, $option4]);
-
-        $select3Group2 = new FormElement(FormElement::TAG_OPTION_GROUP);
-        $select3Group2->setLabel('America');
-
-        $option5 = new FormElement(FormElement::TAG_OPTION);
-        $option5->setValue('us')->setLabel('USA');
-
-        $option6 = new FormElement(FormElement::TAG_OPTION);
-        $option6->setValue('ca')->setLabel('Canada');
-
-        $select3Group2->setChildNodes([$option5, $option6]);
-
-        $select3Group3 = new FormElement(FormElement::TAG_OPTION_GROUP);
-        $select3Group3->setLabel('Asia');
-
-        $option7 = new FormElement(FormElement::TAG_OPTION);
-        $option7->setValue('jp')->setLabel('Japan');
-
-        $select3Group3->setChildNodes([$option7]);
-
-        $select3->setChildNodes([$select3Group1, $select3Group2, $select3Group3]);
-
-        // Assign elements to the fieldset
-        $fieldset->addChildNode($legend)
-            ->addChildNode($select1)
-            ->addChildNode($select2)
-            ->addChildNode($select3);
-
-        return $fieldset;
+        return $fieldSet;
     }
 }

@@ -1,7 +1,7 @@
 <div class="element checkbox">
     {% if formElement.hasOptions() %}
         <fieldset name="{{ formElement.getName() }}">
-            <legend>{{ formElement.getLabel }}</legend>
+            <legend>{{ formElement.getLabel() }}</legend>
             {% for label, option in formElement.getOptions() %}
                 <label>
                     <input type="hidden" name="{{ formElement.getName() }}[{{ option.value }}]" value="0" />

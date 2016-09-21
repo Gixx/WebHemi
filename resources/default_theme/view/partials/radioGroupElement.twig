@@ -1,10 +1,10 @@
 <div class="element radio">
     {% if formElement.hasOptions() %}
         <fieldset name="{{ formElement.getName() }}">
-            <legend>{{ formElement.getLabel }}</legend>
+            <legend>{{ formElement.getLabel() }}</legend>
             {% for label, option in formElement.getOptions() %}
                 <label>
-                    <input type="radio" name="{{ formElement.getName() }}" value="{{ option.value }}" {{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}{% if option.value == formElement.getValue() %} checked="checked"{% endif %} />
+                    <input type="radio" name="{{ formElement.getName() }}" value="{{ option.value }}" {{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}{% if option.checked %} checked="checked"{% endif %} />
                     {{ label }}
                 </label>
             {% endfor %}

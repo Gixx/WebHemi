@@ -26,11 +26,34 @@ interface FormInterface
     public function __construct($name, $action = '', $method = 'POST');
 
     /**
+     * Gets form name.
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * Set unique identifier for the form. Activates only when the auto-complete feature is in 'false' state.
+     *
+     * @param string $salt
+     * @return FormInterface
+     */
+    public function setNameSalt($salt);
+
+    /**
+     * Sets form auto-complete feature on/off.
+     *
+     * @param bool $autoComplete
+     * @return FormInterface
+     */
+    public function setAutoComplete($autoComplete = true);
+
+    /**
      * Gets the form elements.
      *
-     * @return array<FormElement>
+     * @return array<FormElementInterface>
      */
-    public function getChildNodes();
+    public function getNodes();
 
     /**
      * Validates the form.

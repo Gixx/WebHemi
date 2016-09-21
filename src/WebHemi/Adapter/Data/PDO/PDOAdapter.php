@@ -222,7 +222,7 @@ class PDOAdapter implements DataAdapterInterface
         }
 
         if (!empty($queryParams)) {
-            $whereExpression = ' WHERE ' . implode(' AND ', $queryParams);
+            $whereExpression = ' WHERE '.implode(' AND ', $queryParams);
         }
 
         return $whereExpression;

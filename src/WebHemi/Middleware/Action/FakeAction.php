@@ -32,6 +32,12 @@ class FakeAction extends AbstractMiddlewareAction
         /** @var UserEntity $userEntity */
         $userEntity = $this->userStorage->getUserById(1);
 
+        $form = new TestForm('test', '', 'POST');
+        // Turn off aut complete feature.
+        $form->setAutoComplete(false);
+        // test data setter
+        $form->setData($this->request->getParsedBody());
+
         return [
             'blogPosts' => [
                 [
@@ -54,7 +60,7 @@ class FakeAction extends AbstractMiddlewareAction
                 ]
             ],
             'postData' => var_export($this->request->getParsedBody(), true),
-            'loginForm' => new TestForm('test', '', 'POST')
+            'loginForm' => $form
         ];
     }
 }
