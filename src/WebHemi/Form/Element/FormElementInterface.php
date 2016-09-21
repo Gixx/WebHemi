@@ -16,58 +16,21 @@ namespace WebHemi\Form\Element;
  */
 interface FormElementInterface
 {
-    /** HTML5 form elements */
-    const TAG_FORM = 'form';
-    const TAG_INPUT_CHECKBOX = 'checkbox';
-    const TAG_INPUT_COLOR = 'color';
-    const TAG_INPUT_DATA = 'date';
-    const TAG_INPUT_DATETIME = 'datetime';
-    const TAG_INPUT_DATETIME_LOCAL = 'datetime-local';
-    const TAG_INPUT_EMAIL = 'email';
-    const TAG_INPUT_FILE = 'file';
-    const TAG_INPUT_HIDDEN = 'hidden';
-    const TAG_INPUT_IMAGE = 'image';
-    const TAG_INPUT_MONTH = 'month';
-    const TAG_INPUT_NUMBER = 'number';
-    const TAG_INPUT_PASSWORD = 'password';
-    const TAG_INPUT_RADIO = 'radio';
-    const TAG_INPUT_RANGE = 'range';
-    const TAG_INPUT_SEARCH = 'search';
-    const TAG_INPUT_TEL = 'tel';
-    const TAG_INPUT_TEXT = 'text';
-    const TAG_INPUT_TIME = 'time';
-    const TAG_INPUT_URL = 'url';
-    const TAG_INPUT_WEEK = 'week';
-    const TAG_TEXTAREA = 'textarea';
-    const TAG_FIELDSET = 'fieldset';
-    const TAG_LEGEND = 'legend';
-    const TAG_LABEL = 'label';
-    const TAG_BUTTON_SUBMIT = 'submit';
-    const TAG_BUTTON_RESET = 'reset';
-    const TAG_BUTTON = 'button';
-    const TAG_DATALIST = 'datalist';
-    const TAG_SELECT = 'select';
-    const TAG_OPTION_GROUP = 'optgroup';
-    const TAG_OPTION = 'option';
-    const TAG_KEYGEN = 'keygen';
-    const TAG_OUTPUT = 'output';
-
     /**
      * AbstractFormElement constructor.
      *
-     * @param string $tagName
      * @param string $name
      * @param string $label
      * @param mixed  $value
      */
-    public function __construct($tagName, $name = '', $label = '', $value = null);
+    public function __construct($name = '', $label = '', $value = null);
 
     /**
-     * Returns the element tag name.
+     * Returns the element type.
      *
      * @return string
      */
-    public function getTagName();
+    public function getType();
 
     /**
      * Sets element name.
@@ -78,11 +41,12 @@ interface FormElementInterface
     public function setName($name);
 
     /**
-     * Returns the element name.
+     * Returns the element name. If parameter is TRUE, then the method should include all the parents' names as well.
      *
+     * @param boolean $getFulNodeName
      * @return string
      */
-    public function getName();
+    public function getName($getFulNodeName = true);
 
     /**
      * Sets element label.
@@ -130,19 +94,11 @@ interface FormElementInterface
     public function getAttributes();
 
     /**
-     * Sets the element errors. Usually the validator should set it, but it is allowed to set from outside too.
+     * Sets and increments the tabulator index globally. This method should be used only on visible elements.
      *
-     * @param array $errors
      * @return FormElementInterface
      */
-    public function setErrors(array $errors);
-
-    /**
-     * Gets validation errors.
-     *
-     * @return array
-     */
-    public function getErrors();
+    public function setTabIndex();
 
     /**
      * Sets the element validators.
@@ -160,12 +116,27 @@ interface FormElementInterface
     public function getValidators();
 
     /**
-     * Validates element value.
+     * Validates the element's value. If parameter is TRUE, the method should ignore any previous validation results.
      *
      * @param bool $reValidate
      * @return bool
      */
     public function isValid($reValidate = false);
+
+    /**
+     * Sets the element error messages. Usually the validator should set it, but it is allowed to set from outside too.
+     *
+     * @param array $errors
+     * @return FormElementInterface
+     */
+    public function setErrors(array $errors);
+
+    /**
+     * Gets the element error messages.
+     *
+     * @return array
+     */
+    public function getErrors();
 
     /**
      * Sets the parent element.
@@ -181,26 +152,4 @@ interface FormElementInterface
      * @return FormElementInterface
      */
     public function getParentNode();
-
-    /**
-     * Set the child nodes for the element.
-     *
-     * @param array<FormElementInterface> $childNodes
-     * @return FormElementInterface
-     */
-    public function setChildNodes(array $childNodes);
-
-    /**
-     * Checks if there are child elements.
-     *
-     * @return boolean
-     */
-    public function hasChildNodes();
-
-    /**
-     * Gets the child nodes of the element.
-     *
-     * @return array<FormElementInterface>
-     */
-    public function getChildNodes();
 }

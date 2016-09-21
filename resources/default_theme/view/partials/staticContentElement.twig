@@ -1,0 +1,9 @@
+<div class="element static-content {{ formElement.getName() }}">
+    <fieldset name="{{ formElement.getName() }}">
+        {% set label = formElement.getLabel() %}
+        {% if label is not empty %}
+        <legend>{{ label }}</legend>
+        {% endif %}
+        {{ formElement.getValue()|raw }}
+    </fieldset>
+</div>

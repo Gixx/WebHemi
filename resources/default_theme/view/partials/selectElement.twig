@@ -3,7 +3,7 @@
     <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
         {% if formElement.hasOptions() %}
             {% set elementOptions = formElement.getOptions() %}
-            {% if formElement.isGrouppedSelect() %}
+            {% if formElement.isGroupedSelect() %}
                 {% for groupName, groupOptions in elementOptions %}
                     <optgroup label="{{ groupName }}">
                         {% for option in groupOptions %}
@@ -16,8 +16,6 @@
                     <option value="{{ option.value }}"{% if option.checked %} selected="selected"{% endif %}>{{ option.label }}</option>
                 {% endfor %}
             {% endif %}
-        {% elseif formElement.hasChildNodes() %}
-            {{ _FORM.renderSubForm(formElement.getChildNodes()) }}
         {% endif %}
     </select>
 </div>
