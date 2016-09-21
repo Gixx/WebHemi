@@ -103,7 +103,7 @@ interface FormElementInterface
     /**
      * Sets the element validators.
      *
-     * @param array<FormValidatorInterface> $validators
+     * @param array<ValidatorInterface> $validators
      * @return FormElementInterface
      */
     public function setValidators(array $validators);
@@ -111,7 +111,7 @@ interface FormElementInterface
     /**
      * Gets the element validators.
      *
-     * @return array<FormValidatorInterface>
+     * @return array<ValidatorInterface>
      */
     public function getValidators();
 
