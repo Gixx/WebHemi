@@ -36,7 +36,7 @@ class FakeAction extends AbstractMiddlewareAction
         // Turn off aut complete feature.
         $form->setAutoComplete(false);
         // test data setter
-        $form->setData($this->request->getParsedBody());
+        $form->setData((array)$this->request->getParsedBody());
 
         return [
             'blogPosts' => [

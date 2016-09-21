@@ -103,12 +103,9 @@ abstract class AbstractForm implements FormInterface, Iterator
      * @param string $action
      * @return AbstractForm
      */
-    protected function setAction($action)
+    final protected function setAction($action)
     {
-        $attributes = $this->form->getAttributes();
-        $attributes['action'] = $action;
-
-        $this->form->setAttributes($attributes);
+        $this->setAttribute('action', $action);
 
         return $this;
     }
@@ -119,12 +116,22 @@ abstract class AbstractForm implements FormInterface, Iterator
      * @param string $method
      * @return AbstractForm
      */
-    protected function setMethod($method = 'POST')
+    final protected function setMethod($method = 'POST')
     {
-        $attributes = $this->form->getAttributes();
-        $attributes['method'] = $method;
+        $this->setAttribute('method', $method);
 
-        $this->form->setAttributes($attributes);
+        return $this;
+    }
+
+    /**
+     * Sets form encoding type.
+     *
+     * @param string $encodingType
+     * @return AbstractForm
+     */
+    final protected function setEnctype($encodingType = 'application/x-www-form-urlencoded')
+    {
+        $this->setAttribute('enctype', $encodingType);
 
         return $this;
     }
@@ -135,7 +142,7 @@ abstract class AbstractForm implements FormInterface, Iterator
      * @param bool $autoComplete
      * @return AbstractForm
      */
-    public function setAutoComplete($autoComplete = true)
+    final public function setAutoComplete($autoComplete = true)
     {
         $name = $this->form->getName(false);
         $md5Match = [];
@@ -152,28 +159,23 @@ abstract class AbstractForm implements FormInterface, Iterator
 
         $this->form->setName($name);
 
-        $attributes = $this->form->getAttributes();
-        $attributes['autocomplete'] = $autoComplete;
-
-        $this->form->setAttributes($attributes);
+        $this->setAttribute('autocomplete', $autoComplete);
 
         return $this;
     }
 
     /**
-     * Sets form encoding type.
+     * Sets specific form attributes.
      *
-     * @param string $encodingType
-     * @return AbstractForm
+     * @param $name
+     * @param $value
      */
-    protected function setEnctype($encodingType = 'application/x-www-form-urlencoded')
+    private function setAttribute($name, $value)
     {
         $attributes = $this->form->getAttributes();
-        $attributes['enctype'] = $encodingType;
+        $attributes[$name] = $value;
 
         $this->form->setAttributes($attributes);
-
-        return $this;
     }
 
     /**

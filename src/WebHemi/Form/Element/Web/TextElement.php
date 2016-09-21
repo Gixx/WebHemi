@@ -16,5 +16,4 @@ namespace WebHemi\Form\Element\Web;
  */
 class TextElement extends InputElement
 {
-
 }
