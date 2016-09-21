@@ -72,17 +72,7 @@ class SelectElement extends RadioElement
             $value = [$value];
         }
 
-        $isAssociativeArray = array_keys($value) !== range(0, count($value) - 1);
-        $valuesToSelect = [];
-
-        // Go through the given data and collect the selected ones.
-        foreach ($value as $key => $data) {
-            if ($isAssociativeArray && $data == 1) {
-                $valuesToSelect[] = $key;
-            } elseif (!$isAssociativeArray) {
-                $valuesToSelect[] = $data;
-            }
-        }
+        $valuesToSelect = $this->getValuesToSelect($value);
 
         foreach ($this->options as $group => $options) {
             foreach ($options as $index => $option) {

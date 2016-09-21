@@ -59,6 +59,24 @@ class RadioElement extends AbstractElement implements MultiOptionElementInterfac
             $value = [$value];
         }
 
+        $valuesToSelect = $this->getValuesToSelect($value);
+
+        // Go through the options and change the defaults.
+        foreach ($this->options as &$option) {
+            $option['checked'] = in_array($option['value'], $valuesToSelect);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Collects the selected values for multi option element.
+     *
+     * @param $value
+     * @return array
+     */
+    protected function getValuesToSelect($value)
+    {
         $isAssociativeArray = array_keys($value) !== range(0, count($value) - 1);
         $valuesToSelect = [];
 
@@ -71,12 +89,7 @@ class RadioElement extends AbstractElement implements MultiOptionElementInterfac
             }
         }
 
-        // Go through the options and change the defaults.
-        foreach ($this->options as &$option) {
-            $option['checked'] = in_array($option['value'], $valuesToSelect);
-        }
-
-        return $this;
+        return $valuesToSelect;
     }
 
     /**
