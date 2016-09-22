@@ -4,7 +4,7 @@ namespace WebHemi\Middleware\Action;
 
 use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataStorage\User\UserStorage;
-use WebHemi\Form\TestForm;
+use WebHemi\Form\Web\TestForm;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
 /**
