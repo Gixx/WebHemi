@@ -15,6 +15,8 @@ use WebHemi\Form\Element\FormElementInterface;
 
 /**
  * Class IteratorTrait
+ *
+ * @codeCoverageIgnore - general implementation of the Iterator interface.
  */
 trait IteratorTrait
 {
