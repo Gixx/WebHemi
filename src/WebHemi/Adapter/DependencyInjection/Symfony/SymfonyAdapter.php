@@ -234,27 +234,17 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      */
     public function setServiceArgument($service, $parameter)
     {
-        if (!$service instanceof Definition) {
-            $service = $this->container->getDefinition($service);
-        }
-
-        $parameterName = $parameter;
+        $service = $this->getRealService($service);
+        $parameterName = $this->getRealParameterName($parameter);
         $serviceClass = $service->getClass();
 
-        if (isset($this->instantiatedSharedServices[$serviceClass])
-            && $this->instantiatedSharedServices[$serviceClass] === true
-        ) {
-            throw new RuntimeException('Cannot add argument to an already initialized service.');
-        }
-
-        if (!is_scalar($parameterName)) {
-            $parameterName = self::$parameterIndex++;
-        }
+        // Check if service is shared and is already initialized.
+        $this->checkSharedServiceClassState($serviceClass);
 
         // Create a normalized name for the argument.
         $normalizedName = $this->getNormalizedName($serviceClass, $parameterName);
 
-        // If the parameter marked as to be used as a scalar
+        // If the parameter marked as to be used as a scalar.
         if (is_scalar($parameter) && strpos((string)$parameter, '!:') === 0) {
             $parameter = substr((string)$parameter, 2);
         } else {
@@ -266,5 +256,50 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         $service->addArgument('%'.$normalizedName.'%');
 
         return $this;
+    }
+
+    /**
+     * Gets the real service instance.
+     *
+     * @param mixed $service
+     * @return Definition
+     */
+    private function getRealService($service)
+    {
+        if (!$service instanceof Definition) {
+            $service = $this->container->getDefinition($service);
+        }
+
+        return $service;
+    }
+
+    /**
+     * Gets the real parameter name.
+     *
+     * @param $parameterName
+     * @return mixed
+     */
+    private function getRealParameterName($parameterName)
+    {
+        if (!is_scalar($parameterName)) {
+            $parameterName = self::$parameterIndex++;
+        }
+
+        return $parameterName;
+    }
+
+    /**
+     * Checks whether the service is shared and initialized
+     *
+     * @param $serviceClass
+     * @throws RuntimeException
+     */
+    private function checkSharedServiceClassState($serviceClass)
+    {
+        if (isset($this->instantiatedSharedServices[$serviceClass])
+            && $this->instantiatedSharedServices[$serviceClass] === true
+        ) {
+            throw new RuntimeException('Cannot add argument to an already initialized service.');
+        }
     }
 }
