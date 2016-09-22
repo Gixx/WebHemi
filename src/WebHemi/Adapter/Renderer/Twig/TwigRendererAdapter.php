@@ -59,11 +59,14 @@ class TwigRendererAdapter implements RendererAdapterInterface
         $this->adapter->addExtension(new Twig_Extension_Debug());
 
         $viewPath = $this->templateViewPath;
+        // @codeCoverageIgnoreStart
+        // link a core function into template level
         $function = new Twig_SimpleFunction('defined', function ($fileName) use ($viewPath) {
             $fileName = str_replace('@Theme', $viewPath, $fileName);
             return file_exists($fileName);
         });
         $this->adapter->addFunction($function);
+        // @codeCoverageIgnoreEnd
     }
 
     /**

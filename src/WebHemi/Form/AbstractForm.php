@@ -27,9 +27,6 @@ abstract class AbstractForm implements FormInterface, Iterator
     /** @var string */
     protected $salt;
 
-    /** @var string */
-    protected $uniqueFormNamePostfix = '';
-
     // The implementation of the Iterator interface.
     use IteratorTrait;
 
@@ -103,7 +100,7 @@ abstract class AbstractForm implements FormInterface, Iterator
      * @param string $action
      * @return AbstractForm
      */
-    final protected function setAction($action)
+    final public function setAction($action)
     {
         $this->setAttribute('action', $action);
 
@@ -116,7 +113,7 @@ abstract class AbstractForm implements FormInterface, Iterator
      * @param string $method
      * @return AbstractForm
      */
-    final protected function setMethod($method = 'POST')
+    final public function setMethod($method = 'POST')
     {
         $this->setAttribute('method', $method);
 
@@ -148,7 +145,7 @@ abstract class AbstractForm implements FormInterface, Iterator
         $md5Match = [];
 
         // Search for the unique form prefix.
-        preg_match('/^[a-z0-9]+\_(?P<md5>[a-f0-9]{32}).*$/', $name, $md5Match);
+        preg_match('/^[a-z0-9\_\-\[\]]+\_(?P<md5>[a-f0-9]{32}).*$/', $name, $md5Match);
 
         // When it's necessary, add/remove the salt to/from the name
         if ($autoComplete && !empty($md5Match)) {
@@ -221,8 +218,6 @@ abstract class AbstractForm implements FormInterface, Iterator
     {
         if (isset($data[$this->form->getName()])) {
             $data = $data[$this->form->getName()];
-        } elseif (isset($data[$this->form->getName(false)])) {
-            $data = $data[$this->form->getName(false)];
         }
 
         $this->form->setValue($data);

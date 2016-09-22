@@ -41,6 +41,22 @@ interface FormInterface
     public function setNameSalt($salt);
 
     /**
+     * Sets form action.
+     *
+     * @param string $action
+     * @return FormInterface
+     */
+    public function setAction($action);
+
+    /**
+     * Sets form submit.
+     *
+     * @param string $method
+     * @return FormInterface
+     */
+    public function setMethod($method = 'POST');
+
+    /**
      * Sets form auto-complete feature on/off.
      *
      * @param bool $autoComplete

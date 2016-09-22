@@ -157,7 +157,7 @@ abstract class AbstractElement implements FormElementInterface, Iterator
         $md5Match = [];
 
         // Rip off the unique form prefix to make possible to work with fixed CSS id selectors.
-        if (preg_match('/^[a-z0-9]+\_(?P<md5>[a-f0-9]{32}).*$/', $name, $md5Match)) {
+        if (preg_match('/^[-z0-9\_\-\[\]]+\_(?P<md5>[a-f0-9]{32}).*$/', $name, $md5Match)) {
             $name = str_replace('_'.$md5Match['md5'], '', $name);
         }
 
