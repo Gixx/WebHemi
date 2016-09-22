@@ -64,22 +64,8 @@ class FinalMiddleware implements MiddlewareInterface
         // Skip sending output when PHP Unit is running.
         // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
-            $reasonPhrase = $response->getReasonPhrase();
-            header(sprintf(
-                'HTTP/%s %d%s',
-                $response->getProtocolVersion(),
-                $response->getStatusCode(),
-                ($reasonPhrase ? ' '.$reasonPhrase : '')
-            ));
-
-            foreach ($response->getHeaders() as $headerName => $values) {
-                $name  = $this->filterHeaderName($headerName);
-                $first = true;
-                foreach ($values as $value) {
-                    header(sprintf('%s: %s', $name, $value), $first);
-                    $first = false;
-                }
-            }
+            $this->sendHttpHeader($response);
+            $this->sendOutputHeaders($response->getHeaders());
 
             echo $content;
         }
@@ -116,5 +102,42 @@ class FinalMiddleware implements MiddlewareInterface
         $filtered = str_replace('-', ' ', $headerName);
         $filtered = ucwords($filtered);
         return str_replace(' ', '-', $filtered);
+    }
+
+    /**
+     * Sends the HTTP header.
+     *
+     * @param ResponseInterface $response
+     *
+     * @codeCoverageIgnore - vendor and core function calls
+     */
+    private function sendHttpHeader(ResponseInterface $response)
+    {
+        $reasonPhrase = $response->getReasonPhrase();
+        header(sprintf(
+            'HTTP/%s %d%s',
+            $response->getProtocolVersion(),
+            $response->getStatusCode(),
+            ($reasonPhrase ? ' '.$reasonPhrase : '')
+        ));
+    }
+
+    /**
+     * Sends out output headers.
+     *
+     * @param array $headers
+     *
+     * @codeCoverageIgnore - vendor and core function calls in loop
+     */
+    private function sendOutputHeaders(array $headers)
+    {
+        foreach ($headers as $headerName => $values) {
+            $name  = $this->filterHeaderName($headerName);
+            $first = true;
+            foreach ($values as $value) {
+                header(sprintf('%s: %s', $name, $value), $first);
+                $first = false;
+            }
+        }
     }
 }
