@@ -11,6 +11,7 @@
  */
 namespace WebHemi\Form\Element\Web;
 
+use Exception;
 use InvalidArgumentException;
 use Iterator;
 use RuntimeException;
@@ -24,6 +25,8 @@ use WebHemi\Validator\ValidatorInterface;
  */
 abstract class AbstractElement implements FormElementInterface, Iterator
 {
+    /** @var string */
+    protected $type = '';
     /** @var int */
     protected static $tabIndex = 1;
 
@@ -64,9 +67,17 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     /**
      * Returns the element type.
      *
+     * @throws Exception
      * @return string
      */
-    abstract public function getType();
+    final public function getType()
+    {
+        if (empty($this->type)) {
+            throw new Exception('You must specify the element type in the $type class property.');
+        }
+
+        return $this->type;
+    }
 
     /**
      * Sets element name. The implementation should decide if it is allowed after init.

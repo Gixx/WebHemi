@@ -16,13 +16,6 @@ namespace WebHemi\Form\Element\Web;
  */
 class ResetElement extends ButtonElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'reset';
-    }
+    /** @var string */
+    protected $type = 'reset';
 }

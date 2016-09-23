@@ -16,13 +16,6 @@ namespace WebHemi\Form\Element\Web;
  */
 class PasswordElement extends InputElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'password';
-    }
+    /** @var string */
+    protected $type = 'password';
 }

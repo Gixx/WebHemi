@@ -16,13 +16,6 @@ namespace WebHemi\Form\Element\Web;
  */
 class OutputElement extends AbstractElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'output';
-    }
+    /** @var string */
+    protected $type = 'output';
 }

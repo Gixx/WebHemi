@@ -19,6 +19,8 @@ use WebHemi\Form\Element\NestedElementInterface;
  */
 class FormElement extends AbstractElement implements NestedElementInterface
 {
+    /** @var string */
+    protected $type = 'form';
     /** @var array<FormElementInterface> */
     protected $nodes = [];
 
@@ -72,16 +74,6 @@ class FormElement extends AbstractElement implements NestedElementInterface
     public function getNodes()
     {
         return $this->nodes;
-    }
-
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'form';
     }
 
     /**

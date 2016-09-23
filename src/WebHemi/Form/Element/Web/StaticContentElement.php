@@ -16,13 +16,6 @@ namespace WebHemi\Form\Element\Web;
  */
 class StaticContentElement extends AbstractElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'static-content';
-    }
+    /** @var string */
+    protected $type = 'static-content';
 }

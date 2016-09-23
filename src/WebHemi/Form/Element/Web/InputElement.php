@@ -17,7 +17,7 @@ namespace WebHemi\Form\Element\Web;
 class InputElement extends AbstractElement
 {
     /** @var string */
-    private $type = 'text';
+    protected $type = 'text';
     /** @var array */
     private $availableInputTypes = [
         'color',
@@ -64,15 +64,5 @@ class InputElement extends AbstractElement
         }
 
         return $this;
-    }
-
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }

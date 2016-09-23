@@ -16,13 +16,6 @@ namespace WebHemi\Form\Element\Web;
  */
 class HiddenElement extends AbstractElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'hidden';
-    }
+    /** @var string */
+    protected $type = 'hidden';
 }

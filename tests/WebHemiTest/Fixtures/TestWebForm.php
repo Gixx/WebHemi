@@ -20,6 +20,7 @@ use WebHemi\Form\Element\NestedElementInterface;
  *
  * @method NestedElementInterface doGetFormContainer()
  * @method TestWebForm doSetEnctype(string $string = '')
+ * @method TestWebForm doSetNodes(array $array)
  *
  * @property NestedElementInterface $form
  * @property string $name
@@ -47,6 +48,39 @@ class TestWebForm extends AbstractForm
     protected function initForm()
     {
         $this->isInitCalled = true;
+
+        $fieldset = new Web\FieldSetElement('info');
+
+        // Hidden element.
+        $hidden = new Web\HiddenElement('hidden');
+        $hidden->setValue('test');
+
+        // Country select.
+        $select = new Web\SelectElement('country', 'Country');
+        $select->setOptions(
+            [
+                ['label' => 'Hungary', 'value' => 'hu'],
+                ['label' => 'Germany', 'value' => 'de', 'checked' => true],
+                ['label' => 'Austria', 'value' => 'at'],
+            ]
+        );
+
+        // Submit button.
+        $submit = new Web\SubmitElement('submit', 'Submit');
+
+        $fieldset->setNodes(
+            [
+                $hidden,
+                $select,
+            ]
+        );
+
+        $this->setNodes(
+            [
+                $fieldset,
+                $submit
+            ]
+        );
     }
 
     /**

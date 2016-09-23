@@ -18,6 +18,8 @@ use WebHemi\Form\Element\MultiOptionElementInterface;
  */
 class RadioElement extends AbstractElement implements MultiOptionElementInterface
 {
+    /** @var string */
+    protected $type = 'radio';
     /** @var array */
     protected $options = [];
     /** @var array */
@@ -35,16 +37,6 @@ class RadioElement extends AbstractElement implements MultiOptionElementInterfac
         parent::__construct($name, $label, $value);
 
         $this->setTabIndex();
-    }
-
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'radio';
     }
 
     /**

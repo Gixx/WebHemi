@@ -16,15 +16,8 @@ namespace WebHemi\Form\Element\Web;
  */
 class ButtonElement extends InputElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'button';
-    }
+    /** @var string */
+    protected $type = 'button';
 
     /**
      * Skip original behaviour: button element does not have value.

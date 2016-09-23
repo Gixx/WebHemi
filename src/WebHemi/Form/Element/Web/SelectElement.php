@@ -16,6 +16,9 @@ namespace WebHemi\Form\Element\Web;
  */
 class SelectElement extends RadioElement
 {
+    /** @var string */
+    protected $type = 'select';
+
     /**
      * SelectElement constructor.
      *
@@ -28,16 +31,6 @@ class SelectElement extends RadioElement
         parent::__construct($name, $label, $value);
 
         $this->setTabIndex();
-    }
-
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'select';
     }
 
     /**
