@@ -168,13 +168,32 @@ abstract class AbstractElement implements FormElementInterface, Iterator
         $md5Match = [];
 
         // Rip off the unique form prefix to make possible to work with fixed CSS id selectors.
-        if (preg_match('/^[-z0-9\_\-\[\]]+\_(?P<md5>[a-f0-9]{32}).*$/', $name, $md5Match)) {
-            $name = str_replace('_'.$md5Match['md5'], '', $name);
+        if (preg_match('/^.+(?P<md5>\_[a-f0-9]{32})($|\_.*$)/', $name, $md5Match)) {
+            $name = str_replace($md5Match['md5'], '', $name);
         }
 
-        $elementId = 'id_'.trim(preg_replace('/[^a-z0-9]/', '_', $name), '_');
+        $elementId = 'id_'.trim(preg_replace('/[^a-zA-Z0-9]/', '_', $name), '_');
+        $elementId = $this->camelCaseToUnderscore($elementId);
 
         return str_replace('__', '_', $elementId);
+    }
+
+    /**
+     * Converts CamelCase text to under_score equivalent.
+     *
+     * @param $input
+     * @return string
+     */
+    private function camelCaseToUnderscore($input)
+    {
+        preg_match_all('/([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)/', $input, $matches);
+        $return = $matches[0];
+
+        foreach ($return as &$match) {
+            $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
+        }
+
+        return implode('_', $return);
     }
 
     /**
