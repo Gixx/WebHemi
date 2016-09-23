@@ -16,13 +16,6 @@ namespace WebHemi\Form\Element\Web;
  */
 class FieldSetElement extends FormElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'fieldset';
-    }
+    /** @var string */
+    protected $type = 'fieldset';
 }

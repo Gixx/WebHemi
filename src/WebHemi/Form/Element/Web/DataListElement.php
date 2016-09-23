@@ -16,13 +16,6 @@ namespace WebHemi\Form\Element\Web;
  */
 class DataListElement extends RadioElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'datalist';
-    }
+    /** @var string */
+    protected $type = 'datalist';
 }

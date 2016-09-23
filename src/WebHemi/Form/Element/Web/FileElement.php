@@ -16,13 +16,20 @@ namespace WebHemi\Form\Element\Web;
  */
 class FileElement extends AbstractElement
 {
+    /** @var string */
+    protected $type = 'file';
+
     /**
-     * Returns the element type.
+     * SelectElement constructor.
      *
-     * @return string
+     * @param string $name
+     * @param string $label
+     * @param mixed  $value
      */
-    public function getType()
+    public function __construct($name = '', $label = '', $value = null)
     {
-        return 'file';
+        parent::__construct($name, $label, $value);
+
+        $this->setTabIndex();
     }
 }

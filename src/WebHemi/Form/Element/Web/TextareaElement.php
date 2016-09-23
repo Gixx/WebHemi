@@ -16,13 +16,20 @@ namespace WebHemi\Form\Element\Web;
  */
 class TextareaElement extends AbstractElement
 {
+    /** @var string */
+    protected $type = 'textarea';
+
     /**
-     * Returns the element type.
+     * SelectElement constructor.
      *
-     * @return string
+     * @param string $name
+     * @param string $label
+     * @param mixed  $value
      */
-    public function getType()
+    public function __construct($name = '', $label = '', $value = null)
     {
-        return 'textarea';
+        parent::__construct($name, $label, $value);
+
+        $this->setTabIndex();
     }
 }

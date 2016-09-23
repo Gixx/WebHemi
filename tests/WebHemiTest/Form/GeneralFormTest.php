@@ -13,6 +13,7 @@ namespace WebHemiTest\Form;
 
 use WebHemi\Form\Element\NestedElementInterface;
 use WebHemi\Form\Element\Web;
+use WebHemiTest\AssertTrait;
 use WebHemiTest\Fixtures\TestWebForm;
 use PHPUnit_Framework_TestCase as TestCase;
 
@@ -21,6 +22,8 @@ use PHPUnit_Framework_TestCase as TestCase;
  */
 class GeneralFormTest extends TestCase
 {
+    use AssertTrait;
+
     /**
      * Tests constructor.
      */
@@ -118,5 +121,96 @@ class GeneralFormTest extends TestCase
 
         $testForm->setAutoComplete(true);
         $this->assertSame('test_form', $testForm->getName());
+    }
+
+    /**
+     * Tests node setter/getter.
+     */
+    public function testNodes()
+    {
+        $testForm = new TestWebForm('test_form');
+        $nodes = [
+            new Web\HiddenElement('hidden'),
+            new Web\SelectElement('select')
+        ];
+
+        $instance = $testForm->doSetNodes($nodes);
+
+        // objects are the same (not cloned)
+        $this->assertInstanceOf(TestWebForm::class, $instance);
+        $this->assertTrue($testForm === $instance);
+
+        $actualNodes = $testForm->getNodes();
+
+        // we get the same amount of nodes and the instances are the same
+        $this->assertSame(count($nodes), count($actualNodes));
+        $this->assertTrue($nodes[0] === $actualNodes['hidden']);
+        $this->assertTrue($nodes[1] === $actualNodes['select']);
+    }
+
+    /**
+     * Test data setter/getter
+     */
+    public function testData()
+    {
+        $salt = 'test';
+        $testForm = new TestWebForm('test_form');
+        $inspectedData = [
+            'info' => [
+                'hidden' => 'test',
+                'country' => ['de']
+            ],
+            'submit' => ''
+        ];
+        // test get default data
+        $this->assertArraysAreSimilar($inspectedData, $testForm->getData());
+
+        $inspectedData = [
+            'info' => [
+                'hidden' => 'test 2',
+                'country' => ['de', 'at']
+            ],
+            'submit' => ''
+        ];
+        // test set and get data
+        $testForm->setData($inspectedData);
+        $this->assertArraysAreSimilar($inspectedData, $testForm->getData());
+
+        $inspectedData = [
+            'info' => [
+                'hidden' => 'test 3',
+                'country' => ['hu']
+            ],
+            'submit' => ''
+        ];
+        // test setter with form name index
+        $testForm->setData(['test_form' => $inspectedData]);
+        $this->assertArraysAreSimilar($inspectedData, $testForm->getData());
+
+
+        $inspectedData = [
+            'info' => [
+                'hidden' => 'test 4',
+                'country' => ['hu', 'de', 'at']
+            ],
+            'submit' => ''
+        ];
+        // test setter with form salted name index
+        $testForm->setNameSalt($salt)
+            ->setAutoComplete(false)
+            ->setData(['test_form_'.md5($salt) => $inspectedData]);
+        $this->assertArraysAreSimilar($inspectedData, $testForm->getData());
+
+        $inspectedData = [
+            'info' => [
+                'hidden' => 'test 5',
+                'country' => ['at']
+            ],
+            'submit' => ''
+        ];
+        // test setter with form salted name index when no salt is used
+        $testForm->setAutoComplete(false)
+            ->setData(['test_form_'.md5($salt) => $inspectedData]);
+        $this->assertArraysAreSimilar($inspectedData, $testForm->getData());
     }
 }

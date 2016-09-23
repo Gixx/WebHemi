@@ -16,13 +16,6 @@ namespace WebHemi\Form\Element\Web;
  */
 class SubmitElement extends ButtonElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'submit';
-    }
+    /** @var string */
+    protected $type = 'submit';
 }

@@ -16,15 +16,8 @@ namespace WebHemi\Form\Element\Web;
  */
 class CheckboxElement extends RadioElement
 {
-    /**
-     * Returns the element type.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return 'checkbox';
-    }
+    /** @var string */
+    protected $type = 'checkbox';
 
     /**
      * Sets element value.
