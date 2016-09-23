@@ -140,7 +140,7 @@ class GeneralFormTest extends TestCase
         $this->assertInstanceOf(TestWebForm::class, $instance);
         $this->assertTrue($testForm === $instance);
 
-        $actualNodes = $testForm->getNodes();
+        $actualNodes = $testForm->doGetNodes();
 
         // we get the same amount of nodes and the instances are the same
         $this->assertSame(count($nodes), count($actualNodes));

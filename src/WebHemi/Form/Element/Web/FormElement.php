@@ -119,4 +119,50 @@ class FormElement extends AbstractElement implements NestedElementInterface
 
         return $value;
     }
+
+    /**
+     * Validates element value.
+     *
+     * @param bool $reValidate
+     * @return bool
+     */
+    public function isValid($reValidate = false)
+    {
+        $children = $this->getNodes();
+        $isValid = true;
+
+        /**
+         * @var string               $simpleName
+         * @var FormElementInterface $child
+         */
+        foreach ($children as $child) {
+            $isValid = $isValid && $child->isValid($reValidate);
+        }
+
+        return $isValid;
+    }
+
+    /**
+     * Returns element value.
+     *
+     * @return mixed
+     */
+    public function getErrors()
+    {
+        $children = $this->getNodes();
+        $error = [];
+
+        /**
+         * @var string               $simpleName
+         * @var FormElementInterface $child
+         */
+        foreach ($children as $simpleName => $child) {
+            $childErrors = $child->getErrors();
+            if (!empty($childErrors)) {
+                $error[$simpleName] = $childErrors;
+            }
+        }
+
+        return $error;
+    }
 }

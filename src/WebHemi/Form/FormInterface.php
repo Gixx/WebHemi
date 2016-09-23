@@ -65,18 +65,19 @@ interface FormInterface
     public function setAutoComplete($autoComplete = true);
 
     /**
-     * Gets the form elements.
-     *
-     * @return array<FormElementInterface>
-     */
-    public function getNodes();
-
-    /**
      * Validates the form.
      *
-     * @return boolean
+     * @param bool $reValidate
+     * @return bool
      */
-    public function isValid();
+    public function isValid($reValidate = false);
+
+    /**
+     * Gets validation errors.
+     *
+     * @return array
+     */
+    public function getErrors();
 
     /**
      * Sets form data.

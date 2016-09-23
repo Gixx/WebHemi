@@ -21,6 +21,7 @@ use WebHemi\Form\Element\NestedElementInterface;
  * @method NestedElementInterface doGetFormContainer()
  * @method TestWebForm doSetEnctype(string $string = '')
  * @method TestWebForm doSetNodes(array $array)
+ * @method array doGetNodes()
  *
  * @property NestedElementInterface $form
  * @property string $name

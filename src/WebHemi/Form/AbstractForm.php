@@ -193,7 +193,7 @@ abstract class AbstractForm implements FormInterface, Iterator
      *
      * @return array<FormElementInterface>
      */
-    public function getNodes()
+    protected function getNodes()
     {
         return $this->form->getNodes();
     }
@@ -201,11 +201,22 @@ abstract class AbstractForm implements FormInterface, Iterator
     /**
      * Validates the form.
      *
-     * @return boolean
+     * @param bool $reValidate
+     * @return bool
      */
-    public function isValid()
+    public function isValid($reValidate = false)
     {
-        return $this->form->isValid();
+        return $this->form->isValid($reValidate);
+    }
+
+    /**
+     * Gets validation errors.
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->form->getErrors();
     }
 
     /**
