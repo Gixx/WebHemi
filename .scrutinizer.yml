@@ -1,5 +1,6 @@
 filter:
-    paths: [src/*]
+    paths: 
+      - 'src/*'
     excluded_paths:
       - 'vendor/*'
       - 'tests/*'
@@ -43,7 +44,7 @@ tools:
 
     php_code_coverage:
         enabled:              true
-        test_command:         'vendor/bin/phpunit -c phpunit.xml'
+        test_command:         'phpunit -c phpunit.xml'
         filter:
             excluded_paths:
                 - 'vendor/*'
@@ -53,10 +54,11 @@ tools:
                 - 'config/*'
                 - 'data/*'
                 - 'resources/*'
+           paths: 
+                - 'src'
 
     php_code_sniffer:
         enabled:              true
-        command:              'vendor/bin/phpcs --standard=PSR2 src/'
         config:
             standard:         PSR2
             sniffs:
@@ -72,6 +74,8 @@ tools:
                 - 'config/*'
                 - 'data/*'
                 - 'resources/*'
+            paths: 
+                - 'src'
 
     # Copy/Paste Detector
     php_cpd:
@@ -128,6 +132,8 @@ tools:
                 - 'config/*'
                 - 'data/*'
                 - 'resources/*'
+            paths: 
+                - 'src'
 
     # Analyzes the size and structure of a PHP project.
     php_pdepend:
@@ -156,6 +162,8 @@ tools:
                 - 'config/*'
                 - 'data/*'
                 - 'resources/*'
+            paths: 
+                - 'src'
         config:
             parameter_reference_check:
                 enabled:              true
