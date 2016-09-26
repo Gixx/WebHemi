@@ -37,7 +37,7 @@ before_commands:
 
 build:
     environment:
-        php: ['5.6','7.0','hvvm']
+        php: '5.6'
     tests:
         override:
             -
