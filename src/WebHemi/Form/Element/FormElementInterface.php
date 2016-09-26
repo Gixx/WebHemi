@@ -96,9 +96,10 @@ interface FormElementInterface
     /**
      * Sets and increments the tabulator index globally. This method should be used only on visible elements.
      *
+     * @param bool $reset
      * @return FormElementInterface
      */
-    public function setTabIndex();
+    public function setTabIndex($reset = false);
 
     /**
      * Sets the element validators.

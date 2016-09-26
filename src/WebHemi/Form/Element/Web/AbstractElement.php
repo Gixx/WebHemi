@@ -260,10 +260,15 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     /**
      * Sets and increments the tabulator index globally. This method should be used only on visible elements.
      *
+     * @param bool $reset
      * @return AbstractElement
      */
-    public function setTabIndex()
+    public function setTabIndex($reset = false)
     {
+        if ($reset) {
+            self::$tabIndex = 1;
+        }
+
         $this->attributes['tabindex'] = self::$tabIndex++;
 
         return $this;
