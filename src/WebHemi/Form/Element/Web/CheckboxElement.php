@@ -27,8 +27,8 @@ class CheckboxElement extends RadioElement
      */
     public function setValue($value)
     {
-        if (empty($this->options) && is_numeric($value)) {
-            $this->value = $value ? 1 : 0;
+        if (empty($this->options)) {
+            $this->value = boolval($value) ? 1 : 0;
         } else {
             parent::setValue($value);
         }
@@ -44,7 +44,7 @@ class CheckboxElement extends RadioElement
     public function getValue()
     {
         if (empty($this->options)) {
-            return $this->value;
+            return (int)$this->value;
         }
 
         return parent::getValue();
