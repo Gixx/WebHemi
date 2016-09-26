@@ -17,6 +17,3 @@ coding_style:
             around_operators:
                 bitwise: false
 
-tools:
-    external_code_coverage:
-        timeout: 3600
