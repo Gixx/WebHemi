@@ -1,6 +1,14 @@
 Change log
 ==========
 
+Version 4.0.0-2.0
+-----------------
+* Add brand new WebHemi\Form support
+* Add Twig templates for generating semantic WebHemi\Form markup  
+* Solve Twig template inheritance (when no custom found use the default one)
+* Minor fixes
+* Move all continuous integration tools to Scrutinizer
+
 Version 4.0.0-1.2
 -----------------
 * Continue on cleaning up the configuration
@@ -9,7 +17,7 @@ Version 4.0.0-1.2
   * Extend Psr\Http\Message interfaces to link as less external resources as possible
   * Standardize Request object attributes in the new (extended) Http interfaces
 * Middleware Actions:
-  * Add new interface to be able to differenciate form other middleware classes
+  * Add new interface to be able to distinguish its instances form other middleware classes
   * Add an AbstractMiddlewareAction class with finalized invoke method
 * Routing:
   * Fix issues with URLs without tailing slash

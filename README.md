@@ -1,14 +1,14 @@
 WebHemi
 =======
 
-[![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--1.2-blue.svg)](https://github.com/Gixx/WebHemi)
+[![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--2.0-blue.svg)](https://github.com/Gixx/WebHemi)
 [![Minimum PHP Version](https://img.shields.io/badge/PHP-%3E%3D5.6-blue.svg)](https://php.net/)
 [![Email](https://img.shields.io/badge/email-navig80@gmail.com-blue.svg?style=flat-square)](mailto:navig80@gmail.com)
 [![Packagist](https://img.shields.io/badge/packagist-download-blue.svg)](https://packagist.org/packages/gixx/web-hemi)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build Status](https://travis-ci.org/Gixx/WebHemi.svg?branch=master)](https://travis-ci.org/Gixx/WebHemi)
 [![StyleCI](https://styleci.io/repos/60013198/shield)](https://styleci.io/repos/60013198)
+[![Build Status](https://scrutinizer-ci.com/g/Gixx/WebHemi/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Gixx/WebHemi/build-status/master)
 [![Code Coverage](https://scrutinizer-ci.com/g/Gixx/WebHemi/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Gixx/WebHemi/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Gixx/WebHemi/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Gixx/WebHemi/?branch=master)
 
