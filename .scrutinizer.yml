@@ -54,7 +54,7 @@ tools:
                 - 'config/*'
                 - 'data/*'
                 - 'resources/*'
-           paths: 
+            paths: 
                 - 'src'
 
     php_code_sniffer:
@@ -103,6 +103,8 @@ tools:
                 - 'config/*'
                 - 'data/*'
                 - 'resources/*'
+            paths: 
+                - 'src'                
 
     # Analyzes the size and structure of a PHP project.
     php_loc:
