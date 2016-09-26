@@ -43,7 +43,7 @@ tools:
 
     php_code_coverage:
         enabled:              true
-        test_command:         '%path%/vendor/bin/phpunit -c phpunit.xml'
+        test_command:         'vendor/bin/phpunit -c phpunit.xml'
         filter:
             excluded_paths:
                 - 'vendor/*'
@@ -56,7 +56,7 @@ tools:
 
     php_code_sniffer:
         enabled:              true
-        command:              '%path%/vendor/bin/phpcs --standard=PSR2 src/'
+        command:              'vendor/bin/phpcs --standard=PSR2 src/'
         config:
             standard:         PSR2
             sniffs:
@@ -115,15 +115,10 @@ tools:
     # PHP Mess Detector (http://phpmd.org).
     php_mess_detector:
         enabled:              true
-        command:              '%path%/vendor/bin/phpmd src/ text phpmd.xml'
+        extensions:
+            - php
         config:
-            rulesets:
-                - codesize
-                - unusedcode
-                - naming
-                - design
-            naming_rules:
-                short_variable: { minimum: 2 }
+            ruleset: phpmd.xml
         filter:
             excluded_paths:
                 - 'vendor/*'
