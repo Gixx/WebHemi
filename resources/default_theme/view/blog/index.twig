@@ -2,6 +2,7 @@
 
 {% block content %}
     <pre>{{ postData }}</pre>
+    <pre>{{ session }}</pre>
     {% for blogPost in blogPosts %}
         <h2><a href="/view/{{ blogPost.slug|url_encode }}">{{ blogPost.title }}</a></h2>
         <p>On {{ blogPost.publishedAt.format('Y-m-d') }} by {{ blogPost.author.name }}</p>

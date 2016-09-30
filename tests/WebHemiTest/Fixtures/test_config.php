@@ -57,63 +57,65 @@ return [
     ],
     'themes' => $themeConfig,
     'dependencies' => [
-        'actionOk' => [
-            'class' => TestActionMiddleware::class,
-            'arguments' => [false],
-        ],
-        'actionBad' => [
-            'class' => TestActionMiddleware::class,
-            'arguments' => [true],
-        ],
-        'pipe1' => [
-            'class' => TestMiddleware::class,
-            'arguments' => ['!:pipe1']
-        ],
-        'pipe2' => [
-            'class' => TestMiddleware::class,
-            'arguments' => ['!:pipe2']
-        ],
-        'pipe3' => [
-            'class' => TestMiddleware::class,
-            'arguments' => ['!:pipe3']
-        ],
-        'pipe4' => [
-            'class' => TestMiddleware::class,
-            'arguments' => ['!:pipe4']
-        ],
-        // Adapter
-        HttpAdapterInterface::class => [
-            'class'     => GuzzleHttpAdapter::class,
-            'shared'    => true,
-        ],
-        RouterAdapterInterface::class => [
-            'class'     => FastRouteAdapter::class,
-            'arguments' => [Result::class],
-            'shared'    => true,
-        ],
-        RendererAdapterInterface::class => [
-            'class'     => TwigRendererAdapter::class,
-            'arguments' => [
-                new Config($themeConfig['default']),
-                '/tests/WebHemiTest/Fixtures/test_theme',
-                '/'
+        'Global' => [
+            'actionOk' => [
+                'class' => TestActionMiddleware::class,
+                'arguments' => [false],
             ],
-            'shared'    => true,
-        ],
-        // Middleware
-        RoutingMiddleware::class => [
-            'arguments' => [
-                RouterAdapterInterface::class,
-            ]
-        ],
-        DispatcherMiddleware::class => [
-            'arguments' => [
-                RendererAdapterInterface::class,
-            ]
-        ],
-        FinalMiddleware::class => [
-            'class' => TestMiddleware::class,
-            'arguments' => ['!:final']
+            'actionBad' => [
+                'class' => TestActionMiddleware::class,
+                'arguments' => [true],
+            ],
+            'pipe1' => [
+                'class' => TestMiddleware::class,
+                'arguments' => ['!:pipe1']
+            ],
+            'pipe2' => [
+                'class' => TestMiddleware::class,
+                'arguments' => ['!:pipe2']
+            ],
+            'pipe3' => [
+                'class' => TestMiddleware::class,
+                'arguments' => ['!:pipe3']
+            ],
+            'pipe4' => [
+                'class' => TestMiddleware::class,
+                'arguments' => ['!:pipe4']
+            ],
+            // Adapter
+            HttpAdapterInterface::class => [
+                'class'     => GuzzleHttpAdapter::class,
+                'shared'    => true,
+            ],
+            RouterAdapterInterface::class => [
+                'class'     => FastRouteAdapter::class,
+                'arguments' => [Result::class],
+                'shared'    => true,
+            ],
+            RendererAdapterInterface::class => [
+                'class'     => TwigRendererAdapter::class,
+                'arguments' => [
+                    new Config($themeConfig['default']),
+                    '/tests/WebHemiTest/Fixtures/test_theme',
+                    '/'
+                ],
+                'shared'    => true,
+            ],
+            // Middleware
+            RoutingMiddleware::class => [
+                'arguments' => [
+                    RouterAdapterInterface::class,
+                ]
+            ],
+            DispatcherMiddleware::class => [
+                'arguments' => [
+                    RendererAdapterInterface::class,
+                ]
+            ],
+            FinalMiddleware::class => [
+                'class' => TestMiddleware::class,
+                'arguments' => ['!:final']
+            ],
         ],
     ],
     'middleware_pipeline' => [

@@ -20,10 +20,11 @@ use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Application\ApplicationInterface;
 use WebHemi\Application\EnvironmentManager;
+use WebHemi\Application\PipelineManager;
+use WebHemi\Application\SessionManager;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\MiddlewareInterface;
-use WebHemi\Middleware\Pipeline\MiddlewarePipelineInterface;
 
 /**
  * Class WebApplication.
@@ -34,25 +35,26 @@ class WebApplication implements ApplicationInterface
     private $container;
     /** @var EnvironmentManager */
     private $environmentManager;
-    /** @var MiddlewarePipelineInterface */
+    /** @var PipelineManager */
     private $pipeline;
-
 
     /**
      * ApplicationInterface constructor.
      *
      * @param DependencyInjectionAdapterInterface $container
      * @param EnvironmentManager                  $environmentManager
-     * @param MiddlewarePipelineInterface         $pipeline
+     * @param PipelineManager                     $pipeline
      */
     public function __construct(
         DependencyInjectionAdapterInterface $container,
         EnvironmentManager $environmentManager,
-        MiddlewarePipelineInterface $pipeline
+        PipelineManager $pipeline
     ) {
         $this->container = $container;
         $this->environmentManager = $environmentManager;
         $this->pipeline = $pipeline;
+
+        $this->container->registerModuleServices($this->environmentManager->getSelectedModule());
     }
 
     /**
@@ -63,6 +65,29 @@ class WebApplication implements ApplicationInterface
     public function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * Starts the session.
+     *
+     * @codeCoverageIgnore - not testing session (yet)
+     */
+    private function initSession()
+    {
+        if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            return;
+        }
+
+        /** @var SessionManager $sessionManager */
+        $sessionManager = $this->container->get(SessionManager::class);
+        $name = $this->environmentManager->getSelectedApplication();
+        $timeOut = 3600;
+        $path = $this->environmentManager->getSelectedApplicationUri();
+        $domain = $this->environmentManager->getApplicationDomain();
+        $secure = $this->environmentManager->isSecuredApplication();
+        $httpOnly = true;
+
+        $sessionManager->start($name, $timeOut, $path, $domain, $secure, $httpOnly);
     }
 
     /**
@@ -153,7 +178,11 @@ class WebApplication implements ApplicationInterface
      */
     public function run()
     {
+        // Start session.
+        $this->initSession();
+        // Inject parameters into services.
         $this->prepare();
+
         /** @var HttpAdapterInterface $httpAdapter */
         $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
         /** @var ServerRequestInterface $request */

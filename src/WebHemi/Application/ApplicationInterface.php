@@ -12,7 +12,6 @@
 namespace WebHemi\Application;
 
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
-use WebHemi\Middleware\Pipeline\MiddlewarePipelineInterface;
 
 /**
  * Interface ApplicationInterface.
@@ -24,12 +23,12 @@ interface ApplicationInterface
      *
      * @param DependencyInjectionAdapterInterface $container
      * @param EnvironmentManager                  $environmentManager
-     * @param MiddlewarePipelineInterface         $pipeline
+     * @param PipelineManager                     $pipeline
      */
     public function __construct(
         DependencyInjectionAdapterInterface $container,
         EnvironmentManager $environmentManager,
-        MiddlewarePipelineInterface $pipeline
+        PipelineManager $pipeline
     );
 
     /**

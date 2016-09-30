@@ -57,11 +57,19 @@ interface DependencyInjectionAdapterInterface
     public function has($identifier);
 
     /**
+     * Register module specific services.
+     * If a service is already registered in the Global namespace, it will be skipped.
+     *
+     * @param string $moduleName
+     * @return DependencyInjectionAdapterInterface
+     */
+    public function registerModuleServices($moduleName);
+
+    /**
      * Sets service argument.
      *
      * @param string $identifier
      * @param mixed  $parameter
-     *
      * @return DependencyInjectionAdapterInterface
      */
     public function setServiceArgument($identifier, $parameter);

@@ -17,7 +17,8 @@ use Iterator;
 use RuntimeException;
 use WebHemi\Form\Element\FormElementInterface;
 use WebHemi\Form\Element\NestedElementInterface;
-use WebHemi\Form\Element\Traits\IteratorTrait;
+use WebHemi\Form\Traits\CamelCaseToUnderScoreTrait;
+use WebHemi\Form\Traits\IteratorTrait;
 use WebHemi\Validator\ValidatorInterface;
 
 /**
@@ -49,6 +50,8 @@ abstract class AbstractElement implements FormElementInterface, Iterator
 
     // The implementation of the Iterator interface.
     use IteratorTrait;
+    // CamelCase to under_score converter
+    use CamelCaseToUnderScoreTrait;
 
     /**
      * AbstractFormElement constructor.
@@ -176,24 +179,6 @@ abstract class AbstractElement implements FormElementInterface, Iterator
         $elementId = $this->camelCaseToUnderscore($elementId);
 
         return str_replace('__', '_', $elementId);
-    }
-
-    /**
-     * Converts CamelCase text to under_score equivalent.
-     *
-     * @param $input
-     * @return string
-     */
-    private function camelCaseToUnderscore($input)
-    {
-        preg_match_all('/([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)/', $input, $matches);
-        $return = $matches[0];
-
-        foreach ($return as &$match) {
-            $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
-        }
-
-        return implode('_', $return);
     }
 
     /**

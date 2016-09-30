@@ -13,7 +13,8 @@ namespace WebHemi\Form;
 
 use Iterator;
 use WebHemi\Form\Element\NestedElementInterface;
-use WebHemi\Form\Element\Traits\IteratorTrait;
+use WebHemi\Form\Traits\CamelCaseToUnderScoreTrait;
+use WebHemi\Form\Traits\IteratorTrait;
 
 /**
  * Class AbstractForm
@@ -23,12 +24,12 @@ abstract class AbstractForm implements FormInterface, Iterator
     /** @var NestedElementInterface */
     protected $form;
     /** @var string */
-    protected $name;
-    /** @var string */
     protected $salt;
 
     // The implementation of the Iterator interface.
     use IteratorTrait;
+    // CamelCase to under_score converter
+    use CamelCaseToUnderScoreTrait;
 
     /**
      * AbstractForm constructor.
@@ -37,8 +38,12 @@ abstract class AbstractForm implements FormInterface, Iterator
      * @param string $action
      * @param string $method
      */
-    final public function __construct($name, $action = '', $method = 'POST')
+    final public function __construct($name = '', $action = '', $method = 'POST')
     {
+        if (empty($name)) {
+            $name = $this->camelCaseToUnderscore(get_called_class());
+        }
+
         $this->form = $this->getFormContainer();
         $this->form->setName($name)
             ->setAttributes(
@@ -70,6 +75,23 @@ abstract class AbstractForm implements FormInterface, Iterator
      * @return void
      */
     abstract protected function initForm();
+
+    /**
+     * Sets form name.
+     *
+     * @param string $name
+     * @return FormInterface
+     */
+    public function setName($name)
+    {
+        $this->form->setName($name);
+
+        $formAttributes = $this->form->getAttributes();
+
+        if (isset($formAttributes['autocomplete'])) {
+            $this->setAutoComplete($formAttributes['autocomplete']);
+        }
+    }
 
     /**
      * Gets form name.

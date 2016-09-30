@@ -23,7 +23,15 @@ interface FormInterface
      * @param string $action
      * @param string $method
      */
-    public function __construct($name, $action = '', $method = 'POST');
+    public function __construct($name = '', $action = '', $method = 'POST');
+
+    /**
+     * Sets form name.
+     *
+     * @param string $name
+     * @return FormInterface
+     */
+    public function setName($name);
 
     /**
      * Gets form name.

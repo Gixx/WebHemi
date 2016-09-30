@@ -27,6 +27,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     private $container;
     /** @var array */
     private $configuration;
+    /** @var string */
+    private $moduleNamespace;
     /** @var array */
     private $servicesToDefine = [];
     /** @var array */
@@ -44,28 +46,44 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         $this->container = new ContainerBuilder();
         $this->configuration = $configuration->toArray();
 
-        $this->initContainer();
+        if (isset($this->configuration['Global'])) {
+            $this->registerServices($this->configuration['Global']);
+        }
     }
 
     /**
      * Initializes the DI container from the config.
+     *
+     * @param array  $dependencies
      */
-    private function initContainer()
+    private function registerServices(array $dependencies)
     {
         // Collect the name information about the services to be registered
-        foreach ($this->configuration as $alias => $setupData) {
-            if (isset($setupData[self::SERVICE_CLASS])) {
-                $serviceClass = $setupData[self::SERVICE_CLASS];
-            } else {
-                $serviceClass = $alias;
-            }
-
-            $this->servicesToDefine[$alias] = $serviceClass;
+        foreach ($dependencies as $alias => $setupData) {
+            $this->servicesToDefine[$alias] = $this->getRealServiceClass($setupData, $alias);
         }
 
         foreach ($this->servicesToDefine as $alias => $serviceClass) {
             $this->registerService($alias, $serviceClass);
         }
+    }
+
+    /**
+     * Gets real service class name.
+     *
+     * @param array  $setupData
+     * @param string $alias
+     * @return mixed
+     */
+    private function getRealServiceClass(array $setupData, $alias)
+    {
+        if (isset($setupData[self::SERVICE_CLASS])) {
+            $serviceClass = $setupData[self::SERVICE_CLASS];
+        } else {
+            $serviceClass = $alias;
+        }
+
+        return $serviceClass;
     }
 
     /**
@@ -90,9 +108,12 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
             // By default the Symfony DI shares all services. In WebHemi by default nothing is shared.
             self::SERVICE_SHARE       => false,
         ];
+
         // Override settings from the configuration if exists.
-        if (isset($this->configuration[$identifier])) {
-            $setUpData = array_merge($setUpData, $this->configuration[$identifier]);
+        if (isset($this->configuration['Global'][$identifier])) {
+            $setUpData = array_merge($setUpData, $this->configuration['Global'][$identifier]);
+        } elseif (!empty($this->moduleNamespace) && isset($this->configuration[$this->moduleNamespace][$identifier])) {
+            $setUpData = array_merge($setUpData, $this->configuration[$this->moduleNamespace][$identifier]);
         }
 
         // Create the definition.
@@ -220,6 +241,24 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     public function has($identifier)
     {
         return $this->container->has($identifier);
+    }
+
+    /**
+     * Register module specific services.
+     * If a service is already registered in the Global namespace, it will be skipped.
+     *
+     * @param string $moduleName
+     * @return DependencyInjectionAdapterInterface
+     */
+    public function registerModuleServices($moduleName)
+    {
+        // TODO solve the case when the method is called multiple times with different argument -> unregister
+        if ($moduleName != 'Global' && isset($this->configuration[$moduleName])) {
+            $this->moduleNamespace = $moduleName;
+            $this->registerServices($this->configuration[$moduleName]);
+        }
+
+        return $this;
     }
 
     /**

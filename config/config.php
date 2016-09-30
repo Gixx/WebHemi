@@ -17,6 +17,7 @@ use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Adapter\Router\FastRoute\FastRouteAdapter;
 use WebHemi\Adapter\Http\GuzzleHttp\GuzzleHttpAdapter;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
+use WebHemi\Application\SessionManager;
 use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataEntity\User\UserMetaEntity;
 use WebHemi\DataStorage\User\UserMetaStorage;
@@ -30,9 +31,10 @@ require_once __DIR__.'/functions.php';
 
 $config = [
     'applications' => [],
-    'modules' => [],
     'themes' => [],
+    'modules' => [],
     'middleware_pipeline' => [
+// Can be different in applications, so define it in the application configs
 //        ['service' => LockCheckMiddleware::class, 'priority' => -100],
 //        ['service' => AuthMiddleware::class, 'priority' => -50],
 //        ['service' => AclMiddleware::class, 'priority' => 33],
@@ -41,76 +43,82 @@ $config = [
 //        ['service' => 'SomeCustomServiceAlias', 'priority' => 200],
     ],
     'dependencies' => [
-        // Library
-        PDO::class => [
-            'arguments' => get_pdo_config(),
-            'calls'     => ['setAttribute' => [PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION]],
-            'shared'    => true,
-        ],
-        // Adapter
-        HttpAdapterInterface::class => [
-            'class'     => GuzzleHttpAdapter::class,
-            'arguments' => [
-                // This class requires arguments. The ApplicationInterface implementation must inject into it.
+        'Global' => [
+            // Library
+            PDO::class => [
+                'arguments' => get_pdo_config(),
+                'calls'     => ['setAttribute' => [PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION]],
+                'shared'    => true,
             ],
-            'shared'    => true,
-        ],
-        RouterAdapterInterface::class => [
-            'class'     => FastRouteAdapter::class,
-            'arguments' => [
-                Result::class,
-                // This class requires additional argument. The ApplicationInterface implementation must inject into it.
+            // Session
+            SessionManager::class => [
+                'shared'    => true
             ],
-            'shared'    => true,
-        ],
-        RendererAdapterInterface::class => [
-            'class'     => TwigRendererAdapter::class,
-            'arguments' => [
-                // This class requires arguments. The ApplicationInterface implementation must inject into it.
+            // Adapter
+            HttpAdapterInterface::class => [
+                'class'     => GuzzleHttpAdapter::class,
+                'arguments' => [
+                    // This class requires arguments.
+                ],
+                'shared'    => true,
             ],
-            'shared'    => true,
-        ],
-        DataAdapterInterface::class => [
-            'class'     => PDOAdapter::class,
-            'arguments' => [
-                PDO::class
+            RouterAdapterInterface::class => [
+                'class'     => FastRouteAdapter::class,
+                'arguments' => [
+                    Result::class,
+                    // This class requires additional argument.
+                ],
+                'shared'    => true,
             ],
-            'shared'    => true,
-        ],
-        // Middleware
-        RoutingMiddleware::class => [
-            'arguments' => [
-                RouterAdapterInterface::class,
-            ]
-        ],
-        DispatcherMiddleware::class => [
-            'arguments' => [
-                RendererAdapterInterface::class,
-            ]
-        ],
-        FinalMiddleware::class => [
-            'arguments' => [
-                RendererAdapterInterface::class,
-            ]
-        ],
-        // Storage
-        UserStorage::class => [
-            'arguments' => [
-                DataAdapterInterface::class,
-                UserEntity::class
+            RendererAdapterInterface::class => [
+                'class'     => TwigRendererAdapter::class,
+                'arguments' => [
+                    // This class requires arguments.
+                ],
+                'shared'    => true,
             ],
-            'shared'    => true,
-        ],
-        UserMetaStorage::class => [
-            'arguments' => [
-                DataAdapterInterface::class,
-                UserMetaEntity::class
+            DataAdapterInterface::class => [
+                'class'     => PDOAdapter::class,
+                'arguments' => [
+                    PDO::class
+                ],
+                'shared'    => true,
             ],
-            'shared'    => true,
+            // Middleware
+            RoutingMiddleware::class => [
+                'arguments' => [
+                    RouterAdapterInterface::class,
+                ]
+            ],
+            DispatcherMiddleware::class => [
+                'arguments' => [
+                    RendererAdapterInterface::class,
+                ]
+            ],
+            FinalMiddleware::class => [
+                'arguments' => [
+                    RendererAdapterInterface::class,
+                ]
+            ],
+            // Storage
+            UserStorage::class => [
+                'arguments' => [
+                    DataAdapterInterface::class,
+                    UserEntity::class
+                ],
+                'shared'    => true,
+            ],
+            UserMetaStorage::class => [
+                'arguments' => [
+                    DataAdapterInterface::class,
+                    UserMetaEntity::class
+                ],
+                'shared'    => true,
+            ],
+            // Classes without any aliases, arguments or sharing options are optional to present here.
+            UserEntity::class     => [],
+            UserMetaEntity::class => [],
         ],
-        // Classes without any aliases, arguments or sharing options are optional to present here.
-        UserEntity::class     => [],
-        UserMetaEntity::class => [],
     ],
 ];
 

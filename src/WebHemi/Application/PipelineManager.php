@@ -9,18 +9,19 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\Middleware\Pipeline;
+namespace WebHemi\Application;
 
 use RuntimeException;
 use WebHemi\Config\ConfigInterface;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\FinalMiddleware;
+use WebHemi\Middleware\MiddlewareInterface;
 use WebHemi\Middleware\RoutingMiddleware;
 
 /**
- * Class Pipeline.
+ * Class PipelineManager.
  */
-class Pipeline implements MiddlewarePipelineInterface
+class PipelineManager
 {
     /** @var ConfigInterface */
     private $config;
@@ -89,12 +90,22 @@ class Pipeline implements MiddlewarePipelineInterface
     private function checkMiddleware($middleWareClass)
     {
         if (isset($this->index)) {
-            throw new RuntimeException('You are forbidden to add new middleware after start.');
+            throw new RuntimeException('You are forbidden to add new middleware after start.', 1000);
         }
 
         if (in_array($middleWareClass, $this->pipelineList)) {
             throw new RuntimeException(
-                sprintf('The service "%s" is already added to the pipeline.', $middleWareClass)
+                sprintf('The service "%s" is already added to the pipeline.', $middleWareClass),
+                1001
+            );
+        }
+
+        if (class_exists($middleWareClass)
+            && !array_key_exists(MiddlewareInterface::class, class_implements($middleWareClass))
+        ) {
+            throw new RuntimeException(
+                sprintf('The service "%s" is not a middleware.', $middleWareClass),
+                1002
             );
         }
 
@@ -170,7 +181,7 @@ class Pipeline implements MiddlewarePipelineInterface
     public function next()
     {
         if (!isset($this->index)) {
-            throw new RuntimeException('Unable to get the next element until the pipeline is not started.');
+            throw new RuntimeException('Unable to get the next element until the pipeline is not started.', 1003);
         }
 
         return isset($this->pipelineList[$this->index]) ? $this->pipelineList[$this->index++] : null;

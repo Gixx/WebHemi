@@ -57,6 +57,8 @@ class EnvironmentManager
     private $selectedThemeResourcePath;
     /** @var array  */
     private $environmentData;
+    /** @var bool */
+    private $isHttps;
 
     /**
      * ModuleManager constructor.
@@ -87,11 +89,10 @@ class EnvironmentManager
             'FILES'  => $filesData,
         ];
 
-        $isHttps = isset($this->environmentData['SERVER']['HTTPS']) && $this->environmentData['SERVER']['HTTPS'];
-        $this->url = 'http'.($isHttps ? 's' : '').'://'
+        $this->isHttps = isset($this->environmentData['SERVER']['HTTPS']) && $this->environmentData['SERVER']['HTTPS'];
+        $this->url = 'http'.($this->isHttps ? 's' : '').'://'
             .$this->environmentData['SERVER']['HTTP_HOST']
-            .$this->environmentData['SERVER']['REQUEST_URI']
-            .$this->environmentData['SERVER']['QUERY_STRING'];
+            .$this->environmentData['SERVER']['REQUEST_URI']; // contains also the query string
 
         $this->selectedModule = self::DEFAULT_MODULE;
         $this->selectedApplication = self::DEFAULT_APPLICATION;
@@ -99,9 +100,28 @@ class EnvironmentManager
         $this->selectedThemeResourcePath = self::DEFAULT_THEME_RESOURCE_PATH;
         $this->selectedApplicationUri = self::DEFAULT_APPLICATION_URI;
 
-        $this->secureSession()
-            ->setDomain()
+        $this->setDomain()
             ->selectModuleApplicationAndTheme();
+    }
+
+    /**
+     * Gets the application domain.
+     *
+     * @return string
+     */
+    public function getApplicationDomain()
+    {
+        return $this->applicationDomain;
+    }
+
+    /**
+     * Gets the application SSL status.
+     *
+     * @return bool
+     */
+    public function isSecuredApplication()
+    {
+        return $this->isHttps;
     }
 
     /**
@@ -198,31 +218,6 @@ class EnvironmentManager
     }
 
     /**
-     * Overwrite PHP settings to be more secure
-     *
-     * @codeCoverageIgnore - Core functions.
-     *
-     * @return $this
-     */
-    private function secureSession()
-    {
-        ini_set('session.entropy_file', '/dev/urandom');
-        ini_set('session.entropy_length', '16');
-        ini_set('session.hash_function', 'sha256');
-        ini_set('session.use_only_cookies', '1');
-        ini_set('session.use_cookies', '1');
-        ini_set('session.use_trans_sid', '0');
-        ini_set('session.cookie_httponly', '1');
-
-        // hide session name
-        session_name(self::COOKIE_SESSION_PREFIX.'-'.bin2hex(self::SESSION_SALT));
-        // set session lifetime to 1 hour
-        session_set_cookie_params(3600);
-
-        return $this;
-    }
-
-    /**
      * Parses server data and tries to set domain information.
      *
      * @return $this
@@ -254,6 +249,14 @@ class EnvironmentManager
         $this->subDomain = $subDomain;
         $this->mainDomain = $domain;
         $this->applicationDomain = $this->subDomain.'.'. $this->mainDomain;
+
+        // Redirecting when the app domain is not equal to the server data
+        if ($this->environmentData['SERVER']['SERVER_NAME'] != $this->applicationDomain) {
+            $schema = 'http'.($this->isHttps ? 's' : '').'://';
+            $uri = $this->environmentData['SERVER']['REQUEST_URI'];
+            header('Location: '.$schema.$this->applicationDomain.$uri);
+            exit;
+        }
 
         return $this;
     }

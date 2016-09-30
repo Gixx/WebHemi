@@ -9,7 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\Form\Element\Traits;
+namespace WebHemi\Form\Traits;
 
 use WebHemi\Form\Element\FormElementInterface;
 
