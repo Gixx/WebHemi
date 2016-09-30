@@ -100,7 +100,6 @@ class SessionManager
      */
     public function regenerateId()
     {
-
         if (!$this->sessionStarted()) {
             throw new RuntimeException('Cannot regenerate session identifier. Session is not started yet.', 1001);
         }
