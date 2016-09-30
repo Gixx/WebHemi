@@ -17,14 +17,14 @@ use WebHemi\Application\ApplicationInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Application\Web\WebApplication as Application;
 use WebHemi\Config\Config;
-use WebHemi\Middleware\Pipeline\Pipeline;
+use WebHemi\Application\PipelineManager as Pipeline;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\Fixtures\TestMiddleware;
 
 /**
  * Class WebapplicationTest.
  */
-class WebapplicationTest extends TestCase
+class WebApplicationTest extends TestCase
 {
     /** @var array */
     protected $config;

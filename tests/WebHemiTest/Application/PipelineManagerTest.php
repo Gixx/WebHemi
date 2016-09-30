@@ -9,7 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTest\Middleware;
+namespace WebHemiTest\Application;
 
 use ArrayObject;
 use DateTime;
@@ -18,9 +18,11 @@ use RuntimeException;
 use WebHemi\Config\Config;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\FinalMiddleware;
-use WebHemi\Middleware\Pipeline\Pipeline;
+use WebHemi\Application\PipelineManager as Pipeline;
 use WebHemi\Middleware\RoutingMiddleware;
 use WebHemiTest\AssertTrait;
+use WebHemiTest\Fixtures\TestActionMiddleware;
+use WebHemiTest\Fixtures\TestMiddleware;
 use WebHemiTest\InvokePrivateMethodTrait;
 
 /**
@@ -39,10 +41,10 @@ class PipelineTest extends TestCase
 
         $this->config = [
             ['service' => FinalMiddleware::class, 'priority' => 1],
-            ['service' => DateTime::class, 'priority' => 50],
+            ['service' => TestMiddleware::class, 'priority' => 50],
             ['service' => 'someAlias', 'priority' => -3],
             ['service' => 'someNoPriorityAlias'],
-            ['service' => ArrayObject::class, 'priority' => 100],
+            ['service' => TestActionMiddleware::class, 'priority' => 100],
         ];
     }
 
@@ -57,10 +59,10 @@ class PipelineTest extends TestCase
         $expectedPipeline = [
             'someAlias',
             RoutingMiddleware::class,
-            DateTime::class,
+            TestMiddleware::class,
             'someNoPriorityAlias',
             DispatcherMiddleware::class,
-            ArrayObject::class
+            TestActionMiddleware::class
         ];
         $actualPipeline = $pipeline->getPipelineList();
         $this->assertArraysAreSimilar($actualPipeline, $expectedPipeline);
@@ -73,7 +75,7 @@ class PipelineTest extends TestCase
     {
         $pipeline = new Pipeline(new Config($this->config));
 
-        $this->setExpectedException(RuntimeException::class);
+        $this->setExpectedException(RuntimeException::class, '', 1003);
         $pipeline->next();
     }
 
@@ -85,18 +87,29 @@ class PipelineTest extends TestCase
         $pipeline = new Pipeline(new Config($this->config));
         $pipeline->start();
 
-        $this->setExpectedException(RuntimeException::class);
+        $this->setExpectedException(RuntimeException::class, '', 1000);
         $this->invokePrivateMethod($pipeline, 'checkMiddleware', ['newService']);
     }
 
     /**
      * Tests the getPipelineList() method.
      */
-    public function testErrorOfCheckMiddlewareWithQueuedServie()
+    public function testErrorOfCheckMiddlewareWithQueuedService()
     {
         $pipeline = new Pipeline(new Config($this->config));
 
-        $this->setExpectedException(RuntimeException::class);
+        $this->setExpectedException(RuntimeException::class, '', 1001);
+        $this->invokePrivateMethod($pipeline, 'checkMiddleware', [TestActionMiddleware::class]);
+    }
+
+    /**
+     * Tests the getPipelineList() method.
+     */
+    public function testErrorOfCheckMiddlewareWithWrongInstance()
+    {
+        $pipeline = new Pipeline(new Config($this->config));
+
+        $this->setExpectedException(RuntimeException::class, '', 1002);
         $this->invokePrivateMethod($pipeline, 'checkMiddleware', [DateTime::class]);
     }
 }

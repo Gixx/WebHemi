@@ -2,8 +2,10 @@
 
 namespace WebHemi\Middleware\Action;
 
+use WebHemi\Application\SessionManager;
 use WebHemi\DataEntity\User\UserEntity;
 use WebHemi\DataStorage\User\UserStorage;
+use WebHemi\Form\FormInterface;
 use WebHemi\Form\Web\TestForm;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
@@ -16,10 +18,16 @@ class FakeAction extends AbstractMiddlewareAction
 {
     /** @var UserStorage */
     private $userStorage;
+    /** @var TestForm */
+    private $loginForm;
+    /** @var SessionManager */
+    private $session;
 
-    public function __construct(UserStorage $userStorage)
+    public function __construct(UserStorage $userStorage, FormInterface $loginForm, SessionManager $session)
     {
         $this->userStorage = $userStorage;
+        $this->loginForm = $loginForm;
+        $this->session = $session;
     }
 
     public function getTemplateName()
@@ -32,11 +40,17 @@ class FakeAction extends AbstractMiddlewareAction
         /** @var UserEntity $userEntity */
         $userEntity = $this->userStorage->getUserById(1);
 
-        $form = new TestForm('test', '', 'POST');
+        // Give special name
+        $this->loginForm->setName('login');
         // Turn off aut complete feature.
-        $form->setAutoComplete(false);
+        $this->loginForm->setAutoComplete(false);
         // test data setter
-        $form->setData((array)$this->request->getParsedBody());
+        $this->loginForm->setData((array)$this->request->getParsedBody());
+
+        if (!empty($this->request->getParsedBody())) {
+            $this->session->set('session', $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+            $this->session->regenerateId();
+        }
 
         return [
             'blogPosts' => [
@@ -60,7 +74,8 @@ class FakeAction extends AbstractMiddlewareAction
                 ]
             ],
             'postData' => var_export($this->request->getParsedBody(), true),
-            'loginForm' => $form
+            'session' => var_export($this->session->toArray(), true),
+            'loginForm' => $this->loginForm
         ];
     }
 }

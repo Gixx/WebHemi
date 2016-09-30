@@ -52,10 +52,12 @@ class SymfonyAdapterTest extends TestCase
     {
         $config = new Config(
             [
-                'alias' => [
-                    'class' => \DateTime::class
-                ],
-                \ArrayObject::class => [],
+                'Global' => [
+                    'alias' => [
+                        'class' => \DateTime::class
+                    ],
+                    \ArrayObject::class => [],
+                ]
             ]
         );
         $adapter = new SymfonyAdapter($config);
@@ -70,20 +72,22 @@ class SymfonyAdapterTest extends TestCase
     {
         $config = new Config(
             [
-                // Alias with argument, no call.
-                'alias1' => [
-                    'class' => DateTime::class,
-                    'arguments' => [
-                        '2016-04-05 01:02:03'
+                'Global' => [
+                    // Alias with argument, no call.
+                    'alias1' => [
+                        'class' => DateTime::class,
+                        'arguments' => [
+                            '2016-04-05 01:02:03'
+                        ]
+                    ],
+                    // No alias, no argument, no call.
+                    stdClass::class => [],
+                    // Alias with call and share, no argument.
+                    'special' => [
+                        'class'  => ArrayObject::class,
+                        'calls'  => ['offsetSet' => ['date', 'alias1']],
+                        'shared' => true
                     ]
-                ],
-                // No alias, no argument, no call.
-                stdClass::class => [],
-                // Alias with call and share, no argument.
-                'special' => [
-                    'class'  => ArrayObject::class,
-                    'calls'  => ['offsetSet' => ['date', 'alias1']],
-                    'shared' => true
                 ]
             ]
         );
@@ -122,31 +126,36 @@ class SymfonyAdapterTest extends TestCase
     {
         $config = new Config(
             [
-                // Tests both class and alias reference to listed but not yet registered services
-                'special1' => [
-                    'class'  => ArrayObject::class,
-                    'calls'  => [
-                        'offsetSet' => ['date', 'alias1'],
-                        'setIteratorClass' => [ArrayIterator::class]
+                'Global' => [
+                    // Tests both class and alias reference to listed but not yet registered services
+                    'special1' => [
+                        'class'  => ArrayObject::class,
+                        'calls'  => [
+                            'offsetSet' => ['date', 'alias1'],
+                            'setIteratorClass' => [ArrayIterator::class]
+                        ],
+                        'shared' => true
                     ],
-                    'shared' => true
-                ],
-                'alias1' => [
-                    'class' => DateTime::class,
-                    'arguments' => [
-                        '2016-04-05 01:02:03'
-                    ]
-                ],
-                'special2' => [
-                    'class'  => ArrayObject::class,
-                    'calls'  => [
-                        'offsetSet' => ['iterator', ArrayIterator::class],
+                    'alias1' => [
+                        'class' => DateTime::class,
+                        'arguments' => [
+                            '2016-04-05 01:02:03'
+                        ]
                     ],
-                    'shared' => true
                 ],
+                'Website' => [
+                    'special2' => [
+                        'class'  => ArrayObject::class,
+                        'calls'  => [
+                            'offsetSet' => ['iterator', ArrayIterator::class],
+                        ],
+                        'shared' => true
+                    ],
+                ]
             ]
         );
         $adapter = new SymfonyAdapter($config);
+        $adapter->registerModuleServices('Website');
 
         // Reference is not a string: returns the same.
         $actualResult = $this->invokePrivateMethod($adapter, 'getReferenceServiceIfAvailable', [155]);
@@ -171,9 +180,11 @@ class SymfonyAdapterTest extends TestCase
     {
         $config = new Config(
             [
-                'alias' => [
-                    'class' => DateTime::class,
-                    'shared' => true
+                'Global' => [
+                    'alias' => [
+                        'class' => DateTime::class,
+                        'shared' => true
+                    ]
                 ]
             ]
         );

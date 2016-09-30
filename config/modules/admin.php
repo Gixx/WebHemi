@@ -11,6 +11,7 @@
  */
 
 use WebHemi\DataStorage\User\UserStorage;
+use WebHemi\Application\SessionManager;
 
 return [
     'modules' => [
@@ -25,20 +26,31 @@ return [
                     'path'            => '/view/{id:.*}',
                     'middleware'      => \WebHemi\Middleware\Action\FakeViewAction::class,
                     'allowed_methods' => ['GET'],
-                ]
+                ],
             ],
         ],
     ],
     'dependencies' => [
-        \WebHemi\Middleware\Action\FakeAction::class => [
-            'arguments' => [
-                UserStorage::class
-            ]
-        ],
-        \WebHemi\Middleware\Action\FakeViewAction::class => [
-            'arguments' => [
-                UserStorage::class
-            ]
-        ],
+        'Admin' => [
+            \WebHemi\Form\Web\TestForm::class => [
+                'arguments' => [
+                    'admin-form',
+                    '',
+                    'POST'
+                ]
+            ],
+            \WebHemi\Middleware\Action\FakeAction::class => [
+                'arguments' => [
+                    UserStorage::class,
+                    \WebHemi\Form\Web\TestForm::class,
+                    SessionManager::class
+                ],
+            ],
+            \WebHemi\Middleware\Action\FakeViewAction::class => [
+                'arguments' => [
+                    UserStorage::class
+                ],
+            ],
+        ]
     ]
 ];

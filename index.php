@@ -11,16 +11,16 @@
  */
 use WebHemi\Adapter\DependencyInjection\Symfony\SymfonyAdapter as DependencyInjectionAdapter;
 use WebHemi\Application\EnvironmentManager;
+use WebHemi\Application\PipelineManager;
 use WebHemi\Application\Web\WebApplication as Application;
 use WebHemi\Config\Config;
-use WebHemi\Middleware\Pipeline\Pipeline;
 
 require_once __DIR__.'/vendor/autoload.php';
 
 $config = new Config(require __DIR__.'/config/config.php');
 $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
 $environmentManager = new EnvironmentManager($config, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
-$pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+$pipeline = new PipelineManager($config->getConfig('middleware_pipeline'));
 
 $app = new Application($diAdapter, $environmentManager, $pipeline);
 $app->run();

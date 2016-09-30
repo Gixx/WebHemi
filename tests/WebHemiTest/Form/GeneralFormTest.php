@@ -29,6 +29,11 @@ class GeneralFormTest extends TestCase
      */
     public function testConstructor()
     {
+        $testForm = new TestWebForm();
+        $this->assertSame('web_hemi_test_fixtures_test_web_form', $testForm->getName());
+        $testForm->setName('x-form');
+        $this->assertSame('x-form', $testForm->getName());
+
         $testForm = new TestWebForm('test_form');
 
         $this->assertTrue($testForm->isInitCalled);
@@ -62,6 +67,10 @@ class GeneralFormTest extends TestCase
 
         $testForm->setNameSalt($salt);
         $this->assertSame(md5($salt), $testForm->salt);
+
+        $testForm->setAutoComplete(false);
+        $testForm->setName('y-form');
+        $this->assertSame('y-form_'.md5($salt), $testForm->getName());
     }
 
     /**

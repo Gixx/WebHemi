@@ -7,5 +7,5 @@
 !/build/logs/.gitkeep
 /resources/vendor_themes/*
 !/resources/vendor_themes/.gitkeep
-/data/*
-!/data/.gitkeep
+/data/session/*
+!/data/session/.gitkeep
