@@ -12,15 +12,13 @@
 namespace WebHemi\Application\Web;
 
 use InvalidArgumentException;
-use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
-use WebHemi\Application\ApplicationInterface;
+use WebHemi\Application\AbstractApplication;
 use WebHemi\Application\EnvironmentManager;
-use WebHemi\Application\PipelineManager;
 use WebHemi\Application\SessionManager;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\FinalMiddleware;
@@ -29,44 +27,8 @@ use WebHemi\Middleware\MiddlewareInterface;
 /**
  * Class WebApplication.
  */
-class WebApplication implements ApplicationInterface
+class WebApplication extends AbstractApplication
 {
-    /** @var DependencyInjectionAdapterInterface */
-    private $container;
-    /** @var EnvironmentManager */
-    private $environmentManager;
-    /** @var PipelineManager */
-    private $pipeline;
-
-    /**
-     * ApplicationInterface constructor.
-     *
-     * @param DependencyInjectionAdapterInterface $container
-     * @param EnvironmentManager                  $environmentManager
-     * @param PipelineManager                     $pipeline
-     */
-    public function __construct(
-        DependencyInjectionAdapterInterface $container,
-        EnvironmentManager $environmentManager,
-        PipelineManager $pipeline
-    ) {
-        $this->container = $container;
-        $this->environmentManager = $environmentManager;
-        $this->pipeline = $pipeline;
-
-        $this->container->registerModuleServices($this->environmentManager->getSelectedModule());
-    }
-
-    /**
-     * Returns the DI Adapter instance.
-     *
-     * @return DependencyInjectionAdapterInterface
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
     /**
      * Starts the session.
      *
@@ -79,12 +41,12 @@ class WebApplication implements ApplicationInterface
         }
 
         /** @var SessionManager $sessionManager */
-        $sessionManager = $this->container->get(SessionManager::class);
-        $name = $this->environmentManager->getSelectedApplication();
+        $sessionManager = $this->getContainer()->get(SessionManager::class);
+        $name = $this->getEnvironmentManager()->getSelectedApplication();
         $timeOut = 3600;
-        $path = $this->environmentManager->getSelectedApplicationUri();
-        $domain = $this->environmentManager->getApplicationDomain();
-        $secure = $this->environmentManager->isSecuredApplication();
+        $path = $this->getEnvironmentManager()->getSelectedApplicationUri();
+        $domain = $this->getEnvironmentManager()->getApplicationDomain();
+        $secure = $this->getEnvironmentManager()->isSecuredApplication();
         $httpOnly = true;
 
         $sessionManager->start($name, $timeOut, $path, $domain, $secure, $httpOnly);
@@ -95,25 +57,45 @@ class WebApplication implements ApplicationInterface
      *
      * @codeCoverageIgnore - Check the EnvironmentManager and Container adapter tests.
      */
-    private function prepare()
+    private function prepareContainer()
     {
-        $this->container
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('GET'))
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('POST'))
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('SERVER'))
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('COOKIE'))
-            ->setServiceArgument(HttpAdapterInterface::class, $this->environmentManager->getEnvironmentData('FILES'));
+        // Register services according to the selected module.
+        $this->getContainer()->registerModuleServices($this->getEnvironmentManager()->getSelectedModule());
+
+        // Set proper arguments for the HTTP adapter.
+        $this->getContainer()
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $this->getEnvironmentManager()->getEnvironmentData('GET')
+            )
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $this->getEnvironmentManager()->getEnvironmentData('POST')
+            )
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $this->getEnvironmentManager()->getEnvironmentData('SERVER')
+            )
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $this->getEnvironmentManager()->getEnvironmentData('COOKIE')
+            )
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $this->getEnvironmentManager()->getEnvironmentData('FILES')
+            );
 
         try {
-            $theme = $this->environmentManager
-                ->getApplicationTemplateSettings($this->environmentManager->getSelectedTheme());
-            $themeResourcePath = $this->environmentManager->getResourcePath();
+            $theme = $this->getEnvironmentManager()
+                ->getApplicationTemplateSettings($this->getEnvironmentManager()->getSelectedTheme());
+            $themeResourcePath = $this->getEnvironmentManager()->getResourcePath();
         } catch (InvalidArgumentException $e) {
-            $theme = $this->environmentManager->getApplicationTemplateSettings(EnvironmentManager::DEFAULT_THEME);
+            $theme = $this->getEnvironmentManager()->getApplicationTemplateSettings(EnvironmentManager::DEFAULT_THEME);
             $themeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
         }
 
-        $this->container
+        // Set proper arguments for the renderer.
+        $this->getContainer()
             ->setServiceArgument(
                 RendererAdapterInterface::class,
                 $theme
@@ -124,17 +106,18 @@ class WebApplication implements ApplicationInterface
             )
             ->setServiceArgument(
                 RendererAdapterInterface::class,
-                $this->environmentManager->getSelectedApplicationUri()
+                $this->getEnvironmentManager()->getSelectedApplicationUri()
             );
 
-        $this->container
+        // Set proper arguments for the router.
+        $this->getContainer()
             ->setServiceArgument(
                 RouterAdapterInterface::class,
-                $this->environmentManager->getModuleRouteSettings()
+                $this->getEnvironmentManager()->getModuleRouteSettings()
             )
             ->setServiceArgument(
                 RouterAdapterInterface::class,
-                $this->environmentManager->getSelectedApplicationUri()
+                $this->getEnvironmentManager()->getSelectedApplicationUri()
             );
     }
 
@@ -181,7 +164,7 @@ class WebApplication implements ApplicationInterface
         // Start session.
         $this->initSession();
         // Inject parameters into services.
-        $this->prepare();
+        $this->prepareContainer();
 
         /** @var HttpAdapterInterface $httpAdapter */
         $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
@@ -189,24 +172,24 @@ class WebApplication implements ApplicationInterface
         $request = $httpAdapter->getRequest();
         /** @var ResponseInterface $response */
         $response = $httpAdapter->getResponse();
-        $middlewareClass = $this->pipeline->start();
+        $middlewareClass = $this->getPipelineManager()->start();
 
         while ($middlewareClass !== null
             && $response->getStatusCode() == ResponseInterface::STATUS_PROCESSING
         ) {
             try {
                 /** @var MiddlewareInterface $middleware */
-                $middleware = $this->container->get($middlewareClass);
+                $middleware = $this->getContainer()->get($middlewareClass);
                 $requestAttributes = $request->getAttributes();
+
                 // As an extra step if the action middleware is resolved, it is invoked right before the dispatcher.
                 // Only the container knows how to instantiate it in the right way, and the container must not be
-                // injected into anz other classes. It seems like a hack but it is by purpose.
-
+                // injected into other classes. It seems like a hack but it is by purpose.
                 if ($middleware instanceof DispatcherMiddleware
                     && isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
                 ) {
                     /** @var MiddlewareInterface $actionMiddleware */
-                    $actionMiddleware = $this->container
+                    $actionMiddleware = $this->getContainer()
                         ->get($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS]);
                     $request = $request->withAttribute(
                         ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE,
@@ -222,7 +205,7 @@ class WebApplication implements ApplicationInterface
                 );
             }
 
-            $middlewareClass = $this->pipeline->next();
+            $middlewareClass = $this->getPipelineManager()->next();
         };
 
         // If there was no error, we mark as ready for output.
@@ -231,7 +214,7 @@ class WebApplication implements ApplicationInterface
         }
 
         /** @var FinalMiddleware $finalMiddleware */
-        $finalMiddleware = $this->container->get(FinalMiddleware::class);
+        $finalMiddleware = $this->getContainer()->get(FinalMiddleware::class);
 
         // Send out headers and content.
         $finalMiddleware($request, $response);

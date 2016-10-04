@@ -251,14 +251,16 @@ class EnvironmentManager
         $this->applicationDomain = $this->subDomain.'.'. $this->mainDomain;
 
         // Redirecting when the app domain is not equal to the server data
+        // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')
             && $this->environmentData['SERVER']['SERVER_NAME'] != $this->applicationDomain
         ) {
-            $schema = 'http'.($this->isHttps ? 's' : '').'://';
+            $schema = 'http'.($this->isSecuredApplication() ? 's' : '').'://';
             $uri = $this->environmentData['SERVER']['REQUEST_URI'];
             header('Location: '.$schema.$this->applicationDomain.$uri);
             exit;
         }
+        // @codeCoverageIgnoreEnd
 
         return $this;
     }
