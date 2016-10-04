@@ -220,19 +220,19 @@ UNLOCK TABLES;
 -- Table structure for table `webhemi_user_policy`
 --
 
-DROP TABLE IF EXISTS `webhemi_user_policy`;
+DROP TABLE IF EXISTS `webhemi_user_to_am_policy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `webhemi_user_policy` (
-  `id_user_policy` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `webhemi_user_to_am_policy` (
+  `id_user_to_am_policy` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `fk_user` INT(10) UNSIGNED NOT NULL,
   `fk_am_policy` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_user_policy`),
-  UNIQUE KEY `unq_user_policy` (`fk_user`, `fk_am_policy`),
-  KEY `idx_user_policy_fk_user` (`fk_user`),
-  KEY `idx_user_policy_fk_am_policy` (`fk_am_policy`),
-  CONSTRAINT `fk_user_policy_fk_user` FOREIGN KEY (`fk_user`) REFERENCES `webhemi_user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_policy_fk_am_policy` FOREIGN KEY (`fk_am_policy`) REFERENCES `webhemi_am_policy` (`id_am_policy`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`id_user_to_am_policy`),
+  UNIQUE KEY `unq_user_to_am_policy` (`fk_user`, `fk_am_policy`),
+  KEY `idx_user_to_am_policy_fk_user` (`fk_user`),
+  KEY `idx_user_to_am_policy_fk_am_policy` (`fk_am_policy`),
+  CONSTRAINT `fk_user_to_am_policy_fk_user` FOREIGN KEY (`fk_user`) REFERENCES `webhemi_user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_to_am_policy_fk_am_policy` FOREIGN KEY (`fk_am_policy`) REFERENCES `webhemi_am_policy` (`id_am_policy`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -242,11 +242,11 @@ CREATE TABLE `webhemi_user_policy` (
 -- Dumping data for table `webhemi_user_policy`
 --
 
-LOCK TABLES `webhemi_user_policy` WRITE;
-/*!40000 ALTER TABLE `webhemi_user_policy` DISABLE KEYS */;
-INSERT INTO `webhemi_user_policy` VALUES
+LOCK TABLES `webhemi_user_to_am_policy` WRITE;
+/*!40000 ALTER TABLE `webhemi_user_to_am_policy` DISABLE KEYS */;
+INSERT INTO `webhemi_user_to_am_policy` VALUES
   (NULL, 1, 1);
-/*!40000 ALTER TABLE `webhemi_user_policy` ENABLE KEYS */;
+/*!40000 ALTER TABLE `webhemi_user_to_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -280,65 +280,65 @@ INSERT INTO `webhemi_user_group` VALUES
 UNLOCK TABLES;
 
 --
--- Table structure for table `webhemi_user_group_user`
+-- Table structure for table `webhemi_user_to_user_group`
 --
 
-DROP TABLE IF EXISTS `webhemi_user_group_user`;
+DROP TABLE IF EXISTS `webhemi_user_to_user_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `webhemi_user_group_user` (
-  `id_user_group_user` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `webhemi_user_to_user_group` (
+  `id_user_to_user_group` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `fk_user_group` INT(10) UNSIGNED NOT NULL,
   `fk_user` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_user_group_user`),
-  UNIQUE KEY `unq_user_group_user` (`fk_user`, `fk_user_group`),
-  KEY `idx_user_group_user_fk_user_group` (`fk_user_group`),
-  KEY `idx_user_group_user_fk_user` (`fk_user`),
-  CONSTRAINT `fk_user_group_user_fk_user_group` FOREIGN KEY (`fk_user_group`) REFERENCES `webhemi_user_group` (`id_user_group`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_group_user_fk_user` FOREIGN KEY (`fk_user`) REFERENCES `webhemi_user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`id_user_to_user_group`),
+  UNIQUE KEY `unq_user_to_user_group` (`fk_user`, `fk_user_group`),
+  KEY `idx_user_to_user_group_fk_user_group` (`fk_user_group`),
+  KEY `idx_user_to_user_group_fk_user` (`fk_user`),
+  CONSTRAINT `fk_user_to_user_group_fk_user_group` FOREIGN KEY (`fk_user_group`) REFERENCES `webhemi_user_group` (`id_user_group`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_to_user_group_fk_user` FOREIGN KEY (`fk_user`) REFERENCES `webhemi_user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `webhemi_user_group_user`
+-- Dumping data for table `webhemi_user_to_user_group`
 --
 
-LOCK TABLES `webhemi_user_group_user` WRITE;
-/*!40000 ALTER TABLE `webhemi_user_group_user` DISABLE KEYS */;
-INSERT INTO `webhemi_user_group_user` VALUES
+LOCK TABLES `webhemi_user_to_user_group` WRITE;
+/*!40000 ALTER TABLE `webhemi_user_to_user_group` DISABLE KEYS */;
+INSERT INTO `webhemi_user_to_user_group` VALUES
   (NULL, 1, 1);
-/*!40000 ALTER TABLE `webhemi_user_group_user` ENABLE KEYS */;
+/*!40000 ALTER TABLE `webhemi_user_to_user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `webhemi_user_group_policy`
+-- Table structure for table `webhemi_user_group_to_am_policy`
 --
 
-DROP TABLE IF EXISTS `webhemi_user_group_policy`;
+DROP TABLE IF EXISTS `webhemi_user_group_to_am_policy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `webhemi_user_group_policy` (
-  `id_user_group_policy` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `webhemi_user_group_to_am_policy` (
+  `id_user_group_to_am_policy` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `fk_user_group` INT(10) UNSIGNED NOT NULL,
   `fk_am_policy` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_user_group_policy`),
-  UNIQUE KEY `unq_user_group_policy` (`fk_user_group`, `fk_am_policy`),
-  KEY `idx_user_group_policy_fk_user_group` (`fk_user_group`),
-  KEY `idx_user_group_policy_fk_am_policy` (`fk_am_policy`),
-  CONSTRAINT `fk_user_group_policy_fk_user_group` FOREIGN KEY (`fk_user_group`) REFERENCES `webhemi_user_group` (`id_user_group`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_group_policy_fk_am_policy` FOREIGN KEY (`fk_am_policy`) REFERENCES `webhemi_am_policy` (`id_am_policy`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`id_user_group_to_am_policy`),
+  UNIQUE KEY `unq_user_group_to_am_policy` (`fk_user_group`, `fk_am_policy`),
+  KEY `idx_user_group_to_am_policy_fk_user_group` (`fk_user_group`),
+  KEY `idx_user_group_to_am_policy_fk_am_policy` (`fk_am_policy`),
+  CONSTRAINT `fk_user_group_to_am_policy_fk_user_group` FOREIGN KEY (`fk_user_group`) REFERENCES `webhemi_user_group` (`id_user_group`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_group_to_am_policy_fk_am_policy` FOREIGN KEY (`fk_am_policy`) REFERENCES `webhemi_am_policy` (`id_am_policy`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `webhemi_user_group_policy`
+-- Dumping data for table `webhemi_user_group_to_am_policy`
 --
 
-LOCK TABLES `webhemi_user_group_policy` WRITE;
-/*!40000 ALTER TABLE `webhemi_user_group_policy` DISABLE KEYS */;
-INSERT INTO `webhemi_user_group_policy` VALUES
+LOCK TABLES `webhemi_user_group_to_am_policy` WRITE;
+/*!40000 ALTER TABLE `webhemi_user_group_to_am_policy` DISABLE KEYS */;
+INSERT INTO `webhemi_user_group_to_am_policy` VALUES
   (NULL, 1, 1);
-/*!40000 ALTER TABLE `webhemi_user_group_policy` ENABLE KEYS */;
+/*!40000 ALTER TABLE `webhemi_user_group_to_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
 
 -- FS - Filesystem
