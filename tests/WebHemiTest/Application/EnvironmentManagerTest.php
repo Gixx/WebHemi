@@ -151,6 +151,8 @@ class EnvironmentManagerTest extends TestCase
         $this->assertInstanceOf(EnvironmentManager::class, $testObj);
         $this->assertEquals('TestApplication', $testObj->getSelectedApplication());
         $this->assertEquals('/', $testObj->getSelectedApplicationUri());
+        $this->assertEquals('test.app.unittest.dev', $testObj->getApplicationDomain());
+        $this->assertFalse($testObj->isSecuredApplication());
     }
 
     /**
