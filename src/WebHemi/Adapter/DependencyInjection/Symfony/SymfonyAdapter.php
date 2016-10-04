@@ -87,7 +87,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     }
 
     /**
-     * Register the service.
+     * Registers the service.
      *
      * @param string $identifier
      * @param string $serviceClass
@@ -100,21 +100,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
             return;
         }
 
-        // Init settings.
-        $setUpData = [
-            self::SERVICE_CLASS       => $serviceClass,
-            self::SERVICE_ARGUMENTS   => [],
-            self::SERVICE_METHOD_CALL => [],
-            // By default the Symfony DI shares all services. In WebHemi by default nothing is shared.
-            self::SERVICE_SHARE       => false,
-        ];
-
-        // Override settings from the configuration if exists.
-        if (isset($this->configuration['Global'][$identifier])) {
-            $setUpData = array_merge($setUpData, $this->configuration['Global'][$identifier]);
-        } elseif (!empty($this->moduleNamespace) && isset($this->configuration[$this->moduleNamespace][$identifier])) {
-            $setUpData = array_merge($setUpData, $this->configuration[$this->moduleNamespace][$identifier]);
-        }
+        $setUpData = $this->getServiceSetupData($identifier, $serviceClass);
 
         // Create the definition.
         $definition = new Definition($serviceClass);
@@ -137,6 +123,34 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         foreach ((array) $setUpData[self::SERVICE_METHOD_CALL] as $method => $parameterList) {
             $this->addMethodCall($service, $method, $parameterList);
         }
+    }
+
+    /**
+     * Gets the set up data for the service registration.
+     *
+     * @param string $identifier
+     * @param string $serviceClass
+     * @return array
+     */
+    private function getServiceSetupData($identifier, $serviceClass)
+    {
+        // Init settings.
+        $setUpData = [
+            self::SERVICE_CLASS       => $serviceClass,
+            self::SERVICE_ARGUMENTS   => [],
+            self::SERVICE_METHOD_CALL => [],
+            // By default the Symfony DI shares all services. In WebHemi by default nothing is shared.
+            self::SERVICE_SHARE       => false,
+        ];
+
+        // Override settings from the configuration if exists.
+        if (isset($this->configuration['Global'][$identifier])) {
+            $setUpData = array_merge($setUpData, $this->configuration['Global'][$identifier]);
+        } elseif (!empty($this->moduleNamespace) && isset($this->configuration[$this->moduleNamespace][$identifier])) {
+            $setUpData = array_merge($setUpData, $this->configuration[$this->moduleNamespace][$identifier]);
+        }
+
+        return $setUpData;
     }
 
     /**
