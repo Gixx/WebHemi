@@ -16,15 +16,15 @@ use InvalidArgumentException;
 use PDO;
 use PHPUnit_Framework_TestCase as TestCase;
 use RuntimeException;
-use WebHemi\Adapter\Data\PDO\PDOAdapter;
+use WebHemi\Adapter\Data\PDO\MySQLAdapter;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
 
 /**
- * Class PDOAdapterTest.
+ * Class MySQLAdapterTest.
  */
-class PDOAdapterTest extends TestCase
+class PDOMySQLAdapterTest extends TestCase
 {
     /** @var PDO */
     protected $pdo;
@@ -64,13 +64,13 @@ class PDOAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $adapter = new PDOAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->pdo);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
         $this->assertAttributeEmpty('dataGroup', $adapter);
         $this->assertAttributeEmpty('idKey', $adapter);
 
         $this->setExpectedException(InvalidArgumentException::class);
-        new PDOAdapter(new DateTime());
+        new MySQLAdapter(new DateTime());
     }
 
     /**
@@ -78,7 +78,7 @@ class PDOAdapterTest extends TestCase
      */
     public function testGetDataStorage()
     {
-        $adapter = new PDOAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->pdo);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
         $actualStorage = $adapter->getDataStorage();
@@ -93,7 +93,7 @@ class PDOAdapterTest extends TestCase
      */
     public function testSetDataGroup()
     {
-        $adapter = new PDOAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->pdo);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
         $result = $adapter->setDataGroup('webhemi_user');
@@ -111,7 +111,7 @@ class PDOAdapterTest extends TestCase
      */
     public function testSetIdKey()
     {
-        $adapter = new PDOAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->pdo);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
         $result = $adapter->setIdKey('id_user');
@@ -151,7 +151,7 @@ class PDOAdapterTest extends TestCase
                 'cTable',
                 null,
                 null,
-                'SELECT * FROM cTable WHERE A=? AND B LIKE ? LIMIT '.PDOAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
+                'SELECT * FROM cTable WHERE A=? AND B LIKE ? LIMIT '.MySQLAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
                 [10, 'someData%']
             ]
         ];
@@ -179,7 +179,7 @@ class PDOAdapterTest extends TestCase
     ) {
         $queryBind = [];
 
-        $adapter = new PDOAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->pdo);
         $adapter->setDataGroup($dataGroup);
 
         if (!is_null($limit)) {
@@ -227,7 +227,7 @@ class PDOAdapterTest extends TestCase
     {
         $queryBind = [];
 
-        $adapter = new PDOAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->pdo);
         $resultExpression = $this->invokePrivateMethod($adapter, 'getWhereExpression', [$expression, &$queryBind]);
 
         $this->assertEquals($expectedExpression, $resultExpression);

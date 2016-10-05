@@ -9,9 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTest\DataEntity;
+namespace WebHemiTest\Data\Entity;
 
-use DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\User\UserMetaEntity;
 use PHPUnit_Framework_TestCase as TestCase;
@@ -69,7 +68,6 @@ class UserMetaEntityTest extends TestCase
      * @param string $attribute
      * @param mixed  $parameter
      * @param mixed  $expectedData
-     * @param bool   $typeCheck
      *
      * @dataProvider dataProvider
      */

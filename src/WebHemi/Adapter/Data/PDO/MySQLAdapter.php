@@ -18,9 +18,9 @@ use RuntimeException;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 
 /**
- * Class PDOAdapter.
+ * Class MySQLAdapter.
  */
-class PDOAdapter implements DataAdapterInterface
+class MySQLAdapter implements DataAdapterInterface
 {
     /** @var PDO */
     private $dataStorage;
@@ -30,7 +30,7 @@ class PDOAdapter implements DataAdapterInterface
     private $idKey = null;
 
     /**
-     * PDOAdapter constructor.
+     * MySQLAdapter constructor.
      *
      * @param PDO $dataStorage
      *
@@ -74,7 +74,7 @@ class PDOAdapter implements DataAdapterInterface
      *
      * @throws RuntimeException
      *
-     * @return PDOAdapter
+     * @return MySQLAdapter
      */
     public function setDataGroup($dataGroup)
     {
@@ -94,7 +94,7 @@ class PDOAdapter implements DataAdapterInterface
      *
      * @throws RuntimeException
      *
-     * @return PDOAdapter
+     * @return MySQLAdapter
      */
     public function setIdKey($idKey)
     {

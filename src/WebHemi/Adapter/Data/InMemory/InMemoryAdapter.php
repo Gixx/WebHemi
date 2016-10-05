@@ -31,7 +31,7 @@ class InMemoryAdapter implements DataAdapterInterface
     private $idKey = 'id';
 
     /**
-     * PDOAdapter constructor.
+     * MySQLAdapter constructor.
      *
      * @param mixed $dataStorage
      *

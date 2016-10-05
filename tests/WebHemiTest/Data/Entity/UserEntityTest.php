@@ -9,7 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTest\DataEntity;
+namespace WebHemiTest\Data\Entity;
 
 use DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
