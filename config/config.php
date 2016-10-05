@@ -23,6 +23,8 @@ use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Entity\User\UserMetaEntity;
+use WebHemi\Data\Storage\AccessManagement\PolicyStorage;
+use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\User\UserGroupStorage;
 use WebHemi\Data\Storage\User\UserMetaStorage;
 use WebHemi\Data\Storage\User\UserStorage;
@@ -62,7 +64,7 @@ $config = [
             HttpAdapterInterface::class => [
                 'class'     => GuzzleHttpAdapter::class,
                 'arguments' => [
-                    // This class requires arguments.
+                    // This class requires calculated arguments. Check WebHemi\Application\Web\WebApplication::class
                 ],
                 'shared'    => true,
             ],
@@ -70,14 +72,14 @@ $config = [
                 'class'     => FastRouteAdapter::class,
                 'arguments' => [
                     Result::class,
-                    // This class requires additional argument.
+                    // This class requires a calculated argument. Check WebHemi\Application\Web\WebApplication::class
                 ],
                 'shared'    => true,
             ],
             RendererAdapterInterface::class => [
                 'class'     => TwigRendererAdapter::class,
                 'arguments' => [
-                    // This class requires arguments.
+                    // This class requires calculated arguments. Check WebHemi\Application\Web\WebApplication::class
                 ],
                 'shared'    => true,
             ],
@@ -123,6 +125,20 @@ $config = [
                 'arguments' => [
                     DataAdapterInterface::class,
                     UserGroupEntity::class
+                ],
+                'shared'    => true,
+            ],
+            PolicyStorage::class => [
+                'arguments' => [
+                    DataAdapterInterface::class,
+                    PolicyEntity::class
+                ],
+                'shared'    => true,
+            ],
+            ResourceStorage::class => [
+                'arguments' => [
+                    DataAdapterInterface::class,
+                    ResourceEntity::class
                 ],
                 'shared'    => true,
             ],
