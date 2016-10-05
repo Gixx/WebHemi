@@ -12,8 +12,8 @@
 namespace WebHemiTest\DataEntity;
 
 use DateTime;
-use WebHemi\DataEntity\DataEntityInterface;
-use WebHemi\DataEntity\User\UserEntity;
+use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\Entity\User\UserEntity;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**

@@ -25,7 +25,7 @@ class GeneralStorageTest extends TestCase
     /**
      * Test constructor.
      *
-     * @covers \WebHemi\DataStorage\AbstractDataStorage
+     * @covers \WebHemi\Data\Storage\AbstractDataStorage
      */
     public function testAbstractClassMethods()
     {

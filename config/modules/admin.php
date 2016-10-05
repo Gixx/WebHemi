@@ -10,7 +10,7 @@
  * @link      http://www.gixx-web.com
  */
 
-use WebHemi\DataStorage\User\UserStorage;
+use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Application\SessionManager;
 
 return [

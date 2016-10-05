@@ -3,8 +3,8 @@
 namespace WebHemi\Middleware\Action;
 
 use WebHemi\Application\SessionManager;
-use WebHemi\DataEntity\User\UserEntity;
-use WebHemi\DataStorage\User\UserStorage;
+use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Form\FormInterface;
 use WebHemi\Form\Web\TestForm;
 use WebHemi\Middleware\AbstractMiddlewareAction;

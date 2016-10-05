@@ -13,8 +13,8 @@ namespace WebHemiTest\DataStorage;
 
 use Prophecy\Argument;
 use WebHemi\Adapter\Data\DataAdapterInterface;
-use WebHemi\DataStorage\User\UserMetaStorage;
-use WebHemi\DataEntity\User\UserMetaEntity;
+use WebHemi\Data\Storage\User\UserMetaStorage;
+use WebHemi\Data\Entity\User\UserMetaEntity;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -40,7 +40,7 @@ class UserMetaStorageTest extends TestCase
     /**
      * Test constructor.
      *
-     * @covers \WebHemi\DataStorage\AbstractDataStorage
+     * @covers \WebHemi\Data\Storage\AbstractDataStorage
      */
     public function testStorageInit()
     {

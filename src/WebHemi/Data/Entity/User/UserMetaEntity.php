@@ -9,18 +9,18 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\DataEntity\User;
+namespace WebHemi\Data\Entity\User;
 
-use WebHemi\DataEntity\DataEntityInterface;
+use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class UserMetaEntity.
  */
 class UserMetaEntity implements DataEntityInterface
 {
-    /** @var string */
+    /** @var int */
     private $userMetaId;
-    /** @var string */
+    /** @var int */
     private $userId;
     /** @var string */
     private $metaKey;
@@ -28,7 +28,7 @@ class UserMetaEntity implements DataEntityInterface
     private $metaData;
 
     /**
-     * @param mixed $userMetaId
+     * @param int $userMetaId
      *
      * @return UserMetaEntity
      */
@@ -40,7 +40,7 @@ class UserMetaEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getUserMetaId()
     {
@@ -48,7 +48,7 @@ class UserMetaEntity implements DataEntityInterface
     }
 
     /**
-     * @param mixed $userId
+     * @param int $userId
      *
      * @return UserMetaEntity
      */
@@ -60,7 +60,7 @@ class UserMetaEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getUserId()
     {

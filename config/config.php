@@ -18,10 +18,14 @@ use WebHemi\Adapter\Router\FastRoute\FastRouteAdapter;
 use WebHemi\Adapter\Http\GuzzleHttp\GuzzleHttpAdapter;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\Application\SessionManager;
-use WebHemi\DataEntity\User\UserEntity;
-use WebHemi\DataEntity\User\UserMetaEntity;
-use WebHemi\DataStorage\User\UserMetaStorage;
-use WebHemi\DataStorage\User\UserStorage;
+use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
+use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
+use WebHemi\Data\Entity\User\UserGroupEntity;
+use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\User\UserMetaEntity;
+use WebHemi\Data\Storage\User\UserGroupStorage;
+use WebHemi\Data\Storage\User\UserMetaStorage;
+use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\RoutingMiddleware;
@@ -115,6 +119,14 @@ $config = [
                 ],
                 'shared'    => true,
             ],
+            UserGroupStorage::class => [
+                'arguments' => [
+                    DataAdapterInterface::class,
+                    UserGroupEntity::class
+                ],
+                'shared'    => true,
+            ],
+
             // Classes without any aliases, arguments or sharing options are optional to present here.
             UserEntity::class     => [],
             UserMetaEntity::class => [],

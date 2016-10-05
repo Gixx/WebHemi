@@ -9,18 +9,19 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\DataEntity\User;
+namespace WebHemi\Data\Entity;
 
 use DateTime;
-use WebHemi\DataEntity\DataEntityInterface;
 
 /**
- * Class UserGroupEntity.
+ * Class ApplicationEntity.
  */
-class UserGroupEntity implements DataEntityInterface
+class ApplicationEntity implements DataEntityInterface
 {
+    /** @var int */
+    private $applicationId;
     /** @var string */
-    private $userGroupId;
+    private $name;
     /** @var string */
     private $title;
     /** @var string */
@@ -33,13 +34,33 @@ class UserGroupEntity implements DataEntityInterface
     private $dateModified;
 
     /**
-     * @param mixed $userGroupId
+     * @param int $applicationId
      *
-     * @return UserGroupEntity
+     * @return ApplicationEntity
      */
-    public function setUserGroupId($userGroupId)
+    public function setApplicationId($applicationId)
     {
-        $this->userGroupId = $userGroupId;
+        $this->applicationId = $applicationId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getApplicationId()
+    {
+        return $this->applicationId;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return ApplicationEntity
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
 
         return $this;
     }
@@ -47,15 +68,15 @@ class UserGroupEntity implements DataEntityInterface
     /**
      * @return string
      */
-    public function getUserGroupId()
+    public function getName()
     {
-        return $this->userGroupId;
+        return $this->name;
     }
 
     /**
      * @param string $title
      *
-     * @return UserGroupEntity
+     * @return ApplicationEntity
      */
     public function setTitle($title)
     {
@@ -75,7 +96,7 @@ class UserGroupEntity implements DataEntityInterface
     /**
      * @param string $description
      *
-     * @return UserGroupEntity
+     * @return ApplicationEntity
      */
     public function setDescription($description)
     {
@@ -95,7 +116,7 @@ class UserGroupEntity implements DataEntityInterface
     /**
      * @param bool $state
      *
-     * @return UserGroupEntity
+     * @return ApplicationEntity
      */
     public function setReadOnly($state)
     {
@@ -115,7 +136,7 @@ class UserGroupEntity implements DataEntityInterface
     /**
      * @param DateTime $dateCreated
      *
-     * @return UserGroupEntity
+     * @return ApplicationEntity
      */
     public function setDateCreated(DateTime $dateCreated)
     {
@@ -135,7 +156,7 @@ class UserGroupEntity implements DataEntityInterface
     /**
      * @param DateTime $dateModified
      *
-     * @return UserGroupEntity
+     * @return ApplicationEntity
      */
     public function setDateModified(DateTime $dateModified)
     {

@@ -11,8 +11,8 @@
  */
 namespace WebHemiTest\Fixtures;
 
-use WebHemi\DataEntity\DataEntityInterface;
-use WebHemi\DataStorage\AbstractDataStorage;
+use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\Storage\AbstractDataStorage;
 
 /**
  * Class EmptyStorage.

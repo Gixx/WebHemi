@@ -9,12 +9,12 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\DataStorage\User;
+namespace WebHemi\Data\Storage\User;
 
 use DateTime;
-use WebHemi\DataEntity\DataEntityInterface;
-use WebHemi\DataEntity\User\UserEntity;
-use WebHemi\DataStorage\AbstractDataStorage;
+use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Storage\AbstractDataStorage;
 
 /**
  * Class UserStorage.
@@ -33,9 +33,9 @@ class UserStorage extends AbstractDataStorage
     private $password = 'password';
     /** @var string */
     private $hash = 'hash';
-    /** @var int */
+    /** @var string */
     private $isActive = 'is_active';
-    /** @var int */
+    /** @var string */
     private $isEnabled = 'is_enabled';
     /** @var string */
     private $dateCreated = 'date_created';
