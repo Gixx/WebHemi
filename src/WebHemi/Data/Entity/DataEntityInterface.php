@@ -9,7 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\DataEntity;
+namespace WebHemi\Data\Entity;
 
 /**
  * Interface DataEntityInterface.

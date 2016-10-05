@@ -9,17 +9,17 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\DataEntity\User;
+namespace WebHemi\Data\Entity\User;
 
 use DateTime;
-use WebHemi\DataEntity\DataEntityInterface;
+use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class UserEntity.
  */
 class UserEntity implements DataEntityInterface
 {
-    /** @var string */
+    /** @var int */
     private $userId;
     /** @var string */
     private $userName;
@@ -39,7 +39,7 @@ class UserEntity implements DataEntityInterface
     private $dateModified;
 
     /**
-     * @param mixed $userId
+     * @param int $userId
      *
      * @return UserEntity
      */
@@ -51,7 +51,7 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getUserId()
     {

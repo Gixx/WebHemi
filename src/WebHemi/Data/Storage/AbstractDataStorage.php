@@ -9,10 +9,10 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\DataStorage;
+namespace WebHemi\Data\Storage;
 
 use WebHemi\Adapter\Data\DataAdapterInterface;
-use WebHemi\DataEntity\DataEntityInterface;
+use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class AbstractDataStorage.

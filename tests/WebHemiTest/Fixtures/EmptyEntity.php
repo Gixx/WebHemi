@@ -11,7 +11,7 @@
  */
 namespace WebHemiTest\Fixtures;
 
-use WebHemi\DataEntity\DataEntityInterface;
+use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class EmptyEntity.

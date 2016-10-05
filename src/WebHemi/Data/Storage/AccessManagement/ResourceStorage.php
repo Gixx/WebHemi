@@ -9,27 +9,29 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\DataStorage\User;
+namespace WebHemi\Data\Storage\AccessManagement;
 
 use DateTime;
-use WebHemi\DataEntity\DataEntityInterface;
-use WebHemi\DataEntity\User\UserGroupEntity;
-use WebHemi\DataStorage\AbstractDataStorage;
+use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
+use WebHemi\Data\Storage\AbstractDataStorage;
 
 /**
- * Class UserGroupStorage.
+ * Class ResourceStorage.
  */
-class UserGroupStorage extends AbstractDataStorage
+class ResourceStorage extends AbstractDataStorage
 {
     /** @var string */
-    protected $dataGroup = 'webhemi_user_group';
+    protected $dataGroup = 'webhemi_am_resource';
     /** @var string */
-    protected $idKey = 'id_user_group';
+    protected $idKey = 'id_am_resource';
+    /** @var string */
+    private $name = 'name';
     /** @var string */
     private $title = 'title';
     /** @var string */
     private $description = 'description';
-    /** @var int */
+    /** @var string */
     private $isReadOnly = 'is_read_only';
     /** @var string */
     private $dateCreated = 'date_created';
@@ -44,8 +46,9 @@ class UserGroupStorage extends AbstractDataStorage
      */
     protected function populateEntity(DataEntityInterface &$entity, array $data)
     {
-        /* @var UserGroupEntity $entity */
-        $entity->setUserGroupId($data[$this->idKey])
+        /* @var ResourceEntity $entity */
+        $entity->setResourceId($data[$this->idKey])
+            ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
             ->setReadOnly($data[$this->isReadOnly])
@@ -54,13 +57,13 @@ class UserGroupStorage extends AbstractDataStorage
     }
 
     /**
-     * Returns a User entity identified by (unique) ID.
+     * Returns a Resource entity identified by (unique) ID.
      *
      * @param int $identifier
      *
-     * @return bool|UserGroupEntity
+     * @return bool|ResourceEntity
      */
-    public function getUserGroupById($identifier)
+    public function getResourceById($identifier)
     {
         $entity = false;
         $data = $this->getDataAdapter()->getData($identifier);

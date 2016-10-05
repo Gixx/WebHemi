@@ -9,11 +9,11 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\DataStorage\User;
+namespace WebHemi\Data\Storage\User;
 
-use WebHemi\DataEntity\DataEntityInterface;
-use WebHemi\DataEntity\User\UserMetaEntity;
-use WebHemi\DataStorage\AbstractDataStorage;
+use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\Entity\User\UserMetaEntity;
+use WebHemi\Data\Storage\AbstractDataStorage;
 
 /**
  * Class UserMetaStorage.
@@ -47,7 +47,7 @@ class UserMetaStorage extends AbstractDataStorage
     }
 
     /**
-     * Returns a User entity identified by (unique) ID.
+     * Returns a User Meta entity identified by (unique) ID.
      *
      * @param int $identifier
      *
@@ -67,7 +67,7 @@ class UserMetaStorage extends AbstractDataStorage
     }
 
     /**
-     * Returns a User entity identified by (unique) Email.
+     * Returns a User Meta entity list identified by user ID.
      *
      * @param mixed $userId
      *
