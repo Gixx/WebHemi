@@ -9,7 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTest\DataStorage;
+namespace WebHemiTest\Data\Storage;
 
 use Prophecy\Argument;
 use WebHemi\Adapter\Data\DataAdapterInterface;

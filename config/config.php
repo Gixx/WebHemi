@@ -10,7 +10,7 @@
  * @link      http://www.gixx-web.com
  */
 use WebHemi\Adapter\Data\DataAdapterInterface;
-use WebHemi\Adapter\Data\PDO\PDOAdapter;
+use WebHemi\Adapter\Data\PDO\MySQLAdapter;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Adapter\Renderer\Twig\TwigRendererAdapter;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
@@ -82,7 +82,7 @@ $config = [
                 'shared'    => true,
             ],
             DataAdapterInterface::class => [
-                'class'     => PDOAdapter::class,
+                'class'     => MySQLAdapter::class,
                 'arguments' => [
                     PDO::class
                 ],

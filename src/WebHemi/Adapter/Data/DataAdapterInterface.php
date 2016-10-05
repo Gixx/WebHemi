@@ -19,7 +19,7 @@ interface DataAdapterInterface
     const DATA_SET_RECORD_LIMIT = PHP_INT_MAX;
 
     /**
-     * PDOAdapter constructor.
+     * MySQLAdapter constructor.
      *
      * @param mixed $dataStorage
      */
