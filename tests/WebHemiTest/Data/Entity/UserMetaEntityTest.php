@@ -28,6 +28,9 @@ class UserMetaEntityTest extends TestCase
         $entity = new UserMetaEntity();
 
         $this->assertInstanceOf(DataEntityInterface::class, $entity);
+
+        $entity->setUserMetaId(123);
+        $this->assertSame($entity->getUserMetaId(), $entity->getKeyData());
     }
 
     /**

@@ -33,6 +33,16 @@ class UserGroupEntity implements DataEntityInterface
     private $dateModified;
 
     /**
+     * Gets the value of the entity identifier.
+     *
+     * @return int
+     */
+    public function getKeyData()
+    {
+        return $this->userGroupId;
+    }
+
+    /**
      * @param int $userGroupId
      *
      * @return UserGroupEntity

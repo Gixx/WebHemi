@@ -35,6 +35,16 @@ class ResourceEntity implements DataEntityInterface
     private $dateModified;
 
     /**
+     * Gets the value of the entity identifier.
+     *
+     * @return int
+     */
+    public function getKeyData()
+    {
+        return $this->resourceId;
+    }
+
+    /**
      * @param int $resourceId
      *
      * @return ResourceEntity

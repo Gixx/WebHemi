@@ -23,6 +23,9 @@ use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Entity\User\UserMetaEntity;
+use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
+use WebHemi\Data\Coupler\UserToGroupCoupler;
+use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Storage\AccessManagement\PolicyStorage;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\User\UserGroupStorage;
@@ -139,6 +142,31 @@ $config = [
                 'arguments' => [
                     DataAdapterInterface::class,
                     ResourceEntity::class
+                ],
+                'shared'    => true,
+            ],
+            // Data Couplers
+            UserToPolicyCoupler::class => [
+                'arguments' => [
+                    DataAdapterInterface::class,
+                    UserEntity::class,
+                    PolicyEntity::class
+                ],
+                'shared'    => true,
+            ],
+            UserToGroupCoupler::class => [
+                'arguments' => [
+                    DataAdapterInterface::class,
+                    UserEntity::class,
+                    UserGroupEntity::class
+                ],
+                'shared'    => true,
+            ],
+            UserGroupToPolicyCoupler::class => [
+                'arguments' => [
+                    DataAdapterInterface::class,
+                    PolicyEntity::class,
+                    UserGroupEntity::class
                 ],
                 'shared'    => true,
             ],

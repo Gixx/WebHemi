@@ -39,6 +39,16 @@ class PolicyEntity implements DataEntityInterface
     private $dateModified;
 
     /**
+     * Gets the value of the entity identifier.
+     *
+     * @return int
+     */
+    public function getKeyData()
+    {
+        return $this->policyId;
+    }
+
+    /**
      * @param int $policyId
      *
      * @return PolicyEntity

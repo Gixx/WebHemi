@@ -4,7 +4,11 @@ namespace WebHemi\Middleware\Action;
 
 use WebHemi\Application\SessionManager;
 use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\User\UserGroupEntity;
 use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Data\Coupler\UserToGroupCoupler;
+use WebHemi\Data\Coupler\UserToPolicyCoupler;
+use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Form\FormInterface;
 use WebHemi\Form\Web\TestForm;
 use WebHemi\Middleware\AbstractMiddlewareAction;
@@ -18,16 +22,31 @@ class FakeAction extends AbstractMiddlewareAction
 {
     /** @var UserStorage */
     private $userStorage;
+    /** @var UserToPolicyCoupler */
+    private $userToPolicyCoupler;
+    /** @var UserToGroupCoupler */
+    private $userToGroupCoupler;
+    /** @var UserGroupToPolicyCoupler */
+    private $userGroupToPolicyCoupler;
     /** @var TestForm */
     private $loginForm;
     /** @var SessionManager */
     private $session;
 
-    public function __construct(UserStorage $userStorage, FormInterface $loginForm, SessionManager $session)
-    {
+    public function __construct(
+        UserStorage $userStorage,
+        FormInterface $loginForm,
+        SessionManager $session,
+        UserToPolicyCoupler $userToPolicyCoupler,
+        UserToGroupCoupler $userToGroupCoupler,
+        UserGroupToPolicyCoupler $userGroupToPolicyCoupler
+    ) {
         $this->userStorage = $userStorage;
         $this->loginForm = $loginForm;
         $this->session = $session;
+        $this->userToPolicyCoupler = $userToPolicyCoupler;
+        $this->userToGroupCoupler = $userToGroupCoupler;
+        $this->userGroupToPolicyCoupler = $userGroupToPolicyCoupler;
     }
 
     public function getTemplateName()
@@ -39,6 +58,16 @@ class FakeAction extends AbstractMiddlewareAction
     {
         /** @var UserEntity $userEntity */
         $userEntity = $this->userStorage->getUserById(1);
+
+        $policies = $this->userToPolicyCoupler->getEntityDependencies($userEntity);
+        $groups = $this->userToGroupCoupler->getEntityDependencies($userEntity);
+        $groupPolicies = [];
+
+        /** @var UserGroupEntity $group */
+        foreach ($groups as $group) {
+            $groupPolicies[$group->getKeyData()] = $this->userGroupToPolicyCoupler->getEntityDependencies($group);
+        }
+
 
         // Give special name
         $this->loginForm->setName('login');
@@ -75,6 +104,10 @@ class FakeAction extends AbstractMiddlewareAction
             ],
             'postData' => var_export($this->request->getParsedBody(), true),
             'session' => var_export($this->session->toArray(), true),
+            'user' => var_export($userEntity, true),
+            'policy' => var_export($policies, true),
+            'group' => var_export($groups, true),
+            'grouppolicy' => var_export($groupPolicies, true),
             'loginForm' => $this->loginForm
         ];
     }

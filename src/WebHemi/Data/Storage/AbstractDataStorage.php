@@ -32,7 +32,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
     protected $initialized = false;
 
     /**
-     * UserMetaStorage constructor. The DataEntity SHOULD not be used directly unless it is required to represent
+     * AbstractDataStorage constructor. The DataEntity SHOULD not be used directly unless it is required to represent
      * the same instance all the time.
      *
      * @param DataAdapterInterface $defaultAdapter

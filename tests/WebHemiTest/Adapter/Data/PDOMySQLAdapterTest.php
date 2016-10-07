@@ -99,9 +99,6 @@ class PDOMySQLAdapterTest extends TestCase
         $result = $adapter->setDataGroup('webhemi_user');
         $this->assertInstanceOf(DataAdapterInterface::class, $result);
         $this->assertTrue($adapter === $result);
-
-        $this->setExpectedException(RuntimeException::class);
-        $adapter->setDataGroup('shouldBeBad');
     }
 
     /**
@@ -117,9 +114,6 @@ class PDOMySQLAdapterTest extends TestCase
         $result = $adapter->setIdKey('id_user');
         $this->assertInstanceOf(DataAdapterInterface::class, $result);
         $this->assertTrue($adapter === $result);
-
-        $this->setExpectedException(RuntimeException::class);
-        $adapter->setIdKey('shouldBeBad');
     }
 
     /**
@@ -143,7 +137,7 @@ class PDOMySQLAdapterTest extends TestCase
                 'bTable',
                 11,
                 20,
-                'SELECT * FROM bTable WHERE A=? LIMIT 11 OFFSET 20',
+                'SELECT * FROM bTable WHERE A = ? LIMIT 11 OFFSET 20',
                 [5]
             ],
             [
@@ -151,8 +145,48 @@ class PDOMySQLAdapterTest extends TestCase
                 'cTable',
                 null,
                 null,
-                'SELECT * FROM cTable WHERE A=? AND B LIKE ? LIMIT '.MySQLAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
+                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.MySQLAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
                 [10, 'someData%']
+            ],
+            [
+                ['A' => 10, 'B LIKE' => 'someData%'],
+                'cTable',
+                null,
+                null,
+                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.MySQLAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
+                [10, 'someData%']
+            ],
+            [
+                ['A' => 10, 'B' => 'someData%'],
+                'cTable',
+                null,
+                null,
+                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.MySQLAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
+                [10, 'someData%']
+            ],
+            [
+                ['A' => 10, 'B IN (?)' => [1,2,3]],
+                'cTable',
+                3,
+                0,
+                'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) LIMIT 3 OFFSET 0',
+                [10, 1, 2, 3]
+            ],
+            [
+                ['A' => 10, 'B IN ?' => [1,2,3]],
+                'cTable',
+                3,
+                0,
+                'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) LIMIT 3 OFFSET 0',
+                [10, 1, 2, 3]
+            ],
+            [
+                ['A' => 10, 'B' => [1,2,3]],
+                'cTable',
+                3,
+                0,
+                'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) LIMIT 3 OFFSET 0',
+                [10, 1, 2, 3]
             ]
         ];
     }
@@ -209,8 +243,9 @@ class PDOMySQLAdapterTest extends TestCase
     {
         return [
             [[], '', []],
-            [['A' => 5], ' WHERE A=?', [5]],
-            [['A' => 10, 'B LIKE ?' => 'someData%'], ' WHERE A=? AND B LIKE ?', [10, 'someData%']]
+            [['A' => 5], ' WHERE A = ?', [5]],
+            [['A' => 10, 'B LIKE ?' => 'someData%'], ' WHERE A = ? AND B LIKE ?', [10, 'someData%']],
+            [['A' => 10, 'B' => [1,2,3]], ' WHERE A = ? AND B IN (?,?,?)', [10, 1, 2, 3]],
         ];
     }
 
