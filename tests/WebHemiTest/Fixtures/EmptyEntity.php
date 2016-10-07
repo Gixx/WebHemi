@@ -20,6 +20,18 @@ class EmptyEntity implements DataEntityInterface
 {
     /** @var array */
     private $storage = [];
+    /** @var string */
+    private $key;
+
+    /**
+     * Gets the value of the entity identifier.
+     *
+     * @return mixed
+     */
+    public function getKeyData()
+    {
+        return isset($this->key) ? $this->storage[$this->key] : null;
+    }
 
     /**
      * Handle getters and setters.

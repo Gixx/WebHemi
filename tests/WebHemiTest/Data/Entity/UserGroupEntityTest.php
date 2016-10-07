@@ -13,28 +13,28 @@ namespace WebHemiTest\Data\Entity;
 
 use DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\User\UserGroupEntity;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
- * Class UserEntityTest.
+ * Class UserGroupEntityTest.
  */
-class UserEntityTest extends TestCase
+class UserGroupEntityTest extends TestCase
 {
     /** @var string */
     private $testTime = '2016-04-26 23:21:00';
 
     /**
-     * Tests if the UserEntity implements the DataEntityInterface.
+     * Tests if the UserGroupEntity implements the DataEntityInterface.
      */
     public function testInstance()
     {
-        $entity = new UserEntity();
+        $entity = new UserGroupEntity();
 
         $this->assertInstanceOf(DataEntityInterface::class, $entity);
 
-        $entity->setUserId(123);
-        $this->assertSame($entity->getUserId(), $entity->getKeyData());
+        $entity->setUserGroupId(123);
+        $this->assertSame($entity->getUserGroupId(), $entity->getKeyData());
     }
 
     /**
@@ -47,25 +47,18 @@ class UserEntityTest extends TestCase
         $dateTest = new DateTime($this->testTime);
 
         return [
-            ['userId', 1, 1, false],
-            ['userId', 'someId', 'someId', false],
-            ['userName', 'someName', 'someName', false],
-            ['email', 'someEmail', 'someEmail', false],
-            ['password', 'somePassword', 'somePassword', false],
-            ['hash', 'someHash', 'someHash', false],
-            ['isActive', 1, true, true],
-            ['isActive', null, false, true],
-            ['isActive', 'yes', true, true],
-            ['isEnabled', 'someValue', true, true],
-            ['isEnabled', 'no', true, true],
-            ['isEnabled', 0, false, true],
+            ['userGroupId', 1, 1, false],
+            ['userGroupId', 'someId', 'someId', false],
+            ['title','some title','some title', false],
+            ['description','some description','some description', false],
+            ['isReadOnly',1, true, true],
             ['dateCreated', $dateTest, $dateTest, true],
             ['dateModified', $dateTest, $dateTest, true],
         ];
     }
 
     /**
-     * Tests if the UserEntity instance has any property preset.
+     * Tests if the UserGroupEntity instance has any property preset.
      *
      * @param string $attribute
      *
@@ -73,14 +66,14 @@ class UserEntityTest extends TestCase
      */
     public function testNoInitValues($attribute)
     {
-        $entity = new UserEntity();
+        $entity = new UserGroupEntity();
 
-        $this->assertClassHasAttribute($attribute, UserEntity::class);
+        $this->assertClassHasAttribute($attribute, UserGroupEntity::class);
         $this->assertAttributeEmpty($attribute, $entity);
     }
 
     /**
-     * Tests if the UserEntity has a specific setter method and it sets the value with the correct type.
+     * Tests if the UserGroupEntity has a specific setter method and it sets the value with the correct type.
      *
      * @param string $attribute
      * @param mixed  $parameter
@@ -91,7 +84,7 @@ class UserEntityTest extends TestCase
      */
     public function testSetters($attribute, $parameter, $expectedData, $typeCheck)
     {
-        $entity = new UserEntity();
+        $entity = new UserGroupEntity();
         $method = 'set' . ucfirst(preg_replace('/^is/', '', $attribute));
 
         $this->assertTrue(method_exists($entity, $method));
@@ -109,7 +102,7 @@ class UserEntityTest extends TestCase
     }
 
     /**
-     * Tests if the UserEntity has a specific getter method and it gets the value with the correct type.
+     * Tests if the UserGroupEntity has a specific getter method and it gets the value with the correct type.
      *
      * @param string $attribute
      * @param mixed  $parameter
@@ -120,7 +113,7 @@ class UserEntityTest extends TestCase
      */
     public function testGetters($attribute, $parameter, $expectedData, $typeCheck)
     {
-        $entity = new UserEntity();
+        $entity = new UserGroupEntity();
         $methodName = ucfirst(preg_replace('/^is/', '', $attribute));
         $setMethod = 'set' . $methodName;
         $getMethod = 'get' . $methodName;

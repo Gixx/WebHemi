@@ -13,7 +13,15 @@ namespace WebHemi\Data\Entity;
 
 /**
  * Interface DataEntityInterface.
+ *
+ * A Data Entity represents a unique set of data, or a row in a database table.
  */
 interface DataEntityInterface
 {
+    /**
+     * Gets the value of the entity identifier.
+     *
+     * @return int
+     */
+    public function getKeyData();
 }

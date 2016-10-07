@@ -28,6 +28,16 @@ class UserMetaEntity implements DataEntityInterface
     private $metaData;
 
     /**
+     * Gets the value of the entity identifier.
+     *
+     * @return int
+     */
+    public function getKeyData()
+    {
+        return $this->userMetaId;
+    }
+
+    /**
      * @param int $userMetaId
      *
      * @return UserMetaEntity

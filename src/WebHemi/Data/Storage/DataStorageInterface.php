@@ -16,6 +16,9 @@ use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Interface DataStorageInterface.
+ *
+ * A Data Storage is the connection between the Data Adapter and the Data Entity. It uses the Adapter to get/set the
+ * data and populates into/from the Entity.
  */
 interface DataStorageInterface
 {

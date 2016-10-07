@@ -78,10 +78,6 @@ class MySQLAdapter implements DataAdapterInterface
      */
     public function setDataGroup($dataGroup)
     {
-        if (!empty($this->dataGroup)) {
-            throw new RuntimeException('Can\'t re-initialize dataGroup property. Property is already set.');
-        }
-
         $this->dataGroup = $dataGroup;
 
         return $this;
@@ -98,10 +94,6 @@ class MySQLAdapter implements DataAdapterInterface
      */
     public function setIdKey($idKey)
     {
-        if (!empty($this->idKey)) {
-            throw new RuntimeException('Can\'t re-initialize idKey property. Property is already set.');
-        }
-
         $this->idKey = $idKey;
 
         return $this;
@@ -215,10 +207,16 @@ class MySQLAdapter implements DataAdapterInterface
         $queryParams = [];
 
         foreach ($expression as $column => $value) {
-            // allow special cases
-            // @example  ['my_column LIKE ?' => 'some value%']
-            $queryParams[] = strpos($column, '?') === false ? "{$column}=?" : $column;
-            $queryBind[] = $value;
+            if (is_array($value)) {
+                $queryParams[] = $this->getInColumnCondition($column, count($value));
+                $queryBind = array_merge($queryBind, $value);
+            } elseif (strpos($column, ' LIKE') !== false || strpos($value, '%') !== false) {
+                $queryParams[] = $this->getLikeColumnCondition($column);
+                $queryBind[] = $value;
+            } else {
+                $queryParams[] = $this->getSimpleColumnCondition($column);
+                $queryBind[] = $value;
+            }
         }
 
         if (!empty($queryParams)) {
@@ -226,6 +224,57 @@ class MySQLAdapter implements DataAdapterInterface
         }
 
         return $whereExpression;
+    }
+
+    /**
+     * Gets a simple condition for the column.
+     *
+     * @param string $column
+     * @return string 'my_column = ?'
+     */
+    private function getSimpleColumnCondition($column)
+    {
+        return strpos($column, '?') === false ? "{$column} = ?" : $column;
+    }
+
+    /**
+     * Gets a 'LIKE' condition for the column.
+     *
+     * Allows special cases:
+     * @example  ['my_column LIKE ?' => 'some value%']
+     * @example  ['my_column LIKE' => 'some value%']
+     * @example  ['my_column' => 'some value%']
+     *
+     * @param string $column
+     * @return string 'my_column LIKE ?'
+     */
+    private function getLikeColumnCondition($column)
+    {
+        list($columnNameOnly) = explode(' ', $column);
+
+        return $columnNameOnly.' LIKE ?';
+    }
+
+    /**
+     * Gets an 'IN' condition for the column.
+     *
+     * Allows special cases:
+     * @example  ['my_column IN (?)' => [1,2,3]]
+     * @example  ['my_column IN ?' => [1,2,3]]
+     * @example  ['my_column IN' => [1,2,3]]
+     * @example  ['my_column' => [1,2,3]]
+     *
+     * @param string $column
+     * @param int    $parameterCount
+     * @return string 'my_column IN (?,?,?)'
+     */
+    private function getInColumnCondition($column, $parameterCount = 1)
+    {
+        list($columnNameOnly) = explode(' ', $column);
+
+        $inParameters  = str_repeat('?,', $parameterCount - 1).'?';
+
+        return $columnNameOnly.' IN ('.$inParameters.')';
     }
 
     /**
@@ -250,14 +299,14 @@ class MySQLAdapter implements DataAdapterInterface
         $queryBind = [];
 
         foreach ($data as $fieldName => $value) {
-            $queryData[] = "{$fieldName}=?";
+            $queryData[] = "{$fieldName} = ?";
             $queryBind[] = $value;
         }
 
         $query .= ' SET '.implode(', ', $queryData);
 
         if (!empty($identifier)) {
-            $query .= " WHERE {$this->idKey}=?";
+            $query .= " WHERE {$this->idKey} = ?";
             $queryBind[] = $identifier;
         }
 
@@ -302,7 +351,7 @@ class MySQLAdapter implements DataAdapterInterface
      */
     public function deleteData($identifier)
     {
-        $statement = $this->getDataStorage()->prepare("DELETE FROM WHERE {$this->idKey}=?");
+        $statement = $this->getDataStorage()->prepare("DELETE FROM WHERE {$this->idKey} = ?");
 
         return $statement->execute([$identifier]);
     }

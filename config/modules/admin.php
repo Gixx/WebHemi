@@ -11,6 +11,9 @@
  */
 
 use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
+use WebHemi\Data\Coupler\UserToPolicyCoupler;
+use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Application\SessionManager;
 
 return [
@@ -43,7 +46,10 @@ return [
                 'arguments' => [
                     UserStorage::class,
                     \WebHemi\Form\Web\TestForm::class,
-                    SessionManager::class
+                    SessionManager::class,
+                    UserToPolicyCoupler::class,
+                    UserToGroupCoupler::class,
+                    UserGroupToPolicyCoupler::class,
                 ],
             ],
             \WebHemi\Middleware\Action\FakeViewAction::class => [
