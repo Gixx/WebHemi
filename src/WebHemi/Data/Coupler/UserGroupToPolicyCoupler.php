@@ -11,7 +11,6 @@
  */
 namespace WebHemi\Data\Coupler;
 
-use RuntimeException;
 use WebHemi\Data\Coupler\Traits\PolicyEntityTrait;
 use WebHemi\Data\Coupler\Traits\UserGroupEntityTrait;
 use WebHemi\Data\Entity\DataEntityInterface;
@@ -47,30 +46,16 @@ class UserGroupToPolicyCoupler extends AbstractDataCoupler
     use PolicyEntityTrait;
 
     /**
-     * Gets all the entities those are depending from the given entity.
+     * Gets a DataEntityInterface instance from the provided data according to the reference entity.
      *
-     * @param DataEntityInterface $entity
-     * @throws RuntimeException
-     * @return array<DataEntityInterface>
+     * @param DataEntityInterface $referenceEntity
+     * @param array               $entityData
+     * @return DataEntityInterface
      */
-    public function getEntityDependencies(DataEntityInterface $entity)
+    protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData)
     {
-        $entityClass = get_class($entity);
-        if (!isset($this->dataEntityPrototypes[$entityClass])) {
-            throw new RuntimeException(
-                sprintf('Cannot use this coupler class to find dependencies for %s.', $entityClass)
-            );
-        }
-
-        $entityList = [];
-        $dataList = $this->getEntityDataSet($entity);
-
-        foreach ($dataList as $entityData) {
-            $entityList[] = $entity instanceof UserGroupEntity
-                ? $this->createPolicyEntity($entityData)
-                : $this->createUserGroupEntity($entityData);
-        }
-
-        return $entityList;
+        return $referenceEntity instanceof UserGroupEntity
+            ? $this->createPolicyEntity($entityData)
+            : $this->createUserGroupEntity($entityData);
     }
 }
