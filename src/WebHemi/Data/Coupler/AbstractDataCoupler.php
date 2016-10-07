@@ -37,7 +37,7 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      * @param DataAdapterInterface $defaultAdapter
      * @param DataEntityInterface[] ...$dataEntityPrototypes
      */
-    final public function __construct(
+    public function __construct(
         DataAdapterInterface $defaultAdapter,
         DataEntityInterface ...$dataEntityPrototypes
     ) {
@@ -53,7 +53,7 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      *
      * @return DataAdapterInterface
      */
-    final public function getDataAdapter()
+    public function getDataAdapter()
     {
         return $this->defaultAdapter;
     }
@@ -62,9 +62,36 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      * Gets all the entities those are depending from the given entity.
      *
      * @param DataEntityInterface $entity
+     * @throws RuntimeException
      * @return array<DataEntityInterface>
      */
-    abstract public function getEntityDependencies(DataEntityInterface $entity);
+    public function getEntityDependencies(DataEntityInterface $entity)
+    {
+        $entityClass = get_class($entity);
+        if (!isset($this->dataEntityPrototypes[$entityClass])) {
+            throw new RuntimeException(
+                sprintf('Cannot use this coupler class to find dependencies for %s.', $entityClass)
+            );
+        }
+
+        $entityList = [];
+        $dataList = $this->getEntityDataSet($entity);
+
+        foreach ($dataList as $entityData) {
+            $entityList[] = $this->getDependingEntity($entity, $entityData);
+        }
+
+        return $entityList;
+    }
+
+    /**
+     * Gets a DataEntityInterface instance from the provided data according to the reference entity.
+     *
+     * @param DataEntityInterface $referenceEntity
+     * @param array               $entityData
+     * @return DataEntityInterface
+     */
+    abstract protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData);
 
     /**
      * Returns a new instance of the required entity.

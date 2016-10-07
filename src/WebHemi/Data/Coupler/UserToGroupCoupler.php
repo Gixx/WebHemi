@@ -11,8 +11,6 @@
  */
 namespace WebHemi\Data\Coupler;
 
-use RuntimeException;
-use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Coupler\Traits\UserEntityTrait;
 use WebHemi\Data\Coupler\Traits\UserGroupEntityTrait;
 use WebHemi\Data\Entity\DataEntityInterface;
@@ -48,46 +46,16 @@ class UserToGroupCoupler extends AbstractDataCoupler
     use UserGroupEntityTrait;
 
     /**
-     * Returns a new instance of the required entity.
+     * Gets a DataEntityInterface instance from the provided data according to the reference entity.
      *
-     * @param string $entityClassName
-     * @throws RuntimeException
+     * @param DataEntityInterface $referenceEntity
+     * @param array               $entityData
      * @return DataEntityInterface
      */
-    protected function getNewEntityInstance($entityClassName)
+    protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData)
     {
-        if (!isset($this->dataEntityPrototypes[$entityClassName])) {
-            throw new RuntimeException(sprintf('Class %s is not defined in this Coupler.', $entityClassName));
-        }
-
-        return clone $this->dataEntityPrototypes[$entityClassName];
-    }
-
-    /**
-     * Gets all the entities those are depending from the given entity.
-     *
-     * @param DataEntityInterface $entity
-     * @throws RuntimeException
-     * @return array<DataEntityInterface>
-     */
-    public function getEntityDependencies(DataEntityInterface $entity)
-    {
-        $entityClass = get_class($entity);
-        if (!isset($this->dataEntityPrototypes[$entityClass])) {
-            throw new RuntimeException(
-                sprintf('Cannot use this coupler class to find dependencies for %s.', $entityClass)
-            );
-        }
-
-        $entityList = [];
-        $dataList = $this->getEntityDataSet($entity);
-
-        foreach ($dataList as $entityData) {
-            $entityList[] = $entity instanceof UserEntity
-                ? $this->createUserGroupEntity($entityData)
-                : $this->createUserEntity($entityData);
-        }
-
-        return $entityList;
+        return $referenceEntity instanceof UserEntity
+            ? $this->createUserGroupEntity($entityData)
+            : $this->createUserEntity($entityData);
     }
 }
