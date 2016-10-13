@@ -12,8 +12,24 @@
 namespace WebHemi\Form\Element\Web;
 
 /**
- * Class TextElement. Alias of InputElement
+ * Class TextElement. Same as InputElement with type 'text'.
  */
-class TextElement extends InputElement
+class TextElement extends AbstractElement
 {
+    /** @var string */
+    protected $type = 'text';
+
+    /**
+     * SelectElement constructor.
+     *
+     * @param string $name
+     * @param string $label
+     * @param mixed  $value
+     */
+    public function __construct($name = '', $label = '', $value = null)
+    {
+        parent::__construct($name, $label, $value);
+
+        $this->setTabIndex();
+    }
 }

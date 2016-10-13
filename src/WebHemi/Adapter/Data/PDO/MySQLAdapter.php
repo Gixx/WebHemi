@@ -177,7 +177,7 @@ class MySQLAdapter implements DataAdapterInterface
     private function getSelectQueryForExpression(
         array $expression,
         array &$queryBind,
-        $limit = self::DATA_SET_RECORD_LIMIT,
+        $limit = PHP_INT_MAX,
         $offset = 0
     ) {
         $query = "SELECT * FROM {$this->dataGroup}";

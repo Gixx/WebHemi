@@ -14,30 +14,22 @@ namespace WebHemi\Form\Element\Web;
 /**
  * Class ButtonElement.
  */
-class ButtonElement extends InputElement
+class ButtonElement extends AbstractElement
 {
     /** @var string */
     protected $type = 'button';
 
     /**
-     * Skip original behaviour: button element does not have value.
+     * SelectElement constructor.
      *
-     * @param mixed $value
-     * @return AbstractElement
+     * @param string $name
+     * @param string $label
+     * @param mixed  $value
      */
-    public function setValue($value)
+    public function __construct($name = '', $label = '', $value = null)
     {
-        unset($value);
-        return $this;
-    }
+        parent::__construct($name, $label, $value);
 
-    /**
-     * Skip original behaviour: button element does not have value.
-     *
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return '';
+        $this->setTabIndex();
     }
 }

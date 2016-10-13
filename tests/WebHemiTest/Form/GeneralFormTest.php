@@ -169,17 +169,16 @@ class GeneralFormTest extends TestCase
                 'hidden' => 'test',
                 'country' => ['de']
             ],
-            'submit' => ''
+            'submit' => null
         ];
         // test get default data
         $this->assertArraysAreSimilar($inspectedData, $testForm->getData());
-
         $inspectedData = [
             'info' => [
                 'hidden' => 'test 2',
                 'country' => ['de', 'at']
             ],
-            'submit' => ''
+            'submit' => null
         ];
         // test set and get data
         $testForm->setData($inspectedData);
@@ -190,7 +189,7 @@ class GeneralFormTest extends TestCase
                 'hidden' => 'test 3',
                 'country' => ['hu']
             ],
-            'submit' => ''
+            'submit' => null
         ];
         // test setter with form name index
         $testForm->setData(['test_form' => $inspectedData]);
@@ -202,7 +201,7 @@ class GeneralFormTest extends TestCase
                 'hidden' => 'test 4',
                 'country' => ['hu', 'de', 'at']
             ],
-            'submit' => ''
+            'submit' => null
         ];
         // test setter with form salted name index
         $testForm->setNameSalt($salt)
@@ -215,7 +214,7 @@ class GeneralFormTest extends TestCase
                 'hidden' => 'test 5',
                 'country' => ['at']
             ],
-            'submit' => ''
+            'submit' => null
         ];
         // test setter with form salted name index when no salt is used
         $testForm->setAutoComplete(false)

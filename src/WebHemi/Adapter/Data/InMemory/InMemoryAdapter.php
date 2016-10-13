@@ -20,9 +20,6 @@ use WebHemi\Adapter\Data\DataAdapterInterface;
  */
 class InMemoryAdapter implements DataAdapterInterface
 {
-    const EXPRESSION_IN_ARRAY = 'IN';
-    const EXPRESSION_WILDCARD = 'LIKE';
-
     /** @var array */
     private $dataStorage;
     /** @var string */
@@ -141,7 +138,7 @@ class InMemoryAdapter implements DataAdapterInterface
      *
      * @return array
      */
-    public function getDataSet(array $expression, $limit = self::DATA_SET_RECORD_LIMIT, $offset = 0)
+    public function getDataSet(array $expression, $limit = PHP_INT_MAX, $offset = 0)
     {
         $result = [];
 
@@ -207,9 +204,9 @@ class InMemoryAdapter implements DataAdapterInterface
      */
     private function match($expressionType, $data, $subject)
     {
-        if ($expressionType == self::EXPRESSION_WILDCARD) {
+        if ($expressionType == 'LIKE') {
             $match = $this->checkWildcardMatch($data, $subject);
-        } elseif ($expressionType == self::EXPRESSION_IN_ARRAY) {
+        } elseif ($expressionType == 'IN') {
             $match = $this->checkInArrayMatch($data, $subject);
         } else {
             $match = $this->checkRelation($expressionType, $data, $subject);
