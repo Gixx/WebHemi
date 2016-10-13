@@ -24,6 +24,19 @@ repository, now I try to create a small, fast and 'only as much as necessary', c
 
 Use it at your own will.
 
+BEHIND THE SCENES
+-----------------
+
+The WebHemi is a simple blog engine that tries to completely apply the S.O.L.I.D. principles, uses the PSR-7 HTTP Messages Interfaces and the Middleware concept.
+
+Figure 1: The basic execution flow of the application.
+
+![webhemi](https://cloud.githubusercontent.com/assets/87073/19352304/aa1cb604-915f-11e6-89e3-7939b733b78b.png)
+
+Figure 2: The queue of the Middleware Pipeline
+
+![pipelinemanager](https://cloud.githubusercontent.com/assets/87073/19352680/0021efd2-9161-11e6-9fed-fec42321083a.png)
+
 FAQ
 ---
 

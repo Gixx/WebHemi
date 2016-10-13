@@ -14,8 +14,22 @@ namespace WebHemi\Form\Element\Web;
 /**
  * Class PasswordElement.
  */
-class PasswordElement extends InputElement
+class PasswordElement extends AbstractElement
 {
     /** @var string */
     protected $type = 'password';
+
+    /**
+     * SelectElement constructor.
+     *
+     * @param string $name
+     * @param string $label
+     * @param mixed  $value
+     */
+    public function __construct($name = '', $label = '', $value = null)
+    {
+        parent::__construct($name, $label, $value);
+
+        $this->setTabIndex();
+    }
 }

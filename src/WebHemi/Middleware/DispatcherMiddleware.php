@@ -52,6 +52,7 @@ class DispatcherMiddleware implements MiddlewareInterface
 
         // If there is a valid action Middleware, then dispatch it.
         if (!is_null($actionMiddleware) && $actionMiddleware instanceof MiddlewareActionInterface) {
+            /** @var ResponseInterface $response */
             $response = $actionMiddleware($request, $response);
 
             /** @var string $template */

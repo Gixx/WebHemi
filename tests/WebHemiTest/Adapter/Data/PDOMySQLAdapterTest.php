@@ -145,7 +145,7 @@ class PDOMySQLAdapterTest extends TestCase
                 'cTable',
                 null,
                 null,
-                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.MySQLAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
+                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.PHP_INT_MAX.' OFFSET 0',
                 [10, 'someData%']
             ],
             [
@@ -153,7 +153,7 @@ class PDOMySQLAdapterTest extends TestCase
                 'cTable',
                 null,
                 null,
-                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.MySQLAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
+                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.PHP_INT_MAX.' OFFSET 0',
                 [10, 'someData%']
             ],
             [
@@ -161,7 +161,7 @@ class PDOMySQLAdapterTest extends TestCase
                 'cTable',
                 null,
                 null,
-                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.MySQLAdapter::DATA_SET_RECORD_LIMIT.' OFFSET 0',
+                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.PHP_INT_MAX.' OFFSET 0',
                 [10, 'someData%']
             ],
             [

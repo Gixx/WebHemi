@@ -16,8 +16,6 @@ namespace WebHemi\Adapter\Data;
  */
 interface DataAdapterInterface
 {
-    const DATA_SET_RECORD_LIMIT = PHP_INT_MAX;
-
     /**
      * MySQLAdapter constructor.
      *
@@ -68,7 +66,7 @@ interface DataAdapterInterface
      *
      * @return array
      */
-    public function getDataSet(array $expression, $limit = self::DATA_SET_RECORD_LIMIT, $offset = 0);
+    public function getDataSet(array $expression, $limit = PHP_INT_MAX, $offset = 0);
 
     /**
      * Get the number of matched data in the set according to the expression.
