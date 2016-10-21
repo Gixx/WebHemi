@@ -99,7 +99,7 @@ EOH;
 
         // Text input with custom attribute
         $loginname = $this->getFormElementContainer()->getTextElement('username', 'Username');
-        $loginname->setAttributes(['placeholder' => 'Your login name']);
+        $loginname->addAttributes(['placeholder' => 'Your login name']);
 
         // Password input
         $password = $this->getFormElementContainer()->getPasswordElement('password', 'Password');
@@ -211,7 +211,7 @@ EOH;
                 ['label' => 'Japan', 'value' => 'jp', 'group' => 'Asia'],
             ]
         )
-            ->setAttributes(
+            ->addAttributes(
                 [
                     'multiple' => true,
                     'size' => 10

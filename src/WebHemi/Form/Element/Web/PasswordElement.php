@@ -14,32 +14,8 @@ namespace WebHemi\Form\Element\Web;
 /**
  * Class PasswordElement.
  */
-class PasswordElement extends AbstractElement
+class PasswordElement extends AbstractTabindexElement
 {
     /** @var string */
     protected $type = 'password';
-
-    /**
-     * SelectElement constructor.
-     *
-     * @param string $name
-     * @param string $label
-     * @param mixed  $value
-     */
-    public function __construct($name = '', $label = '', $value = null)
-    {
-        parent::__construct($name, $label, $value);
-
-        $this->setTabIndex();
-    }
-
-    /**
-     * Resets the object when cloning.
-     */
-    public function __clone()
-    {
-        parent::__clone();
-
-        $this->setTabIndex();
-    }
 }

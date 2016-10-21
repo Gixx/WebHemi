@@ -4,7 +4,7 @@
             <legend>{{ formElement.getLabel() }}</legend>
             {% for label, option in formElement.getOptions() %}
                 <label>
-                    <input type="radio" name="{{ formElement.getName() }}" value="{{ option.value }}" {{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}{% if option.checked %} checked="checked"{% endif %} />
+                    <input type="radio" name="{{ formElement.getName() }}" value="{{ option.value }}" {{ _FORM.renderFormElementAttributes(option.attributes) }}{% if option.checked %} checked="checked"{% endif %} />
                     {{ label }}
                 </label>
             {% endfor %}

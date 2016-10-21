@@ -79,12 +79,20 @@ interface FormElementInterface
     public function getValue();
 
     /**
-     * Sets multiple attributes.
+     * Sets multiple attributes with deleting the existing ones.
      *
      * @param array $attributes
      * @return FormElementInterface
      */
     public function setAttributes(array $attributes);
+
+    /**
+     * Adds multiple attributes to the existing ones.
+     *
+     * @param array $attributes
+     * @return FormElementInterface
+     */
+    public function addAttributes(array $attributes);
 
     /**
      * Gets all the attributes.
@@ -96,10 +104,9 @@ interface FormElementInterface
     /**
      * Sets and increments the tabulator index globally. This method should be used only on visible elements.
      *
-     * @param bool $reset
      * @return FormElementInterface
      */
-    public function setTabIndex($reset = false);
+    public function setTabIndex();
 
     /**
      * Sets the element validators.

@@ -16,7 +16,7 @@ use WebHemi\Form\Element\MultiOptionElementInterface;
 /**
  * Class RadioElement.
  */
-class RadioElement extends AbstractElement implements MultiOptionElementInterface
+class RadioElement extends AbstractTabindexElement implements MultiOptionElementInterface
 {
     /** @var string */
     protected $type = 'radio';
@@ -24,20 +24,6 @@ class RadioElement extends AbstractElement implements MultiOptionElementInterfac
     protected $options = [];
     /** @var array */
     protected $optionGroups = [];
-
-    /**
-     * RadioElement constructor.
-     *
-     * @param string $name
-     * @param string $label
-     * @param mixed  $value
-     */
-    public function __construct($name = '', $label = '', $value = null)
-    {
-        parent::__construct($name, $label, $value);
-
-        $this->setTabIndex();
-    }
 
     /**
      * Resets the object when cloning.
@@ -48,8 +34,6 @@ class RadioElement extends AbstractElement implements MultiOptionElementInterfac
 
         $this->options = [];
         $this->optionGroups = [];
-
-        $this->setTabIndex();
     }
 
     /**
@@ -127,10 +111,16 @@ class RadioElement extends AbstractElement implements MultiOptionElementInterfac
         $this->options = [];
         $this->optionGroups = [];
 
+        // The tabulator index is an automatically set attribute for all elements. Since this element group is generated
+        // from the options, the element should manipulate the global tabulator index counter
+        self::$tabIndex--;
+
         foreach ($options as $option) {
             $checked = !empty($option['checked']);
             $group = !empty($option['group']) ? $option['group'] : 'Default';
-            $this->setOption($option['label'], $option['value'], $checked, $group);
+            $attributes = isset($option['attributes']) ? $option['attributes'] : [];
+            $attributes['tabindex'] = self::$tabIndex++;
+            $this->setOption($option['label'], $option['value'], $checked, $group, $attributes);
         }
 
         return $this;
@@ -143,15 +133,17 @@ class RadioElement extends AbstractElement implements MultiOptionElementInterfac
      * @param string  $value
      * @param boolean $checked
      * @param string  $group
+     * @param array   $attributes
      * @return RadioElement
      */
-    protected function setOption($label, $value, $checked, $group)
+    protected function setOption($label, $value, $checked, $group, array $attributes = [])
     {
         $this->options[$label] = [
             'label' => $label,
             'value' => $value,
             'checked' => $checked,
-            'group' => $group
+            'group' => $group,
+            'attributes' => $attributes
         ];
 
         return $this;
