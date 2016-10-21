@@ -104,17 +104,23 @@ class SpecialFormElementTest extends TestCase
         $select->setOptions(
             [
                 ['label' => 'Hungary', 'value' => 'hu'],
-                ['label' => 'Germany', 'value' => 'de', 'checked' => true],
+                ['label' => 'Germany', 'value' => 'de', 'checked' => true, 'attributes' => ['class' => 'red']],
                 ['label' => 'Austria', 'value' => 'at'],
             ]
         );
         $expected = [
             'Default' => [
-                'Hungary' => ['label' => 'Hungary', 'value' => 'hu', 'checked' => false],
-                'Germany' => ['label' => 'Germany', 'value' => 'de', 'checked' => true],
-                'Austria' => ['label' => 'Austria', 'value' => 'at', 'checked' => false],
+                'Hungary' => ['label' => 'Hungary', 'value' => 'hu', 'checked' => false, 'attributes' => []],
+                'Germany' => [
+                    'label' => 'Germany',
+                    'value' => 'de',
+                    'checked' => true,
+                    'attributes' => ['class' => 'red']
+                ],
+                'Austria' => ['label' => 'Austria', 'value' => 'at', 'checked' => false, 'attributes' => []],
             ]
         ];
+
         $this->assertTrue($select->hasOptions());
         $this->assertArraysAreSimilar($expected, $select->getOptions());
         $this->assertFalse($select->isGroupedSelect());
@@ -129,11 +135,11 @@ class SpecialFormElementTest extends TestCase
         $select->setValue('at');
         $expected = [
             'Hungarian' => [
-                'Hungary' => ['label' => 'Hungary', 'value' => 'hu', 'checked' => false],
+                'Hungary' => ['label' => 'Hungary', 'value' => 'hu', 'checked' => false, 'attributes' => []],
             ],
             'German' => [
-                'Germany' => ['label' => 'Germany', 'value' => 'de', 'checked' => false],
-                'Austria' => ['label' => 'Austria', 'value' => 'at', 'checked' => true],
+                'Germany' => ['label' => 'Germany', 'value' => 'de', 'checked' => false, 'attributes' => []],
+                'Austria' => ['label' => 'Austria', 'value' => 'at', 'checked' => true, 'attributes' => []],
             ]
         ];
         $this->assertTrue($select->hasOptions());
@@ -183,7 +189,9 @@ class SpecialFormElementTest extends TestCase
         }
 
         $element = new Web\FileElement('file');
-        $element->setTabIndex(true);
+        $element->resetTabIndex()
+            ->setTabIndex();
+
         $this->assertSame(1, $element->getAttribute('tabindex'));
 
         $element2 = clone $element;

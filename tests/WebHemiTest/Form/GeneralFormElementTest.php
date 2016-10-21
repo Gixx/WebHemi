@@ -100,6 +100,14 @@ class GeneralFormElementTest extends TestCase
 
         $this->assertSame('name', $element2->getName(false));
         $this->assertSame('info[name]', $element2->getName(true));
+
+        $element3 = new Web\CheckboxElement();
+        $element3->setName('checky');
+        $this->assertSame('checky', $element3->getName(false));
+
+        $element3->setAttributes(['name' => 'chuck']);
+        $this->assertNotSame('chuck', $element3->getName(false));
+        $this->assertSame('checky', $element3->getName(false));
     }
 
     /**
@@ -145,6 +153,26 @@ class GeneralFormElementTest extends TestCase
 
         $this->setExpectedException(InvalidArgumentException::class);
         $element->setAttributes(['non-scalar' => ['test']]);
+    }
+
+    /**
+     * Tests adding and then setting attribute will remove added.
+     */
+    public function testAttributesError3()
+    {
+        $element = new Web\InputElement('test');
+        $expectedAttributes = [
+            'class' => 'username',
+            'title' => 'User name',
+        ];
+        $element->addAttributes($expectedAttributes);
+        $this->assertSame('username', $element->getAttribute('class'));
+        $this->assertSame('User name', $element->getAttribute('title'));
+
+        $element->setAttributes(['class' => 'user-name']);
+
+        $this->setExpectedException(InvalidArgumentException::class);
+        $element->getAttribute('title');
     }
 
     /**

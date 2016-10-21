@@ -14,32 +14,8 @@ namespace WebHemi\Form\Element\Web;
 /**
  * Class FileElement.
  */
-class FileElement extends AbstractElement
+class FileElement extends AbstractTabindexElement
 {
     /** @var string */
     protected $type = 'file';
-
-    /**
-     * SelectElement constructor.
-     *
-     * @param string $name
-     * @param string $label
-     * @param mixed  $value
-     */
-    public function __construct($name = '', $label = '', $value = null)
-    {
-        parent::__construct($name, $label, $value);
-
-        $this->setTabIndex();
-    }
-
-    /**
-     * Resets the object when cloning.
-     */
-    public function __clone()
-    {
-        parent::__clone();
-
-        $this->setTabIndex();
-    }
 }

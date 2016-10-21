@@ -15,6 +15,7 @@ use DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Storage\AbstractDataStorage;
+use WebHemi\Data\Storage\Traits\GetEntityListFromDataSetTrait;
 
 /**
  * Class PolicyStorage.
@@ -41,6 +42,9 @@ class PolicyStorage extends AbstractDataStorage
     private $dateCreated = 'date_created';
     /** @var string */
     private $dateModified = 'date_modified';
+
+    /** @method bool|array<PolicyEntity> getEntityListFromDataSet(array $dataList) */
+    use GetEntityListFromDataSetTrait;
 
     /**
      * Populates an entity with storage data.
@@ -91,19 +95,9 @@ class PolicyStorage extends AbstractDataStorage
      */
     public function getPoliciesByResourceId($resourceId)
     {
-        $entityList = false;
         $dataList = $this->getDataAdapter()->getDataSet([$this->resourceId => $resourceId]);
 
-        if (!empty($dataList)) {
-            foreach ($dataList as $policy) {
-                /** @var PolicyEntity $entity */
-                $entity = $this->createEntity();
-                $this->populateEntity($entity, $policy);
-                $entityList[] = $entity;
-            }
-        }
-
-        return $entityList;
+        return $this->getEntityListFromDataSet($dataList);
     }
 
     /**
@@ -115,19 +109,9 @@ class PolicyStorage extends AbstractDataStorage
      */
     public function getPoliciesByApplicationId($applicationId)
     {
-        $entityList = false;
         $dataList = $this->getDataAdapter()->getDataSet([$this->applicationId => $applicationId]);
 
-        if (!empty($dataList)) {
-            foreach ($dataList as $policy) {
-                /** @var PolicyEntity $entity */
-                $entity = $this->createEntity();
-                $this->populateEntity($entity, $policy);
-                $entityList[] = $entity;
-            }
-        }
-
-        return $entityList;
+        return $this->getEntityListFromDataSet($dataList);
     }
 
     /**
@@ -140,7 +124,6 @@ class PolicyStorage extends AbstractDataStorage
      */
     public function getPoliciesByResourceAndApplicationIds($resourceId, $applicationId)
     {
-        $entityList = false;
         $dataList = $this->getDataAdapter()->getDataSet(
             [
                 $this->resourceId => $resourceId,
@@ -148,15 +131,6 @@ class PolicyStorage extends AbstractDataStorage
             ]
         );
 
-        if (!empty($dataList)) {
-            foreach ($dataList as $policy) {
-                /** @var PolicyEntity $entity */
-                $entity = $this->createEntity();
-                $this->populateEntity($entity, $policy);
-                $entityList[] = $entity;
-            }
-        }
-
-        return $entityList;
+        return $this->getEntityListFromDataSet($dataList);
     }
 }

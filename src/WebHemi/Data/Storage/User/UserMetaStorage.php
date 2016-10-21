@@ -14,6 +14,7 @@ namespace WebHemi\Data\Storage\User;
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\User\UserMetaEntity;
 use WebHemi\Data\Storage\AbstractDataStorage;
+use WebHemi\Data\Storage\Traits\GetEntityListFromDataSetTrait;
 
 /**
  * Class UserMetaStorage.
@@ -30,6 +31,9 @@ class UserMetaStorage extends AbstractDataStorage
     private $metaKey = 'meta_key';
     /** @var string */
     private $metaData = 'meta_data';
+
+    /** @method bool|array<UserMetaEntity> getEntityListFromDataSet(array $dataList) */
+    use GetEntityListFromDataSetTrait;
 
     /**
      * Populates an entity with storage data.
@@ -75,18 +79,8 @@ class UserMetaStorage extends AbstractDataStorage
      */
     public function getUserMetaForUserId($userId)
     {
-        $entityList = false;
         $dataList = $this->getDataAdapter()->getDataSet([$this->userId => $userId]);
 
-        if (!empty($dataList)) {
-            foreach ($dataList as $metaData) {
-                /** @var UserMetaEntity $entity */
-                $entity = $this->createEntity();
-                $this->populateEntity($entity, $metaData);
-                $entityList[] = $entity;
-            }
-        }
-
-        return $entityList;
+        return $this->getEntityListFromDataSet($dataList);
     }
 }

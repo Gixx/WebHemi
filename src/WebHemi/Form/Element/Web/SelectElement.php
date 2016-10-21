@@ -11,6 +11,8 @@
  */
 namespace WebHemi\Form\Element\Web;
 
+use WebHemi\Form\Element\MultiOptionElementInterface;
+
 /**
  * Class SelectElement.
  */
@@ -83,15 +85,38 @@ class SelectElement extends RadioElement
     }
 
     /**
+     * Set label-value options for the element.
+     *
+     * @param array $options
+     * @return RadioElement
+     */
+    public function setOptions(array $options)
+    {
+        /** @var MultiOptionElementInterface $this */
+        $this->options = [];
+        $this->optionGroups = [];
+
+        foreach ($options as $option) {
+            $checked = !empty($option['checked']);
+            $group = !empty($option['group']) ? $option['group'] : 'Default';
+            $attributes = isset($option['attributes']) ? $option['attributes'] : [];
+            $this->setOption($option['label'], $option['value'], $checked, $group, $attributes);
+        }
+
+        return $this;
+    }
+
+    /**
      * Sets label-value option for the element.
      *
      * @param string  $label
      * @param string  $value
      * @param boolean $checked
      * @param string  $group
+     * @param array   $attributes
      * @return SelectElement
      */
-    protected function setOption($label, $value, $checked, $group)
+    protected function setOption($label, $value, $checked, $group, array $attributes = [])
     {
         // For <select> tag, the option grouping is allowed.
         if (!isset($this->options[$group])) {
@@ -103,7 +128,8 @@ class SelectElement extends RadioElement
         $this->options[$group][$label] = [
             'label' => $label,
             'value' => $value,
-            'checked' => $checked
+            'checked' => $checked,
+            'attributes' => $attributes
         ];
 
         return $this;

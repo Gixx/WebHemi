@@ -5,7 +5,7 @@
             {% for label, option in formElement.getOptions() %}
                 <label>
                     <input type="hidden" name="{{ formElement.getName() }}[{{ option.value }}]" value="0" />
-                    <input type="checkbox" name="{{ formElement.getName() }}[{{ option.value }}]" value="1"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}{% if option.checked %}checked="checked"{% endif %} />
+                    <input type="checkbox" name="{{ formElement.getName() }}[{{ option.value }}]" value="1"{{ _FORM.renderFormElementAttributes(option.attributes) }}{% if option.checked %}checked="checked"{% endif %} />
                     {{ label }}
                 </label>
             {% endfor %}

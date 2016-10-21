@@ -211,6 +211,17 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     {
         $this->attributes = [];
 
+        return $this->addAttributes($attributes);
+    }
+
+    /**
+     * Adds multiple attributes.
+     *
+     * @param array $attributes
+     * @return AbstractElement
+     */
+    public function addAttributes(array $attributes)
+    {
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
         }
@@ -228,6 +239,13 @@ abstract class AbstractElement implements FormElementInterface, Iterator
      */
     protected function setAttribute($key, $value)
     {
+        $forbiddenAttributes = ['name', 'id'];
+
+        // Skip forbidden attributes.
+        if (in_array($key, $forbiddenAttributes)) {
+            return $this;
+        }
+
         if (!is_scalar($value)) {
             throw new InvalidArgumentException('Element attribute can hold scalar data only.');
         }
@@ -263,17 +281,24 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     }
 
     /**
-     * Sets and increments the tabulator index globally. This method should be used only on visible elements.
+     * Resets the tabulator index internal counter.
      *
-     * @param bool $reset
      * @return AbstractElement
      */
-    public function setTabIndex($reset = false)
+    public function resetTabIndex()
     {
-        if ($reset) {
-            self::$tabIndex = 1;
-        }
+        self::$tabIndex = 1;
 
+        return $this;
+    }
+
+    /**
+     * Sets and increments the tabulator index globally. This method should be used only on visible elements.
+     *
+     * @return AbstractElement
+     */
+    public function setTabIndex()
+    {
         $this->attributes['tabindex'] = self::$tabIndex++;
 
         return $this;

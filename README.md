@@ -7,7 +7,7 @@ WebHemi
 [![Packagist](https://img.shields.io/badge/packagist-download-blue.svg)](https://packagist.org/packages/gixx/web-hemi)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![StyleCI](https://styleci.io/repos/60013198/shield)](https://styleci.io/repos/60013198)
+[![StyleCI](https://styleci.io/repos/60013198/shield?branch=master)](https://styleci.io/repos/60013198)
 [![Build Status](https://scrutinizer-ci.com/g/Gixx/WebHemi/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Gixx/WebHemi/build-status/master)
 [![Code Coverage](https://scrutinizer-ci.com/g/Gixx/WebHemi/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Gixx/WebHemi/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Gixx/WebHemi/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Gixx/WebHemi/?branch=master)
