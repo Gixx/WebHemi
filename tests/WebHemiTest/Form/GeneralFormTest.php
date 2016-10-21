@@ -14,6 +14,7 @@ namespace WebHemiTest\Form;
 use WebHemi\Form\Element\NestedElementInterface;
 use WebHemi\Form\Element\Web;
 use WebHemiTest\AssertTrait;
+use WebHemiTest\InvokePrivateMethodTrait;
 use WebHemiTest\Fixtures\TestWebForm;
 use PHPUnit_Framework_TestCase as TestCase;
 
@@ -23,18 +24,22 @@ use PHPUnit_Framework_TestCase as TestCase;
 class GeneralFormTest extends TestCase
 {
     use AssertTrait;
+    use InvokePrivateMethodTrait;
 
     /**
      * Tests constructor.
      */
     public function testConstructor()
     {
-        $testForm = new TestWebForm();
+        $testForm = new TestWebForm(new Web\FormElementContainer());
         $this->assertSame('web_hemi_test_fixtures_test_web_form', $testForm->getName());
         $testForm->setName('x-form');
         $this->assertSame('x-form', $testForm->getName());
 
-        $testForm = new TestWebForm('test_form');
+        $elementContainer = $this->invokePrivateMethod($testForm, 'getFormElementContainer');
+        $this->assertInstanceOf(Web\FormElementContainer::class, $elementContainer);
+
+        $testForm = new TestWebForm(new Web\FormElementContainer(), 'test_form');
 
         $this->assertTrue($testForm->isInitCalled);
         $this->assertSame('test_form', $testForm->getName());
@@ -52,7 +57,7 @@ class GeneralFormTest extends TestCase
      */
     public function testValidator()
     {
-        $testForm = new TestWebForm('test_form');
+        $testForm = new TestWebForm(new Web\FormElementContainer(), 'test_form');
 
         $this->assertTrue($testForm->isValid());
     }
@@ -63,7 +68,7 @@ class GeneralFormTest extends TestCase
     public function testSalt()
     {
         $salt = 'test';
-        $testForm = new TestWebForm('test_form');
+        $testForm = new TestWebForm(new Web\FormElementContainer(), 'test_form');
 
         $testForm->setNameSalt($salt);
         $this->assertSame(md5($salt), $testForm->salt);
@@ -78,7 +83,7 @@ class GeneralFormTest extends TestCase
      */
     public function testAttributes()
     {
-        $testForm = new TestWebForm('test_form');
+        $testForm = new TestWebForm(new Web\FormElementContainer(), 'test_form');
 
         $attributes = $testForm->form->getAttributes();
         $this->assertSame('POST', $attributes['method']);
@@ -113,7 +118,7 @@ class GeneralFormTest extends TestCase
     public function testAutoCompete()
     {
         $salt = 'test';
-        $testForm = new TestWebForm('test_form');
+        $testForm = new TestWebForm(new Web\FormElementContainer(), 'test_form');
 
         $testForm->setNameSalt($salt);
         $this->assertSame('test_form', $testForm->getName());
@@ -137,7 +142,7 @@ class GeneralFormTest extends TestCase
      */
     public function testNodes()
     {
-        $testForm = new TestWebForm('test_form');
+        $testForm = new TestWebForm(new Web\FormElementContainer(), 'test_form');
         $nodes = [
             new Web\HiddenElement('hidden'),
             new Web\SelectElement('select')
@@ -163,7 +168,7 @@ class GeneralFormTest extends TestCase
     public function testData()
     {
         $salt = 'test';
-        $testForm = new TestWebForm('test_form');
+        $testForm = new TestWebForm(new Web\FormElementContainer(), 'test_form');
         $inspectedData = [
             'info' => [
                 'hidden' => 'test',

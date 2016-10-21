@@ -11,6 +11,8 @@
  */
 namespace WebHemi\Form;
 
+use WebHemi\Form\Element\FormElementContainerInterface;
+
 /**
  * Interface FormInterface
  */
@@ -19,11 +21,17 @@ interface FormInterface
     /**
      * FormInterface constructor. Creates <FORM> element.
      *
-     * @param string $name
-     * @param string $action
-     * @param string $method
+     * @param FormElementContainerInterface $formElementContainer
+     * @param string                        $name
+     * @param string                        $action
+     * @param string                        $method
      */
-    public function __construct($name = '', $action = '', $method = 'POST');
+    public function __construct(
+        FormElementContainerInterface $formElementContainer,
+        $name = '',
+        $action = '',
+        $method = 'POST'
+    );
 
     /**
      * Sets form name.

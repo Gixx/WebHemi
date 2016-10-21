@@ -186,10 +186,37 @@ class SpecialFormElementTest extends TestCase
         $element->setTabIndex(true);
         $this->assertSame(1, $element->getAttribute('tabindex'));
 
+        $element2 = clone $element;
+        $this->assertSame(2, $element2->getAttribute('tabindex'));
+
         $element = new Web\KeygenElement('keygen');
-        $this->assertSame(2, $element->getAttribute('tabindex'));
+        $this->assertSame(3, $element->getAttribute('tabindex'));
+
+        $element2 = clone $element;
+        $this->assertSame(4, $element2->getAttribute('tabindex'));
 
         $element = new Web\TextareaElement('textarea');
-        $this->assertSame(3, $element->getAttribute('tabindex'));
+        $this->assertSame(5, $element->getAttribute('tabindex'));
+
+        $element2 = clone $element;
+        $this->assertSame(6, $element2->getAttribute('tabindex'));
+
+        $element = new Web\PasswordElement('password');
+        $this->assertSame(7, $element->getAttribute('tabindex'));
+
+        $element2 = clone $element;
+        $this->assertSame(8, $element2->getAttribute('tabindex'));
+
+        $element = new Web\ButtonElement('button');
+        $this->assertSame(9, $element->getAttribute('tabindex'));
+
+        $element2 = clone $element;
+        $this->assertSame(10, $element2->getAttribute('tabindex'));
+
+        $element = new Web\RadioElement('radio');
+        $this->assertSame(11, $element->getAttribute('tabindex'));
+
+        $element2 = clone $element;
+        $this->assertSame(12, $element2->getAttribute('tabindex'));
     }
 }

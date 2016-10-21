@@ -81,4 +81,82 @@ class PolicyStorage extends AbstractDataStorage
 
         return $entity;
     }
+
+    /**
+     * Returns a set of Policy entities identified by Resource ID.
+     *
+     * @param int $resourceId
+     *
+     * @return bool|array<PolicyEntity>
+     */
+    public function getPoliciesByResourceId($resourceId)
+    {
+        $entityList = false;
+        $dataList = $this->getDataAdapter()->getDataSet([$this->resourceId => $resourceId]);
+
+        if (!empty($dataList)) {
+            foreach ($dataList as $policy) {
+                /** @var PolicyEntity $entity */
+                $entity = $this->createEntity();
+                $this->populateEntity($entity, $policy);
+                $entityList[] = $entity;
+            }
+        }
+
+        return $entityList;
+    }
+
+    /**
+     * Returns a set of Policy entities identified by Application ID.
+     *
+     * @param int $applicationId
+     *
+     * @return bool|array<PolicyEntity>
+     */
+    public function getPoliciesByApplicationId($applicationId)
+    {
+        $entityList = false;
+        $dataList = $this->getDataAdapter()->getDataSet([$this->applicationId => $applicationId]);
+
+        if (!empty($dataList)) {
+            foreach ($dataList as $policy) {
+                /** @var PolicyEntity $entity */
+                $entity = $this->createEntity();
+                $this->populateEntity($entity, $policy);
+                $entityList[] = $entity;
+            }
+        }
+
+        return $entityList;
+    }
+
+    /**
+     * Returns a set of Policy entities identified by both Resource and Application IDs.
+     *
+     * @param int $resourceId
+     * @param int $applicationId
+     *
+     * @return bool|array<PolicyEntity>
+     */
+    public function getPoliciesByResourceAndApplicationIds($resourceId, $applicationId)
+    {
+        $entityList = false;
+        $dataList = $this->getDataAdapter()->getDataSet(
+            [
+                $this->resourceId => $resourceId,
+                $this->applicationId => $applicationId
+            ]
+        );
+
+        if (!empty($dataList)) {
+            foreach ($dataList as $policy) {
+                /** @var PolicyEntity $entity */
+                $entity = $this->createEntity();
+                $this->populateEntity($entity, $policy);
+                $entityList[] = $entity;
+            }
+        }
+
+        return $entityList;
+    }
 }

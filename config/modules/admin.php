@@ -14,6 +14,8 @@ use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
+use WebHemi\Form\Element\FormElementContainerInterface;
+use WebHemi\Form\Web as WebForm;
 use WebHemi\Application\SessionManager;
 
 return [
@@ -35,22 +37,23 @@ return [
     ],
     'dependencies' => [
         'Admin' => [
-            \WebHemi\Form\Web\TestForm::class => [
-                'arguments' => [
-                    'admin-form',
-                    '',
-                    'POST'
-                ]
-            ],
             \WebHemi\Middleware\Action\FakeAction::class => [
                 'arguments' => [
                     UserStorage::class,
-                    \WebHemi\Form\Web\TestForm::class,
+                    WebForm\TestForm::class,
                     SessionManager::class,
                     UserToPolicyCoupler::class,
                     UserToGroupCoupler::class,
                     UserGroupToPolicyCoupler::class,
                 ],
+            ],
+            WebForm\TestForm::class => [
+                'arguments' => [
+                    FormElementContainerInterface::class,
+                    'admin-form',
+                    '',
+                    'POST'
+                ]
             ],
             \WebHemi\Middleware\Action\FakeViewAction::class => [
                 'arguments' => [

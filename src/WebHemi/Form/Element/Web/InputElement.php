@@ -52,6 +52,16 @@ class InputElement extends AbstractElement
     }
 
     /**
+     * Resets the object when cloning.
+     */
+    public function __clone()
+    {
+        parent::__clone();
+
+        $this->setTabIndex();
+    }
+
+    /**
      * Sets input element type.
      *
      * @param string $type

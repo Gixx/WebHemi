@@ -32,4 +32,14 @@ class KeygenElement extends AbstractElement
 
         $this->setTabIndex();
     }
+
+    /**
+     * Resets the object when cloning.
+     */
+    public function __clone()
+    {
+        parent::__clone();
+
+        $this->setTabIndex();
+    }
 }
