@@ -104,7 +104,7 @@ interface FormElementInterface
     /**
      * Resets the tabulator index internal counter.
      *
-     * @return AbstractElement
+     * @return FormElementInterface
      */
     public function resetTabIndex();
 
