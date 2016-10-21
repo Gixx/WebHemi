@@ -19,6 +19,21 @@ use WebHemi\Data\Entity\DataEntityInterface;
 trait GetEntityListFromDataSetTrait
 {
     /**
+     * Creates an empty entity. Should be use by getters.
+     *
+     * @return DataEntityInterface
+     */
+    abstract public function createEntity();
+
+    /**
+     * Populates an entity with storage data.
+     *
+     * @param DataEntityInterface $entity
+     * @param array               $data
+     */
+    abstract protected function populateEntity(DataEntityInterface &$entity, array $data);
+
+    /**
      * Gets entity list from data storage set.
      *
      * @param bool|array $dataList
@@ -28,7 +43,7 @@ trait GetEntityListFromDataSetTrait
     {
         $entityList = false;
 
-        if (!empty($dataList)) {
+        if (!empty($dataList) && is_array($dataList)) {
             foreach ($dataList as $entityData) {
                 /** @var DataEntityInterface $entity */
                 $entity = $this->createEntity();
