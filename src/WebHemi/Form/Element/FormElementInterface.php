@@ -102,6 +102,13 @@ interface FormElementInterface
     public function getAttributes();
 
     /**
+     * Resets the tabulator index internal counter.
+     *
+     * @return AbstractElement
+     */
+    public function resetTabIndex();
+
+    /**
      * Sets and increments the tabulator index globally. This method should be used only on visible elements.
      *
      * @return FormElementInterface
