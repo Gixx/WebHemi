@@ -40,6 +40,19 @@ class RadioElement extends AbstractElement implements MultiOptionElementInterfac
     }
 
     /**
+     * Resets the object when cloning.
+     */
+    public function __clone()
+    {
+        parent::__clone();
+
+        $this->options = [];
+        $this->optionGroups = [];
+
+        $this->setTabIndex();
+    }
+
+    /**
      * Sets element value.
      *
      * @param mixed $value

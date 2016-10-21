@@ -31,6 +31,9 @@ use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\User\UserGroupStorage;
 use WebHemi\Data\Storage\User\UserMetaStorage;
 use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Form\Element\FormElementContainerInterface;
+use WebHemi\Form\Element\Web\FormElementContainer as WebFormElementContainer;
+use WebHemi\Form\Element\Web as WebFormElement;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\RoutingMiddleware;
@@ -170,7 +173,30 @@ $config = [
                 ],
                 'shared'    => true,
             ],
-
+            FormElementContainerInterface::class => [
+                'class' => WebFormElementContainer::class,
+                'arguments' => [
+                    WebFormElement\ButtonElement::class,
+                    WebFormElement\CheckboxElement::class,
+                    WebFormElement\DataListElement::class,
+                    WebFormElement\FieldSetElement::class,
+                    WebFormElement\FileElement::class,
+                    WebFormElement\FormElement::class,
+                    WebFormElement\HiddenElement::class,
+                    WebFormElement\InputElement::class,
+                    WebFormElement\KeygenElement::class,
+                    WebFormElement\OutputElement::class,
+                    WebFormElement\PasswordElement::class,
+                    WebFormElement\RadioElement::class,
+                    WebFormElement\ResetElement::class,
+                    WebFormElement\SelectElement::class,
+                    WebFormElement\StaticContentElement::class,
+                    WebFormElement\SubmitElement::class,
+                    WebFormElement\TextareaElement::class,
+                    WebFormElement\TextElement::class
+                ],
+                'shared'    => true,
+            ],
             // Classes without any aliases, arguments or sharing options are optional to present here.
             UserEntity::class     => [],
             UserMetaEntity::class => [],

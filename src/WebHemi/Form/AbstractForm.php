@@ -12,6 +12,7 @@
 namespace WebHemi\Form;
 
 use Iterator;
+use WebHemi\Form\Element\FormElementContainerInterface;
 use WebHemi\Form\Element\NestedElementInterface;
 use WebHemi\Form\Traits\CamelCaseToUnderScoreTrait;
 use WebHemi\Form\Traits\IteratorTrait;
@@ -21,6 +22,8 @@ use WebHemi\Form\Traits\IteratorTrait;
  */
 abstract class AbstractForm implements FormInterface, Iterator
 {
+    /** @var FormElementContainerInterface */
+    private $formElementContainer;
     /** @var NestedElementInterface */
     protected $form;
     /** @var string */
@@ -34,12 +37,19 @@ abstract class AbstractForm implements FormInterface, Iterator
     /**
      * AbstractForm constructor.
      *
-     * @param string $name
-     * @param string $action
-     * @param string $method
+     * @param FormElementContainerInterface $formElementContainer
+     * @param string                        $name
+     * @param string                        $action
+     * @param string                        $method
      */
-    final public function __construct($name = '', $action = '', $method = 'POST')
-    {
+    final public function __construct(
+        FormElementContainerInterface $formElementContainer,
+        $name = '',
+        $action = '',
+        $method = 'POST'
+    ) {
+        $this->formElementContainer = $formElementContainer;
+
         if (empty($name)) {
             $name = $this->camelCaseToUnderscore(get_called_class());
         }
@@ -60,6 +70,16 @@ abstract class AbstractForm implements FormInterface, Iterator
         $this->salt = md5(gmdate('YmdH'));
 
         $this->initForm();
+    }
+
+    /**
+     * Returns the form element container.
+     *
+     * @return FormElementContainerInterface
+     */
+    protected function getFormElementContainer()
+    {
+        return $this->formElementContainer;
     }
 
     /**

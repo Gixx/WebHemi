@@ -20,20 +20,6 @@ class SelectElement extends RadioElement
     protected $type = 'select';
 
     /**
-     * SelectElement constructor.
-     *
-     * @param string $name
-     * @param string $label
-     * @param mixed  $value
-     */
-    public function __construct($name = '', $label = '', $value = null)
-    {
-        parent::__construct($name, $label, $value);
-
-        $this->setTabIndex();
-    }
-
-    /**
      * Returns the element name. If parameter is TRUE, then the method should include all the parents' names as well.
      *
      * @param boolean $getFulNodeName

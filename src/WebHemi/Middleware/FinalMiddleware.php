@@ -50,13 +50,12 @@ class FinalMiddleware implements MiddlewareInterface
         }
         // @codeCoverageIgnoreEnd
 
-        $content = $response->getBody();
-
         // Handle errors here.
         if ($response->getStatusCode() !== ResponseInterface::STATUS_OK) {
             $errorTemplate = 'error-'.$response->getStatusCode();
             $exception = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
-            $content = $this->templateRenderer->render($errorTemplate, ['exception' => $exception]);
+            $body = $this->templateRenderer->render($errorTemplate, ['exception' => $exception]);
+            $response = $response->withBody($body);
         }
 
         $response = $this->injectContentLength($response);
@@ -67,7 +66,7 @@ class FinalMiddleware implements MiddlewareInterface
             $this->sendHttpHeader($response);
             $this->sendOutputHeaders($response->getHeaders());
 
-            echo $content;
+            echo $response->getBody();
         }
         // @codeCoverageIgnoreEnd
 

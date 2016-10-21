@@ -68,6 +68,21 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     }
 
     /**
+     * Resets the object when cloning.
+     */
+    public function __clone()
+    {
+        unset($this->parentNode);
+        $this->name = '';
+        $this->label = '';
+        $this->value = '';
+        $this->attributes = [];
+        $this->validators = [];
+        $this->errors = [];
+        $this->mandatoryParentTypes = [];
+    }
+
+    /**
      * Returns the element type.
      *
      * @throws Exception
@@ -76,7 +91,12 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     final public function getType()
     {
         if (empty($this->type)) {
-            throw new Exception('You must specify the element type in the $type class property.');
+            throw new Exception(
+                sprintf(
+                    'You must specify the element type in the $type class property. In %s',
+                    get_called_class()
+                )
+            );
         }
 
         return $this->type;
@@ -105,7 +125,7 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     {
         $name = $this->name;
 
-        if ($getFulNodeName) {
+        if ($getFulNodeName && isset($this->parentNode)) {
             if ($this->parentNode instanceof FormElementInterface) {
                 $name = $this->parentNode->getName().'['.$this->name.']';
             }

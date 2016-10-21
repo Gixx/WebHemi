@@ -21,7 +21,6 @@ use WebHemi\Form\Element\Web;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\Fixtures\TestWebForm;
 use WebHemiTest\Fixtures\TestWebFormElement;
-use WebHemiTest\Fixtures\TestTrueValidator;
 use WebHemiTest\Fixtures\TestFalseValidator;
 use PHPUnit_Framework_TestCase as TestCase;
 
@@ -169,7 +168,7 @@ class GeneralFormElementTest extends TestCase
      */
     public function testNestedValidator()
     {
-        $testForm = new TestWebForm('test');
+        $testForm = new TestWebForm(new Web\FormElementContainer(), 'test');
 
         $element1 = new Web\FieldSetElement('info');
         $element2 = new Web\TextElement('name');

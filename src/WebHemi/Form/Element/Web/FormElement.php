@@ -25,6 +25,16 @@ class FormElement extends AbstractElement implements NestedElementInterface
     protected $nodes = [];
 
     /**
+     * Resets the object when cloning.
+     */
+    public function __clone()
+    {
+        parent::__clone();
+
+        $this->nodes = [];
+    }
+
+    /**
      * Set the child nodes for the element.
      *
      * @param array<FormElementInterface> $nodeElements

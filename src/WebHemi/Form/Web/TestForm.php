@@ -17,6 +17,8 @@ use WebHemi\Form\Element\Web;
 /**
  * Class TestForm
  *
+ * @method Web\FormElementContainer getFormElementContainer()
+ *
  * @codeCoverageIgnore - only for test purposes
  */
 class TestForm extends AbstractForm
@@ -31,7 +33,7 @@ class TestForm extends AbstractForm
      */
     protected function getFormContainer()
     {
-        return new Web\FormElement();
+        return $this->getFormElementContainer()->getFormElement();
     }
 
     /**
@@ -42,7 +44,7 @@ class TestForm extends AbstractForm
     protected function initForm()
     {
         // Hidden field.
-        $hiddenCSRF = new Web\HiddenElement('csrf');
+        $hiddenCSRF = $this->getFormElementContainer()->getHiddenElement('csrf');
         $hiddenCSRF->setValue('Some CSRF test value');
 
         $xContent = <<<EOH
@@ -63,7 +65,7 @@ class TestForm extends AbstractForm
     illum quaestio vix id.
 </p>
 EOH;
-        $fieldSetX = new Web\StaticContentElement('notice', 'Please Note');
+        $fieldSetX = $this->getFormElementContainer()->getStaticContentElement('notice', 'Please Note');
         $fieldSetX->setValue($xContent);
 
         // Field sets
@@ -71,7 +73,7 @@ EOH;
         $fieldSet2 = $this->getLocationFieldSet();
 
         // Submit button.
-        $submit = new Web\SubmitElement('submit', 'Login');
+        $submit = $this->getFormElementContainer()->getSubmitElement('submit', 'Login');
 
         // Assign elements and the field sets to the form
         $this->setNodes(
@@ -93,14 +95,14 @@ EOH;
     private function getMainFieldSet()
     {
         // Field set
-        $fieldSet = new Web\FieldSetElement('info', 'Login form');
+        $fieldSet = $this->getFormElementContainer()->getFieldSetElement('info', 'Login form');
 
         // Text input with custom attribute
-        $loginname = new Web\TextElement('username', 'Username');
+        $loginname = $this->getFormElementContainer()->getTextElement('username', 'Username');
         $loginname->setAttributes(['placeholder' => 'Your login name']);
 
         // Password input
-        $password = new Web\PasswordElement('password', 'Password');
+        $password = $this->getFormElementContainer()->getPasswordElement('password', 'Password');
         $password->setErrors(
             [
                 'It just doesn\'t work, buddy...'
@@ -108,16 +110,16 @@ EOH;
         );
 
         // HTML5 email input
-        $email = new Web\InputElement('email', 'Email');
+        $email = $this->getFormElementContainer()->getInputElement('email', 'Email');
         $email->setType('email');
 
         // Single-option checkbox.
         // For single-option radio boxes the ->setValue(1) is equals to this: ->setAttribute('checked', true);
-        $checkboxRememberMe = new Web\CheckboxElement('remember_me', 'Remember Me');
+        $checkboxRememberMe = $this->getFormElementContainer()->getCheckboxElement('remember_me', 'Remember Me');
         $checkboxRememberMe->setValue('1');
 
         // Radio group.
-        $radioLanguage = new Web\RadioElement('language', 'Select language');
+        $radioLanguage = $this->getFormElementContainer()->getRadioElement('language', 'Select language');
         $radioLanguage->setOptions(
             [
                 ['label' => 'English', 'value' => 'en', 'checked' => true],
@@ -127,7 +129,7 @@ EOH;
         );
 
         // Checkbox group.
-        $checkboxTerms = new Web\CheckboxElement('terms', 'Terms and conditions');
+        $checkboxTerms = $this->getFormElementContainer()->getCheckboxElement('terms', 'Terms and conditions');
         $checkboxTerms->setOptions(
             [
                 ['label' => 'I am human.', 'value' => 'human'],
@@ -159,10 +161,10 @@ EOH;
     private function getLocationFieldSet()
     {
         // Field set
-        $fieldSet = new Web\FieldSetElement('location', 'Location');
+        $fieldSet = $this->getFormElementContainer()->getFieldSetElement('location', 'Location');
 
         // Select box with no multi selection and with no option groups
-        $select1 = new Web\SelectElement('country', 'I live in:');
+        $select1 = $this->getFormElementContainer()->getSelectElement('country', 'I live in:');
         $select1->setOptions(
             [
                 ['label' => 'Hungary', 'value' => 'hu'],
@@ -172,7 +174,7 @@ EOH;
         );
 
         // Select box with no multi selection and WITH option groups
-        $select2 = new Web\SelectElement('dream', 'I\'d like live in:');
+        $select2 = $this->getFormElementContainer()->getSelectElement('dream', 'I\'d like live in:');
         $select2->setOptions(
             [
                 ['label' => 'Anywhere', 'value' => '*'],
@@ -195,7 +197,7 @@ EOH;
             );
 
         // Select box WITH multi selection.
-        $select3 = new Web\SelectElement('past', 'I\'ve already lived in:');
+        $select3 = $this->getFormElementContainer()->getSelectElement('past', 'I\'ve already lived in:');
         $select3->setOptions(
             [
                 ['label' => 'Hungary', 'value' => 'hu', 'group' => 'Europe', 'checked' => true],
