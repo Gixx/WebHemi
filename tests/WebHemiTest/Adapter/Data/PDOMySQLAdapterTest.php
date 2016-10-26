@@ -14,12 +14,13 @@ namespace WebHemiTest\Adapter\Data;
 use DateTime;
 use InvalidArgumentException;
 use PDO;
-use PHPUnit_Framework_TestCase as TestCase;
 use RuntimeException;
 use WebHemi\Adapter\Data\PDO\MySQLAdapter;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
+use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit_Framework_SkippedTestError;
 
 /**
  * Class MySQLAdapterTest.
@@ -38,7 +39,7 @@ class PDOMySQLAdapterTest extends TestCase
     protected function checkRequirements()
     {
         if (!extension_loaded('pdo_sqlite')) {
-            $this->markTestSkipped('No SQLite Available');
+            throw new PHPUnit_Framework_SkippedTestError('No SQLite Available');
         }
 
         parent::checkRequirements();

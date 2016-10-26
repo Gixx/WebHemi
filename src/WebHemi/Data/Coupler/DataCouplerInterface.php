@@ -25,9 +25,14 @@ interface DataCouplerInterface
      * DataCouplerInterface constructor.
      *
      * @param DataAdapterInterface $defaultAdapter
-     * @param DataEntityInterface[] ...$dataEntityPrototypes
+     * @param DataEntityInterface  $dataEntityPrototypeA
+     * @param DataEntityInterface  $dataEntityPrototypeB
      */
-    public function __construct(DataAdapterInterface $defaultAdapter, DataEntityInterface ...$dataEntityPrototypes);
+    public function __construct(
+        DataAdapterInterface $defaultAdapter,
+        DataEntityInterface $dataEntityPrototypeA,
+        DataEntityInterface $dataEntityPrototypeB
+    );
 
     /**
      * Returns the DataAdapter instance.

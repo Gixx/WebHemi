@@ -288,14 +288,14 @@ DROP TABLE IF EXISTS `webhemi_user_to_user_group`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `webhemi_user_to_user_group` (
   `id_user_to_user_group` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `fk_user_group` INT(10) UNSIGNED NOT NULL,
   `fk_user` INT(10) UNSIGNED NOT NULL,
+  `fk_user_group` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id_user_to_user_group`),
   UNIQUE KEY `unq_user_to_user_group` (`fk_user`, `fk_user_group`),
-  KEY `idx_user_to_user_group_fk_user_group` (`fk_user_group`),
   KEY `idx_user_to_user_group_fk_user` (`fk_user`),
-  CONSTRAINT `fk_user_to_user_group_fk_user_group` FOREIGN KEY (`fk_user_group`) REFERENCES `webhemi_user_group` (`id_user_group`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_to_user_group_fk_user` FOREIGN KEY (`fk_user`) REFERENCES `webhemi_user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `idx_user_to_user_group_fk_user_group` (`fk_user_group`),
+  CONSTRAINT `fk_user_to_user_group_fk_user` FOREIGN KEY (`fk_user`) REFERENCES `webhemi_user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_to_user_group_fk_user_group` FOREIGN KEY (`fk_user_group`) REFERENCES `webhemi_user_group` (`id_user_group`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
