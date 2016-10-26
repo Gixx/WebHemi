@@ -21,7 +21,7 @@ class EmptyEntity implements DataEntityInterface
     /** @var array */
     private $storage = [];
     /** @var string */
-    private $key;
+    public $key;
 
     /**
      * Gets the value of the entity identifier.

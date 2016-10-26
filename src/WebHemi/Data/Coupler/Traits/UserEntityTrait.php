@@ -12,6 +12,7 @@
 namespace WebHemi\Data\Coupler\Traits;
 
 use DateTime;
+use RuntimeException;
 use WebHemi\Data\Entity\User\UserEntity;
 
 /**
@@ -20,6 +21,15 @@ use WebHemi\Data\Entity\User\UserEntity;
 trait UserEntityTrait
 {
     /**
+     * Returns a new instance of the required entity.
+     *
+     * @param string $entityClassName
+     * @throws RuntimeException
+     * @return UserEntity
+     */
+    abstract protected function getNewEntityInstance($entityClassName);
+
+    /**
      * Creates a new User Entity instance form the data.
      *
      * @param array $data
@@ -27,8 +37,7 @@ trait UserEntityTrait
      */
     protected function createUserEntity(array $data)
     {
-        /* @var UserEntity $entity */
-        $entity = parent::getNewEntityInstance(UserEntity::class);
+        $entity = $this->getNewEntityInstance(UserEntity::class);
 
         $entity->setUserId($data['id_user'])
             ->setUserName($data['username'])

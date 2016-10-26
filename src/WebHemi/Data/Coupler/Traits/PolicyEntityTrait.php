@@ -12,6 +12,7 @@
 namespace WebHemi\Data\Coupler\Traits;
 
 use DateTime;
+use RuntimeException;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 
 /**
@@ -20,6 +21,15 @@ use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 trait PolicyEntityTrait
 {
     /**
+     * Returns a new instance of the required entity.
+     *
+     * @param string $entityClassName
+     * @throws RuntimeException
+     * @return PolicyEntity
+     */
+    abstract protected function getNewEntityInstance($entityClassName);
+
+    /**
      * Creates a new Policy Entity instance form the data.
      *
      * @param array $data
@@ -27,8 +37,7 @@ trait PolicyEntityTrait
      */
     protected function createPolicyEntity(array $data)
     {
-        /* @var PolicyEntity $entity */
-        $entity = parent::getNewEntityInstance(PolicyEntity::class);
+        $entity = $this->getNewEntityInstance(PolicyEntity::class);
 
         $entity->setPolicyId($data['id_am_policy'])
             ->setResourceId($data['fk_am_resource'])

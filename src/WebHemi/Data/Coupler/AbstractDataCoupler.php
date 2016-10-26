@@ -11,6 +11,7 @@
  */
 namespace WebHemi\Data\Coupler;
 
+use InvalidArgumentException;
 use RuntimeException;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Entity\DataEntityInterface;
@@ -32,20 +33,37 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
     protected $dependentDataGroups;
 
     /**
-     * DataCouplerInterface constructor.
+     * AbstractDataCoupler constructor.
      *
      * @param DataAdapterInterface $defaultAdapter
-     * @param DataEntityInterface[] ...$dataEntityPrototypes
+     * @param DataEntityInterface  $dataEntityPrototypeA
+     * @param DataEntityInterface  $dataEntityPrototypeB
      */
     public function __construct(
         DataAdapterInterface $defaultAdapter,
-        DataEntityInterface ...$dataEntityPrototypes
+        DataEntityInterface $dataEntityPrototypeA,
+        DataEntityInterface $dataEntityPrototypeB
     ) {
-        $this->defaultAdapter = $defaultAdapter;
+        $entityClassA = get_class($dataEntityPrototypeA);
+        $entityClassB = get_class($dataEntityPrototypeB);
 
-        foreach ($dataEntityPrototypes as $entityPrototype) {
-            $this->dataEntityPrototypes[get_class($entityPrototype)] = $entityPrototype;
+        if (!isset($this->dependentDataGroups[$entityClassA])
+            || !isset($this->dependentDataGroups[$entityClassB])
+            || (count(array_keys($this->dependentDataGroups)) == 2 && $entityClassA == $entityClassB)
+        ) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'This coupler requires data entity instances from the following classes: %s; %s and %s are given.',
+                    implode(', ', array_keys($this->dependentDataGroups)),
+                    $entityClassA,
+                    $entityClassB
+                )
+            );
         }
+
+        $this->defaultAdapter = $defaultAdapter;
+        $this->dataEntityPrototypes[$entityClassA] = $dataEntityPrototypeA;
+        $this->dataEntityPrototypes[$entityClassB] = $dataEntityPrototypeB;
     }
 
     /**
@@ -102,10 +120,6 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      */
     protected function getNewEntityInstance($entityClassName)
     {
-        if (!isset($this->dataEntityPrototypes[$entityClassName])) {
-            throw new RuntimeException(sprintf('Class %s is not defined in this Coupler.', $entityClassName));
-        }
-
         return clone $this->dataEntityPrototypes[$entityClassName];
     }
 
@@ -127,7 +141,6 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
         $dataList = $this->getDataAdapter()->getDataSet([
             $this->dependentDataGroups[$entityClassName]['source_key'].' = ?' => $entity->getKeyData()
         ]);
-
         foreach ($dataList as $rowData) {
             $identifiers[] = $rowData[$this->dependentDataGroups[$entityClassName]['connector_key']];
         }

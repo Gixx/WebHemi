@@ -12,6 +12,7 @@
 namespace WebHemi\Data\Coupler\Traits;
 
 use DateTime;
+use RuntimeException;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 
 /**
@@ -20,6 +21,15 @@ use WebHemi\Data\Entity\User\UserGroupEntity;
 trait UserGroupEntityTrait
 {
     /**
+     * Returns a new instance of the required entity.
+     *
+     * @param string $entityClassName
+     * @throws RuntimeException
+     * @return UserGroupEntity
+     */
+    abstract protected function getNewEntityInstance($entityClassName);
+
+    /**
      * Creates a new Policy Entity instance form the data.
      *
      * @param array $data
@@ -27,8 +37,7 @@ trait UserGroupEntityTrait
      */
     protected function createUserGroupEntity(array $data)
     {
-        /* @var UserGroupEntity $entity */
-        $entity = parent::getNewEntityInstance(UserGroupEntity::class);
+        $entity = $this->getNewEntityInstance(UserGroupEntity::class);
 
         $entity->setUserGroupId($data['id_user_group'])
             ->setTitle($data['title'])
