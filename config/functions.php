@@ -86,7 +86,6 @@ function get_application_config()
             'website' => [
                 'module'      => 'Website',
                 'type'        => 'domain',
-                'path'        => 'www',
             ],
             'admin' => [
                 'module'      => 'Admin',

@@ -3,6 +3,7 @@
 return [
     'applications' => [
         'website' => [
+            'path'        => 'www',
             'theme'       => 'default',
         ],
         'my_sub-application' => [

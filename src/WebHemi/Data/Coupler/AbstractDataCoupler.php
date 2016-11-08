@@ -141,6 +141,7 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
         $dataList = $this->getDataAdapter()->getDataSet([
             $this->dependentDataGroups[$entityClassName]['source_key'].' = ?' => $entity->getKeyData()
         ]);
+
         foreach ($dataList as $rowData) {
             $identifiers[] = $rowData[$this->dependentDataGroups[$entityClassName]['connector_key']];
         }

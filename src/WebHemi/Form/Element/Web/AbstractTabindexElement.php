@@ -17,7 +17,7 @@ namespace WebHemi\Form\Element\Web;
 abstract class AbstractTabindexElement extends AbstractElement
 {
     /**
-     * SelectElement constructor.
+     * AbstractTabindexElement constructor.
      *
      * @param string $name
      * @param string $label
