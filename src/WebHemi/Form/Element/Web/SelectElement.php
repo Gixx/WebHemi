@@ -11,8 +11,6 @@
  */
 namespace WebHemi\Form\Element\Web;
 
-use WebHemi\Form\Element\MultiOptionElementInterface;
-
 /**
  * Class SelectElement.
  */
@@ -88,7 +86,7 @@ class SelectElement extends RadioElement
      * Set label-value options for the element.
      *
      * @param array $options
-     * @return RadioElement
+     * @return SelectElement
      */
     public function setOptions(array $options)
     {

@@ -54,7 +54,7 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     use CamelCaseToUnderScoreTrait;
 
     /**
-     * AbstractFormElement constructor.
+     * AbstractElement constructor.
      *
      * @param string $name
      * @param string $label

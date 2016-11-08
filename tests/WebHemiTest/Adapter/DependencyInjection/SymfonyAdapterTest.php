@@ -54,9 +54,9 @@ class SymfonyAdapterTest extends TestCase
             [
                 'Global' => [
                     'alias' => [
-                        'class' => \DateTime::class
+                        'class' => DateTime::class
                     ],
-                    \ArrayObject::class => [],
+                    ArrayObject::class => [],
                 ]
             ]
         );

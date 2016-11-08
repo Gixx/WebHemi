@@ -16,12 +16,13 @@
 return [
     'applications' => [
         'website' => [
+            'path'        => 'www',
             'theme'       => 'default',
         ],
         'admin' => [
-            'type'        => 'directory',
             'path'        => 'admin',
             'theme'       => 'default',
+            'type'        => 'directory',
         ],
-    ]
+    ],
 ];

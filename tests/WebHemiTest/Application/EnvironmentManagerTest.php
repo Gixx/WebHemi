@@ -47,14 +47,16 @@ class EnvironmentManagerTest extends TestCase
 
         $this->config = [
             'applications' => [
-                'Website' => [
-                    'path' => '/'
+                'website' => [
+                    'module' => 'Website',
+                    'type'   => 'domain',
+                    'path'   => 'www'
                 ],
-                'Admin' => [
-                    'path' => 'admin',
-                    'module' => 'Admin'
+                'admin' => [
+                    'module' => 'Admin',
+                    'type'   => 'directory',
+                    'path'   => 'admin',
                 ]
-
             ],
             'themes' => [
                 'default' => [],
@@ -67,6 +69,19 @@ class EnvironmentManagerTest extends TestCase
             'REQUEST_URI'  => '/',
             'QUERY_STRING' => '',
         ];
+    }
+
+    /**
+     * Returns the config in the correct order.
+     *
+     * @return array
+     */
+    private function getOrderedConfig()
+    {
+        // It is important that the custom application should be checked first, then the 'admin', and the 'website' last
+        $this->config['applications'] = array_reverse($this->config['applications']);
+
+        return $this->config;
     }
 
     /**
@@ -108,7 +123,7 @@ class EnvironmentManagerTest extends TestCase
         ];
         $this->server['REQUEST_URI'] = '/test_app/some_page';
 
-        $config = new Config($this->config);
+        $config = new Config($this->getOrderedConfig());
 
         $testObj = new EnvironmentManager(
             $config,
@@ -137,7 +152,7 @@ class EnvironmentManagerTest extends TestCase
         $this->server['SERVER_NAME'] = 'test.app.unittest.dev';
         $this->server['REQUEST_URI'] = '/test_app/some_page';
 
-        $config = new Config($this->config);
+        $config = new Config($this->getOrderedConfig());
 
         $testObj = new EnvironmentManager(
             $config,
@@ -170,7 +185,7 @@ class EnvironmentManagerTest extends TestCase
         $this->server['SERVER_NAME'] = 'test.app.unittest.dev';
         $this->server['REQUEST_URI'] = '/test_app/some_page';
 
-        $config = new Config($this->config);
+        $config = new Config($this->getOrderedConfig());
 
         $testObj = new EnvironmentManager(
             $config,

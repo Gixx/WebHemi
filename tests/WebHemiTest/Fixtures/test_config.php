@@ -21,7 +21,6 @@ use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\RoutingMiddleware;
 use WebHemi\Routing\Result;
-use WebHemiTest\Fixtures\TestAdapter;
 use WebHemiTest\Fixtures\TestMiddleware;
 use WebHemiTest\Fixtures\TestActionMiddleware;
 
@@ -35,8 +34,11 @@ $themeConfig = [
 
 return [
     'applications' => [
-        'Website' => [
-            'path' => '/',
+        'website' => [
+            'module' => 'Website',
+            'type'   => 'domain',
+            'path'   => 'www',
+            'theme'  => 'default'
         ],
     ],
     'modules' => [

@@ -241,9 +241,9 @@ class EnvironmentManager
             $subDomain = implode('.', $domainParts);
         }
 
-        // If no sub-domain presents, then it should be handled as 'www'
+        // If no sub-domain presents, then it should be handled as the default sub-domain set for the 'website'
         if (empty($subDomain)) {
-            $subDomain = 'www';
+            $subDomain = $this->config->getData('applications/website/path');
         }
 
         $this->subDomain = $subDomain;
@@ -319,7 +319,7 @@ class EnvironmentManager
      */
     private function checkDirectoryIsValid($applicationName, $applicationData, $subDirectory)
     {
-        return $this->subDomain == 'www'
+        return $this->subDomain == $this->config->getData('applications/website/path')
             && $applicationName != 'website'
             && !empty($subDirectory)
             && $applicationData['type'] == self::APPLICATION_TYPE_DIRECTORY
@@ -339,7 +339,7 @@ class EnvironmentManager
     {
         $isSubdomain = $applicationName == 'website'
             || (
-                $this->subDomain != 'www'
+                $this->subDomain != $this->config->getData('applications/website/path')
                 && $applicationData['type'] == self::APPLICATION_TYPE_DOMAIN
                 && $applicationData['path'] == $this->subDomain
             );
