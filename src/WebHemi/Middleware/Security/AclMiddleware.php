@@ -90,6 +90,10 @@ class AclMiddleware implements MiddlewareInterface
             $userEntity = $this->authAdapter->getIdentity();
         }
 
+        if (!$userEntity instanceof UserEntity) {
+            $response = $response->withStatus(401, 'Unauthorized');
+        }
+
         // TODO: now we have the user entity, so let's check it against the policies...
 
         return $response;

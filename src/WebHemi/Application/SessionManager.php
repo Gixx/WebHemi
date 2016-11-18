@@ -37,22 +37,22 @@ class SessionManager
      */
     public function __construct(ConfigInterface $sessionConfig)
     {
-        $config = $sessionConfig->toArray();
+        $configuration = $sessionConfig->getData('session');
 
-        $this->namespace = $config['namespace'];
-        $this->cookiePrefix = $config['cookie_prefix'];
-        $this->sessionNameSalt = $config['session_name_salt'];
+        $this->namespace = $configuration['namespace'];
+        $this->cookiePrefix = $configuration['cookie_prefix'];
+        $this->sessionNameSalt = $configuration['session_name_salt'];
 
         // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
             ini_set('session.entropy_file', '/dev/urandom');
             ini_set('session.entropy_length', '16');
-            ini_set('session.hash_function', $config['hash_function']);
-            ini_set('session.use_only_cookies', (int)$config['use_only_cookies']);
-            ini_set('session.use_cookies', (int)$config['use_cookies']);
-            ini_set('session.use_trans_sid', (int)$config['use_trans_sid']);
-            ini_set('session.cookie_httponly', (int)$config['cookie_http_only']);
-            ini_set('session.save_path', $config['save_path']);
+            ini_set('session.hash_function', $configuration['hash_function']);
+            ini_set('session.use_only_cookies', (int)$configuration['use_only_cookies']);
+            ini_set('session.use_cookies', (int)$configuration['use_cookies']);
+            ini_set('session.use_trans_sid', (int)$configuration['use_trans_sid']);
+            ini_set('session.cookie_httponly', (int)$configuration['cookie_http_only']);
+            ini_set('session.save_path', $configuration['save_path']);
         }
         // @codeCoverageIgnoreEnd
     }

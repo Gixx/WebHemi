@@ -43,7 +43,7 @@ class SessionStorageTest extends TestCase
     public function testStorage()
     {
         $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $sessionManager = new SessionManager($config);
         $userEntity = new UserEntity();
 
         $storage = new SessionStorage($sessionManager);

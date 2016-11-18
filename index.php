@@ -18,18 +18,18 @@ use WebHemi\Config;
 
 require_once __DIR__.'/vendor/autoload.php';
 
-$config = new Config\Config(require __DIR__.'/config/config.php');
+$configuration = new Config\Config(require __DIR__.'/config/config.php');
 // Set core objects
-$environmentManager = new EnvironmentManager($config, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
+$environmentManager = new EnvironmentManager($configuration, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
 
-$pipelineManager = new PipelineManager($config->getConfig('middleware_pipeline'));
+$pipelineManager = new PipelineManager($configuration);
 $pipelineManager->addModulePipeLine($environmentManager->getSelectedModule());
 
-$sessionManager = new SessionManager($config->getConfig('session'));
+$sessionManager = new SessionManager($configuration);
 
-$diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+$diAdapter = new DependencyInjectionAdapter($configuration);
 // Add core and module services to the DI adapter
-$diAdapter->registerService(Config\ConfigInterface::class, $config)
+$diAdapter->registerService(Config\ConfigInterface::class, $configuration)
     ->registerService(EnvironmentManager::class, $environmentManager)
     ->registerService(PipelineManager::class, $pipelineManager)
     ->registerService(SessionManager::class, $sessionManager)

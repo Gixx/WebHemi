@@ -15,6 +15,7 @@ use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
 use WebHemi\Routing\Result;
 
@@ -25,9 +26,7 @@ class FastRouteAdapter implements RouterAdapterInterface
 {
     /** @var Result */
     private $result;
-    /** @var ConfigInterface */
-    private $config;
-    /** @var Dispatcher */
+    /** @var Dispatcher\GroupCountBased */
     private $adapter;
     /** @var string */
     private $applicationPath;
@@ -35,19 +34,20 @@ class FastRouteAdapter implements RouterAdapterInterface
     /**
      * FastRouteAdapter constructor.
      *
-     * @param Result          $routeResult
-     * @param ConfigInterface $routeConfig
-     * @param string          $applicationPath
+     * @param ConfigInterface    $configuration
+     * @param EnvironmentManager $environmentManager
+     * @param Result             $routeResult
      */
-    public function __construct(Result $routeResult, ConfigInterface $routeConfig, $applicationPath = '/')
-    {
+    public function __construct(
+        ConfigInterface $configuration,
+        EnvironmentManager $environmentManager,
+        Result $routeResult
+    ) {
+        $module = $environmentManager->getSelectedModule();
+        $routes = $configuration->getData('modules/'.$module.'/routing');
+
         $this->result = $routeResult;
-        $this->config = $routeConfig;
-        $this->applicationPath = $applicationPath;
-
-        $routes = $this->config->toArray();
-
-        /** @var Dispatcher\GroupCountBase adapter */
+        $this->applicationPath = $environmentManager->getSelectedApplicationUri();
         $this->adapter = \FastRoute\simpleDispatcher(
             function (RouteCollector $routeCollector) use ($routes) {
                 foreach ($routes as $route) {

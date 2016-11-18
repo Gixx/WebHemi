@@ -39,26 +39,8 @@ class PipelineTest extends TestCase
     {
         parent::setUp();
 
-        $this->config = [
-            'applications' => [],
-            'auth' => [],
-            'dependencies' => [],
-            'middleware_pipeline' => [
-                'Global' => [
-                    ['service' => FinalMiddleware::class, 'priority' => 1],
-                    ['service' => TestMiddleware::class, 'priority' => 50],
-                    ['service' => 'someAlias', 'priority' => -3],
-                    ['service' => 'someNoPriorityAlias'],
-                    ['service' => TestActionMiddleware::class, 'priority' => 100],
-                ],
-                'Admin' => [
-                    ['service' => 'someModuleAlias', 'priority' => 55],
-                ]
-            ],
-            'modules' => [],
-            'session' => [],
-            'themes' => [],
-        ];
+        $config = require __DIR__ . '/../Fixtures/test_config.php';
+        $this->config = new Config($config);
     }
 
     /**
@@ -66,19 +48,18 @@ class PipelineTest extends TestCase
      */
     public function testGetList()
     {
-        $config = new Config($this->config);
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
-        $pipeline->addModulePipeLine('Admin')
+        $pipeline = new Pipeline($this->config);
+        $pipeline->addModulePipeLine('SomeApp')
             ->start();
 
         $expectedPipeline = [
-            'someAlias',
+            'pipe2',
             RoutingMiddleware::class,
-            TestMiddleware::class,
-            'someNoPriorityAlias',
+            'pipe3',
             'someModuleAlias',
+            'pipe1',
             DispatcherMiddleware::class,
-            TestActionMiddleware::class
+            'pipe4'
         ];
         $actualPipeline = $pipeline->getPipelineList();
         $this->assertArraysAreSimilar($actualPipeline, $expectedPipeline);
@@ -89,9 +70,9 @@ class PipelineTest extends TestCase
      */
     public function testErrorOfCallNextWhenNotStarted()
     {
-        $config = new Config($this->config);
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipeline = new Pipeline($this->config);
 
+        // Exception for not started pipeline
         $this->setExpectedException(RuntimeException::class, '', 1003);
         $pipeline->next();
     }
@@ -101,10 +82,10 @@ class PipelineTest extends TestCase
      */
     public function testErrorOfCheckMiddlewareWhenStarted()
     {
-        $config = new Config($this->config);
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipeline = new Pipeline($this->config);
         $pipeline->start();
 
+        // Exception for already started pipeline
         $this->setExpectedException(RuntimeException::class, '', 1000);
         $this->invokePrivateMethod($pipeline, 'checkMiddleware', ['newService']);
     }
@@ -114,11 +95,11 @@ class PipelineTest extends TestCase
      */
     public function testErrorOfCheckMiddlewareWithQueuedService()
     {
-        $config = new Config($this->config);
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipeline = new Pipeline($this->config);
 
+        // Exception for already registered item
         $this->setExpectedException(RuntimeException::class, '', 1001);
-        $this->invokePrivateMethod($pipeline, 'checkMiddleware', [TestActionMiddleware::class]);
+        $this->invokePrivateMethod($pipeline, 'checkMiddleware', ['pipe1']);
     }
 
     /**
@@ -126,9 +107,9 @@ class PipelineTest extends TestCase
      */
     public function testErrorOfCheckMiddlewareWithWrongInstance()
     {
-        $config = new Config($this->config);
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipeline = new Pipeline($this->config);
 
+        // Exception for not-middleware class
         $this->setExpectedException(RuntimeException::class, '', 1002);
         $this->invokePrivateMethod($pipeline, 'checkMiddleware', [DateTime::class]);
     }

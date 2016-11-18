@@ -16,21 +16,14 @@ use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Adapter\Router\FastRoute\FastRouteAdapter;
 use WebHemi\Adapter\Http\GuzzleHttp\GuzzleHttpAdapter;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
-use WebHemi\Config\Config;
+use WebHemi\Application\EnvironmentManager;
+use WebHemi\Config\ConfigInterface;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\RoutingMiddleware;
 use WebHemi\Routing\Result;
 use WebHemiTest\Fixtures\TestMiddleware;
 use WebHemiTest\Fixtures\TestActionMiddleware;
-
-$themeConfig = [
-    'default' => [
-        'map' => [
-            'test-page' => 'unit/test.twig'
-        ],
-    ],
-];
 
 return [
     'applications' => [
@@ -39,6 +32,12 @@ return [
             'type'   => 'domain',
             'path'   => 'www',
             'theme'  => 'default'
+        ],
+        'some_app' => [
+            'module' => 'SomeApp',
+            'type'   => 'directory',
+            'path'   => 'some_application',
+            'theme'  => 'test_theme'
         ],
     ],
     'auth' => [],
@@ -71,19 +70,25 @@ return [
             // Adapter
             HttpAdapterInterface::class => [
                 'class'     => GuzzleHttpAdapter::class,
+                'arguments' => [
+                    EnvironmentManager::class,
+                ],
                 'shared'    => true,
             ],
             RouterAdapterInterface::class => [
                 'class'     => FastRouteAdapter::class,
-                'arguments' => [Result::class],
+                'arguments' => [
+                    ConfigInterface::class,
+                    EnvironmentManager::class,
+                    Result::class,
+                ],
                 'shared'    => true,
             ],
             RendererAdapterInterface::class => [
                 'class'     => TwigRendererAdapter::class,
                 'arguments' => [
-                    new Config($themeConfig['default']),
-                    '/tests/WebHemiTest/Fixtures/test_theme',
-                    '/'
+                    ConfigInterface::class,
+                    EnvironmentManager::class
                 ],
                 'shared'    => true,
             ],
@@ -103,28 +108,52 @@ return [
                 'arguments' => ['!:final']
             ],
         ],
-        'Website' => []
+        'Website' => [],
+        'SomeApp' => [],
     ],
     'middleware_pipeline' => [
         'Global' => [
             ['service' => 'pipe1', 'priority' => 66],
             ['service' => 'pipe2', 'priority' => -20],
             ['service' => 'pipe3'],
-            ['service' => 'pipe4', 'priority' => 120],
+            ['service' => 'pipe4', 'priority' => 100],
+            ['service' => FinalMiddleware::class],
         ],
-        'Website' => []
+        'Website' => [],
+        'SomeApp' => [
+            ['service' => 'someModuleAlias', 'priority' => 55],
+        ],
     ],
     'modules' => [
         'Website' => [
             'routing' => [
                 'index' => [
-                    'path' => '/',
-                    'middleware' => 'actionOk',
+                    'path'            => '/',
+                    'middleware'      => 'ActionOK',
+                    'allowed_methods' => ['GET','POST'],
+                ],
+                'login' => [
+                    'path'            => '/login',
+                    'middleware'      => 'SomeLoginMiddleware',
                     'allowed_methods' => ['GET'],
                 ],
                 'error' => [
                     'path' => '/error/',
                     'middleware' => 'actionBad',
+                    'allowed_methods' => ['GET'],
+                ],
+            ],
+        ],
+        'SomeApp' => [
+            'routing' => [
+                'index' => [
+                    'path'            => '/',
+                    'middleware'      => 'SomeIndexMiddleware',
+                    'allowed_methods' => ['GET','POST'],
+                ],
+                'somepath' => [
+                    'path'            => '/some/path',
+                    'middleware'      => 'SomeOtherMiddleware',
                     'allowed_methods' => ['GET'],
                 ],
             ],
@@ -135,5 +164,16 @@ return [
         'cookie_prefix' => 'abcd',
         'session_name_salt' => 'WebHemiTest'
     ],
-    'themes' => $themeConfig,
+    'themes' => [
+        'default' => [
+            'map' => [
+                'test-page' => 'unit/test.twig'
+            ],
+        ],
+        'test_theme' => [
+            'map' => [
+                'test-page' => 'unit/test.twig'
+            ],
+        ],
+    ]
 ];

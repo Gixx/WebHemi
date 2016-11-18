@@ -48,7 +48,7 @@ class SymfonyAdapterTest extends TestCase
             'middleware_pipeline' => [],
             'dependencies' => [],
         ]);
-        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter = new SymfonyAdapter($config);
         $adapter->registerService(ConfigInterface::class, $config)
             ->registerModuleServices('Global');
 
@@ -106,7 +106,7 @@ class SymfonyAdapterTest extends TestCase
                 ],
             ]
         );
-        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter = new SymfonyAdapter($config);
         $adapter->registerService(ConfigInterface::class, $config)
             ->registerModuleServices('Global');
 
@@ -174,7 +174,7 @@ class SymfonyAdapterTest extends TestCase
                 ],
             ]
         );
-        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter = new SymfonyAdapter($config);
         $adapter->registerService(ConfigInterface::class, $config)
             ->registerModuleServices('Global')
             ->registerModuleServices('Website');
@@ -225,7 +225,7 @@ class SymfonyAdapterTest extends TestCase
             ]
         );
 
-        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter = new SymfonyAdapter($config);
         $adapter->registerService(ConfigInterface::class, $config)
             ->registerModuleServices('Global');
 
@@ -267,7 +267,7 @@ class SymfonyAdapterTest extends TestCase
             ]
         );
 
-        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter = new SymfonyAdapter($config);
         $adapter->registerService(ConfigInterface::class, $config)
             ->registerModuleServices('Global');
 
@@ -292,7 +292,7 @@ class SymfonyAdapterTest extends TestCase
             ]
         );
 
-        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter = new SymfonyAdapter($config);
         $adapter->registerService(ConfigInterface::class, $config)
             ->registerModuleServices('Global');
 

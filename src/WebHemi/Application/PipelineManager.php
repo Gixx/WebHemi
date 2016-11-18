@@ -37,11 +37,11 @@ class PipelineManager
     /**
      * Pipeline constructor.
      *
-     * @param ConfigInterface $pipelineConfig
+     * @param ConfigInterface $configuration
      */
-    public function __construct(ConfigInterface $pipelineConfig)
+    public function __construct(ConfigInterface $configuration)
     {
-        $this->configuration = $pipelineConfig->toArray();
+        $this->configuration = $configuration->getConfig('middleware_pipeline');
         $this->keyMiddlewareList = [
             RoutingMiddleware::class,
             DispatcherMiddleware::class,
@@ -69,7 +69,7 @@ class PipelineManager
      */
     private function buildPipeline($moduleName = 'Global')
     {
-        $pipelineConfig = $this->configuration[$moduleName];
+        $pipelineConfig = $this->configuration->getData($moduleName);
 
         foreach ($pipelineConfig as $middlewareData) {
             if (!isset($middlewareData['priority'])) {

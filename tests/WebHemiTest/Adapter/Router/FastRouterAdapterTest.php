@@ -13,13 +13,13 @@ namespace WebHemiTest\Adapter\Router;
 
 use FastRoute\Dispatcher;
 use WebHemi\Adapter\Http\GuzzleHttp\ServerRequest;
-use InvalidArgumentException;
 use PHPUnit_Framework_TestCase as TestCase;
 use WebHemi\Config\Config;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Adapter\Router\FastRoute\FastRouteAdapter;
 use WebHemi\Routing\Result;
 use WebHemiTest\AssertTrait;
+use WebHemiTest\Fixtures\EmptyEnvironmentManager;
 use WebHemiTest\InvokePrivateMethodTrait;
 
 /**
@@ -28,7 +28,19 @@ use WebHemiTest\InvokePrivateMethodTrait;
 class FastRouterAdapterTest extends TestCase
 {
     /** @var Config */
-    protected $routeConfig;
+    protected $config = [];
+    /** @var array */
+    protected $get = [];
+    /** @var array */
+    protected $post = [];
+    /** @var array */
+    protected $server;
+    /** @var array */
+    protected $cookie = [];
+    /** @var array */
+    protected $files = [];
+    /** @var EmptyEnvironmentManager */
+    protected $environmentManager;
     /** @var Result */
     protected $routeResult;
 
@@ -43,25 +55,23 @@ class FastRouterAdapterTest extends TestCase
     {
         parent::setUp();
 
-        $options = [
-            'index' => [
-                'path'            => '/',
-                'middleware'      => 'SomeMiddleware',
-                'allowed_methods' => ['GET','POST'],
-            ],
-            'login' => [
-                'path'            => '/login',
-                'middleware'      => 'SomeLoginMiddleware',
-                'allowed_methods' => ['GET'],
-            ],
-            'auth' => [
-                'path'            => '/login_auth',
-                'middleware'      => 'SomeAuthMiddleware',
-                'allowed_methods' => ['POST'],
-            ],
+        $config = require __DIR__ . '/../../Fixtures/test_config.php';
+        $this->config = new Config($config);
+        $this->server = [
+            'HTTP_HOST'    => 'unittest.dev',
+            'SERVER_NAME'  => 'unittest.dev',
+            'REQUEST_URI'  => '/',
+            'QUERY_STRING' => '',
         ];
 
-        $this->routeConfig = new Config($options);
+        $this->environmentManager = new EmptyEnvironmentManager(
+            $this->config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
         $this->routeResult = new Result();
     }
 
@@ -70,7 +80,11 @@ class FastRouterAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $adapterObj = new FastRouteAdapter($this->routeResult, $this->routeConfig);
+        $adapterObj = new FastRouteAdapter(
+            $this->config,
+            $this->environmentManager,
+            $this->routeResult
+        );
 
         $this->assertInstanceOf(RouterAdapterInterface::class, $adapterObj);
         $this->assertAttributeInstanceOf(Dispatcher::class, 'adapter', $adapterObj);
@@ -81,28 +95,32 @@ class FastRouterAdapterTest extends TestCase
      */
     public function testPrivateMethod()
     {
-        $adapterObj = new FastRouteAdapter($this->routeResult, $this->routeConfig);
+        $adapterObj = new FastRouteAdapter(
+            $this->config,
+            $this->environmentManager,
+            $this->routeResult
+        );
         $request = new ServerRequest('GET', '/');
         $result = $this->invokePrivateMethod($adapterObj, 'getApplicationRouteUri', [$request]);
-
         $this->assertEquals('/', $result);
 
-        $adapterObj = new FastRouteAdapter($this->routeResult, $this->routeConfig, '/');
         $request = new ServerRequest('GET', '/some/path/');
         $result = $this->invokePrivateMethod($adapterObj, 'getApplicationRouteUri', [$request]);
-
         $this->assertEquals('/some/path/', $result);
 
-        $adapterObj = new FastRouteAdapter($this->routeResult, $this->routeConfig, '/some_application');
+        // Change application root
+        $this->environmentManager->setSelectedApplicationUri('/some_application');
+        $adapterObj = new FastRouteAdapter(
+            $this->config,
+            $this->environmentManager,
+            $this->routeResult
+        );
         $request = new ServerRequest('GET', '/some_application/some/path/');
         $result = $this->invokePrivateMethod($adapterObj, 'getApplicationRouteUri', [$request]);
-
         $this->assertEquals('/some/path/', $result);
 
-        $adapterObj = new FastRouteAdapter($this->routeResult, $this->routeConfig, '/some_application');
         $request = new ServerRequest('GET', '/some_application/');
         $result = $this->invokePrivateMethod($adapterObj, 'getApplicationRouteUri', [$request]);
-
         $this->assertEquals('/', $result);
     }
 
@@ -111,22 +129,26 @@ class FastRouterAdapterTest extends TestCase
      */
     public function testRouteMatchWithDefaultApplication()
     {
-        $adapterObj = new FastRouteAdapter($this->routeResult, $this->routeConfig);
+        $adapterObj = new FastRouteAdapter(
+            $this->config,
+            $this->environmentManager,
+            $this->routeResult
+        );
 
         $request = new ServerRequest('GET', '/');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
-        $this->assertEquals('SomeMiddleware', $result->getMatchedMiddleware());
+        $this->assertEquals('ActionOK', $result->getMatchedMiddleware());
 
         $request = new ServerRequest('POST', '/');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
-        $this->assertEquals('SomeMiddleware', $result->getMatchedMiddleware());
+        $this->assertEquals('ActionOK', $result->getMatchedMiddleware());
 
-        $request = new ServerRequest('POST', '/login_auth');
+        $request = new ServerRequest('GET', '/login');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
-        $this->assertEquals('SomeAuthMiddleware', $result->getMatchedMiddleware());
+        $this->assertEquals('SomeLoginMiddleware', $result->getMatchedMiddleware());
 
         $request = new ServerRequest('POST', '/login');
         $result = $adapterObj->match($request);
@@ -143,29 +165,36 @@ class FastRouterAdapterTest extends TestCase
      */
     public function testRouteMatchWithNonDefaultApplication()
     {
-        $adapterObj = new FastRouteAdapter($this->routeResult, $this->routeConfig, '/admin');
+        $this->environmentManager->setSelectedModule('SomeApp')
+            ->setSelectedApplicationUri('/some_application')
+            ->setSelectedApplication('some_app');
+        $adapterObj = new FastRouteAdapter(
+            $this->config,
+            $this->environmentManager,
+            $this->routeResult
+        );
 
-        $request = new ServerRequest('GET', '/admin/');
+        $request = new ServerRequest('GET', '/some_application/');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
-        $this->assertEquals('SomeMiddleware', $result->getMatchedMiddleware());
+        $this->assertEquals('SomeIndexMiddleware', $result->getMatchedMiddleware());
 
-        $request = new ServerRequest('POST', '/admin/');
+        $request = new ServerRequest('POST', '/some_application/');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
-        $this->assertEquals('SomeMiddleware', $result->getMatchedMiddleware());
+        $this->assertEquals('SomeIndexMiddleware', $result->getMatchedMiddleware());
 
-        $request = new ServerRequest('POST', '/admin/login_auth');
+        $request = new ServerRequest('GET', '/some_application/some/path');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
-        $this->assertEquals('SomeAuthMiddleware', $result->getMatchedMiddleware());
+        $this->assertEquals('SomeOtherMiddleware', $result->getMatchedMiddleware());
 
-        $request = new ServerRequest('POST', '/admin/login');
+        $request = new ServerRequest('POST', '/some_application/some/path');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_BAD_METHOD, $result->getStatus());
 
 
-        $request = new ServerRequest('POST', '/admin/some-non-existing-address');
+        $request = new ServerRequest('POST', '/some_application/some-non-existing-address');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_NOT_FOUND, $result->getStatus());
     }

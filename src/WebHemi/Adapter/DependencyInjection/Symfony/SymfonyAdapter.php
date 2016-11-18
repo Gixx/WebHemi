@@ -44,7 +44,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     public function __construct(ConfigInterface $configuration)
     {
         $this->container = new ContainerBuilder();
-        $this->configuration = $configuration->toArray();
+        $this->configuration = $configuration->getData('dependencies');
     }
 
     /**

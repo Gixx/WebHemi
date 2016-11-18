@@ -107,6 +107,7 @@ class EnvironmentManagerTest extends TestCase
         $this->assertEquals(EnvironmentManager::DEFAULT_MODULE, $testObj->getSelectedModule());
         $this->assertEquals(EnvironmentManager::DEFAULT_THEME, $testObj->getSelectedTheme());
         $this->assertEquals(EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH, $testObj->getResourcePath());
+        $this->assertEquals(realpath(__DIR__.'/../../../'), $testObj->getDocumentRoot());
 
         $actualServerData = $testObj->getEnvironmentData('SERVER');
         $expectedServerData = $this->server;

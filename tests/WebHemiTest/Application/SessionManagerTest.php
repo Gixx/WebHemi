@@ -24,7 +24,7 @@ use PHPUnit_Framework_TestCase as TestCase;
  */
 class SessionManagerTest extends TestCase
 {
-    /** @var array */
+    /** @var Config */
     private $config;
 
     use AssertTrait;
@@ -37,7 +37,8 @@ class SessionManagerTest extends TestCase
     {
         parent::setUp();
 
-        $this->config = require __DIR__ . '/../Fixtures/test_config.php';
+        $config = require __DIR__ . '/../Fixtures/test_config.php';
+        $this->config = new Config($config);
     }
 
     /**
@@ -45,12 +46,15 @@ class SessionManagerTest extends TestCase
      */
     public function testConstructor()
     {
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $sessionManager = new SessionManager($this->config);
         $this->assertAttributeEmpty('data', $sessionManager);
-        $this->assertAttributeEquals($config->getData('session/namespace'), 'namespace', $sessionManager);
-        $this->assertAttributeEquals($config->getData('session/cookie_prefix'), 'cookiePrefix', $sessionManager);
-        $this->assertAttributeEquals($config->getData('session/session_name_salt'), 'sessionNameSalt', $sessionManager);
+        $this->assertAttributeEquals($this->config->getData('session/namespace'), 'namespace', $sessionManager);
+        $this->assertAttributeEquals($this->config->getData('session/cookie_prefix'), 'cookiePrefix', $sessionManager);
+        $this->assertAttributeEquals(
+            $this->config->getData('session/session_name_salt'),
+            'sessionNameSalt',
+            $sessionManager
+        );
     }
 
     /**
@@ -58,18 +62,19 @@ class SessionManagerTest extends TestCase
      */
     public function testSessionStart()
     {
+        $config = require __DIR__ . '/../Fixtures/test_config.php';
         // Change the namespace, so the sessionStarted() method will return false.
-        $this->config['session']['namespace'] = 'UNITTEST';
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $config['session']['namespace'] = 'UNITTEST';
+        $this->config = new Config($config);
+        $sessionManager = new SessionManager($this->config);
 
         $actualObject = $sessionManager->start('test');
         $this->assertInstanceOf(SessionManager::class, $actualObject);
         $this->assertTrue($actualObject === $sessionManager);
 
-        $this->config['session']['namespace'] = 'TEST';
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $config['session']['namespace'] = 'TEST';
+        $this->config = new Config($config);
+        $sessionManager = new SessionManager($this->config);
         try {
             $sessionManager->start('test');
         } catch (Exception $e) {
@@ -83,16 +88,16 @@ class SessionManagerTest extends TestCase
      */
     public function testRegenerateId()
     {
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $sessionManager = new SessionManager($this->config);
 
         $actualObject = $sessionManager->regenerateId();
         $this->assertInstanceOf(SessionManager::class, $actualObject);
         $this->assertTrue($actualObject === $sessionManager);
 
-        $this->config['session']['namespace'] = 'UNITTEST';
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $config = require __DIR__ . '/../Fixtures/test_config.php';
+        $config['session']['namespace'] = 'UNITTEST';
+        $this->config = new Config($config);
+        $sessionManager = new SessionManager($this->config);
         try {
             $sessionManager->regenerateId();
         } catch (Exception $e) {
@@ -106,8 +111,7 @@ class SessionManagerTest extends TestCase
      */
     public function testSetter()
     {
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $sessionManager = new SessionManager($this->config);
 
         $name = 'test';
         $value = 'value';
@@ -143,9 +147,10 @@ class SessionManagerTest extends TestCase
         $sessionManager->set($name, $value);
         $this->assertSame($value, $sessionManager->get($name));
 
-        $this->config['session']['namespace'] = 'UNITTEST';
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $config = require __DIR__ . '/../Fixtures/test_config.php';
+        $config['session']['namespace'] = 'UNITTEST';
+        $this->config = new Config($config);
+        $sessionManager = new SessionManager($this->config);
         try {
             $sessionManager->set('some', 'value');
         } catch (Exception $e) {
@@ -159,8 +164,7 @@ class SessionManagerTest extends TestCase
      */
     public function testGetter()
     {
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $sessionManager = new SessionManager($this->config);
 
         $name = 'test';
         $value = 'value';
@@ -180,9 +184,10 @@ class SessionManagerTest extends TestCase
             $this->assertSame(1004, $e->getCode());
         }
 
-        $this->config['session']['namespace'] = 'UNITTEST';
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $config = require __DIR__ . '/../Fixtures/test_config.php';
+        $config['session']['namespace'] = 'UNITTEST';
+        $this->config = new Config($config);
+        $sessionManager = new SessionManager($this->config);
         try {
             $sessionManager->get('something');
         } catch (Exception $e) {
@@ -196,8 +201,7 @@ class SessionManagerTest extends TestCase
      */
     public function testDelete()
     {
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $sessionManager = new SessionManager($this->config);
 
         $name = 'test';
         $value = 'value';
@@ -225,9 +229,10 @@ class SessionManagerTest extends TestCase
         // delete non-existing
         $sessionManager->delete('something');
 
-        $this->config['session']['namespace'] = 'UNITTEST';
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $config = require __DIR__ . '/../Fixtures/test_config.php';
+        $config['session']['namespace'] = 'UNITTEST';
+        $this->config = new Config($config);
+        $sessionManager = new SessionManager($this->config);
         try {
             $sessionManager->delete('something');
         } catch (Exception $e) {
@@ -249,8 +254,7 @@ class SessionManagerTest extends TestCase
                 'date' => new DateTime()
             ]
         ];
-        $config = new Config($this->config);
-        $sessionManager = new SessionManager($config->getConfig('session'));
+        $sessionManager = new SessionManager($this->config);
         foreach ($expectedData as $key => $value) {
             $sessionManager->set($key, $value);
         }
