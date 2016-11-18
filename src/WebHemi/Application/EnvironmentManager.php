@@ -81,6 +81,10 @@ class EnvironmentManager
         $this->config = $config;
         $this->documentRoot = realpath(__DIR__.'/../../../');
 
+        if (isset($serverData['HTTP_REFERER'])) {
+            $serverData['HTTP_REFERER'] = urldecode($serverData['HTTP_REFERER']);
+        }
+
         $this->environmentData = [
             'GET'    => $getData,
             'POST'   => $postData,
@@ -300,7 +304,6 @@ class EnvironmentManager
                 break;
             }
         }
-
         if ($this->selectedTheme !== self::DEFAULT_THEME) {
             $this->selectedThemeResourcePath = '/resources/vendor_themes/'.$this->selectedTheme;
         }

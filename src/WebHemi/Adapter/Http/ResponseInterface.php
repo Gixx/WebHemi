@@ -22,5 +22,7 @@ interface ResponseInterface extends PsrResponseInterface
 
     const STATUS_OK = 200;
 
+    const STATUS_REDIRECT = 302;
+
     const STATUS_INTERNAL_SERVER_ERROR = 500;
 }

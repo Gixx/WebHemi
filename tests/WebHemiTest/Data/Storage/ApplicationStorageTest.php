@@ -16,6 +16,8 @@ use Prophecy\Argument;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Data\Entity\ApplicationEntity;
+use WebHemiTest\AssertTrait;
+use WebHemiTest\InvokePrivateMethodTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -24,6 +26,9 @@ use PHPUnit_Framework_TestCase as TestCase;
 class ApplicationStorageTest extends TestCase
 {
     private $defaultAdapter;
+
+    use AssertTrait;
+    use InvokePrivateMethodTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -75,9 +80,9 @@ class ApplicationStorageTest extends TestCase
             'name' => 'test.application',
             'title' => 'Test Application',
             'description' => 'A test application record',
-            'is_read_only' => true,
+            'is_read_only' => 1,
             'date_created' =>  '2016-03-24 16:25:12',
-            'date_modified' =>  null,
+            'date_modified' =>  '2016-03-24 16:25:12',
         ];
 
         $this->defaultAdapter
@@ -108,5 +113,8 @@ class ApplicationStorageTest extends TestCase
         $this->assertEquals($data['name'], $actualResult->getName());
         $this->assertEquals($data['title'], $actualResult->getTitle());
         $this->assertTrue($actualResult->getReadOnly());
+
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
+        $this->assertArraysAreSimilar($data, $actualData);
     }
 }

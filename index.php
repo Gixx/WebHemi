@@ -12,15 +12,29 @@
 use WebHemi\Adapter\DependencyInjection\Symfony\SymfonyAdapter as DependencyInjectionAdapter;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Application\PipelineManager;
+use WebHemi\Application\SessionManager;
 use WebHemi\Application\Web\WebApplication as Application;
-use WebHemi\Config\Config;
+use WebHemi\Config;
 
 require_once __DIR__.'/vendor/autoload.php';
 
-$config = new Config(require __DIR__.'/config/config.php');
-$diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+$config = new Config\Config(require __DIR__.'/config/config.php');
+// Set core objects
 $environmentManager = new EnvironmentManager($config, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
-$pipeline = new PipelineManager($config->getConfig('middleware_pipeline'));
 
-$app = new Application($diAdapter, $environmentManager, $pipeline);
+$pipelineManager = new PipelineManager($config->getConfig('middleware_pipeline'));
+$pipelineManager->addModulePipeLine($environmentManager->getSelectedModule());
+
+$sessionManager = new SessionManager($config->getConfig('session'));
+
+$diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+// Add core and module services to the DI adapter
+$diAdapter->registerService(Config\ConfigInterface::class, $config)
+    ->registerService(EnvironmentManager::class, $environmentManager)
+    ->registerService(PipelineManager::class, $pipelineManager)
+    ->registerService(SessionManager::class, $sessionManager)
+    ->registerModuleServices('Global')
+    ->registerModuleServices($environmentManager->getSelectedModule());
+
+$app = new Application($diAdapter);
 $app->run();

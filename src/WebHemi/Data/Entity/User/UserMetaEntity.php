@@ -11,6 +11,7 @@
  */
 namespace WebHemi\Data\Entity\User;
 
+use DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
@@ -26,6 +27,23 @@ class UserMetaEntity implements DataEntityInterface
     private $metaKey;
     /** @var string */
     private $metaData;
+    /** @var DateTime */
+    private $dateCreated;
+    /** @var DateTime */
+    private $dateModified;
+
+    /**
+     * Sets the value of the entity identifier.
+     *
+     * @param int $entityId
+     * @return UserMetaEntity
+     */
+    public function setKeyData($entityId)
+    {
+        $this->userMetaId = $entityId;
+
+        return $this;
+    }
 
     /**
      * Gets the value of the entity identifier.
@@ -115,5 +133,45 @@ class UserMetaEntity implements DataEntityInterface
     public function getMetaData()
     {
         return $this->metaData;
+    }
+
+    /**
+     * @param DateTime $dateCreated
+     *
+     * @return UserMetaEntity
+     */
+    public function setDateCreated(DateTime $dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @param DateTime $dateModified
+     *
+     * @return UserMetaEntity
+     */
+    public function setDateModified(DateTime $dateModified)
+    {
+        $this->dateModified = $dateModified;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateModified()
+    {
+        return $this->dateModified;
     }
 }

@@ -11,6 +11,7 @@
  */
 namespace WebHemi\Data\Storage;
 
+use InvalidArgumentException;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Entity\DataEntityInterface;
 
@@ -93,6 +94,46 @@ abstract class AbstractDataStorage implements DataStorageInterface
     {
         return clone $this->entityPrototype;
     }
+
+    /**
+     * Saves data.
+     *
+     * @param DataEntityInterface &$entity
+     * @return mixed The ID of the saved entity in the storage
+     */
+    public function saveEntity(DataEntityInterface &$entity)
+    {
+        $entityClass = get_class($entity);
+        $storageEntityClass = get_class($this->entityPrototype);
+
+        if ($entityClass != $storageEntityClass) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Cannot use %s with this data storage class. You must use %s.',
+                    $entityClass,
+                    $storageEntityClass
+                )
+            );
+        }
+
+        $dataId = $this->getDataAdapter()->saveData($entity->getKeyData(), $this->getEntityData($entity));
+
+        // If key data is empty, then it was an insert. Get a new entity with all data.
+        if ($dataId && empty($entity->getKeyData())) {
+            $entityData = $this->getDataAdapter()->getData($dataId);
+            $this->populateEntity($entity, $entityData);
+        }
+
+        return $dataId;
+    }
+
+    /**
+     * Get data from an entity.
+     *
+     * @param DataEntityInterface $entity
+     * @return array
+     */
+    abstract protected function getEntityData(DataEntityInterface $entity);
 
     /**
      * Populates an entity with storage data.

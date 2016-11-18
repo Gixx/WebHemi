@@ -40,11 +40,24 @@ class PipelineTest extends TestCase
         parent::setUp();
 
         $this->config = [
-            ['service' => FinalMiddleware::class, 'priority' => 1],
-            ['service' => TestMiddleware::class, 'priority' => 50],
-            ['service' => 'someAlias', 'priority' => -3],
-            ['service' => 'someNoPriorityAlias'],
-            ['service' => TestActionMiddleware::class, 'priority' => 100],
+            'applications' => [],
+            'auth' => [],
+            'dependencies' => [],
+            'middleware_pipeline' => [
+                'Global' => [
+                    ['service' => FinalMiddleware::class, 'priority' => 1],
+                    ['service' => TestMiddleware::class, 'priority' => 50],
+                    ['service' => 'someAlias', 'priority' => -3],
+                    ['service' => 'someNoPriorityAlias'],
+                    ['service' => TestActionMiddleware::class, 'priority' => 100],
+                ],
+                'Admin' => [
+                    ['service' => 'someModuleAlias', 'priority' => 55],
+                ]
+            ],
+            'modules' => [],
+            'session' => [],
+            'themes' => [],
         ];
     }
 
@@ -53,14 +66,17 @@ class PipelineTest extends TestCase
      */
     public function testGetList()
     {
-        $pipeline = new Pipeline(new Config($this->config));
-        $pipeline->start();
+        $config = new Config($this->config);
+        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipeline->addModulePipeLine('Admin')
+            ->start();
 
         $expectedPipeline = [
             'someAlias',
             RoutingMiddleware::class,
             TestMiddleware::class,
             'someNoPriorityAlias',
+            'someModuleAlias',
             DispatcherMiddleware::class,
             TestActionMiddleware::class
         ];
@@ -73,7 +89,8 @@ class PipelineTest extends TestCase
      */
     public function testErrorOfCallNextWhenNotStarted()
     {
-        $pipeline = new Pipeline(new Config($this->config));
+        $config = new Config($this->config);
+        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
 
         $this->setExpectedException(RuntimeException::class, '', 1003);
         $pipeline->next();
@@ -84,7 +101,8 @@ class PipelineTest extends TestCase
      */
     public function testErrorOfCheckMiddlewareWhenStarted()
     {
-        $pipeline = new Pipeline(new Config($this->config));
+        $config = new Config($this->config);
+        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
         $pipeline->start();
 
         $this->setExpectedException(RuntimeException::class, '', 1000);
@@ -96,7 +114,8 @@ class PipelineTest extends TestCase
      */
     public function testErrorOfCheckMiddlewareWithQueuedService()
     {
-        $pipeline = new Pipeline(new Config($this->config));
+        $config = new Config($this->config);
+        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
 
         $this->setExpectedException(RuntimeException::class, '', 1001);
         $this->invokePrivateMethod($pipeline, 'checkMiddleware', [TestActionMiddleware::class]);
@@ -107,7 +126,8 @@ class PipelineTest extends TestCase
      */
     public function testErrorOfCheckMiddlewareWithWrongInstance()
     {
-        $pipeline = new Pipeline(new Config($this->config));
+        $config = new Config($this->config);
+        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
 
         $this->setExpectedException(RuntimeException::class, '', 1002);
         $this->invokePrivateMethod($pipeline, 'checkMiddleware', [DateTime::class]);

@@ -11,6 +11,10 @@
  */
 namespace WebHemi\Application;
 
+use InvalidArgumentException;
+use WebHemi\Adapter\Http\HttpAdapterInterface;
+use WebHemi\Adapter\Renderer\RendererAdapterInterface;
+use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 
 /**
@@ -20,26 +24,87 @@ abstract class AbstractApplication implements ApplicationInterface
 {
     /** @var DependencyInjectionAdapterInterface */
     private $container;
-    /** @var EnvironmentManager */
-    private $environmentManager;
-    /** @var PipelineManager */
-    private $pipelineManager;
 
     /**
      * ApplicationInterface constructor.
      *
      * @param DependencyInjectionAdapterInterface $container
-     * @param EnvironmentManager                  $environmentManager
-     * @param PipelineManager                     $pipelineManager
      */
-    public function __construct(
-        DependencyInjectionAdapterInterface $container,
-        EnvironmentManager $environmentManager,
-        PipelineManager $pipelineManager
-    ) {
+    public function __construct(DependencyInjectionAdapterInterface $container)
+    {
         $this->container = $container;
-        $this->environmentManager = $environmentManager;
-        $this->pipelineManager = $pipelineManager;
+
+        // Final touches.
+        $this->prepareContainer();
+    }
+
+    /**
+     * Get ready to run the application: set final data for specific services.
+     *
+     * @codeCoverageIgnore - Check the EnvironmentManager and Container adapter tests.
+     */
+    private function prepareContainer()
+    {
+        /** @var EnvironmentManager $environmentManager */
+        $environmentManager = $this->container->get(EnvironmentManager::class);
+
+        // Set proper arguments for the HTTP adapter.
+        $this->container
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $environmentManager->getEnvironmentData('GET')
+            )
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $environmentManager->getEnvironmentData('POST')
+            )
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $environmentManager->getEnvironmentData('SERVER')
+            )
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $environmentManager->getEnvironmentData('COOKIE')
+            )
+            ->setServiceArgument(
+                HttpAdapterInterface::class,
+                $environmentManager->getEnvironmentData('FILES')
+            );
+
+        try {
+            $themeConfig = $environmentManager
+                ->getApplicationTemplateSettings($environmentManager->getSelectedTheme());
+            $themeResourcePath = $environmentManager->getResourcePath();
+        } catch (InvalidArgumentException $e) {
+            $themeConfig = $environmentManager->getApplicationTemplateSettings(EnvironmentManager::DEFAULT_THEME);
+            $themeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
+        }
+
+        // Set proper arguments for the renderer.
+        $this->container
+            ->setServiceArgument(
+                RendererAdapterInterface::class,
+                $themeConfig
+            )
+            ->setServiceArgument(
+                RendererAdapterInterface::class,
+                $themeResourcePath
+            )
+            ->setServiceArgument(
+                RendererAdapterInterface::class,
+                $environmentManager->getSelectedApplicationUri()
+            );
+
+        // Set proper arguments for the router.
+        $this->container
+            ->setServiceArgument(
+                RouterAdapterInterface::class,
+                $environmentManager->getModuleRouteSettings()
+            )
+            ->setServiceArgument(
+                RouterAdapterInterface::class,
+                $environmentManager->getSelectedApplicationUri()
+            );
     }
 
     /**
@@ -52,27 +117,7 @@ abstract class AbstractApplication implements ApplicationInterface
         return $this->container;
     }
 
-    /**
-     * Gets the environment manager instance.
-     *
-     * @return EnvironmentManager
-     */
-    final public function getEnvironmentManager()
-    {
-        return $this->environmentManager;
-    }
-
-    /**
-     * Gets the pipeline manager instance.
-     *
-     * @return PipelineManager
-     */
-    final public function getPipelineManager()
-    {
-        return $this->pipelineManager;
-    }
-
-    /**
+   /**
      * Runs the application. This is where the magic happens.
      * For example for a web application this initializes the Request and Response objects, builds the middleware
      * pipeline, applies the Routing and the Dispatch.

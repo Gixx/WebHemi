@@ -35,6 +35,11 @@ class PolicyEntityTest extends TestCase
 
         $entity->setPolicyId(123);
         $this->assertSame($entity->getPolicyId(), $entity->getKeyData());
+
+        $expectedKey = 567;
+        $entity->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $entity->getPolicyId());
+        $this->assertSame($expectedKey, $entity->getKeyData());
     }
 
     /**
@@ -52,6 +57,7 @@ class PolicyEntityTest extends TestCase
             ['applicationId', null, null, true],
             ['resourceId', 1, 1, false],
             ['resourceId', null, null, true],
+            ['name','some name','some name', false],
             ['title','some title','some title', false],
             ['description','some description','some description', false],
             ['isReadOnly',1, true, true],

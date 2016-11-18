@@ -39,6 +39,19 @@ class UserEntity implements DataEntityInterface
     private $dateModified;
 
     /**
+     * Sets the value of the entity identifier.
+     *
+     * @param int $entityId
+     * @return UserEntity
+     */
+    public function setKeyData($entityId)
+    {
+        $this->userId = $entityId;
+
+        return $this;
+    }
+
+    /**
      * Gets the value of the entity identifier.
      *
      * @return int

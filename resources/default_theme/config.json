@@ -15,6 +15,7 @@
     "admin_login_javascript": "script/login.js"
   },
   "map": {
+    "admin-dashboard": "admin/dashboard.twig",
     "blog-list": "blog/index.twig",
     "blog-post": "blog/post.twig",
     "error-404": "error/404.twig",

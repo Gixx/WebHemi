@@ -1,6 +1,13 @@
 Change log
 ==========
 
+Version 4.0.0-2.1
+-----------------
+* Add AuthAdapterInterface
+* Add a very basic Auth adapter and ACL Middleware implementations
+* Refactor config structure and Application parameters
+* Solved to add core Services to the DI, so they can be injected into other services if needed.
+
 Version 4.0.0-2.0
 -----------------
 * Add brand new WebHemi\Form support
@@ -27,7 +34,7 @@ Version 4.0.0-1.2
   * Add Unit test
 * Unit Test:
   * Add traits and new fixtures
-  * Follow up changes changes
+  * Follow up changes
 
 Version 4.0.0-1.1
 -----------------

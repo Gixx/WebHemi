@@ -22,14 +22,8 @@ interface ApplicationInterface
      * ApplicationInterface constructor.
      *
      * @param DependencyInjectionAdapterInterface $container
-     * @param EnvironmentManager                  $environmentManager
-     * @param PipelineManager                     $pipelineManager
      */
-    public function __construct(
-        DependencyInjectionAdapterInterface $container,
-        EnvironmentManager $environmentManager,
-        PipelineManager $pipelineManager
-    );
+    public function __construct(DependencyInjectionAdapterInterface $container);
 
     /**
      * Returns the DI Adapter instance.
@@ -37,20 +31,6 @@ interface ApplicationInterface
      * @return DependencyInjectionAdapterInterface
      */
     public function getContainer();
-
-    /**
-     * Gets the environment manager instance.
-     *
-     * @return EnvironmentManager
-     */
-    public function getEnvironmentManager();
-
-    /**
-     * Gets the pipeline manager instance.
-     *
-     * @return PipelineManager
-     */
-    public function getPipelineManager();
 
     /**
      * Runs the application. This is where the magic happens.

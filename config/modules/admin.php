@@ -9,14 +9,15 @@
  *
  * @link      http://www.gixx-web.com
  */
-
-use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Adapter\Auth\AuthAdapterInterface;
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
-use WebHemi\Form\Element\FormElementContainerInterface;
-use WebHemi\Form\Web as WebForm;
-use WebHemi\Application\SessionManager;
+use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Data\Storage\User\UserGroupStorage;
+use WebHemi\Middleware\Action;
+use WebHemi\Middleware\Security\AclMiddleware;
 
 return [
     'modules' => [
@@ -24,12 +25,17 @@ return [
             'routing' => [
                 'index' => [
                     'path'            => '/',
-                    'middleware'      => \WebHemi\Middleware\Action\FakeAction::class,
-                    'allowed_methods' => ['GET', 'POST'],
+                    'middleware'      => Action\Admin\DashboardAction::class,
+                    'allowed_methods' => ['GET'],
                 ],
-                'view' => [
-                    'path'            => '/view/{id:.*}',
-                    'middleware'      => \WebHemi\Middleware\Action\FakeViewAction::class,
+                'login' => [
+                    'path'            => '/auth/login',
+                    'middleware'      => Action\Auth\LoginAction::class,
+                    'allowed_methods' => ['GET'],
+                ],
+                'logout' => [
+                    'path'            => '/auth/logout',
+                    'middleware'      => Action\Auth\LogoutAction::class,
                     'allowed_methods' => ['GET'],
                 ],
             ],
@@ -37,29 +43,38 @@ return [
     ],
     'dependencies' => [
         'Admin' => [
-            \WebHemi\Middleware\Action\FakeAction::class => [
+            Action\Auth\LoginAction::class => [
                 'arguments' => [
+                    AuthAdapterInterface::class,
+                    EnvironmentManager::class,
                     UserStorage::class,
-                    WebForm\TestForm::class,
-                    SessionManager::class,
+                    UserGroupStorage::class,
+                    UserToGroupCoupler::class,
+                ],
+            ],
+            Action\Auth\LogoutAction::class => [
+                'arguments' => [
+                    AuthAdapterInterface::class
+                ]
+            ],
+            AclMiddleware::class => [
+                'arguments' => [
+                    AuthAdapterInterface::class,
                     UserToPolicyCoupler::class,
                     UserToGroupCoupler::class,
                     UserGroupToPolicyCoupler::class,
-                ],
-            ],
-            WebForm\TestForm::class => [
-                'arguments' => [
-                    FormElementContainerInterface::class,
-                    'admin-form',
-                    '',
-                    'POST'
                 ]
             ],
-            \WebHemi\Middleware\Action\FakeViewAction::class => [
+            Action\Admin\DashboardAction::class => [
                 'arguments' => [
-                    UserStorage::class
+                    AuthAdapterInterface::class,
                 ],
             ],
         ]
-    ]
+    ],
+    'middleware_pipeline' => [
+        'Admin' => [
+            ['service' => AclMiddleware::class, 'priority' => 10],
+        ],
+    ],
 ];

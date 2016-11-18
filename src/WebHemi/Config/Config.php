@@ -89,7 +89,7 @@ class Config implements ConfigInterface
      *
      * @throws InvalidArgumentException
      *
-     * @return mixed
+     * @return Config
      */
     public function getConfig($path)
     {

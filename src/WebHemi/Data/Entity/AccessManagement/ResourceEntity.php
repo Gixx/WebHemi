@@ -35,6 +35,19 @@ class ResourceEntity implements DataEntityInterface
     private $dateModified;
 
     /**
+     * Sets the value of the entity identifier.
+     *
+     * @param int $entityId
+     * @return ResourceEntity
+     */
+    public function setKeyData($entityId)
+    {
+        $this->resourceId = $entityId;
+
+        return $this;
+    }
+
+    /**
      * Gets the value of the entity identifier.
      *
      * @return int

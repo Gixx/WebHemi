@@ -11,14 +11,13 @@
  */
 namespace WebHemi\Application\Web;
 
-use InvalidArgumentException;
+use Exception;
 use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
-use WebHemi\Adapter\Renderer\RendererAdapterInterface;
-use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Application\AbstractApplication;
 use WebHemi\Application\EnvironmentManager;
+use WebHemi\Application\PipelineManager;
 use WebHemi\Application\SessionManager;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\FinalMiddleware;
@@ -42,83 +41,17 @@ class WebApplication extends AbstractApplication
 
         /** @var SessionManager $sessionManager */
         $sessionManager = $this->getContainer()->get(SessionManager::class);
-        $name = $this->getEnvironmentManager()->getSelectedApplication();
+        /** @var EnvironmentManager $environmentManager */
+        $environmentManager = $this->getContainer()->get(EnvironmentManager::class);
+
+        $name = $environmentManager->getSelectedApplication();
         $timeOut = 3600;
-        $path = $this->getEnvironmentManager()->getSelectedApplicationUri();
-        $domain = $this->getEnvironmentManager()->getApplicationDomain();
-        $secure = $this->getEnvironmentManager()->isSecuredApplication();
+        $path = $environmentManager->getSelectedApplicationUri();
+        $domain = $environmentManager->getApplicationDomain();
+        $secure = $environmentManager->isSecuredApplication();
         $httpOnly = true;
 
         $sessionManager->start($name, $timeOut, $path, $domain, $secure, $httpOnly);
-    }
-
-    /**
-     * Get ready to run the application: set final data for specific services.
-     *
-     * @codeCoverageIgnore - Check the EnvironmentManager and Container adapter tests.
-     */
-    private function prepareContainer()
-    {
-        // Register services according to the selected module.
-        $this->getContainer()->registerModuleServices($this->getEnvironmentManager()->getSelectedModule());
-
-        // Set proper arguments for the HTTP adapter.
-        $this->getContainer()
-            ->setServiceArgument(
-                HttpAdapterInterface::class,
-                $this->getEnvironmentManager()->getEnvironmentData('GET')
-            )
-            ->setServiceArgument(
-                HttpAdapterInterface::class,
-                $this->getEnvironmentManager()->getEnvironmentData('POST')
-            )
-            ->setServiceArgument(
-                HttpAdapterInterface::class,
-                $this->getEnvironmentManager()->getEnvironmentData('SERVER')
-            )
-            ->setServiceArgument(
-                HttpAdapterInterface::class,
-                $this->getEnvironmentManager()->getEnvironmentData('COOKIE')
-            )
-            ->setServiceArgument(
-                HttpAdapterInterface::class,
-                $this->getEnvironmentManager()->getEnvironmentData('FILES')
-            );
-
-        try {
-            $theme = $this->getEnvironmentManager()
-                ->getApplicationTemplateSettings($this->getEnvironmentManager()->getSelectedTheme());
-            $themeResourcePath = $this->getEnvironmentManager()->getResourcePath();
-        } catch (InvalidArgumentException $e) {
-            $theme = $this->getEnvironmentManager()->getApplicationTemplateSettings(EnvironmentManager::DEFAULT_THEME);
-            $themeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
-        }
-
-        // Set proper arguments for the renderer.
-        $this->getContainer()
-            ->setServiceArgument(
-                RendererAdapterInterface::class,
-                $theme
-            )
-            ->setServiceArgument(
-                RendererAdapterInterface::class,
-                $themeResourcePath
-            )
-            ->setServiceArgument(
-                RendererAdapterInterface::class,
-                $this->getEnvironmentManager()->getSelectedApplicationUri()
-            );
-
-        // Set proper arguments for the router.
-        $this->getContainer()
-            ->setServiceArgument(
-                RouterAdapterInterface::class,
-                $this->getEnvironmentManager()->getModuleRouteSettings()
-            )
-            ->setServiceArgument(
-                RouterAdapterInterface::class,
-                $this->getEnvironmentManager()->getSelectedApplicationUri()
-            );
     }
 
     /**
@@ -163,16 +96,18 @@ class WebApplication extends AbstractApplication
     {
         // Start session.
         $this->initSession();
-        // Inject parameters into services.
-        $this->prepareContainer();
 
         /** @var HttpAdapterInterface $httpAdapter */
         $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
+        /** @var PipelineManager $pipelineManager */
+        $pipelineManager = $this->getContainer()->get(PipelineManager::class);
+
         /** @var ServerRequestInterface $request */
         $request = $httpAdapter->getRequest();
         /** @var ResponseInterface $response */
         $response = $httpAdapter->getResponse();
-        $middlewareClass = $this->getPipelineManager()->start();
+        /** @var string $middlewareClass */
+        $middlewareClass = $pipelineManager->start();
 
         while ($middlewareClass !== null
             && $response->getStatusCode() == ResponseInterface::STATUS_PROCESSING
@@ -197,7 +132,7 @@ class WebApplication extends AbstractApplication
                     );
                 }
                 $response = $middleware($request, $response);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $response = $response->withStatus(ResponseInterface::STATUS_INTERNAL_SERVER_ERROR);
                 $request = $request->withAttribute(
                     ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION,
@@ -205,7 +140,7 @@ class WebApplication extends AbstractApplication
                 );
             }
 
-            $middlewareClass = $this->getPipelineManager()->next();
+            $middlewareClass = $pipelineManager->next();
         };
 
         // If there was no error, we mark as ready for output.

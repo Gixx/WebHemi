@@ -31,6 +31,8 @@ class PolicyStorage extends AbstractDataStorage
     /** @var string */
     private $applicationId = 'fk_application';
     /** @var string */
+    private $name = 'name';
+    /** @var string */
     private $title = 'title';
     /** @var string */
     private $description = 'description';
@@ -58,12 +60,39 @@ class PolicyStorage extends AbstractDataStorage
         $entity->setPolicyId($data[$this->idKey])
             ->setResourceId($data[$this->resourceId])
             ->setApplicationId($data[$this->applicationId])
+            ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
             ->setReadOnly($data[$this->isReadOnly])
             ->setAllowed($data[$this->isAllowed])
             ->setDateCreated(new DateTime($data[$this->dateCreated]))
             ->setDateModified(new DateTime($data[$this->dateModified]));
+    }
+
+    /**
+     * Get data from an entity.
+     *
+     * @param DataEntityInterface $entity
+     * @return array
+     */
+    protected function getEntityData(DataEntityInterface $entity)
+    {
+        /** @var PolicyEntity $entity */
+        $dateCreated = $entity->getDateCreated();
+        $dateModified = $entity->getDateModified();
+
+        return [
+            $this->idKey => $entity->getKeyData(),
+            $this->resourceId => $entity->getResourceId(),
+            $this->applicationId => $entity->getApplicationId(),
+            $this->name => $entity->getName(),
+            $this->title => $entity->getTitle(),
+            $this->description => $entity->getDescription(),
+            $this->isReadOnly => (int)$entity->getReadOnly(),
+            $this->isAllowed => (int)$entity->getAllowed(),
+            $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
+            $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
+        ];
     }
 
     /**
@@ -81,6 +110,26 @@ class PolicyStorage extends AbstractDataStorage
         if (!empty($data)) {
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Returns a Policy entity by name.
+     *
+     * @param string $name
+     *
+     * @return bool|PolicyEntity
+     */
+    public function getPolicyByName($name)
+    {
+        $entity = false;
+        $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
+
+        if (!empty($dataList)) {
+            $entity = $this->createEntity();
+            $this->populateEntity($entity, $dataList[0]);
         }
 
         return $entity;

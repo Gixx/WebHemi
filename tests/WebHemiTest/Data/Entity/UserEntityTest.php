@@ -35,6 +35,11 @@ class UserEntityTest extends TestCase
 
         $entity->setUserId(123);
         $this->assertSame($entity->getUserId(), $entity->getKeyData());
+
+        $expectedKey = 567;
+        $entity->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $entity->getUserId());
+        $this->assertSame($expectedKey, $entity->getKeyData());
     }
 
     /**

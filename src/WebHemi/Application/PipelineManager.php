@@ -24,7 +24,7 @@ use WebHemi\Middleware\RoutingMiddleware;
 class PipelineManager
 {
     /** @var ConfigInterface */
-    private $config;
+    private $configuration;
     /** @var array */
     private $priorityList;
     /** @var array */
@@ -41,7 +41,7 @@ class PipelineManager
      */
     public function __construct(ConfigInterface $pipelineConfig)
     {
-        $this->config = $pipelineConfig;
+        $this->configuration = $pipelineConfig->toArray();
         $this->keyMiddlewareList = [
             RoutingMiddleware::class,
             DispatcherMiddleware::class,
@@ -64,10 +64,12 @@ class PipelineManager
 
     /**
      * Add middleware definitions to the pipeline.
+     *
+     * @param string $moduleName
      */
-    private function buildPipeline()
+    private function buildPipeline($moduleName = 'Global')
     {
-        $pipelineConfig = $this->config->toArray();
+        $pipelineConfig = $this->configuration[$moduleName];
 
         foreach ($pipelineConfig as $middlewareData) {
             if (!isset($middlewareData['priority'])) {
@@ -79,7 +81,7 @@ class PipelineManager
     }
 
     /**
-     * Checks the given class against Middleware Criterias.
+     * Checks the given class against Middleware Criteria.
      *
      * @param $middleWareClass
      *
@@ -113,6 +115,19 @@ class PipelineManager
     }
 
     /**
+     * Adds module specific pipeline.
+     *
+     * @param $moduleName
+     * @return PipelineManager
+     */
+    public function addModulePipeLine($moduleName)
+    {
+        $this->buildPipeline($moduleName);
+
+        return $this;
+    }
+
+    /**
      * Adds a new middleware to the pipeline queue.
      *
      * @param string $middleWareClass
@@ -120,7 +135,7 @@ class PipelineManager
      *
      * @throws RuntimeException
      *
-     * @return $this
+     * @return PipelineManager
      */
     public function queueMiddleware($middleWareClass, $priority = 50)
     {

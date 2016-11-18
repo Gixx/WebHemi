@@ -66,6 +66,7 @@ class EnvironmentManagerTest extends TestCase
         $this->server = [
             'HTTP_HOST'    => 'unittest.dev',
             'SERVER_NAME'  => 'unittest.dev',
+            'HTTP_REFERER' => 'http://foo.org?uri='.urlencode('https://www.youtube.com/'),
             'REQUEST_URI'  => '/',
             'QUERY_STRING' => '',
         ];
@@ -106,7 +107,12 @@ class EnvironmentManagerTest extends TestCase
         $this->assertEquals(EnvironmentManager::DEFAULT_MODULE, $testObj->getSelectedModule());
         $this->assertEquals(EnvironmentManager::DEFAULT_THEME, $testObj->getSelectedTheme());
         $this->assertEquals(EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH, $testObj->getResourcePath());
-        $this->assertArraysAreSimilar($testObj->getEnvironmentData('SERVER'), $this->server);
+
+        $actualServerData = $testObj->getEnvironmentData('SERVER');
+        $expectedServerData = $this->server;
+        $expectedServerData['HTTP_REFERER'] = urldecode($expectedServerData['HTTP_REFERER']);
+
+        $this->assertArraysAreSimilar($actualServerData, $expectedServerData);
 
         $this->setExpectedException(InvalidArgumentException::class);
         $testObj->getEnvironmentData('WEBSERVER');

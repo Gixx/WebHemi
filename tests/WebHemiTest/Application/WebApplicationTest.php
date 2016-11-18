@@ -15,10 +15,13 @@ use PHPUnit_Framework_TestCase as TestCase;
 use WebHemi\Adapter\DependencyInjection\Symfony\SymfonyAdapter as DependencyInjectionAdapter;
 use WebHemi\Application\ApplicationInterface;
 use WebHemi\Application\EnvironmentManager;
+use WebHemi\Application\PipelineManager;
+use WebHemi\Application\SessionManager;
 use WebHemi\Application\Web\WebApplication as Application;
 use WebHemi\Config\Config;
 use WebHemi\Application\PipelineManager as Pipeline;
 use WebHemiTest\AssertTrait;
+use WebHemiTest\InvokePrivateMethodTrait;
 use WebHemiTest\Fixtures\TestMiddleware;
 
 /**
@@ -40,6 +43,7 @@ class WebApplicationTest extends TestCase
     protected $files = [];
 
     use AssertTrait;
+    use InvokePrivateMethodTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -77,8 +81,6 @@ class WebApplicationTest extends TestCase
         ];
 
         $config = new Config($this->config);
-
-        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
         $environmentManager = new EnvironmentManager(
             $config,
             $this->get,
@@ -87,12 +89,21 @@ class WebApplicationTest extends TestCase
             $this->cookie,
             $this->files
         );
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipelineManager = new PipelineManager($config->getConfig('middleware_pipeline'));
 
-        $app = new Application($diAdapter, $environmentManager, $pipeline);
+        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+        $diAdapter->registerService(ConfigInterface::class, $config)
+            ->registerService(EnvironmentManager::class, $environmentManager)
+            ->registerService(PipelineManager::class, $pipelineManager)
+            ->registerModuleServices('Global');
+
+        $app = new Application($diAdapter);
 
         $this->assertInstanceOf(ApplicationInterface::class, $app);
         $this->assertTrue($diAdapter === $app->getContainer());
+        $actualObject = $app->getContainer()->get(EnvironmentManager::class);
+        $this->assertInstanceOf(EnvironmentManager::class, $actualObject);
+        $this->assertTrue($environmentManager === $actualObject);
     }
 
     /**
@@ -108,8 +119,6 @@ class WebApplicationTest extends TestCase
         ];
 
         $config = new Config($this->config);
-
-        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
         $environmentManager = new EnvironmentManager(
             $config,
             $this->get,
@@ -118,9 +127,15 @@ class WebApplicationTest extends TestCase
             $this->cookie,
             $this->files
         );
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipelineManager = new PipelineManager($config->getConfig('middleware_pipeline'));
 
-        $app = new Application($diAdapter, $environmentManager, $pipeline);
+        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+        $diAdapter->registerService(ConfigInterface::class, $config)
+            ->registerService(EnvironmentManager::class, $environmentManager)
+            ->registerService(PipelineManager::class, $pipelineManager)
+            ->registerModuleServices('Global');
+
+        $app = new Application($diAdapter);
         $app->run();
 
         $expectedPipelineTrace = [
@@ -156,8 +171,6 @@ class WebApplicationTest extends TestCase
         ];
 
         $config = new Config($this->config);
-
-        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
         $environmentManager = new EnvironmentManager(
             $config,
             $this->get,
@@ -166,9 +179,15 @@ class WebApplicationTest extends TestCase
             $this->cookie,
             $this->files
         );
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipelineManager = new PipelineManager($config->getConfig('middleware_pipeline'));
 
-        $app = new Application($diAdapter, $environmentManager, $pipeline);
+        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+        $diAdapter->registerService(ConfigInterface::class, $config)
+            ->registerService(EnvironmentManager::class, $environmentManager)
+            ->registerService(PipelineManager::class, $pipelineManager)
+            ->registerModuleServices('Global');
+
+        $app = new Application($diAdapter);
         $app->run();
 
         $expectedPipelineTrace = [
@@ -197,8 +216,6 @@ class WebApplicationTest extends TestCase
         ];
 
         $config = new Config($this->config);
-
-        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
         $environmentManager = new EnvironmentManager(
             $config,
             $this->get,
@@ -207,9 +224,15 @@ class WebApplicationTest extends TestCase
             $this->cookie,
             $this->files
         );
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipelineManager = new PipelineManager($config->getConfig('middleware_pipeline'));
 
-        $app = new Application($diAdapter, $environmentManager, $pipeline);
+        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+        $diAdapter->registerService(ConfigInterface::class, $config)
+            ->registerService(EnvironmentManager::class, $environmentManager)
+            ->registerService(PipelineManager::class, $pipelineManager)
+            ->registerModuleServices('Global');
+
+        $app = new Application($diAdapter);
         $app->run();
 
         $expectedPipelineTrace = [
@@ -237,8 +260,6 @@ class WebApplicationTest extends TestCase
         ];
 
         $config = new Config($this->config);
-
-        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
         $environmentManager = new EnvironmentManager(
             $config,
             $this->get,
@@ -247,9 +268,15 @@ class WebApplicationTest extends TestCase
             $this->cookie,
             $this->files
         );
-        $pipeline = new Pipeline($config->getConfig('middleware_pipeline'));
+        $pipelineManager = new PipelineManager($config->getConfig('middleware_pipeline'));
 
-        $app = new Application($diAdapter, $environmentManager, $pipeline);
+        $diAdapter = new DependencyInjectionAdapter($config->getConfig('dependencies'));
+        $diAdapter->registerService(ConfigInterface::class, $config)
+            ->registerService(EnvironmentManager::class, $environmentManager)
+            ->registerService(PipelineManager::class, $pipelineManager)
+            ->registerModuleServices('Global');
+
+        $app = new Application($diAdapter);
         $app->run();
 
         $expectedPipelineTrace = [

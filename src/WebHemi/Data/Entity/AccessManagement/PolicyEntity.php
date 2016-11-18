@@ -26,6 +26,8 @@ class PolicyEntity implements DataEntityInterface
     /** @var int */
     private $applicationId;
     /** @var string */
+    private $name;
+    /** @var string */
     private $title;
     /** @var string */
     private $description;
@@ -37,6 +39,19 @@ class PolicyEntity implements DataEntityInterface
     private $dateCreated;
     /** @var DateTime */
     private $dateModified;
+
+    /**
+     * Sets the value of the entity identifier.
+     *
+     * @param int $entityId
+     * @return PolicyEntity
+     */
+    public function setKeyData($entityId)
+    {
+        $this->policyId = $entityId;
+
+        return $this;
+    }
 
     /**
      * Gets the value of the entity identifier.
@@ -106,6 +121,26 @@ class PolicyEntity implements DataEntityInterface
     public function getApplicationId()
     {
         return $this->applicationId;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return PolicyEntity
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

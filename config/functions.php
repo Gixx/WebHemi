@@ -11,6 +11,28 @@
  */
 
 /**
+ * Damn var dumping in a user-friendly way.
+ *
+ * @param mixed $variable
+ */
+function d(...$variables)
+{
+    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+    $FILE = __FILE__;
+    $LINE = __LINE__;
+    if (isset($backtrace[0])) {
+        $FILE = $backtrace[0]['file'];
+        $LINE = $backtrace[0]['line'];
+    }
+    if (php_sapi_name() !== 'cli') {
+        echo '<strong>In file '.$FILE." at line ".$LINE.':</strong>';
+    } else {
+        echo 'In file '.$FILE." at line ".$LINE.':'.PHP_EOL;
+    }
+    var_dump(...$variables);
+}
+
+/**
  * Merge config arrays in the correct way.
  * This rewrites the given key->value pairs and does not make key->array(value1, value2) like the
  * `array_merge_recursive` does.
@@ -63,7 +85,7 @@ function get_pdo_config()
         $databaseConfig = require __DIR__.'/local.db.php';
     }
 
-    return $databaseConfig;
+    return $databaseConfig['pdo'];
 }
 
 /**
@@ -113,7 +135,7 @@ function get_application_config()
     // It is important that the custom application should be checked first, then the 'admin', and the 'website' last.
     $applicationConfig['applications'] = array_reverse($applicationConfig['applications']);
 
-    return $applicationConfig;
+    return $applicationConfig['applications'];
 }
 
 /**
@@ -134,7 +156,7 @@ function get_theme_config()
     $handle = opendir($vendorThemePath);
 
     if (!$handle) {
-        return $themeConfig;
+        return $themeConfig['themes'];
     }
 
     while (false !== ($entry = readdir($handle))) {
@@ -144,7 +166,7 @@ function get_theme_config()
         }
     }
     closedir($handle);
-    return $themeConfig;
+    return $themeConfig['themes'];
 }
 
 /**
@@ -152,7 +174,7 @@ function get_theme_config()
  *
  * @return array
  */
-function get_module_config()
+function get_full_module_config()
 {
     $moduleConfig = [];
 
@@ -172,4 +194,76 @@ function get_module_config()
     }
     closedir($handle);
     return $moduleConfig;
+}
+
+/**
+ * Returns the module config.
+ *
+ * @return array
+ */
+function get_module_config()
+{
+    $moduleConfig = get_full_module_config();
+
+    return $moduleConfig['modules'];
+}
+
+/**
+ * Returns the dependencies config.
+ *
+ * @return array
+ */
+function get_dependencies_config()
+{
+    $moduleConfig = get_full_module_config();
+    $globalConfig = require __DIR__.'/global.dependencies.php';
+
+    $dependenciesConfig = merge_array_overwrite($moduleConfig, $globalConfig);
+
+    return $dependenciesConfig['dependencies'];
+}
+
+/**
+ * Returns the pipeline config.
+ *
+ * @return array
+ */
+function get_pipeline_config()
+{
+    $moduleConfig = get_full_module_config();
+    $globalConfig = require __DIR__.'/global.pipeline.php';
+
+    $dependenciesConfig = merge_array_overwrite($moduleConfig, $globalConfig);
+
+    return $dependenciesConfig['middleware_pipeline'];
+}
+
+/**
+ * Returns the auth config.
+ *
+ * @return array
+ */
+function get_auth_config()
+{
+    $globalAuthConfig = require __DIR__.'/global.auth.php';
+    $localAuthConfig = (file_exists(__DIR__.'/local.auth.php')) ? require __DIR__.'/local.auth.php' : [];
+
+    $authConfig = merge_array_overwrite($globalAuthConfig, $localAuthConfig);
+
+    return $authConfig['auth'];
+}
+
+/**
+ * Returns the session config.
+ *
+ * @return array
+ */
+function get_session_config()
+{
+    $globalSessionConfig = require __DIR__.'/global.session.php';
+    $localSessionConfig = (file_exists(__DIR__.'/local.session.php')) ? require __DIR__.'/local.session.php' : [];
+
+    $sessionConfig = merge_array_overwrite($globalSessionConfig, $localSessionConfig);
+
+    return $sessionConfig['session'];
 }

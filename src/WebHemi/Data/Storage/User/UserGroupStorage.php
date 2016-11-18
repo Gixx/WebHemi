@@ -26,6 +26,8 @@ class UserGroupStorage extends AbstractDataStorage
     /** @var string */
     protected $idKey = 'id_user_group';
     /** @var string */
+    private $name = 'name';
+    /** @var string */
     private $title = 'title';
     /** @var string */
     private $description = 'description';
@@ -46,11 +48,35 @@ class UserGroupStorage extends AbstractDataStorage
     {
         /* @var UserGroupEntity $entity */
         $entity->setUserGroupId($data[$this->idKey])
+            ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
             ->setReadOnly($data[$this->isReadOnly])
             ->setDateCreated(new DateTime($data[$this->dateCreated]))
             ->setDateModified(new DateTime($data[$this->dateModified]));
+    }
+
+    /**
+     * Get data from an entity.
+     *
+     * @param DataEntityInterface $entity
+     * @return array
+     */
+    protected function getEntityData(DataEntityInterface $entity)
+    {
+        /** @var UserGroupEntity $entity */
+        $dateCreated = $entity->getDateCreated();
+        $dateModified = $entity->getDateModified();
+
+        return [
+            $this->idKey => $entity->getKeyData(),
+            $this->name => $entity->getName(),
+            $this->title => $entity->getTitle(),
+            $this->description => $entity->getDescription(),
+            $this->isReadOnly => (int)$entity->getReadOnly(),
+            $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
+            $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
+        ];
     }
 
     /**
@@ -68,6 +94,26 @@ class UserGroupStorage extends AbstractDataStorage
         if (!empty($data)) {
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Returns a User Group entity by name.
+     *
+     * @param string $name
+     *
+     * @return bool|UserGroupEntity
+     */
+    public function getUserGroupByName($name)
+    {
+        $entity = false;
+        $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
+
+        if (!empty($dataList)) {
+            $entity = $this->createEntity();
+            $this->populateEntity($entity, $dataList[0]);
         }
 
         return $entity;

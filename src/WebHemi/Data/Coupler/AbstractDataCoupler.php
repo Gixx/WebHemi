@@ -57,7 +57,8 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
                     implode(', ', array_keys($this->dependentDataGroups)),
                     $entityClassA,
                     $entityClassB
-                )
+                ),
+                1000
             );
         }
 
@@ -88,7 +89,8 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
         $entityClass = get_class($entity);
         if (!isset($this->dataEntityPrototypes[$entityClass])) {
             throw new RuntimeException(
-                sprintf('Cannot use this coupler class to find dependencies for %s.', $entityClass)
+                sprintf('Cannot use this coupler class to find dependencies for %s.', $entityClass),
+                1001
             );
         }
 
@@ -100,6 +102,44 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
         }
 
         return $entityList;
+    }
+
+    /**
+     * Sets dependency for the entities
+     *
+     * @param DataEntityInterface $entityA
+     * @param DataEntityInterface $entityB
+     * @return mixed The ID of the saved entity in the storage
+     */
+    public function setDependency(DataEntityInterface $entityA, DataEntityInterface $entityB)
+    {
+        $entityClassA = get_class($entityA);
+        if (!isset($this->dataEntityPrototypes[$entityClassA])) {
+            throw new InvalidArgumentException(sprintf('Cannot use this coupler class for %s.', $entityClassA), 1002);
+        }
+
+        $entityClassB = get_class($entityB);
+        if (!isset($this->dataEntityPrototypes[$entityClassB])) {
+            throw new InvalidArgumentException(sprintf('Cannot use this coupler class for %s.', $entityClassB), 1003);
+        }
+
+        if ($entityClassA == $entityClassB) {
+            throw new InvalidArgumentException(
+                sprintf('Cannot set dependency for the same type of entity %s.', $entityClassB),
+                1004
+            );
+        }
+
+        $data = [
+            $this->dependentDataGroups[$entityClassA]['source_key'] => $entityA->getKeyData(),
+            $this->dependentDataGroups[$entityClassB]['source_key'] => $entityB->getKeyData(),
+        ];
+
+        // Point the data adapter to the connector group
+        return $this->getDataAdapter()
+            ->setDataGroup($this->connectorDataGroup)
+            ->setIdKey($this->connectorIdKey)
+            ->saveData(null, $data);
     }
 
     /**

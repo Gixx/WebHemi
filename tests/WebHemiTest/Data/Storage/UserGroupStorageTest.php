@@ -15,6 +15,8 @@ use Prophecy\Argument;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Storage\User\UserGroupStorage;
 use WebHemi\Data\Entity\User\UserGroupEntity;
+use WebHemiTest\AssertTrait;
+use WebHemiTest\InvokePrivateMethodTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -23,6 +25,9 @@ use PHPUnit_Framework_TestCase as TestCase;
 class UserGroupStorageTest extends TestCase
 {
     private $defaultAdapter;
+
+    use AssertTrait;
+    use InvokePrivateMethodTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -72,6 +77,7 @@ class UserGroupStorageTest extends TestCase
         $data = [
             [
                 'id_user_group' => 1,
+                'name' => 'admin',
                 'title' => 'Admins',
                 'description' => 'Administrator group',
                 'is_read_only' => true,
@@ -80,6 +86,7 @@ class UserGroupStorageTest extends TestCase
             ],
             [
                 'id_user_group' => 2,
+                'name' => 'guest',
                 'title' => 'Guests',
                 'description' => 'Visitor group',
                 'is_read_only' => false,
@@ -124,6 +131,79 @@ class UserGroupStorageTest extends TestCase
 
         /** @var bool $actualResult */
         $actualResult = $storage->getUserGroupById(3);
+        $this->assertFalse($actualResult);
+    }
+
+    /**
+     * Test the getUserGroupByName method.
+     */
+    public function testGetUserGroupByName()
+    {
+        $data = [
+            [
+                'id_user_group' => 1,
+                'name' => 'admin',
+                'title' => 'Admins',
+                'description' => 'Administrator group',
+                'is_read_only' => 1,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ],
+            [
+                'id_user_group' => 2,
+                'name' => 'guest',
+                'title' => 'Guests',
+                'description' => 'Visitor group',
+                'is_read_only' => 0,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ],
+        ];
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('int'))
+            ->will(
+                function ($args) use ($data) {
+                    if (isset($args[0]['name'])) {
+                        foreach ($data as $itemData) {
+                            if ($itemData['name'] == $args[0]['name']) {
+                                return [$itemData];
+                            }
+                        }
+                    }
+
+                    return false;
+                }
+            );
+
+        $dataEntity = new UserGroupEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new UserGroupStorage($defaultAdapterInstance, $dataEntity);
+
+
+        /** @var UserGroupEntity $actualResult */
+        $actualResult = $storage->getUserGroupByName('admin');
+        $this->assertInstanceOf(UserGroupEntity::class, $actualResult);
+        $this->assertFalse($dataEntity === $actualResult);
+        $this->assertEquals($data[0]['title'], $actualResult->getTitle());
+        $this->assertEquals($data[0]['description'], $actualResult->getDescription());
+        $this->assertTrue($actualResult->getReadOnly());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
+        $this->assertArraysAreSimilar($data[0], $actualData);
+
+        /** @var UserGroupEntity $actualResult */
+        $actualResult = $storage->getUserGroupByName('guest');
+        $this->assertInstanceOf(UserGroupEntity::class, $actualResult);
+        $this->assertFalse($dataEntity === $actualResult);
+        $this->assertEquals($data[1]['title'], $actualResult->getTitle());
+        $this->assertEquals($data[1]['description'], $actualResult->getDescription());
+        $this->assertFalse($actualResult->getReadOnly());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
+        $this->assertArraysAreSimilar($data[1], $actualData);
+
+        /** @var bool $actualResult */
+        $actualResult = $storage->getUserGroupByName('someName');
         $this->assertFalse($actualResult);
     }
 }

@@ -34,6 +34,19 @@ class ApplicationEntity implements DataEntityInterface
     private $dateModified;
 
     /**
+     * Sets the value of the entity identifier.
+     *
+     * @param int $entityId
+     * @return ApplicationEntity
+     */
+    public function setKeyData($entityId)
+    {
+        $this->applicationId = $entityId;
+
+        return $this;
+    }
+
+    /**
      * Gets the value of the entity identifier.
      *
      * @return int

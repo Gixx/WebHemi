@@ -17,6 +17,7 @@ use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Storage\AccessManagement\PolicyStorage;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemiTest\AssertTrait;
+use WebHemiTest\InvokePrivateMethodTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -29,6 +30,7 @@ class PolicyStorageTest extends TestCase
     private $defaultAdapter;
 
     use AssertTrait;
+    use InvokePrivateMethodTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -45,34 +47,37 @@ class PolicyStorageTest extends TestCase
                 'id_am_policy' => 1,
                 'fk_am_resource' => 1,
                 'fk_application' => 1,
+                'name' => 'test1',
                 'title' => 'Test Policy 1',
                 'description' => 'A test policy record',
-                'is_read_only' => true,
-                'is_allowed' => true,
+                'is_read_only' => 1,
+                'is_allowed' => 1,
                 'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  null,
+                'date_modified' =>  '2016-03-24 16:25:12',
             ],
             1 => [
                 'id_am_policy' => 2,
                 'fk_am_resource' => 1,
                 'fk_application' => 2,
+                'name' => 'test2',
                 'title' => 'Test Policy 2',
                 'description' => 'A test policy record',
-                'is_read_only' => false,
-                'is_allowed' => false,
+                'is_read_only' => 0,
+                'is_allowed' => 0,
                 'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  null,
+                'date_modified' =>  '2016-03-24 16:25:12',
             ],
             2 => [
                 'id_am_policy' => 3,
                 'fk_am_resource' => null,
                 'fk_application' => null,
+                'name' => 'test3',
                 'title' => 'Test Policy 3',
                 'description' => 'A test policy record',
-                'is_read_only' => false,
-                'is_allowed' => true,
+                'is_read_only' => 0,
+                'is_allowed' => 1,
                 'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  null,
+                'date_modified' =>  '2016-03-24 16:25:12',
             ]
         ];
 
@@ -142,8 +147,57 @@ class PolicyStorageTest extends TestCase
         $this->assertEquals(1, $actualResult->getResourceId());
         $this->assertEquals(1, $actualResult->getApplicationId());
         $this->assertTrue($actualResult->getReadOnly());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
+        $this->assertArraysAreSimilar($data[0], $actualData);
 
         $actualResult = $storage->getPolicyById(3);
+        $this->assertEmpty($actualResult->getResourceId());
+        $this->assertTrue($actualResult->getAllowed());
+    }
+
+    /**
+     * Test the getPolicyByName method.
+     */
+    public function testGetPolicyByName()
+    {
+        $data = $this->data;
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('int'))
+            ->will(
+                function ($args) use ($data) {
+                    if (isset($args[0]['name'])) {
+                        foreach ($data as $itemData) {
+                            if ($itemData['name'] == $args[0]['name']) {
+                                return [$itemData];
+                            }
+                        }
+                    }
+
+                    return false;
+                }
+            );
+
+        $dataEntity = new PolicyEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new PolicyStorage($defaultAdapterInstance, $dataEntity);
+
+        $actualResult = $storage->getPolicyByName('someName');
+        $this->assertFalse($actualResult);
+
+        /** @var PolicyEntity $actualResult */
+        $actualResult = $storage->getPolicyByName('test1');
+        $this->assertInstanceOf(PolicyEntity::class, $actualResult);
+        $this->assertFalse($dataEntity === $actualResult);
+        $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
+        $this->assertEquals(1, $actualResult->getResourceId());
+        $this->assertEquals(1, $actualResult->getApplicationId());
+        $this->assertTrue($actualResult->getReadOnly());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
+        $this->assertArraysAreSimilar($data[0], $actualData);
+
+        $actualResult = $storage->getPolicyByName('test3');
         $this->assertEmpty($actualResult->getResourceId());
         $this->assertTrue($actualResult->getAllowed());
     }
@@ -183,14 +237,20 @@ class PolicyStorageTest extends TestCase
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
         $this->assertSame('Test Policy 1', $actualResult[0]->getTitle());
         $this->assertTrue($actualResult[0]->getAllowed());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
+        $this->assertArraysAreSimilar($data[0], $actualData);
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[1]);
         $this->assertFalse($actualResult[1]->getAllowed());
         $this->assertSame('Test Policy 2', $actualResult[1]->getTitle());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
+        $this->assertArraysAreSimilar($data[1], $actualData);
 
         $actualResult = $storage->getPoliciesByResourceId(null);
         $this->assertSame(1, count($actualResult));
         $this->assertFalse($actualResult[0]->getReadOnly());
         $this->assertSame('Test Policy 3', $actualResult[0]->getTitle());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
+        $this->assertArraysAreSimilar($data[2], $actualData);
 
         $actualResult = $storage->getPoliciesByResourceId(100);
         $this->assertEmpty($actualResult);

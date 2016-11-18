@@ -53,6 +53,14 @@ interface DataStorageInterface
     public function createEntity();
 
     /**
+     * Saves data.
+     *
+     * @param DataEntityInterface &$entity
+     * @return DataStorageInterface
+     */
+    public function saveEntity(DataEntityInterface &$entity);
+
+    /**
      * Returns the DataAdapter instance.
      *
      * @return DataAdapterInterface

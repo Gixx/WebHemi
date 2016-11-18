@@ -22,7 +22,6 @@ return [
         'admin' => [
             'path'        => 'admin',
             'theme'       => 'default',
-            'type'        => 'directory',
         ],
     ],
 ];

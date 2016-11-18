@@ -40,6 +40,18 @@ class EmptyStorage extends AbstractDataStorage
     }
 
     /**
+     * Get data from an entity.
+     *
+     * @param DataEntityInterface $entity
+     * @return array
+     */
+    protected function getEntityData(DataEntityInterface $entity)
+    {
+        /** @var EmptyEntity $entity */
+        return $entity->storage;
+    }
+
+    /**
      * Sets id key fir the storage. Only for unit test.
      *
      * @param string $idKey

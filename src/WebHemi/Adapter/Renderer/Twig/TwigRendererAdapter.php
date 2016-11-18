@@ -48,7 +48,7 @@ class TwigRendererAdapter implements RendererAdapterInterface
     {
         $this->config = $templateConfig;
         $this->defaultViewPath = realpath(__DIR__.'/../../../../../resources/default_theme/view');
-        $this->templateViewPath = realpath(__DIR__.'/../../../../../'.$templatePath.'/view');
+        $this->templateViewPath = realpath(__DIR__.'/../../../../..'.$templatePath.'/view');
         $this->templateResourcePath = $templatePath.'/static';
         $this->applicationBaseUri = $applicationBaseUri;
 

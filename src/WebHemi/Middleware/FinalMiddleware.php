@@ -51,7 +51,7 @@ class FinalMiddleware implements MiddlewareInterface
         // @codeCoverageIgnoreEnd
 
         // Handle errors here.
-        if ($response->getStatusCode() !== ResponseInterface::STATUS_OK) {
+        if (!in_array($response->getStatusCode(), [ResponseInterface::STATUS_OK, ResponseInterface::STATUS_REDIRECT])) {
             $errorTemplate = 'error-'.$response->getStatusCode();
             $exception = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
             $body = $this->templateRenderer->render($errorTemplate, ['exception' => $exception]);
@@ -75,6 +75,8 @@ class FinalMiddleware implements MiddlewareInterface
 
     /**
      * Inject the Content-Length header if is not already present.
+     *
+     * NOTE: if there will be chunk content displayed, check if the response getSize counts the real size correctly
      *
      * @param ResponseInterface $response
      *

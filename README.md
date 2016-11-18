@@ -1,7 +1,9 @@
 WebHemi
 =======
 
-[![WebHemi Version](https://img.shields.io/badge/version-v4.0.0--2.0-blue.svg)](https://github.com/Gixx/WebHemi)
+[![WebHemi Development](https://img.shields.io/badge/Development-dev--master-orange.svg)](https://github.com/Gixx/WebHemi)
+[![WebHemi Latest](https://img.shields.io/badge/Latest-v4.0.0--2.1-yellowgreen.svg)](https://github.com/Gixx/WebHemi/releases/latest)
+
 [![Minimum PHP Version](https://img.shields.io/badge/PHP-%3E%3D5.6-blue.svg)](https://php.net/)
 [![Email](https://img.shields.io/badge/email-navig80@gmail.com-blue.svg?style=flat-square)](mailto:navig80@gmail.com)
 [![Packagist](https://img.shields.io/badge/packagist-download-blue.svg)](https://packagist.org/packages/gixx/web-hemi)
@@ -35,7 +37,7 @@ Figure 1: The basic execution flow of the application.
 
 Figure 2: The queue of the Middleware Pipeline
 
-![pipelinemanager](https://cloud.githubusercontent.com/assets/87073/19352680/0021efd2-9161-11e6-9fed-fec42321083a.png)
+![pipelinemanager](https://cloud.githubusercontent.com/assets/87073/20424303/6a5a8118-ad75-11e6-8012-15cf2d166bdb.png)
 
 FAQ
 ---
