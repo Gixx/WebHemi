@@ -35,6 +35,11 @@ class UserGroupEntityTest extends TestCase
 
         $entity->setUserGroupId(123);
         $this->assertSame($entity->getUserGroupId(), $entity->getKeyData());
+
+        $expectedKey = 567;
+        $entity->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $entity->getUserGroupId());
+        $this->assertSame($expectedKey, $entity->getKeyData());
     }
 
     /**
@@ -49,6 +54,7 @@ class UserGroupEntityTest extends TestCase
         return [
             ['userGroupId', 1, 1, false],
             ['userGroupId', 'someId', 'someId', false],
+            ['name','some name','some name', false],
             ['title','some title','some title', false],
             ['description','some description','some description', false],
             ['isReadOnly',1, true, true],

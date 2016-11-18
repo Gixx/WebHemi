@@ -16,6 +16,8 @@ use Prophecy\Argument;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Entity\User\UserEntity;
+use WebHemiTest\AssertTrait;
+use WebHemiTest\InvokePrivateMethodTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -24,6 +26,9 @@ use PHPUnit_Framework_TestCase as TestCase;
 class UserStorageTest extends TestCase
 {
     private $defaultAdapter;
+
+    use AssertTrait;
+    use InvokePrivateMethodTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -66,7 +71,7 @@ class UserStorageTest extends TestCase
     }
 
     /**
-     * Test the getUserById method.
+     * Test the getUserById() method.
      */
     public function testGetUserById()
     {
@@ -112,7 +117,7 @@ class UserStorageTest extends TestCase
     }
 
     /**
-     * Test the getUserByEmail method.
+     * Test the getUserByEmail() method.
      */
     public function testGetUserByEmail()
     {
@@ -122,10 +127,10 @@ class UserStorageTest extends TestCase
             'email' => 'test.address@foo.org',
             'password' => md5('testPassword'),
             'hash' => null,
-            'is_active' => true,
-            'is_enabled' => true,
+            'is_active' => 1,
+            'is_enabled' => 1,
             'date_created' =>  '2016-03-24 16:25:12',
-            'date_modified' =>  null,
+            'date_modified' =>  '2016-03-24 16:25:12',
         ];
 
         $this->defaultAdapter
@@ -154,5 +159,56 @@ class UserStorageTest extends TestCase
         $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
         $this->assertEquals($data['password'], $actualResult->getPassword());
         $this->assertSame(true, $actualResult->getEnabled());
+
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
+        $this->assertArraysAreSimilar($data, $actualData);
+    }
+
+    /**
+     * Test the getUserByUserName() method.
+     */
+    public function testGetUserByUserName()
+    {
+        $data = [
+            'id_user' => 1,
+            'username' => 'testUser',
+            'email' => 'test.address@foo.org',
+            'password' => md5('testPassword'),
+            'hash' => null,
+            'is_active' => 1,
+            'is_enabled' => 1,
+            'date_created' =>  '2016-03-24 16:25:12',
+            'date_modified' =>  '2016-03-24 16:25:12',
+        ];
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('int'))
+            ->will(
+                function ($args) use ($data) {
+                    if ($args[0]['username'] == 'testUser') {
+                        return [$data];
+                    }
+                    return false;
+                }
+            );
+
+        $dataEntity = new UserEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new UserStorage($defaultAdapterInstance, $dataEntity);
+
+        $actualResult = $storage->getUserByUserName('Donald Trump');
+        $this->assertFalse($actualResult);
+
+        /** @var UserEntity $actualResult */
+        $actualResult = $storage->getUserByUserName('testUser');
+        $this->assertInstanceOf(UserEntity::class, $actualResult);
+        $this->assertFalse($dataEntity === $actualResult);
+        $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
+        $this->assertEquals($data['password'], $actualResult->getPassword());
+        $this->assertSame(true, $actualResult->getEnabled());
+
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
+        $this->assertArraysAreSimilar($data, $actualData);
     }
 }

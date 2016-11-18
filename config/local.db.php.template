@@ -1,8 +1,11 @@
 <?php
 
 return [
-    'dsn'      => 'mysql:dbname=webhemi;charset=utf8;host=127.0.0.1',
-    'user'     => 'username',
-    'password' => 'password',
-    'options'  => [],
+    'pdo' => [
+        'dsn'      => 'mysql:dbname=%pdo.dbname%;charset=utf8;hostname=%pdo.hostname%',
+        'user'     => '%pdo.username%',
+        'password' => '%pdo.password%',
+        'options'  => [
+        ],
+    ],
 ];

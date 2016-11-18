@@ -22,6 +22,8 @@ class UserGroupEntity implements DataEntityInterface
     /** @var int */
     private $userGroupId;
     /** @var string */
+    private $name;
+    /** @var string */
     private $title;
     /** @var string */
     private $description;
@@ -31,6 +33,19 @@ class UserGroupEntity implements DataEntityInterface
     private $dateCreated;
     /** @var DateTime */
     private $dateModified;
+
+    /**
+     * Sets the value of the entity identifier.
+     *
+     * @param int $entityId
+     * @return UserGroupEntity
+     */
+    public function setKeyData($entityId)
+    {
+        $this->userGroupId = $entityId;
+
+        return $this;
+    }
 
     /**
      * Gets the value of the entity identifier.
@@ -60,6 +75,26 @@ class UserGroupEntity implements DataEntityInterface
     public function getUserGroupId()
     {
         return $this->userGroupId;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return UserGroupEntity
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

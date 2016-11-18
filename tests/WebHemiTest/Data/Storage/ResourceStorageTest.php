@@ -16,6 +16,8 @@ use Prophecy\Argument;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
+use WebHemiTest\AssertTrait;
+use WebHemiTest\InvokePrivateMethodTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -24,6 +26,9 @@ use PHPUnit_Framework_TestCase as TestCase;
 class ResourceStorageTest extends TestCase
 {
     private $defaultAdapter;
+
+    use AssertTrait;
+    use InvokePrivateMethodTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -75,9 +80,9 @@ class ResourceStorageTest extends TestCase
             'name' => 'test.resource',
             'title' => 'Test Resource',
             'description' => 'A test resource record',
-            'is_read_only' => false,
+            'is_read_only' => 0,
             'date_created' =>  '2016-03-24 16:25:12',
-            'date_modified' =>  null,
+            'date_modified' =>  '2016-03-24 16:25:12',
         ];
 
         $this->defaultAdapter
@@ -108,5 +113,7 @@ class ResourceStorageTest extends TestCase
         $this->assertEquals($data['name'], $actualResult->getName());
         $this->assertEquals($data['title'], $actualResult->getTitle());
         $this->assertFalse($actualResult->getReadOnly());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
+        $this->assertArraysAreSimilar($data, $actualData);
     }
 }

@@ -45,16 +45,13 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     {
         $this->container = new ContainerBuilder();
         $this->configuration = $configuration->toArray();
-
-        if (isset($this->configuration['Global'])) {
-            $this->registerServices($this->configuration['Global']);
-        }
     }
 
     /**
      * Initializes the DI container from the config.
      *
      * @param array  $dependencies
+     * @return SymfonyAdapter
      */
     private function registerServices(array $dependencies)
     {
@@ -66,6 +63,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         foreach ($this->servicesToDefine as $alias => $serviceClass) {
             $this->registerService($alias, $serviceClass);
         }
+
+        return $this;
     }
 
     /**
@@ -89,15 +88,26 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     /**
      * Registers the service.
      *
-     * @param string $identifier
-     * @param string $serviceClass
+     * @param string        $identifier
+     * @param string|object $serviceClass
+     * @return SymfonyAdapter
      */
     public function registerService($identifier, $serviceClass)
     {
         // Do nothing if the service has been already registered with the same alias.
         // It is allowed to register the same service multiple times with different aliases.
         if ($this->has($identifier)) {
-            return;
+            return $this;
+        }
+
+        // Register synthetic services
+        if ('object' == gettype($serviceClass)) {
+            $this->container->register($identifier)
+                ->setShared(true)
+                ->setSynthetic(true);
+
+            $this->container->set($identifier, $serviceClass);
+            return $this;
         }
 
         $setUpData = $this->getServiceSetupData($identifier, $serviceClass);
@@ -110,6 +120,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
 
         // Register the service.
         $service = $this->container->setDefinition($identifier, $definition);
+
         if ($sharedService) {
             $this->instantiatedSharedServices[$service->getClass()] = false;
         }
@@ -123,6 +134,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         foreach ((array) $setUpData[self::SERVICE_METHOD_CALL] as $method => $parameterList) {
             $this->addMethodCall($service, $method, $parameterList);
         }
+
+        return $this;
     }
 
     /**
@@ -259,15 +272,14 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
 
     /**
      * Register module specific services.
-     * If a service is already registered in the Global namespace, it will be skipped.
+     * If a service is already registered, it will be skipped.
      *
      * @param string $moduleName
      * @return DependencyInjectionAdapterInterface
      */
     public function registerModuleServices($moduleName)
     {
-        // TODO solve the case when the method is called multiple times with different argument -> unregister
-        if ($moduleName != 'Global' && isset($this->configuration[$moduleName])) {
+        if (isset($this->configuration[$moduleName])) {
             $this->moduleNamespace = $moduleName;
             $this->registerServices($this->configuration[$moduleName]);
         }

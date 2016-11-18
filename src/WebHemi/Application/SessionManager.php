@@ -12,38 +12,49 @@
 namespace WebHemi\Application;
 
 use RuntimeException;
+use WebHemi\Config\ConfigInterface;
 
 /**
  * Class SessionManager.
- *
- * @codeCoverageIgnore - Not testing session (yet).
  */
 class SessionManager
 {
     /** @var string */
-    private $namespace = '_webhemi';
+    private $namespace;
     /** @var string */
-    private $cookiePrefix = 'atsn';
+    private $cookiePrefix;
     /** @var string */
-    private $sessionNameSalt = 'WebHemi';
+    private $sessionNameSalt;
     /** @var array */
-    private $readonly = [];
+    private $readOnly = [];
     /** @var array */
     private $data = [];
 
     /**
      * SessionManager constructor.
+     *
+     * @param ConfigInterface $sessionConfig
      */
-    public function __construct()
+    public function __construct(ConfigInterface $sessionConfig)
     {
-        ini_set('session.entropy_file', '/dev/urandom');
-        ini_set('session.entropy_length', '16');
-        ini_set('session.hash_function', 'sha256');
-        ini_set('session.use_only_cookies', '1');
-        ini_set('session.use_cookies', '1');
-        ini_set('session.use_trans_sid', '0');
-        ini_set('session.cookie_httponly', '1');
-        ini_set('session.save_path', __DIR__.'/../../../data/session/');
+        $config = $sessionConfig->toArray();
+
+        $this->namespace = $config['namespace'];
+        $this->cookiePrefix = $config['cookie_prefix'];
+        $this->sessionNameSalt = $config['session_name_salt'];
+
+        // @codeCoverageIgnoreStart
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            ini_set('session.entropy_file', '/dev/urandom');
+            ini_set('session.entropy_length', '16');
+            ini_set('session.hash_function', $config['hash_function']);
+            ini_set('session.use_only_cookies', (int)$config['use_only_cookies']);
+            ini_set('session.use_cookies', (int)$config['use_cookies']);
+            ini_set('session.use_trans_sid', (int)$config['use_trans_sid']);
+            ini_set('session.cookie_httponly', (int)$config['cookie_http_only']);
+            ini_set('session.save_path', $config['save_path']);
+        }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -51,17 +62,52 @@ class SessionManager
      */
     public function __destruct()
     {
+        $this->write();
+
+        // @codeCoverageIgnoreStart
+        if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            session_write_close();
+        }
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * Reads PHP Session array to class property.
+     * @codeCoverageIgnore
+     */
+    private function read()
+    {
+        if (isset($_SESSION[$this->namespace])) {
+            $this->data = $_SESSION[$this->namespace];
+        }
+    }
+
+    /**
+     * Writes class property to PHP Session array.
+     * @codeCoverageIgnore
+     */
+    private function write()
+    {
+        if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            return;
+        }
+
         $_SESSION[$this->namespace] = $this->data;
-        session_write_close();
     }
 
     /**
      * Check whether the session has already been started.
      *
      * @return bool
+     * @codeCoverageIgnore
      */
     private function sessionStarted()
     {
+        // For unit test we give controllable result.
+        if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            return $this->namespace == 'TEST';
+        }
+
         return session_status() === PHP_SESSION_ACTIVE;
     }
 
@@ -82,13 +128,15 @@ class SessionManager
             throw new RuntimeException('Cannot start session. Session is already started.', 1000);
         }
 
-        session_name($this->cookiePrefix.'-'.bin2hex($name . $this->sessionNameSalt));
-        session_set_cookie_params($timeOut, $path, $domain, $secure, $httpOnly);
-        session_start();
-
-        if (isset($_SESSION[$this->namespace])) {
-            $this->data = $_SESSION[$this->namespace];
+        // @codeCoverageIgnoreStart
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            session_name($this->cookiePrefix.'-'.bin2hex($name . $this->sessionNameSalt));
+            session_set_cookie_params($timeOut, $path, $domain, $secure, $httpOnly);
+            session_start();
         }
+        // @codeCoverageIgnoreEnd
+
+        $this->read();
 
         return $this;
     }
@@ -105,13 +153,40 @@ class SessionManager
         }
 
         // first save data.
-        $_SESSION[$this->namespace] = $this->data;
+        $this->write();
 
-        if (!session_regenerate_id(true)) {
-            throw new RuntimeException('Cannot regenerate session identifier. Unknown error.', 1002);
+        // @codeCoverageIgnoreStart
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            if (!session_regenerate_id(true)) {
+                throw new RuntimeException('Cannot regenerate session identifier. Unknown error.', 1002);
+            }
         }
+        // @codeCoverageIgnoreEnd
 
         return $this;
+    }
+
+    /**
+     * Gets session data.
+     *
+     * @param string $name
+     * @param bool   $skipMissing
+     * @throws RuntimeException
+     * @return mixed
+     */
+    public function get($name, $skipMissing = true)
+    {
+        if (!$this->sessionStarted()) {
+            throw new RuntimeException('Cannot set session data. Session is not started yet.', 1003);
+        }
+
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        } elseif ($skipMissing) {
+            return null;
+        }
+
+        throw new RuntimeException('Cannot retrieve session data. Data is not set', 1004);
     }
 
     /**
@@ -119,22 +194,22 @@ class SessionManager
      *
      * @param string $name
      * @param mixed  $value
-     * @param bool   $readonly
+     * @param bool   $readOnly
      * @throws RuntimeException
      * @return SessionManager
      */
-    public function set($name, $value, $readonly = false)
+    public function set($name, $value, $readOnly = false)
     {
         if (!$this->sessionStarted()) {
-            throw new RuntimeException('Cannot set session data. Session is not started yet.', 1003);
+            throw new RuntimeException('Cannot set session data. Session is not started yet.', 1005);
         }
 
-        if (isset($this->readonly[$name])) {
-            throw new RuntimeException('Unable to overwrite data. Permission denied.', 1004);
+        if (isset($this->readOnly[$name])) {
+            throw new RuntimeException('Unable to overwrite data. Permission denied.', 1006);
         }
 
-        if ($readonly) {
-            $this->readonly[$name] = $name;
+        if ($readOnly) {
+            $this->readOnly[$name] = $name;
         }
 
         $this->data[$name] = $value;
@@ -153,30 +228,30 @@ class SessionManager
     public function delete($name, $forceDelete = false)
     {
         if (!$this->sessionStarted()) {
-            throw new RuntimeException('Cannot delete session data. Session is not started.', 1005);
+            throw new RuntimeException('Cannot delete session data. Session is not started.', 1007);
         }
 
-        if (!$forceDelete && isset($this->readonly[$name])) {
-            throw new RuntimeException('Unable to delete data. Permission denied.', 1006);
+        if (!$forceDelete && isset($this->readOnly[$name])) {
+            throw new RuntimeException('Unable to delete data. Permission denied.', 1008);
         }
 
         // hide errors if data not exists.
-        unset($this->readonly[$name]);
+        unset($this->readOnly[$name]);
         unset($this->data[$name]);
 
         return $this;
     }
 
     /**
-     * Unlocks readonly data.
+     * Unlocks readOnly data.
      *
      * @param string $name
      * @return SessionManager
      */
     public function unlock($name)
     {
-        if (isset($this->readonly[$name])) {
-            unset($this->readonly[$name]);
+        if (isset($this->readOnly[$name])) {
+            unset($this->readOnly[$name]);
         }
 
         return $this;

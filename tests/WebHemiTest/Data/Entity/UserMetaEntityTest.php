@@ -31,6 +31,11 @@ class UserMetaEntityTest extends TestCase
 
         $entity->setUserMetaId(123);
         $this->assertSame($entity->getUserMetaId(), $entity->getKeyData());
+
+        $expectedKey = 567;
+        $entity->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $entity->getUserMetaId());
+        $this->assertSame($expectedKey, $entity->getKeyData());
     }
 
     /**

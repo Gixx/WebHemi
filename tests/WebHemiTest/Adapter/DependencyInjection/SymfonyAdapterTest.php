@@ -21,8 +21,10 @@ use Symfony\Component\DependencyInjection\Reference;
 use WebHemi\Adapter\DependencyInjection\Symfony\SymfonyAdapter;
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
 use WebHemi\Config\Config;
+use WebHemi\Config\ConfigInterface;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
+use WebHemiTest\Fixtures\EmptyEntity;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -38,8 +40,17 @@ class SymfonyAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $config = new Config([]);
-        $adapter = new SymfonyAdapter($config);
+        $config = new Config([
+            'applications' => [],
+            'themes' => [],
+            'modules' => [],
+            'auth' => [],
+            'middleware_pipeline' => [],
+            'dependencies' => [],
+        ]);
+        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter->registerService(ConfigInterface::class, $config)
+            ->registerModuleServices('Global');
 
         $this->assertInstanceOf(DependencyInjectionAdapterInterface::class, $adapter);
         $this->assertAttributeEmpty('configuration', $adapter);
@@ -52,12 +63,14 @@ class SymfonyAdapterTest extends TestCase
     {
         $config = new Config(
             [
-                'Global' => [
-                    'alias' => [
-                        'class' => DateTime::class
-                    ],
-                    ArrayObject::class => [],
-                ]
+                'dependencies' => [
+                    'Global' => [
+                        'alias' => [
+                            'class' => DateTime::class
+                        ],
+                        ArrayObject::class => [],
+                    ]
+                ],
             ]
         );
         $adapter = new SymfonyAdapter($config);
@@ -72,26 +85,31 @@ class SymfonyAdapterTest extends TestCase
     {
         $config = new Config(
             [
-                'Global' => [
-                    // Alias with argument, no call.
-                    'alias1' => [
-                        'class' => DateTime::class,
-                        'arguments' => [
-                            '2016-04-05 01:02:03'
+                'dependencies' => [
+                    'Global' => [
+                        // Alias with argument, no call.
+                        'alias1' => [
+                            'class' => DateTime::class,
+                            'arguments' => [
+                                '2016-04-05 01:02:03'
+                            ]
+                        ],
+                        // No alias, no argument, no call.
+                        stdClass::class => [],
+                        // Alias with call and share, no argument.
+                        'special' => [
+                            'class'  => ArrayObject::class,
+                            'calls'  => ['offsetSet' => ['date', 'alias1']],
+                            'shared' => true
                         ]
-                    ],
-                    // No alias, no argument, no call.
-                    stdClass::class => [],
-                    // Alias with call and share, no argument.
-                    'special' => [
-                        'class'  => ArrayObject::class,
-                        'calls'  => ['offsetSet' => ['date', 'alias1']],
-                        'shared' => true
                     ]
-                ]
+                ],
             ]
         );
-        $adapter = new SymfonyAdapter($config);
+        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter->registerService(ConfigInterface::class, $config)
+            ->registerModuleServices('Global');
+
         // can't overwrite already registered alias.
         $adapter->registerService('alias1', DateTime::class);
         // register the same service with different alias and with default parameters.
@@ -126,50 +144,66 @@ class SymfonyAdapterTest extends TestCase
     {
         $config = new Config(
             [
-                'Global' => [
-                    // Tests both class and alias reference to listed but not yet registered services
-                    'special1' => [
-                        'class'  => ArrayObject::class,
-                        'calls'  => [
-                            'offsetSet' => ['date', 'alias1'],
-                            'setIteratorClass' => [ArrayIterator::class]
+                'dependencies' => [
+                    'Global' => [
+                        // Tests both class and alias reference to listed but not yet registered services
+                        'special1' => [
+                            'class'  => ArrayObject::class,
+                            'calls'  => [
+                                'offsetSet' => ['date', 'alias1'],
+                                'setIteratorClass' => [ArrayIterator::class]
+                            ],
+                            'shared' => true
                         ],
-                        'shared' => true
+                        'alias1' => [
+                            'class' => DateTime::class,
+                            'arguments' => [
+                                '2016-04-05 01:02:03'
+                            ]
+                        ],
                     ],
-                    'alias1' => [
-                        'class' => DateTime::class,
-                        'arguments' => [
-                            '2016-04-05 01:02:03'
-                        ]
-                    ],
+                    'Website' => [
+                        'special2' => [
+                            'class'  => ArrayObject::class,
+                            'calls'  => [
+                                'offsetSet' => ['iterator', ArrayIterator::class],
+                            ],
+                            'shared' => true
+                        ],
+                    ]
                 ],
-                'Website' => [
-                    'special2' => [
-                        'class'  => ArrayObject::class,
-                        'calls'  => [
-                            'offsetSet' => ['iterator', ArrayIterator::class],
-                        ],
-                        'shared' => true
-                    ],
-                ]
             ]
         );
-        $adapter = new SymfonyAdapter($config);
-        $adapter->registerModuleServices('Website');
+        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter->registerService(ConfigInterface::class, $config)
+            ->registerModuleServices('Global')
+            ->registerModuleServices('Website');
 
         // Reference is not a string: returns the same.
-        $actualResult = $this->invokePrivateMethod($adapter, 'getReferenceServiceIfAvailable', [155]);
+        $actualResult = $this->invokePrivateMethod(
+            $adapter,
+            'getReferenceServiceIfAvailable',
+            [155]
+        );
         $this->assertInternalType('int', $actualResult);
         $this->assertSame(155, $actualResult);
 
         // Reference is a registered service.
         /** @var Reference $actualResult */
-        $actualResult = $this->invokePrivateMethod($adapter, 'getReferenceServiceIfAvailable', ['special2']);
+        $actualResult = $this->invokePrivateMethod(
+            $adapter,
+            'getReferenceServiceIfAvailable',
+            ['special2']
+        );
         $this->assertInstanceOf(Reference::class, $actualResult);
 
         // Reference is an existing but not registered class.
         /** @var Reference $actualResult */
-        $actualResult = $this->invokePrivateMethod($adapter, 'getReferenceServiceIfAvailable', [DateTime::class]);
+        $actualResult = $this->invokePrivateMethod(
+            $adapter,
+            'getReferenceServiceIfAvailable',
+            [DateTime::class]
+        );
         $this->assertInstanceOf(Reference::class, $actualResult);
     }
 
@@ -180,19 +214,24 @@ class SymfonyAdapterTest extends TestCase
     {
         $config = new Config(
             [
-                'Global' => [
-                    'alias' => [
-                        'class' => DateTime::class,
-                        'shared' => true
+                'dependencies' => [
+                    'Global' => [
+                        'alias' => [
+                            'class' => DateTime::class,
+                            'shared' => true
+                        ]
                     ]
-                ]
+                ],
             ]
         );
 
-        $adapter = new SymfonyAdapter($config);
-        $adapter = $adapter->setServiceArgument('alias', '2016-04-05 01:02:03');
+        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter->registerService(ConfigInterface::class, $config)
+            ->registerModuleServices('Global');
+
         $timeZone = new DateTimeZone('Europe/Berlin');
-        $adapter->setServiceArgument('alias', $timeZone);
+        $adapter->setServiceArgument('alias', '2016-04-05 01:02:03')
+            ->setServiceArgument('alias', $timeZone);
 
         /** @var DateTime $actualDate */
         $actualDate = $adapter->get('alias');
@@ -203,5 +242,64 @@ class SymfonyAdapterTest extends TestCase
         $timeZone = new DateTimeZone('Europe/London');
         $this->setExpectedException(RuntimeException::class);
         $adapter->setServiceArgument('alias', $timeZone);
+    }
+
+    /**
+     * Tests scalar argument
+     */
+    public function testScalarArgument()
+    {
+        $keyData = DateTime::class;
+
+        $config = new Config(
+            [
+                'dependencies' => [
+                    'Global' => [
+                        'alias' => [
+                            'class' => EmptyEntity::class,
+                            'arguments' => [
+                                'theKey',
+                                $keyData
+                            ]
+                        ]
+                    ]
+                ],
+            ]
+        );
+
+        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter->registerService(ConfigInterface::class, $config)
+            ->registerModuleServices('Global');
+
+        /** @var EmptyEntity $actualDate */
+        $actualObject = $adapter->get('alias');
+        $this->assertInstanceOf(EmptyEntity::class, $actualObject);
+        $this->assertInstanceOf(DateTime::class, $actualObject->getKeyData());
+
+        $config = new Config(
+            [
+                'dependencies' => [
+                    'Global' => [
+                        'alias' => [
+                            'class' => EmptyEntity::class,
+                            'arguments' => [
+                                'theKey',
+                                '!:'.$keyData
+                            ]
+                        ]
+                    ]
+                ],
+            ]
+        );
+
+        $adapter = new SymfonyAdapter($config->getConfig('dependencies'));
+        $adapter->registerService(ConfigInterface::class, $config)
+            ->registerModuleServices('Global');
+
+        /** @var EmptyEntity $actualDate */
+        $actualObject = $adapter->get('alias');
+        $this->assertInstanceOf(EmptyEntity::class, $actualObject);
+        $this->assertInternalType('string', $actualObject->getKeyData());
+        $this->assertSame($keyData, $actualObject->getKeyData());
     }
 }

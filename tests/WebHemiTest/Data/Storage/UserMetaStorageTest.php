@@ -15,6 +15,8 @@ use Prophecy\Argument;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Storage\User\UserMetaStorage;
 use WebHemi\Data\Entity\User\UserMetaEntity;
+use WebHemiTest\AssertTrait;
+use WebHemiTest\InvokePrivateMethodTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -23,6 +25,9 @@ use PHPUnit_Framework_TestCase as TestCase;
 class UserMetaStorageTest extends TestCase
 {
     private $defaultAdapter;
+
+    use AssertTrait;
+    use InvokePrivateMethodTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -75,12 +80,16 @@ class UserMetaStorageTest extends TestCase
                 'fk_user' => 1,
                 'meta_key' => 'body',
                 'meta_data' => 'sporty',
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
             ],
             [
                 'id_user_meta' => 2,
                 'fk_user' => 1,
                 'meta_key' => 'phone',
                 'meta_data' => '+49 176 1234 5678',
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
             ],
         ];
 
@@ -132,12 +141,16 @@ class UserMetaStorageTest extends TestCase
                 'fk_user' => 1,
                 'meta_key' => 'body',
                 'meta_data' => 'sporty',
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
             ],
             [
                 'id_user_meta' => 2,
                 'fk_user' => 1,
                 'meta_key' => 'phone',
                 'meta_data' => '+49 176 1234 5678',
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
             ],
         ];
 
@@ -158,6 +171,9 @@ class UserMetaStorageTest extends TestCase
         $defaultAdapterInstance = $this->defaultAdapter->reveal();
         $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
 
+        /** @var bool $actualResult */
+        $actualResult = $storage->getUserMetaForUserId(2);
+        $this->assertFalse($actualResult);
 
         /** @var UserMetaEntity[] $actualResult */
         $actualResult = $storage->getUserMetaForUserId(1);
@@ -168,8 +184,10 @@ class UserMetaStorageTest extends TestCase
         $this->assertEquals('phone', $actualResult[1]->getMetaKey());
         $this->assertEquals('+49 176 1234 5678', $actualResult[1]->getMetaData());
 
-        /** @var bool $actualResult */
-        $actualResult = $storage->getUserMetaForUserId(2);
-        $this->assertFalse($actualResult);
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
+        $this->assertArraysAreSimilar($data[0], $actualData);
+
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
+        $this->assertArraysAreSimilar($data[1], $actualData);
     }
 }

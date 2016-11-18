@@ -19,9 +19,34 @@ use WebHemi\Data\Entity\DataEntityInterface;
 class EmptyEntity implements DataEntityInterface
 {
     /** @var array */
-    private $storage = [];
+    public $storage = [];
     /** @var string */
     public $key;
+
+    /**
+     * EmptyEntity constructor.
+     *
+     * @param string $key
+     * @param mixed  $keyData
+     */
+    public function __construct($key = null, $keyData = null)
+    {
+        $this->key = $key;
+        $this->storage[$this->key] = $keyData;
+    }
+
+    /**
+     * Sets the value of the entity identifier.
+     *
+     * @param int $entityId
+     * @return EmptyEntity
+     */
+    public function setKeyData($entityId)
+    {
+        $this->storage[$this->key] = $entityId;
+
+        return $this;
+    }
 
     /**
      * Gets the value of the entity identifier.

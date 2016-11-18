@@ -59,4 +59,8 @@ return [
             ],
         ],
     ],
+    'middleware_pipeline' => [
+        'Website' => [
+        ],
+    ],
 ];

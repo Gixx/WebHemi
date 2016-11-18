@@ -35,6 +35,11 @@ class ApplicationEntityTest extends TestCase
 
         $entity->setApplicationId(123);
         $this->assertSame($entity->getApplicationId(), $entity->getKeyData());
+
+        $expectedKey = 567;
+        $entity->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $entity->getApplicationId());
+        $this->assertSame($expectedKey, $entity->getKeyData());
     }
 
     /**

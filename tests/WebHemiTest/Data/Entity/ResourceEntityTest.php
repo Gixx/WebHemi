@@ -35,6 +35,11 @@ class ResourceEntityTest extends TestCase
 
         $entity->setResourceId(123);
         $this->assertSame($entity->getResourceId(), $entity->getKeyData());
+
+        $expectedKey = 567;
+        $entity->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $entity->getResourceId());
+        $this->assertSame($expectedKey, $entity->getKeyData());
     }
 
     /**

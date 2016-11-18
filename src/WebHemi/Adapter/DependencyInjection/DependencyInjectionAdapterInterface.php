@@ -33,8 +33,9 @@ interface DependencyInjectionAdapterInterface
     /**
      * Register the service.
      *
-     * @param string $identifier
-     * @param string $serviceClass
+     * @param string        $identifier
+     * @param string|object $serviceClass
+     * @return DependencyInjectionAdapterInterface
      */
     public function registerService($identifier, $serviceClass);
 

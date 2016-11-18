@@ -56,6 +56,29 @@ class ApplicationStorage extends AbstractDataStorage
     }
 
     /**
+     * Get data from an entity.
+     *
+     * @param DataEntityInterface $entity
+     * @return array
+     */
+    protected function getEntityData(DataEntityInterface $entity)
+    {
+        /** @var ApplicationEntity $entity */
+        $dateCreated = $entity->getDateCreated();
+        $dateModified = $entity->getDateModified();
+
+        return [
+            $this->idKey => $entity->getKeyData(),
+            $this->name => $entity->getName(),
+            $this->title => $entity->getTitle(),
+            $this->description => $entity->getDescription(),
+            $this->isReadOnly => (int)$entity->getReadOnly(),
+            $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
+            $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
+        ];
+    }
+
+    /**
      * Returns a Application entity identified by (unique) ID.
      *
      * @param int $identifier

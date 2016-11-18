@@ -40,6 +40,7 @@ trait UserGroupEntityTrait
         $entity = $this->getNewEntityInstance(UserGroupEntity::class);
 
         $entity->setUserGroupId($data['id_user_group'])
+            ->setName($data['name'])
             ->setTitle($data['title'])
             ->setDescription($data['description'])
             ->setReadOnly($data['is_read_only'])

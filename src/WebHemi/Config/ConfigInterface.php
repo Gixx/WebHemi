@@ -53,7 +53,7 @@ interface ConfigInterface
      *
      * @throws InvalidArgumentException
      *
-     * @return mixed
+     * @return ConfigInterface
      */
     public function getConfig($path);
 

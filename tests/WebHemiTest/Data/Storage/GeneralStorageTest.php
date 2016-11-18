@@ -11,8 +11,11 @@
  */
 namespace WebHemiTest\Data\Storage;
 
+use InvalidArgumentException;
 use Prophecy\Argument;
 use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Storage\User\UserStorage;
 use WebHemiTest\Fixtures\EmptyStorage;
 use WebHemiTest\Fixtures\EmptyEntity;
 use PHPUnit_Framework_TestCase as TestCase;
@@ -62,5 +65,66 @@ class GeneralStorageTest extends TestCase
         // objects are not the same --> cloned.
         $this->assertInstanceOf(EmptyEntity::class, $storage->createEntity());
         $this->assertFalse($dataEntity === $storage->createEntity());
+    }
+
+    /**
+     * Tests saveEntity() method.
+     */
+    public function testSaveEntity()
+    {
+        $randNewId = rand(5, 100);
+
+        // create a user with no Id.
+        $userEntity = new UserEntity();
+        $userEntity->setUserName('test')
+            ->setEmail('test@foo.org');
+
+        $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->saveData(Argument::any(), Argument::type('array'))->will(
+            function ($args) use ($randNewId) {
+                if (is_null($args[0])) {
+                    return $randNewId;
+                } else {
+                    return $args[0];
+                }
+            }
+        );
+        $defaultAdapter->getData(Argument::type('int'))->will(
+            function ($args) use ($userEntity) {
+                return [
+                    'id_user' => $args[0],
+                    'username' => $userEntity->getUserName(),
+                    'email' => $userEntity->getEmail(),
+                    'password' => null,
+                    'hash' => null,
+                    'is_active' => 1,
+                    'is_enabled' => 1,
+                    'date_created' => '2016-11-11 11:11:11',
+                    'date_modified' => null
+                ];
+            }
+        );
+
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $defaultAdapter->reveal();
+
+        // User is not in data storage yet
+        $this->assertEmpty($userEntity->getKeyData());
+        $this->assertEmpty($userEntity->getUserId());
+        $this->assertEmpty($userEntity->getDateCreated());
+
+        $storage = new UserStorage($defaultAdapterInstance, $userEntity);
+
+        // save new entity assumes it will have a new ID.
+        $actualId = $storage->saveEntity($userEntity);
+        $this->assertSame($randNewId, $actualId);
+        $this->assertSame($randNewId, $userEntity->getKeyData());
+        $this->assertSame('2016-11-11 11:11:11', $userEntity->getDateCreated()->format('Y-m-d H:i:s'));
+
+        $this->setExpectedException(InvalidArgumentException::class);
+        $otherEntity = new EmptyEntity();
+        $storage->saveEntity($otherEntity);
     }
 }

@@ -42,6 +42,7 @@ trait PolicyEntityTrait
         $entity->setPolicyId($data['id_am_policy'])
             ->setResourceId($data['fk_am_resource'])
             ->setApplicationId($data['fk_application'])
+            ->setName($data['name'])
             ->setTitle($data['title'])
             ->setDescription($data['description'])
             ->setReadOnly($data['is_read_only'])

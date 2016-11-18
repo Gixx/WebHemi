@@ -11,6 +11,7 @@
  */
 namespace WebHemi\Data\Storage\User;
 
+use DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\User\UserMetaEntity;
 use WebHemi\Data\Storage\AbstractDataStorage;
@@ -31,6 +32,10 @@ class UserMetaStorage extends AbstractDataStorage
     private $metaKey = 'meta_key';
     /** @var string */
     private $metaData = 'meta_data';
+    /** @var string */
+    private $dateCreated = 'date_created';
+    /** @var string */
+    private $dateModified = 'date_modified';
 
     /** @method bool|array<UserMetaEntity> getEntityListFromDataSet(array $dataList) */
     use GetEntityListFromDataSetTrait;
@@ -47,7 +52,31 @@ class UserMetaStorage extends AbstractDataStorage
         $entity->setUserMetaId($data[$this->idKey])
             ->setUserId($data[$this->userId])
             ->setMetaKey($data[$this->metaKey])
-            ->setMetaData($data[$this->metaData]);
+            ->setMetaData($data[$this->metaData])
+            ->setDateCreated(new DateTime($data[$this->dateCreated]))
+            ->setDateModified(new DateTime($data[$this->dateModified]));
+    }
+
+    /**
+     * Get data from an entity.
+     *
+     * @param DataEntityInterface $entity
+     * @return array
+     */
+    protected function getEntityData(DataEntityInterface $entity)
+    {
+        /** @var UserMetaEntity $entity */
+        $dateCreated = $entity->getDateCreated();
+        $dateModified = $entity->getDateModified();
+
+        return [
+            $this->idKey => $entity->getKeyData(),
+            $this->userId => $entity->getUserId(),
+            $this->metaKey => $entity->getMetaKey(),
+            $this->metaData => $entity->getMetaData(),
+            $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
+            $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
+        ];
     }
 
     /**

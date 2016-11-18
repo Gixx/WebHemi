@@ -63,6 +63,31 @@ class UserStorage extends AbstractDataStorage
     }
 
     /**
+     * Get data from an entity.
+     *
+     * @param DataEntityInterface $entity
+     * @return array
+     */
+    protected function getEntityData(DataEntityInterface $entity)
+    {
+        /** @var UserEntity $entity */
+        $dateCreated = $entity->getDateCreated();
+        $dateModified = $entity->getDateModified();
+
+        return [
+            $this->idKey => $entity->getKeyData(),
+            $this->userName => $entity->getUserName(),
+            $this->email => $entity->getEmail(),
+            $this->password => $entity->getPassword(),
+            $this->hash => $entity->getHash(),
+            $this->isActive => (int)$entity->getActive(),
+            $this->isEnabled => (int)$entity->getEnabled(),
+            $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
+            $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
+        ];
+    }
+
+    /**
      * Returns a User entity identified by (unique) ID.
      *
      * @param int $identifier
@@ -83,9 +108,29 @@ class UserStorage extends AbstractDataStorage
     }
 
     /**
-     * Returns a User entity identified by (unique) Email.
+     * Returns a User entity by user name.
      *
-     * @param $email
+     * @param string $name
+     *
+     * @return bool|UserEntity
+     */
+    public function getUserByUserName($name)
+    {
+        $entity = false;
+        $dataList = $this->getDataAdapter()->getDataSet([$this->userName => $name], 1);
+
+        if (!empty($dataList)) {
+            $entity = $this->createEntity();
+            $this->populateEntity($entity, $dataList[0]);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Returns a User entity by email.
+     *
+     * @param string $email
      *
      * @return bool|UserEntity
      */

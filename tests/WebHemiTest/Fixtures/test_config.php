@@ -28,8 +28,8 @@ $themeConfig = [
     'default' => [
         'map' => [
             'test-page' => 'unit/test.twig'
-        ]
-    ]
+        ],
+    ],
 ];
 
 return [
@@ -41,23 +41,7 @@ return [
             'theme'  => 'default'
         ],
     ],
-    'modules' => [
-        'Website' => [
-            'routing' => [
-                'index' => [
-                    'path' => '/',
-                    'middleware' => 'actionOk',
-                    'allowed_methods' => ['GET'],
-                ],
-                'error' => [
-                    'path' => '/error/',
-                    'middleware' => 'actionBad',
-                    'allowed_methods' => ['GET'],
-                ]
-            ]
-        ]
-    ],
-    'themes' => $themeConfig,
+    'auth' => [],
     'dependencies' => [
         'Global' => [
             'actionOk' => [
@@ -119,11 +103,37 @@ return [
                 'arguments' => ['!:final']
             ],
         ],
+        'Website' => []
     ],
     'middleware_pipeline' => [
-        ['service' => 'pipe1', 'priority' => 66],
-        ['service' => 'pipe2', 'priority' => -20],
-        ['service' => 'pipe3'],
-        ['service' => 'pipe4', 'priority' => 120],
-    ]
+        'Global' => [
+            ['service' => 'pipe1', 'priority' => 66],
+            ['service' => 'pipe2', 'priority' => -20],
+            ['service' => 'pipe3'],
+            ['service' => 'pipe4', 'priority' => 120],
+        ],
+        'Website' => []
+    ],
+    'modules' => [
+        'Website' => [
+            'routing' => [
+                'index' => [
+                    'path' => '/',
+                    'middleware' => 'actionOk',
+                    'allowed_methods' => ['GET'],
+                ],
+                'error' => [
+                    'path' => '/error/',
+                    'middleware' => 'actionBad',
+                    'allowed_methods' => ['GET'],
+                ],
+            ],
+        ],
+    ],
+    'session' => [
+        'namespace' => 'TEST',
+        'cookie_prefix' => 'abcd',
+        'session_name_salt' => 'WebHemiTest'
+    ],
+    'themes' => $themeConfig,
 ];

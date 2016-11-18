@@ -19,6 +19,14 @@ namespace WebHemi\Data\Entity;
 interface DataEntityInterface
 {
     /**
+     * Sets the value of the entity identifier.
+     *
+     * @param int $entityId
+     * @return DataEntityInterface
+     */
+    public function setKeyData($entityId);
+
+    /**
      * Gets the value of the entity identifier.
      *
      * @return int

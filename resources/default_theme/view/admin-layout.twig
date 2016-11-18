@@ -1,0 +1,21 @@
+{% import '@WebHemi/macros/renderForm.twig' as _FORM %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="{% if application_base_uri != '/' %}{{ application_base_uri }}{% endif %}/" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WebHemi Admin</title>
+    <link rel="stylesheet" href="{{ template_resource_path }}/css/site.css" />
+</head>
+<body>
+    <h1>DEFAULT ADMIN THEME</h1>
+{% block body %}
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+{% endblock %}
+</body>
+</html>

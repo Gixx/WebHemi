@@ -48,4 +48,13 @@ interface DataCouplerInterface
      * @return array<DataEntityInterface>
      */
     public function getEntityDependencies(DataEntityInterface $entity);
+
+    /**
+     * Sets dependency for the entities
+     *
+     * @param DataEntityInterface $entityA
+     * @param DataEntityInterface $entityB
+     * @return mixed The ID of the saved entity in the storage
+     */
+    public function setDependency(DataEntityInterface $entityA, DataEntityInterface $entityB);
 }

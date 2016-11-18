@@ -89,8 +89,7 @@ CREATE TABLE `webhemi_am_resource` (
 LOCK TABLES `webhemi_am_resource` WRITE;
 /*!40000 ALTER TABLE `webhemi_am_resource` DISABLE KEYS */;
 INSERT INTO `webhemi_am_resource` VALUES
-  (1,  '\WebHemi\Middleware\Action\FakeAction',     'Some action', '', 1, NOW(), NULL),
-  (2,  '\WebHemi\Middleware\Action\FakeViewAction', 'Some other action', '', 1, NOW(), NULL);
+  (1,  '\WebHemi\Middleware\Action\Admin\DashboardAction', 'The Dashboard page', '', 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_am_resource` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -107,6 +106,7 @@ CREATE TABLE `webhemi_am_policy` (
   `fk_am_resource` INT(10) UNSIGNED DEFAULT NULL,
   -- If key is NULL, then the policy is applied to all applications
   `fk_application` INT(10) UNSIGNED DEFAULT NULL,
+  `name` VARCHAR(255) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL DEFAULT '',
   `is_read_only` TINYINT(1) NOT NULL DEFAULT 0,
@@ -130,7 +130,8 @@ CREATE TABLE `webhemi_am_policy` (
 LOCK TABLES `webhemi_am_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_am_policy` DISABLE KEYS */;
 INSERT INTO `webhemi_am_policy` VALUES
-  (1, NULL, NULL, 'Supervisor access', 'Access to all resources in every application', 1, 1, NOW(), NULL);
+  (1, NULL, NULL, 'supervisor', 'Supervisor access', 'Access to all resources in every application.', 1, 1, NOW(), NULL),
+  (2, 1, 1, 'dashboard', 'Dashboard visitor', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,11 +147,11 @@ DROP TABLE IF EXISTS `webhemi_user`;
 CREATE TABLE `webhemi_user` (
   `id_user` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) DEFAULT NULL,
   -- Hashed password. MD5 and SHA1 are not recommended.
   `password` VARCHAR(60) NOT NULL,
   -- Hash is used in emails and auto-login cookie to identify user without credentials. Once used a new one should be generated.
-  `hash` VARCHAR(32) DEFAULT '',
+  `hash` VARCHAR(32) DEFAULT NULL,
   `is_active` TINYINT(1) NOT NULL DEFAULT '0',
   `is_enabled` TINYINT(1) NOT NULL DEFAULT '0',
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -258,6 +259,7 @@ DROP TABLE IF EXISTS `webhemi_user_group`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `webhemi_user_group` (
   `id_user_group` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
   `title` VARCHAR(30) NOT NULL,
   `description` TEXT NOT NULL DEFAULT '',
   `is_read_only` TINYINT(1) NOT NULL DEFAULT 0,
@@ -275,7 +277,8 @@ CREATE TABLE `webhemi_user_group` (
 LOCK TABLES `webhemi_user_group` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_group` DISABLE KEYS */;
 INSERT INTO `webhemi_user_group` VALUES
-  (1, 'Administrators', 'Group for global administrators', 1, NOW(), NULL);
+  (1, 'admin', 'Administrators', 'Group for global administrators', 1, NOW(), NULL),
+  (2, 'guest', 'Guests', 'Group for guests.', 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 

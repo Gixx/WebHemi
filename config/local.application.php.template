@@ -3,13 +3,12 @@
 return [
     'applications' => [
         'website' => [
-            'path'        => 'www',
-            'theme'       => 'default',
+            'path'  => '%application.website.path%',
+            'theme' => '%application.website.theme%',
         ],
-        'my_sub-application' => [
-            'type'        => 'directory',
-            'path'        => 'sub-app',
-            'theme'       => 'default',
-        ]
-    ]
+        'admin' => [
+            'path'  => '%application.admin.path%',
+            'theme' => '%application.admin.theme%',
+        ],
+    ],
 ];
