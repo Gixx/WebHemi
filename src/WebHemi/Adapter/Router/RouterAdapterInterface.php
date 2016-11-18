@@ -12,6 +12,7 @@
 namespace WebHemi\Adapter\Router;
 
 use WebHemi\Adapter\Http\ServerRequestInterface;
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
 use WebHemi\Routing\Result;
 
@@ -21,13 +22,17 @@ use WebHemi\Routing\Result;
 interface RouterAdapterInterface
 {
     /**
-     * FastRouteAdapter constructor.
+     * RouterAdapterInterface constructor.
      *
-     * @param Result          $routeResult
-     * @param ConfigInterface $routeConfig
-     * @param string          $applicationPath
+     * @param ConfigInterface    $configuration
+     * @param EnvironmentManager $environmentManager
+     * @param Result             $routeResult
      */
-    public function __construct(Result $routeResult, ConfigInterface $routeConfig, $applicationPath = '/');
+    public function __construct(
+        ConfigInterface $configuration,
+        EnvironmentManager $environmentManager,
+        Result $routeResult
+    );
 
     /**
      * Processes the Request and give a Result.

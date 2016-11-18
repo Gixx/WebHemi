@@ -14,6 +14,7 @@ namespace WebHemi\Adapter\Http\GuzzleHttp;
 use GuzzleHttp\Psr7\LazyOpenStream;
 use GuzzleHttp\Psr7\Uri;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
+use WebHemi\Application\EnvironmentManager;
 
 /**
  * Class GuzzleHttpAdapter.
@@ -39,19 +40,15 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     /**
      * GuzzleHTTPAdapter constructor.
      *
-     * @param array $get
-     * @param array $post
-     * @param array $server
-     * @param array $cookie
-     * @param array $files
+     * @param EnvironmentManager $environmentManager
      */
-    public function __construct(array $get, array $post, array $server, array $cookie, array $files)
+    public function __construct(EnvironmentManager $environmentManager)
     {
-        $this->get = $get;
-        $this->post = $post;
-        $this->server = $server;
-        $this->cookie = $cookie;
-        $this->files = $files;
+        $this->get = $environmentManager->getEnvironmentData('GET');
+        $this->post = $environmentManager->getEnvironmentData('POST');
+        $this->server = $environmentManager->getEnvironmentData('SERVER');
+        $this->cookie = $environmentManager->getEnvironmentData('COOKIE');
+        $this->files = $environmentManager->getEnvironmentData('FILES');
 
         $this->initialize();
     }

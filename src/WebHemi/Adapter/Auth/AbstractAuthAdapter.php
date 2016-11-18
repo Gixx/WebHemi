@@ -46,7 +46,7 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
         AuthStorageInterface $authStorage,
         DataStorageInterface $dataStorage
     ) {
-        $this->configuration = $configuration->getData('auth');
+        $this->configuration = $configuration->getConfig('auth');
         $this->authResult = $authResultPrototype;
         $this->authStorage = $authStorage;
         $this->dataStorage = $dataStorage;

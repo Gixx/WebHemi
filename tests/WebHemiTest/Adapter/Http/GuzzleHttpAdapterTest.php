@@ -15,7 +15,10 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\Adapter\Http\GuzzleHttp\GuzzleHttpAdapter;
+use WebHemi\Application\EnvironmentManager;
+use WebHemi\Config\Config;
 use WebHemiTest\InvokePrivateMethodTrait;
+use WebHemiTest\Fixtures\EmptyEnvironmentManager;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -23,6 +26,8 @@ use PHPUnit_Framework_TestCase as TestCase;
  */
 class GuzzleHttpAdapterTest extends TestCase
 {
+    /** @var array */
+    protected $config = [];
     /** @var array */
     protected $get = [];
     /** @var array */
@@ -44,6 +49,7 @@ class GuzzleHttpAdapterTest extends TestCase
     {
         parent::setUp();
 
+        $this->config = require __DIR__ . '/../../Fixtures/test_config.php';
         $this->server = [
             'HTTP_HOST'    => 'unittest.dev',
             'SERVER_NAME'  => 'unittest.dev',
@@ -57,13 +63,17 @@ class GuzzleHttpAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $testObj = new GuzzleHttpAdapter(
+        $config = new Config($this->config);
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
             $this->get,
             $this->post,
             $this->server,
             $this->cookie,
             $this->files
         );
+
+        $testObj = new GuzzleHttpAdapter($environmentManager);
 
         $this->assertInstanceOf(HttpAdapterInterface::class, $testObj);
         $this->assertInstanceOf(ServerRequest::class, $testObj->getRequest());
@@ -75,7 +85,9 @@ class GuzzleHttpAdapterTest extends TestCase
      */
     public function testGetScheme()
     {
-        $testObj = new GuzzleHttpAdapter(
+        $config = new Config($this->config);
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
             $this->get,
             $this->post,
             $this->server,
@@ -83,19 +95,24 @@ class GuzzleHttpAdapterTest extends TestCase
             $this->files
         );
 
+        $testObj = new GuzzleHttpAdapter($environmentManager);
+
         $result = $this->invokePrivateMethod($testObj, 'getScheme');
         $this->assertEquals('http', $result);
 
         $server = $this->server;
         $server['HTTPS'] = 'on';
 
-        $testObj = new GuzzleHttpAdapter(
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
             $this->get,
             $this->post,
             $server,
             $this->cookie,
             $this->files
         );
+
+        $testObj = new GuzzleHttpAdapter($environmentManager);
 
         $result = $this->invokePrivateMethod($testObj, 'getScheme');
         $this->assertEquals('https', $result);
@@ -110,13 +127,17 @@ class GuzzleHttpAdapterTest extends TestCase
         $server['HTTP_HOST'] = '';
         $server['SERVER_NAME']  = 'unittest.dev:8080';
 
-        $testObj = new GuzzleHttpAdapter(
+        $config = new Config($this->config);
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
             $this->get,
             $this->post,
             $server,
             $this->cookie,
             $this->files
         );
+
+        $testObj = new GuzzleHttpAdapter($environmentManager);
 
         $result = $this->invokePrivateMethod($testObj, 'getHost');
         $this->assertEquals('unittest.dev', $result);
@@ -127,7 +148,9 @@ class GuzzleHttpAdapterTest extends TestCase
      */
     public function testGetProtocol()
     {
-        $testObj = new GuzzleHttpAdapter(
+        $config = new Config($this->config);
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
             $this->get,
             $this->post,
             $this->server,
@@ -135,19 +158,24 @@ class GuzzleHttpAdapterTest extends TestCase
             $this->files
         );
 
+        $testObj = new GuzzleHttpAdapter($environmentManager);
+
         $result = $this->invokePrivateMethod($testObj, 'getProtocol');
         $this->assertEquals('1.1', $result);
 
         $server = $this->server;
         $server['SERVER_PROTOCOL'] = 'HTTP/1.0';
 
-        $testObj = new GuzzleHttpAdapter(
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
             $this->get,
             $this->post,
             $server,
             $this->cookie,
             $this->files
         );
+
+        $testObj = new GuzzleHttpAdapter($environmentManager);
 
         $result = $this->invokePrivateMethod($testObj, 'getProtocol');
         $this->assertEquals('1.0', $result);

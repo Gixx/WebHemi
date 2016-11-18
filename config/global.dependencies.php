@@ -19,6 +19,7 @@ use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Adapter\Router\FastRoute\FastRouteAdapter;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
 use WebHemi\Adapter\Http\GuzzleHttp\GuzzleHttpAdapter;
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Application\SessionManager;
 use WebHemi\Auth\Auth as AuthAdapter;
 use WebHemi\Auth\Result as AuthResult;
@@ -69,22 +70,24 @@ return [
             HttpAdapterInterface::class => [
                 'class'     => GuzzleHttpAdapter::class,
                 'arguments' => [
-                    // This class requires calculated arguments. Check WebHemi\Application\Web\WebApplication::class
+                    EnvironmentManager::class,
                 ],
                 'shared'    => true,
             ],
             RouterAdapterInterface::class => [
                 'class'     => FastRouteAdapter::class,
                 'arguments' => [
+                    ConfigInterface::class,
+                    EnvironmentManager::class,
                     RouteResult::class,
-                    // This class requires a calculated argument. Check WebHemi\Application\Web\WebApplication::class
                 ],
                 'shared'    => true,
             ],
             RendererAdapterInterface::class => [
                 'class'     => TwigRendererAdapter::class,
                 'arguments' => [
-                    // This class requires calculated arguments. Check WebHemi\Application\Web\WebApplication::class
+                    ConfigInterface::class,
+                    EnvironmentManager::class
                 ],
                 'shared'    => true,
             ],

@@ -14,8 +14,10 @@ namespace WebHemiTest\Adapter\Renderer;
 use InvalidArgumentException;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Adapter\Renderer\Twig\TwigRendererAdapter;
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\Config;
 use WebHemiTest\AssertTrait;
+use WebHemiTest\Fixtures\EmptyEnvironmentManager;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -24,9 +26,19 @@ use PHPUnit_Framework_TestCase as TestCase;
 class TwigRendererAdapterTest extends TestCase
 {
     /** @var Config */
-    protected $templateConfig;
-    /** @var string */
-    protected $templatePath;
+    protected $config;
+    /** @var array */
+    protected $get = [];
+    /** @var array */
+    protected $post = [];
+    /** @var array */
+    protected $server;
+    /** @var array */
+    protected $cookie = [];
+    /** @var array */
+    protected $files = [];
+    /** @var EmptyEnvironmentManager */
+    protected $environmentManager;
 
     use AssertTrait;
 
@@ -38,14 +50,23 @@ class TwigRendererAdapterTest extends TestCase
     {
         parent::setUp();
 
-        $options = [
-            "map" => [
-                "test-page" => "unit/test.twig"
-            ]
+        $config = require __DIR__ . '/../../Fixtures/test_config.php';
+        $this->config = new Config($config);
+        $this->server = [
+            'HTTP_HOST'    => 'unittest.dev',
+            'SERVER_NAME'  => 'unittest.dev',
+            'REQUEST_URI'  => '/',
+            'QUERY_STRING' => '',
         ];
 
-        $this->templateConfig = new Config($options);
-        $this->templatePath = '/tests/WebHemiTest/Fixtures/test_theme';
+        $this->environmentManager = new EmptyEnvironmentManager(
+            $this->config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
     }
 
     /**
@@ -53,9 +74,14 @@ class TwigRendererAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $resultObj = new TwigRendererAdapter($this->templateConfig, $this->templatePath, '/');
+        $resultObj = new TwigRendererAdapter($this->config, $this->environmentManager);
         $this->assertInstanceOf(RendererAdapterInterface::class, $resultObj);
         $this->assertAttributeInstanceOf(\Twig_Environment::class, 'adapter', $resultObj);
+
+        // test if the config doesn't has the selected theme
+        $this->environmentManager->setSelectedTheme('someNoneExistingTheme');
+        $resultObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+        $this->assertInstanceOf(RendererAdapterInterface::class, $resultObj);
     }
 
     /**
@@ -63,14 +89,17 @@ class TwigRendererAdapterTest extends TestCase
      */
     public function testRenderer()
     {
-        $adapterObj = new TwigRendererAdapter($this->templateConfig, $this->templatePath, '/');
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
 
         $result = $adapterObj->render('test-page');
         $resultData = json_decode($result, true);
 
         $this->assertInternalType('array', $resultData);
         $this->assertTrue(isset($resultData['template_resource_path']));
-        $this->assertEquals($this->templatePath.'/static', $resultData['template_resource_path']);
+        $this->assertEquals(
+            $this->environmentManager->getResourcePath().'/static',
+            $resultData['template_resource_path']
+        );
         $this->assertEquals('Hello World!', $resultData['message']);
 
         $result = $adapterObj->render('unit/test.twig');

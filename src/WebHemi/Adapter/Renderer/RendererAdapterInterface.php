@@ -12,6 +12,7 @@
 namespace WebHemi\Adapter\Renderer;
 
 use Psr\Http\Message\StreamInterface;
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
 
 /**
@@ -22,11 +23,10 @@ interface RendererAdapterInterface
     /**
      * RendererAdapterInterface constructor.
      *
-     * @param ConfigInterface $templateConfig
-     * @param string          $templatePath
-     * @param string          $applicationBaseUri
+     * @param ConfigInterface    $templateConfig
+     * @param EnvironmentManager $environmentManager
      */
-    public function __construct(ConfigInterface $templateConfig, $templatePath, $applicationBaseUri);
+    public function __construct(ConfigInterface $templateConfig, EnvironmentManager $environmentManager);
 
     /**
      * Renders the template for the output.

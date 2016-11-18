@@ -11,6 +11,8 @@
  */
 namespace WebHemi\Adapter\Http;
 
+use WebHemi\Application\EnvironmentManager;
+
 /**
  * Interface AdapterInterface.
  */
@@ -19,13 +21,9 @@ interface HttpAdapterInterface
     /**
      * AdapterInterface constructor.
      *
-     * @param array $get
-     * @param array $post
-     * @param array $server
-     * @param array $cookie
-     * @param array $files
+     * @param EnvironmentManager $environmentManager
      */
-    public function __construct(array $get, array $post, array $server, array $cookie, array $files);
+    public function __construct(EnvironmentManager $environmentManager);
 
     /**
      * Returns the HTTP request.

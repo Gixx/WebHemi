@@ -34,7 +34,7 @@ class EnvironmentManager
     const SESSION_SALT = 'WebHemi';
 
     /** @var ConfigInterface */
-    private $config;
+    private $configuration;
     /** @var string */
     private $url;
     /** @var string */
@@ -63,7 +63,7 @@ class EnvironmentManager
     /**
      * ModuleManager constructor.
      *
-     * @param ConfigInterface $config
+     * @param ConfigInterface $configuration
      * @param array           $getData
      * @param array           $postData
      * @param array           $serverData
@@ -71,14 +71,14 @@ class EnvironmentManager
      * @param array           $filesData
      */
     public function __construct(
-        ConfigInterface $config,
+        ConfigInterface $configuration,
         array $getData,
         array $postData,
         array $serverData,
         array $cookieData,
         array $filesData
     ) {
-        $this->config = $config;
+        $this->configuration = $configuration->getConfig('applications');
         $this->documentRoot = realpath(__DIR__.'/../../../');
 
         if (isset($serverData['HTTP_REFERER'])) {
@@ -106,6 +106,16 @@ class EnvironmentManager
 
         $this->setDomain()
             ->selectModuleApplicationAndTheme();
+    }
+
+    /**
+     * Gets the document root path.
+     *
+     * @return string
+     */
+    public function getDocumentRoot()
+    {
+        return $this->documentRoot;
     }
 
     /**
@@ -196,32 +206,6 @@ class EnvironmentManager
     }
 
     /**
-     * Gets the template settings for a specific theme.
-     *
-     * @param string $theme
-     *
-     * @codeCoverageIgnore - @see \WebHemiTest\Config\ConfigTest
-     *
-     * @return ConfigInterface
-     */
-    public function getApplicationTemplateSettings($theme = self::DEFAULT_THEME)
-    {
-        return $this->config->getConfig('themes/'.$theme);
-    }
-
-    /**
-     * Gets the routing settings for the selected module.
-     *
-     * @codeCoverageIgnore - @see \WebHemiTest\Config\ConfigTest
-     *
-     * @return ConfigInterface
-     */
-    public function getModuleRouteSettings()
-    {
-        return $this->config->getConfig('modules/'.$this->getSelectedModule().'/routing');
-    }
-
-    /**
      * Parses server data and tries to set domain information.
      *
      * @return $this
@@ -247,7 +231,7 @@ class EnvironmentManager
 
         // If no sub-domain presents, then it should be handled as the default sub-domain set for the 'website'
         if (empty($subDomain)) {
-            $subDomain = $this->config->getData('applications/website/path');
+            $subDomain = $this->configuration->getData('website/path');
         }
 
         $this->subDomain = $subDomain;
@@ -277,7 +261,7 @@ class EnvironmentManager
     private function selectModuleApplicationAndTheme()
     {
         $urlParts = parse_url($this->url);
-        $applications = $this->config->getData('applications');
+        $applications = $this->configuration->toArray();
 
         // Only the first segment is important (if exists).
         list($subDirectory) = explode('/', ltrim($urlParts['path'], '/'), 2);
@@ -304,6 +288,8 @@ class EnvironmentManager
                 break;
             }
         }
+
+        // Final check for config and resources.
         if ($this->selectedTheme !== self::DEFAULT_THEME) {
             $this->selectedThemeResourcePath = '/resources/vendor_themes/'.$this->selectedTheme;
         }
@@ -322,7 +308,7 @@ class EnvironmentManager
      */
     private function checkDirectoryIsValid($applicationName, $applicationData, $subDirectory)
     {
-        return $this->subDomain == $this->config->getData('applications/website/path')
+        return $this->subDomain == $this->configuration->getData('website/path')
             && $applicationName != 'website'
             && !empty($subDirectory)
             && $applicationData['type'] == self::APPLICATION_TYPE_DIRECTORY
@@ -342,7 +328,7 @@ class EnvironmentManager
     {
         $isSubdomain = $applicationName == 'website'
             || (
-                $this->subDomain != $this->config->getData('applications/website/path')
+                $this->subDomain != $this->configuration->getData('website/path')
                 && $applicationData['type'] == self::APPLICATION_TYPE_DOMAIN
                 && $applicationData['path'] == $this->subDomain
             );
