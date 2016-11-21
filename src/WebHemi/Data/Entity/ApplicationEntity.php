@@ -11,7 +11,7 @@
  */
 namespace WebHemi\Data\Entity;
 
-use DateTime;
+use WebHemi\DateTime;
 
 /**
  * Class ApplicationEntity.

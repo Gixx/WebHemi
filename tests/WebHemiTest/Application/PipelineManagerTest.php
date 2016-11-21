@@ -12,7 +12,7 @@
 namespace WebHemiTest\Application;
 
 use ArrayObject;
-use DateTime;
+use WebHemi\DateTime;
 use PHPUnit_Framework_TestCase as TestCase;
 use RuntimeException;
 use WebHemi\Config\Config;

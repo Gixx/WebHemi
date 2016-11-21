@@ -11,7 +11,7 @@
  */
 namespace WebHemi\Data\Coupler\Traits;
 
-use DateTime;
+use WebHemi\DateTime;
 use RuntimeException;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 

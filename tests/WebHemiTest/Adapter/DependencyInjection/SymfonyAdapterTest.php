@@ -13,7 +13,7 @@ namespace WebHemiTest\Adapter\DependencyInjection;
 
 use ArrayIterator;
 use ArrayObject;
-use DateTime;
+use WebHemi\DateTime;
 use DateTimeZone;
 use RuntimeException;
 use stdClass;

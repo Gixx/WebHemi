@@ -37,7 +37,7 @@ class MySQLAdapter implements DataAdapterInterface
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(DataDriverInterface $dataStorage = null)
+    public function __construct(DataDriverInterface $dataStorage)
     {
         if (!$dataStorage instanceof PDO) {
             $type = gettype($dataStorage);

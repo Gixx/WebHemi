@@ -13,10 +13,10 @@ namespace WebHemiTest\Adapter\Data;
 
 use InvalidArgumentException;
 use PHPUnit_Framework_TestCase as TestCase;
-use Prophecy\Argument;
 use RuntimeException;
 use WebHemi\Adapter\Data\InMemory\InMemoryAdapter;
 use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Adapter\Data\InMemory\InMemoryDriver;
 use WebHemiTest\AssertTrait;
 
 /**
@@ -65,14 +65,12 @@ class InMemoryAdapterTest extends TestCase
     public function dataProvider()
     {
         return [
-            [null, ['default' => []]],
             [[], ['default' => []]],
             [
                 [['someKey' => 'someData'],['someOtherData']],
                 ['default' => [0 => ['someKey' => 'someData'], 1 => ['someOtherData']]]
             ],
-            ['shouldBeBad', InvalidArgumentException::class],
-            [['shouldBeAlsoBad'], InvalidArgumentException::class]
+            [['shouldBeBad'], InvalidArgumentException::class]
         ];
     }
 
@@ -92,12 +90,12 @@ class InMemoryAdapterTest extends TestCase
             $this->setExpectedException(InvalidArgumentException::class);
         }
 
-        // Test without init data.
-        $adapter = new InMemoryAdapter($argument);
+        $driver = new InMemoryDriver($argument);
+        $adapter = new InMemoryAdapter($driver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
         $this->assertAttributeEquals('id', 'idKey', $adapter);
         $this->assertAttributeEquals('default', 'dataGroup', $adapter);
-        $this->assertArraysAreSimilar($adapter->getDataStorage(), $expectedResult);
+        $this->assertArraysAreSimilar($expectedResult, $adapter->getDataStorage());
     }
 
     /**
@@ -122,7 +120,8 @@ class InMemoryAdapterTest extends TestCase
                 1 => ['someOtherData']]
         ];
 
-        $adapter = new InMemoryAdapter($argument);
+        $driver = new InMemoryDriver($argument);
+        $adapter = new InMemoryAdapter($driver);
 
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
         $this->assertAttributeEquals('default', 'dataGroup', $adapter);
@@ -143,7 +142,7 @@ class InMemoryAdapterTest extends TestCase
      */
     public function testSetIdKey()
     {
-        $adapter = new InMemoryAdapter();
+        $adapter = new InMemoryAdapter(new InMemoryDriver());
 
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
         $this->assertAttributeEquals('id', 'idKey', $adapter);
@@ -160,7 +159,7 @@ class InMemoryAdapterTest extends TestCase
      */
     public function testSaveData()
     {
-        $adapter = new InMemoryAdapter();
+        $adapter = new InMemoryAdapter(new InMemoryDriver());
 
         $expectedArray = $this->arrayDatabase['webhemi_user_meta'];
         $adapter->setDataGroup('webhemi_user_meta');
@@ -213,7 +212,8 @@ class InMemoryAdapterTest extends TestCase
      */
     public function testGetData()
     {
-        $adapter = new InMemoryAdapter();
+        $adapter = new InMemoryAdapter(new InMemoryDriver());
+
         $adapter = $this->prepareDataStoreWithProperData($adapter);
         $expectedArray = $this->arrayDatabase['webhemi_user_meta'];
 
@@ -232,7 +232,7 @@ class InMemoryAdapterTest extends TestCase
      */
     public function testDeleteData()
     {
-        $adapter = new InMemoryAdapter();
+        $adapter = new InMemoryAdapter(new InMemoryDriver());
         $adapter = $this->prepareDataStoreWithProperData($adapter);
         $expectedArray = $this->arrayDatabase['webhemi_user_meta'];
 
@@ -253,7 +253,7 @@ class InMemoryAdapterTest extends TestCase
      */
     public function testDataSetWithoutExpressions()
     {
-        $adapter = new InMemoryAdapter();
+        $adapter = new InMemoryAdapter(new InMemoryDriver());
         $adapter = $this->prepareDataStoreWithProperData($adapter);
         $expectedArray = $this->arrayDatabase['webhemi_user_meta'];
 
@@ -288,7 +288,7 @@ class InMemoryAdapterTest extends TestCase
      */
     public function testDataSetExpressions()
     {
-        $adapter = new InMemoryAdapter();
+        $adapter = new InMemoryAdapter(new InMemoryDriver());
         $adapter = $this->prepareDataStoreWithProperData($adapter);
         $expectedArray = $this->arrayDatabase['webhemi_user_meta'];
 
