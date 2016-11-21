@@ -11,7 +11,7 @@
  */
 namespace WebHemi\Data\Storage\User;
 
-use DateTime;
+use WebHemi\DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\AbstractDataStorage;

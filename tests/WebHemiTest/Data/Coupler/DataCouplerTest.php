@@ -14,9 +14,11 @@ namespace WebHemiTest\Data\Coupler;
 use InvalidArgumentException;
 use PDO;
 use WebHemi\Adapter\Data\PDO\MySQLAdapter;
+use WebHemi\Adapter\Data\DataDriverInterface;
 use WebHemi\Data\Coupler;
 use WebHemi\Data\Entity;
 use WebHemi\Data\Storage;
+use WebHemiTest\Fixtures\EmptySqliteDataDriver;
 use PHPUnit_Framework_TestCase as TestCase;
 use PHPUnit_Framework_IncompleteTestError;
 use PHPUnit_Framework_SkippedTestError;
@@ -26,8 +28,8 @@ use PHPUnit_Framework_SkippedTestError;
  */
 class DataCouplerTest extends TestCase
 {
-    /** @var PDO */
-    protected static $pdo;
+    /** @var DataDriverInterface */
+    protected static $dataDriver;
     /** @var MySQLAdapter */
     protected static $adapter;
 
@@ -53,24 +55,24 @@ class DataCouplerTest extends TestCase
 
         $databaseFile = realpath(__DIR__ . '/../../../../build/webhemi_schema.sqlite3');
 
-        self::$pdo = new PDO('sqlite:' . $databaseFile);
+        self::$dataDriver = new EmptySqliteDataDriver('sqlite:' . $databaseFile);
 
         $fixture = realpath(__DIR__.'/../../Fixtures/sql/data_coupler_test.sql');
         $setUpSql = file($fixture);
 
         if ($setUpSql) {
             foreach ($setUpSql as $sql) {
-                $result = self::$pdo->query($sql);
+                $result = self::$dataDriver->query($sql);
 
                 if (!$result) {
                     throw new PHPUnit_Framework_IncompleteTestError(
-                        'Cannot set up test database: '.json_encode(self::$pdo->errorInfo())
+                        'Cannot set up test database: '.json_encode(self::$dataDriver->errorInfo())
                     );
                 }
             }
         }
 
-        self::$adapter = new MySQLAdapter(self::$pdo);
+        self::$adapter = new MySQLAdapter(self::$dataDriver);
     }
 
     /**
@@ -271,7 +273,7 @@ class DataCouplerTest extends TestCase
 
         if ($tearDownSql) {
             foreach ($tearDownSql as $sql) {
-                self::$pdo->query($sql);
+                self::$dataDriver->query($sql);
             }
         }
     }

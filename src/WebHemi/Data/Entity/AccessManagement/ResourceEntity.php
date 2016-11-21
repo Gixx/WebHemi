@@ -11,7 +11,7 @@
  */
 namespace WebHemi\Data\Entity\AccessManagement;
 
-use DateTime;
+use WebHemi\DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
 
 /**

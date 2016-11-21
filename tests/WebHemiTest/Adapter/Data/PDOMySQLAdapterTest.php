@@ -11,14 +11,16 @@
  */
 namespace WebHemiTest\Adapter\Data;
 
-use DateTime;
 use InvalidArgumentException;
 use PDO;
 use RuntimeException;
 use WebHemi\Adapter\Data\PDO\MySQLAdapter;
+use WebHemi\Adapter\Data\InMemory\InMemoryDriver;
 use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Adapter\Data\DataDriverInterface;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
+use WebHemiTest\Fixtures\EmptySqliteDataDriver;
 use PHPUnit_Framework_TestCase as TestCase;
 use PHPUnit_Framework_SkippedTestError;
 
@@ -27,8 +29,8 @@ use PHPUnit_Framework_SkippedTestError;
  */
 class PDOMySQLAdapterTest extends TestCase
 {
-    /** @var PDO */
-    protected $pdo;
+    /** @var DataDriverInterface */
+    protected $dataDriver;
 
     use AssertTrait;
     use InvokePrivateMethodTrait;
@@ -55,7 +57,7 @@ class PDOMySQLAdapterTest extends TestCase
 
         $databaseFile = realpath(__DIR__ . '/../../../../build/webhemi_schema.sqlite3');
 
-        $this->pdo = new PDO('sqlite:' . $databaseFile);
+        $this->dataDriver = new EmptySqliteDataDriver('sqlite:' . $databaseFile);
     }
 
     /**
@@ -65,13 +67,13 @@ class PDOMySQLAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $adapter = new MySQLAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->dataDriver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
         $this->assertAttributeEmpty('dataGroup', $adapter);
         $this->assertAttributeEmpty('idKey', $adapter);
 
         $this->setExpectedException(InvalidArgumentException::class);
-        new MySQLAdapter(new DateTime());
+        new MySQLAdapter(new InMemoryDriver());
     }
 
     /**
@@ -79,12 +81,12 @@ class PDOMySQLAdapterTest extends TestCase
      */
     public function testGetDataStorage()
     {
-        $adapter = new MySQLAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->dataDriver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
         $actualStorage = $adapter->getDataStorage();
         $this->assertInstanceOf(PDO::class, $actualStorage);
-        $this->assertTrue($this->pdo === $actualStorage);
+        $this->assertTrue($this->dataDriver === $actualStorage);
     }
 
     /**
@@ -94,7 +96,7 @@ class PDOMySQLAdapterTest extends TestCase
      */
     public function testSetDataGroup()
     {
-        $adapter = new MySQLAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->dataDriver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
         $result = $adapter->setDataGroup('webhemi_user');
@@ -109,7 +111,7 @@ class PDOMySQLAdapterTest extends TestCase
      */
     public function testSetIdKey()
     {
-        $adapter = new MySQLAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->dataDriver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
         $result = $adapter->setIdKey('id_user');
@@ -214,7 +216,7 @@ class PDOMySQLAdapterTest extends TestCase
     ) {
         $queryBind = [];
 
-        $adapter = new MySQLAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->dataDriver);
         $adapter->setDataGroup($dataGroup);
 
         if (!is_null($limit)) {
@@ -263,7 +265,7 @@ class PDOMySQLAdapterTest extends TestCase
     {
         $queryBind = [];
 
-        $adapter = new MySQLAdapter($this->pdo);
+        $adapter = new MySQLAdapter($this->dataDriver);
         $resultExpression = $this->invokePrivateMethod($adapter, 'getWhereExpression', [$expression, &$queryBind]);
 
         $this->assertEquals($expectedExpression, $resultExpression);

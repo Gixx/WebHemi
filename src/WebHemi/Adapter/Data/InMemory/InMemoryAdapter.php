@@ -14,6 +14,7 @@ namespace WebHemi\Adapter\Data\InMemory;
 use InvalidArgumentException;
 use RuntimeException;
 use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Adapter\Data\DataDriverInterface;
 
 /**
  * Class InMemoryAdapter.
@@ -30,27 +31,22 @@ class InMemoryAdapter implements DataAdapterInterface
     /**
      * MySQLAdapter constructor.
      *
-     * @param mixed $dataStorage
+     * @param DataDriverInterface $dataDriver
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($dataStorage = null)
+    public function __construct(DataDriverInterface $dataDriver)
     {
-        if (empty($dataStorage)) {
-            $dataStorage = [];
-        }
+        /** @var InMemoryDriver $dataDriver */
+        $dataDriver = $dataDriver->toArray();
 
-        if (!is_array($dataStorage)) {
-            throw new InvalidArgumentException('The constructor parameter must be empty or an array.');
-        }
-
-        foreach ($dataStorage as $rowData) {
+        foreach ($dataDriver as $rowData) {
             if (!is_array($rowData)) {
                 throw new InvalidArgumentException('The constructor parameter if present must be an array of arrays.');
             }
         }
 
-        $this->dataStorage[$this->dataGroup] = $dataStorage;
+        $this->dataStorage[$this->dataGroup] = $dataDriver;
     }
 
     /**

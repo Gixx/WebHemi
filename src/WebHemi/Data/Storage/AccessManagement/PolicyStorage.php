@@ -11,7 +11,7 @@
  */
 namespace WebHemi\Data\Storage\AccessManagement;
 
-use DateTime;
+use WebHemi\DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Storage\AbstractDataStorage;

@@ -21,7 +21,7 @@ interface DataAdapterInterface
      *
      * @param mixed $dataStorage
      */
-    public function __construct(DataDriverInterface $dataStorage = null);
+    public function __construct(DataDriverInterface $dataStorage);
 
     /**
      * Returns the Data Storage instance.

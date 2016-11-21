@@ -11,7 +11,7 @@
  */
 namespace WebHemiTest\Data\Storage;
 
-use DateTime;
+use WebHemi\DateTime;
 use Prophecy\Argument;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Storage\ApplicationStorage;
