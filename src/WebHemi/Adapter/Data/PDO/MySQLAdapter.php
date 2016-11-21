@@ -16,6 +16,7 @@ use PDO;
 use PDOStatement;
 use RuntimeException;
 use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Adapter\Data\DataDriverInterface;
 
 /**
  * Class MySQLAdapter.
@@ -32,11 +33,11 @@ class MySQLAdapter implements DataAdapterInterface
     /**
      * MySQLAdapter constructor.
      *
-     * @param PDO $dataStorage
+     * @param DataDriverInterface $dataStorage
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($dataStorage = null)
+    public function __construct(DataDriverInterface $dataStorage = null)
     {
         if (!$dataStorage instanceof PDO) {
             $type = gettype($dataStorage);
