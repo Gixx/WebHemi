@@ -12,6 +12,7 @@
 
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Adapter\Data\DataDriverInterface;
 use WebHemi\Adapter\Data\PDO\MySQLAdapter;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Adapter\Renderer\Twig\TwigRendererAdapter;
@@ -50,12 +51,7 @@ use WebHemi\Routing\Result as RouteResult;
 return [
     'dependencies' => [
         'Global' => [
-            // Library
-            PDO::class => [
-                'arguments' => get_pdo_config(),
-                'calls'     => ['setAttribute' => [PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION]],
-                'shared'    => true,
-            ],
+            DataDriverInterface::class => [],
             // Adapter
             AuthAdapterInterface::class => [
                 'class'     => AuthAdapter::class,
@@ -94,7 +90,7 @@ return [
             DataAdapterInterface::class => [
                 'class'     => MySQLAdapter::class,
                 'arguments' => [
-                    PDO::class
+                    DataDriverInterface::class
                 ],
                 'shared'    => true,
             ],

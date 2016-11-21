@@ -1,11 +1,24 @@
 <?php
 
+use WebHemi\Adapter\Data\DataDriverInterface;
+
 return [
-    'pdo' => [
-        'dsn'      => 'mysql:dbname=%pdo.dbname%;charset=utf8;hostname=%pdo.hostname%',
-        'user'     => '%pdo.username%',
-        'password' => '%pdo.password%',
-        'options'  => [
+    'dependencies' => [
+        'Global' => [
+            DataDriverInterface::class => [
+                'class' => PDO::class,
+                'arguments' => [
+                    'dsn'      => 'mysql:dbname=%pdo.dbname%;charset=utf8;hostname=%pdo.hostname%',
+                    'user'     => '%pdo.username%',
+                    'password' => '%pdo.password%',
+                    'options'  => [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+                    ],
+                ],
+                'calls'     => ['setAttribute' => [PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION]],
+                'shared'    => true,
+            ],
         ],
     ],
 ];

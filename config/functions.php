@@ -73,22 +73,6 @@ function merge_array_overwrite()
 }
 
 /**
- * Gets the database config if exists.
- *
- * @return array
- */
-function get_pdo_config()
-{
-    $databaseConfig = [];
-
-    if (file_exists(__DIR__.'/local.db.php')) {
-        $databaseConfig = require __DIR__.'/local.db.php';
-    }
-
-    return $databaseConfig['pdo'];
-}
-
-/**
  * Gets the application config by combine the default, a custom and the read-only settings.
  *
  * @return array
@@ -217,8 +201,13 @@ function get_dependencies_config()
 {
     $moduleConfig = get_full_module_config();
     $globalConfig = require __DIR__.'/global.dependencies.php';
+    $localDbConfig = [];
 
-    $dependenciesConfig = merge_array_overwrite($moduleConfig, $globalConfig);
+    if (file_exists(__DIR__.'/local.db.php')) {
+        $localDbConfig = require __DIR__.'/local.db.php';
+    }
+
+    $dependenciesConfig = merge_array_overwrite($moduleConfig, $globalConfig, $localDbConfig);
 
     return $dependenciesConfig['dependencies'];
 }
@@ -233,9 +222,9 @@ function get_pipeline_config()
     $moduleConfig = get_full_module_config();
     $globalConfig = require __DIR__.'/global.pipeline.php';
 
-    $dependenciesConfig = merge_array_overwrite($moduleConfig, $globalConfig);
+    $pipelineConfig = merge_array_overwrite($globalConfig, $moduleConfig);
 
-    return $dependenciesConfig['middleware_pipeline'];
+    return $pipelineConfig['middleware_pipeline'];
 }
 
 /**
