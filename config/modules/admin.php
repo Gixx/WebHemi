@@ -14,6 +14,8 @@ use WebHemi\Application\EnvironmentManager;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
+use WebHemi\Data\Storage\ApplicationStorage;
+use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Storage\User\UserGroupStorage;
 use WebHemi\Middleware\Action;
@@ -59,10 +61,13 @@ return [
             ],
             AclMiddleware::class => [
                 'arguments' => [
+                    EnvironmentManager::class,
                     AuthAdapterInterface::class,
                     UserToPolicyCoupler::class,
                     UserToGroupCoupler::class,
                     UserGroupToPolicyCoupler::class,
+                    ApplicationStorage::class,
+                    ResourceStorage::class,
                 ]
             ],
             Action\Admin\DashboardAction::class => [

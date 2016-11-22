@@ -97,4 +97,24 @@ class ApplicationStorage extends AbstractDataStorage
 
         return $entity;
     }
+
+    /**
+     * Returns an Application entity by name.
+     *
+     * @param string $name
+     *
+     * @return bool|ApplicationEntity
+     */
+    public function getApplicationByName($name)
+    {
+        $entity = false;
+        $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
+
+        if (!empty($dataList)) {
+            $entity = $this->createEntity();
+            $this->populateEntity($entity, $dataList[0]);
+        }
+
+        return $entity;
+    }
 }

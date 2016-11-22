@@ -98,4 +98,24 @@ class ResourceStorage extends AbstractDataStorage
 
         return $entity;
     }
+
+    /**
+     * Returns an Resource entity by name.
+     *
+     * @param string $name
+     *
+     * @return bool|ResourceEntity
+     */
+    public function getResourceByName($name)
+    {
+        $entity = false;
+        $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
+
+        if (!empty($dataList)) {
+            $entity = $this->createEntity();
+            $this->populateEntity($entity, $dataList[0]);
+        }
+
+        return $entity;
+    }
 }

@@ -27,6 +27,7 @@ use WebHemi\Auth\Result as AuthResult;
 use WebHemi\Auth\AuthStorageInterface;
 use WebHemi\Auth\Storage\Session;
 use WebHemi\Config\ConfigInterface;
+use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\User\UserGroupEntity;
@@ -35,6 +36,7 @@ use WebHemi\Data\Entity\User\UserMetaEntity;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
+use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Data\Storage\AccessManagement\PolicyStorage;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\User\UserGroupStorage;
@@ -119,6 +121,13 @@ return [
                 'shared'    => true,
             ],
             // DataStorage
+            ApplicationStorage::class => [
+                'arguments' => [
+                    DataAdapterInterface::class,
+                    ApplicationEntity::class
+                ],
+                'shared'    => true,
+            ],
             UserStorage::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
