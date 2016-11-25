@@ -63,7 +63,7 @@ interface AuthAdapterInterface
     /**
      * Gets the authenticated user's entity.
      *
-     * @return DataEntityInterface
+     * @return null|string|DataEntityInterface
      */
     public function getIdentity();
 

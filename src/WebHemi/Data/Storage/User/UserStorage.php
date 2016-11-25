@@ -48,7 +48,7 @@ class UserStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @param array               $data
      */
-    protected function populateEntity(DataEntityInterface &$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data)
     {
         /* @var UserEntity $entity */
         $entity->setUserId($data[$this->idKey])
@@ -80,8 +80,8 @@ class UserStorage extends AbstractDataStorage
             $this->email => $entity->getEmail(),
             $this->password => $entity->getPassword(),
             $this->hash => $entity->getHash(),
-            $this->isActive => (int)$entity->getActive(),
-            $this->isEnabled => (int)$entity->getEnabled(),
+            $this->isActive => (int) $entity->getActive(),
+            $this->isEnabled => (int) $entity->getEnabled(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];

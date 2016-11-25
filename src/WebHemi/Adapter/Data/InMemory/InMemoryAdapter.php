@@ -38,15 +38,15 @@ class InMemoryAdapter implements DataAdapterInterface
     public function __construct(DataDriverInterface $dataDriver)
     {
         /** @var InMemoryDriver $dataDriver */
-        $dataDriver = $dataDriver->toArray();
+        $dataCollection = $dataDriver->toArray();
 
-        foreach ($dataDriver as $rowData) {
+        foreach ($dataCollection as $rowData) {
             if (!is_array($rowData)) {
                 throw new InvalidArgumentException('The constructor parameter if present must be an array of arrays.');
             }
         }
 
-        $this->dataStorage[$this->dataGroup] = $dataDriver;
+        $this->dataStorage[$this->dataGroup] = $dataCollection;
     }
 
     /**
@@ -220,7 +220,7 @@ class InMemoryAdapter implements DataAdapterInterface
     private function checkWildcardMatch($data, $subject)
     {
         $subject = str_replace('%', '.*', $subject);
-        return preg_match('/^'.$subject.'$/', $data);
+        return (bool) preg_match('/^'.$subject.'$/', $data);
     }
 
     /**
@@ -231,7 +231,7 @@ class InMemoryAdapter implements DataAdapterInterface
      */
     private function checkInArrayMatch($data, $subject)
     {
-        return in_array($data, (array)$subject);
+        return in_array($data, (array) $subject);
     }
 
     /**

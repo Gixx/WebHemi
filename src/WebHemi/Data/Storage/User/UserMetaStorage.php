@@ -46,7 +46,7 @@ class UserMetaStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @param array               $data
      */
-    protected function populateEntity(DataEntityInterface &$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data)
     {
         /* @var UserMetaEntity $entity */
         $entity->setUserMetaId($data[$this->idKey])

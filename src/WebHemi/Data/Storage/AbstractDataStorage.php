@@ -141,5 +141,5 @@ abstract class AbstractDataStorage implements DataStorageInterface
      * @param DataEntityInterface $entity
      * @param array               $data
      */
-    abstract protected function populateEntity(DataEntityInterface &$entity, array $data);
+    abstract protected function populateEntity(DataEntityInterface&$entity, array $data);
 }

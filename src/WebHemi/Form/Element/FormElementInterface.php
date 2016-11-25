@@ -11,6 +11,8 @@
  */
 namespace WebHemi\Form\Element;
 
+use WebHemi\Validator\ValidatorInterface;
+
 /**
  * Interface FormElementInterface
  */

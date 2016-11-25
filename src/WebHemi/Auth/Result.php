@@ -19,11 +19,11 @@ use WebHemi\Data\Entity\User\UserEntity;
  */
 class Result
 {
-    const FAILURE =  0;
+    const FAILURE = 0;
     const FAILURE_IDENTITY_NOT_FOUND = -1;
     const FAILURE_CREDENTIAL_INVALID = -2;
     const FAILURE_OTHER = -3;
-    const SUCCESS =  1;
+    const SUCCESS = 1;
 
     /** @var int */
     private $code;
@@ -45,7 +45,7 @@ class Result
      */
     public function isValid()
     {
-        return $this->code == 1;
+        return $this->code == 1 && !empty($this->userEntity);
     }
 
     /**
@@ -91,7 +91,7 @@ class Result
     /**
      * Gets the authenticated user if any.
      *
-     * @return null|UserEntity
+     * @return UserEntity
      */
     public function getIdentity()
     {

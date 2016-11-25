@@ -114,16 +114,16 @@ class AclMiddleware implements MiddlewareInterface
             // First we check the group policies
             /** @var array<UserGroupEntity> $userGroups */
             $userGroups = $this->userToGroupCoupler->getEntityDependencies($identity);
+            /** @var array<PolicyEntity> $userGroupPolicies */
             $userGroupPolicies = [];
             foreach ($userGroups as $userGroupEntity) {
-                /** @var array<PolicyEntity> $userGroupPolicies */
                 $groupPolicies = $this->userGroupToPolicyCoupler->getEntityDependencies($userGroupEntity);
                 $userGroupPolicies = array_merge($userGroupPolicies, $groupPolicies);
             }
             $hasAccess = $this->checkPolicies($userGroupPolicies, $applicationEntity, $resourceEntity);
 
             // Then we check the personal policies
-            /** @var array<PolicyEntity> $policies */
+            /** @var array<PolicyEntity> $userPolicies */
             $userPolicies = $this->userToPolicyCoupler->getEntityDependencies($identity);
             $hasAccess = $hasAccess && $this->checkPolicies($userPolicies, $applicationEntity, $resourceEntity);
 
@@ -142,9 +142,9 @@ class AclMiddleware implements MiddlewareInterface
     /**
      * Checks policies for application and resource
      *
-     * @param array<PolicyEntity> $policies
-     * @param ApplicationEntity   $applicationEntity
-     * @param ResourceEntity      $resourceEntity
+     * @param array<PolicyEntity>      $policies
+     * @param ApplicationEntity|null   $applicationEntity
+     * @param ResourceEntity|null      $resourceEntity
      * @return bool
      */
     private function checkPolicies(
@@ -154,24 +154,42 @@ class AclMiddleware implements MiddlewareInterface
     ) {
         // We assume the best case: the user has access
         $hasAccess = true;
-        $applicationId = $applicationEntity ? $applicationEntity->getApplicationId() : null;
-        $resourceId = $resourceEntity ? $resourceEntity->getResourceId() : null;
 
         /** @var PolicyEntity $policyEntity */
         foreach ($policies as $policyEntity) {
-            $policyApplicationId = $policyEntity->getApplicationId();
-            $policyResourceId = $policyEntity->getResourceId();
-
-            // The user has access when:
-            // - user has a policy that connected to the current application OR any application AND
-            // - user has a policy that connected to the current resource OR any resource
-            if (($policyApplicationId == null || $policyApplicationId == $applicationId)
-                && ($policyResourceId == null || $policyResourceId == $resourceId)
-            ) {
-                $hasAccess = $hasAccess && $policyEntity->getAllowed();
-            }
+            $hasAccess = $hasAccess && $this->checkPolicy($policyEntity, $applicationEntity, $resourceEntity);
         }
 
         return $hasAccess;
+    }
+
+    /**
+     * @param PolicyEntity           $policyEntity
+     * @param ApplicationEntity|null $applicationEntity
+     * @param ResourceEntity|null    $resourceEntity
+     * @return bool
+     */
+    private function checkPolicy(
+        PolicyEntity $policyEntity,
+        ApplicationEntity $applicationEntity = null,
+        ResourceEntity $resourceEntity = null
+    ) {
+        $applicationId = $applicationEntity ? $applicationEntity->getApplicationId() : null;
+        $resourceId = $resourceEntity ? $resourceEntity->getResourceId() : null;
+        $policyApplicationId = $policyEntity->getApplicationId();
+        $policyResourceId = $policyEntity->getResourceId();
+
+        // The user has access when:
+        // - user has a policy that connected to the current application OR any application AND
+        // - user has a policy that connected to the current resource OR any resource
+        if (($policyApplicationId == null || $policyApplicationId == $applicationId)
+            && ($policyResourceId == null || $policyResourceId == $resourceId)
+        ) {
+            return $policyEntity->getAllowed();
+        }
+
+        // At this point we know that the current policy doesn't belong to this application or resource, so no need
+        // to block the user.
+        return true;
     }
 }

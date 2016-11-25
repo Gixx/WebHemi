@@ -30,7 +30,7 @@ class SpecialFormElementTest extends TestCase
     {
         $element = new Web\CheckboxElement('test');
 
-        $this->assertSame(0, $element->getValue());
+        $this->assertSame(null, $element->getValue());
 
         $element->setValue("0");
         $this->assertSame(0, $element->getValue());

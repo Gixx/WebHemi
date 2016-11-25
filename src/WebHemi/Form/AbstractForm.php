@@ -64,7 +64,7 @@ abstract class AbstractForm implements FormInterface, Iterator
             );
 
         // For simplicity in rendering (twig macro), we store it in an array.
-        $this->nodes[0] =& $this->form;
+        $this->nodes[0] = &$this->form;
         // Set a default salt for the form name. If the AutoComplete attribute is 'off', it will be added to the form's
         // name attribute. The default salt will change every hour.
         $this->salt = md5(gmdate('YmdH'));

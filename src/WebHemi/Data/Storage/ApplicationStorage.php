@@ -43,7 +43,7 @@ class ApplicationStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @param array               $data
      */
-    protected function populateEntity(DataEntityInterface &$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data)
     {
         /* @var ApplicationEntity $entity */
         $entity->setApplicationId($data[$this->idKey])
@@ -72,7 +72,7 @@ class ApplicationStorage extends AbstractDataStorage
             $this->name => $entity->getName(),
             $this->title => $entity->getTitle(),
             $this->description => $entity->getDescription(),
-            $this->isReadOnly => (int)$entity->getReadOnly(),
+            $this->isReadOnly => (int) $entity->getReadOnly(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];

@@ -44,7 +44,7 @@ class UserGroupStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @param array               $data
      */
-    protected function populateEntity(DataEntityInterface &$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data)
     {
         /* @var UserGroupEntity $entity */
         $entity->setUserGroupId($data[$this->idKey])
@@ -73,7 +73,7 @@ class UserGroupStorage extends AbstractDataStorage
             $this->name => $entity->getName(),
             $this->title => $entity->getTitle(),
             $this->description => $entity->getDescription(),
-            $this->isReadOnly => (int)$entity->getReadOnly(),
+            $this->isReadOnly => (int) $entity->getReadOnly(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];

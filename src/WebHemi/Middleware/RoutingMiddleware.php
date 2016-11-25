@@ -43,7 +43,7 @@ class RoutingMiddleware implements MiddlewareInterface
      *
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface&$request, ResponseInterface $response)
     {
         $routeResult = $this->routerAdapter->match($request);
 

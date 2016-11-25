@@ -95,22 +95,7 @@ class LoginAction extends AbstractMiddlewareAction
 
             // save new user if we have the username credentials and add him/her to the Guest group
             if (!$userEntity instanceof UserEntity && !empty($userEntity)) {
-                /** @var string $userName */
-                $userName = $userEntity;
-                /** @var UserEntity $userEntity */
-                $userEntity = $this->userStorage->createEntity();
-                $userEntity->setUserName($userName)
-                    ->setPassword('SSO-user')
-                    ->setActive(true)
-                    ->setEnabled(true)
-                    ->setDateCreated(new DateTime('now'));
-
-                $userId = $this->userStorage->saveEntity($userEntity);
-                // add user to the Guests group.
-                if ($userId) {
-                    $userGroupEntity = $this->userGroupStorage->getUserGroupByName('guest');
-                    $this->userToGroupCoupler->setDependency($userEntity, $userGroupEntity);
-                }
+                $userEntity = $this->registerGuestUser($userEntity);
             }
 
             if ($userEntity instanceof UserEntity) {
@@ -127,5 +112,33 @@ class LoginAction extends AbstractMiddlewareAction
         }
 
         return [];
+    }
+
+    /**
+     * Registers a new user as guest.
+     *
+     * @param string $identity
+     * @return UserEntity
+     */
+    private function registerGuestUser($identity)
+    {
+        /** @var string $userName */
+        $userName = (string) $identity;
+        /** @var UserEntity $userEntity */
+        $userEntity = $this->userStorage->createEntity();
+        $userEntity->setUserName($userName)
+            ->setPassword('guest-user')
+            ->setActive(true)
+            ->setEnabled(true)
+            ->setDateCreated(new DateTime('now'));
+
+        $userId = $this->userStorage->saveEntity($userEntity);
+        $userGroupEntity = $this->userGroupStorage->getUserGroupByName('guest');
+        // add user to the Guests group.
+        if ($userId && $userGroupEntity) {
+            $this->userToGroupCoupler->setDependency($userEntity, $userGroupEntity);
+        }
+
+        return $userEntity;
     }
 }
