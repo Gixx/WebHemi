@@ -42,7 +42,7 @@ class FinalMiddleware implements MiddlewareInterface
      *
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface&$request, ResponseInterface $response)
     {
         // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && headers_sent()) {
@@ -84,7 +84,7 @@ class FinalMiddleware implements MiddlewareInterface
      */
     private function injectContentLength(ResponseInterface $response)
     {
-        if (!$response->hasHeader('Content-Length')&& !is_null($response->getBody()->getSize())) {
+        if (!$response->hasHeader('Content-Length') && !is_null($response->getBody()->getSize())) {
             $response = $response->withHeader('Content-Length', (string) $response->getBody()->getSize());
         }
 

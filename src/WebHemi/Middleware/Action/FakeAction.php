@@ -3,12 +3,12 @@
 namespace WebHemi\Middleware\Action;
 
 use WebHemi\Application\SessionManager;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Entity\User\UserGroupEntity;
-use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
+use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\User\UserGroupEntity;
+use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Form\FormInterface;
 use WebHemi\Form\Web\TestForm;
 use WebHemi\Middleware\AbstractMiddlewareAction;
@@ -42,6 +42,7 @@ class FakeAction extends AbstractMiddlewareAction
         UserGroupToPolicyCoupler $userGroupToPolicyCoupler
     ) {
         $this->userStorage = $userStorage;
+        /** @var TestForm loginForm */
         $this->loginForm = $loginForm;
         $this->session = $session;
         $this->userToPolicyCoupler = $userToPolicyCoupler;
@@ -74,7 +75,7 @@ class FakeAction extends AbstractMiddlewareAction
         // Turn off aut complete feature.
         $this->loginForm->setAutoComplete(false);
         // test data setter
-        $this->loginForm->setData((array)$this->request->getParsedBody());
+        $this->loginForm->setData((array) $this->request->getParsedBody());
 
         if (!empty($this->request->getParsedBody())) {
             $this->session->set('session', $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);

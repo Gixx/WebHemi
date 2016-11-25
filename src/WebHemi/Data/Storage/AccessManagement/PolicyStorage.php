@@ -54,7 +54,7 @@ class PolicyStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @param array               $data
      */
-    protected function populateEntity(DataEntityInterface &$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data)
     {
         /* @var PolicyEntity $entity */
         $entity->setPolicyId($data[$this->idKey])
@@ -88,8 +88,8 @@ class PolicyStorage extends AbstractDataStorage
             $this->name => $entity->getName(),
             $this->title => $entity->getTitle(),
             $this->description => $entity->getDescription(),
-            $this->isReadOnly => (int)$entity->getReadOnly(),
-            $this->isAllowed => (int)$entity->getAllowed(),
+            $this->isReadOnly => (int) $entity->getReadOnly(),
+            $this->isAllowed => (int) $entity->getAllowed(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];

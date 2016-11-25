@@ -48,10 +48,10 @@ class SessionManager
             ini_set('session.entropy_file', '/dev/urandom');
             ini_set('session.entropy_length', '16');
             ini_set('session.hash_function', $configuration['hash_function']);
-            ini_set('session.use_only_cookies', (int)$configuration['use_only_cookies']);
-            ini_set('session.use_cookies', (int)$configuration['use_cookies']);
-            ini_set('session.use_trans_sid', (int)$configuration['use_trans_sid']);
-            ini_set('session.cookie_httponly', (int)$configuration['cookie_http_only']);
+            ini_set('session.use_only_cookies', (int) $configuration['use_only_cookies']);
+            ini_set('session.use_cookies', (int) $configuration['use_cookies']);
+            ini_set('session.use_trans_sid', (int) $configuration['use_trans_sid']);
+            ini_set('session.cookie_httponly', (int) $configuration['cookie_http_only']);
             ini_set('session.save_path', $configuration['save_path']);
         }
         // @codeCoverageIgnoreEnd
@@ -130,7 +130,7 @@ class SessionManager
 
         // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
-            session_name($this->cookiePrefix.'-'.bin2hex($name . $this->sessionNameSalt));
+            session_name($this->cookiePrefix.'-'.bin2hex($name.$this->sessionNameSalt));
             session_set_cookie_params($timeOut, $path, $domain, $secure, $httpOnly);
             session_start();
         }

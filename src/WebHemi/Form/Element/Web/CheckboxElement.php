@@ -22,8 +22,8 @@ class CheckboxElement extends RadioElement
     /**
      * Sets element value.
      *
-     * @param mixed $value
-     * @return RadioElement
+     * @param string $value
+     * @return CheckboxElement
      */
     public function setValue($value)
     {
@@ -44,7 +44,7 @@ class CheckboxElement extends RadioElement
     public function getValue()
     {
         if (empty($this->options)) {
-            return (int)$this->value;
+            return $this->value;
         }
 
         return parent::getValue();

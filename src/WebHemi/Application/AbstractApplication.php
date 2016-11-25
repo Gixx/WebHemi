@@ -41,7 +41,7 @@ abstract class AbstractApplication implements ApplicationInterface
         return $this->container;
     }
 
-   /**
+    /**
      * Runs the application. This is where the magic happens.
      * For example for a web application this initializes the Request and Response objects, builds the middleware
      * pipeline, applies the Routing and the Dispatch.

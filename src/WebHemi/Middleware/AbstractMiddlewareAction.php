@@ -46,7 +46,7 @@ abstract class AbstractMiddlewareAction implements MiddlewareInterface, Middlewa
      *
      * @return ResponseInterface
      */
-    final public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
+    final public function __invoke(ServerRequestInterface&$request, ResponseInterface $response)
     {
         $this->request = $request;
         $this->response = $response;

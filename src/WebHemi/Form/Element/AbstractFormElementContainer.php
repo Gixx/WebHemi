@@ -28,6 +28,7 @@ abstract class AbstractFormElementContainer implements FormElementContainerInter
      */
     public function __construct(FormElementInterface ...$formElementPrototypes)
     {
+        /** @var FormElementInterface $formElement */
         foreach ($formElementPrototypes as $formElement) {
             if (method_exists($formElement, 'resetTabIndex')) {
                 $formElement->resetTabIndex();

@@ -31,7 +31,7 @@ trait GetEntityListFromDataSetTrait
      * @param DataEntityInterface $entity
      * @param array               $data
      */
-    abstract protected function populateEntity(DataEntityInterface &$entity, array $data);
+    abstract protected function populateEntity(DataEntityInterface&$entity, array $data);
 
     /**
      * Gets entity list from data storage set.

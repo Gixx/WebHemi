@@ -246,7 +246,7 @@ class EnvironmentManager
 
         $this->subDomain = $subDomain;
         $this->mainDomain = $domain;
-        $this->applicationDomain = $this->subDomain.'.'. $this->mainDomain;
+        $this->applicationDomain = $this->subDomain.'.'.$this->mainDomain;
 
         // Redirecting when the app domain is not equal to the server data
         // @codeCoverageIgnoreStart

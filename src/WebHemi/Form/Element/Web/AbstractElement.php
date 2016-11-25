@@ -160,7 +160,7 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     /**
      * Sets element value.
      *
-     * @param mixed $value
+     * @param string $value
      * @return AbstractElement
      */
     public function setValue($value)
@@ -307,7 +307,7 @@ abstract class AbstractElement implements FormElementInterface, Iterator
     /**
      * Sets the element errors. Usually the validator should set it, but it is allowed to set from outside too.
      *
-     * @param array $errors
+     * @param array<string> $errors
      * @return AbstractElement
      */
     public function setErrors(array $errors)

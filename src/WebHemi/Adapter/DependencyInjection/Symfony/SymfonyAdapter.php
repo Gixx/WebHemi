@@ -44,7 +44,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     public function __construct(ConfigInterface $configuration)
     {
         $this->container = new ContainerBuilder();
-        $this->configuration = $configuration->getData('dependencies');
+        $this->configuration = (array) $configuration->getData('dependencies');
     }
 
     /**
@@ -222,8 +222,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     /**
      * Creates a safe normalized name.
      *
-     * @param $className
-     * @param $argumentName
+     * @param string $className
+     * @param string $argumentName
      *
      * @return string
      */
@@ -290,8 +290,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     /**
      * Sets service argument.
      *
-     * @param string|Definition $service
-     * @param mixed             $parameter
+     * @param Definition $service
+     * @param mixed      $parameter
      *
      * @throws RuntimeException
      *
@@ -310,8 +310,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         $normalizedName = $this->getNormalizedName($serviceClass, $parameterName);
 
         // If the parameter marked as to be used as a scalar.
-        if (is_scalar($parameter) && strpos((string)$parameter, '!:') === 0) {
-            $parameter = substr((string)$parameter, 2);
+        if (is_scalar($parameter) && strpos((string) $parameter, '!:') === 0) {
+            $parameter = substr((string) $parameter, 2);
         } else {
             // Otherwise check if the parameter is a service.
             $parameter = $this->getReferenceServiceIfAvailable($parameter);
@@ -341,8 +341,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     /**
      * Gets the real parameter name.
      *
-     * @param $parameterName
-     * @return mixed
+     * @param mixed $parameterName
+     * @return string
      */
     private function getRealParameterName($parameterName)
     {
@@ -356,7 +356,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     /**
      * Checks whether the service is shared and initialized
      *
-     * @param $serviceClass
+     * @param string $serviceClass
      * @throws RuntimeException
      */
     private function checkSharedServiceClassState($serviceClass)

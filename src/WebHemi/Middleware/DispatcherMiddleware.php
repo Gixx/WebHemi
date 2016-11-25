@@ -45,7 +45,7 @@ class DispatcherMiddleware implements MiddlewareInterface
      *
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface&$request, ResponseInterface $response)
     {
         /** @var MiddlewareInterface $actionMiddleware */
         $actionMiddleware = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE);

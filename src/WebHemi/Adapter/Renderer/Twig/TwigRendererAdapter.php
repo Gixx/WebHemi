@@ -131,33 +131,42 @@ class TwigRendererAdapter implements RendererAdapterInterface
         $canUseThisTheme = true;
 
         // check the theme settings
-        // If no admin login support, then use default theme
-        if ('admin' == $this->environmentManager->getSelectedApplication()
-            && strpos($this->environmentManager->getRequestUri(), '/auth/login') !== false
-            && (!$themeConfig->has('features/admin_login_support')
-                || !$themeConfig->getData('features/admin_login_support')
-            )
-        ) {
-            $canUseThisTheme = false;
-        }
-
-        if ('admin' == $this->environmentManager->getSelectedApplication()
-            && strpos($this->environmentManager->getRequestUri(), '/auth/login') === false
-            && (!$themeConfig->has('features/admin_support')
-                || !$themeConfig->getData('features/admin_support')
-            )
-        ) {
-            $canUseThisTheme = false;
-        }
-
-        if ('admin' != $this->environmentManager->getSelectedApplication()
-            && (!$themeConfig->has('features/website_support')
-                || !$themeConfig->getData('features/website_support')
-            )
+        // If no theme support for the application, then use the default theme
+        if (($this->isAdminApplication(false) && !$this->isFeatureSupported($themeConfig, 'admin'))
+            || ($this->isAdminApplication(true) && !$this->isFeatureSupported($themeConfig, 'admin_login'))
+            || (!$this->isAdminApplication(false) && !$this->isFeatureSupported($themeConfig, 'website'))
+            || (!$this->isAdminApplication(true) && !$this->isFeatureSupported($themeConfig, 'website'))
         ) {
             $canUseThisTheme = false;
         }
 
         return $canUseThisTheme;
+    }
+
+    /**
+     * Checks whether the current application is the Admin(login) or not.
+     *
+     * @param bool $checkIfLogin
+     * @return bool
+     */
+    private function isAdminApplication($checkIfLogin = false)
+    {
+        $isAdmin = 'admin' == $this->environmentManager->getSelectedApplication();
+        $isLogin = strpos($this->environmentManager->getRequestUri(), '/auth/login') !== false;
+
+        return $checkIfLogin ? $isAdmin && $isLogin : $isAdmin && !$isLogin;
+    }
+
+    /**
+     * Checks the config for feature settings.
+     *
+     * @param ConfigInterface $themeConfig
+     * @param string          $feature
+     * @return bool
+     */
+    private function isFeatureSupported(ConfigInterface $themeConfig, $feature)
+    {
+        return $themeConfig->has('features/'.$feature.'_support')
+            && $themeConfig->getData('features/'.$feature.'_support');
     }
 }

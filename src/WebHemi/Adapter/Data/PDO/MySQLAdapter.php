@@ -273,7 +273,7 @@ class MySQLAdapter implements DataAdapterInterface
     {
         list($columnNameOnly) = explode(' ', $column);
 
-        $inParameters  = str_repeat('?,', $parameterCount - 1).'?';
+        $inParameters = str_repeat('?,', $parameterCount - 1).'?';
 
         return $columnNameOnly.' IN ('.$inParameters.')';
     }
@@ -326,7 +326,7 @@ class MySQLAdapter implements DataAdapterInterface
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    private function bindValuesToStatement(PDOStatement &$statement, array $queryBind)
+    private function bindValuesToStatement(PDOStatement&$statement, array $queryBind)
     {
         foreach ($queryBind as $index => $data) {
             $paramType = PDO::PARAM_STR;

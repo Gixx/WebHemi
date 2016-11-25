@@ -12,9 +12,9 @@
 namespace WebHemi\Auth;
 
 use Exception;
+use WebHemi\Adapter\Auth\AbstractAuthAdapter;
 use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Adapter\Auth\AbstractAuthAdapter;
 
 /**
  * Class Auth
