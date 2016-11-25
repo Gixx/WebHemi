@@ -3,9 +3,9 @@
 namespace WebHemi\Middleware\Action;
 
 use WebHemi\Application\SessionManager;
+use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
-use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 use WebHemi\Data\Storage\User\UserStorage;

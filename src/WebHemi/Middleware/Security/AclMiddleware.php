@@ -17,18 +17,17 @@ use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Application\EnvironmentManager;
-use WebHemi\Auth\Result;
+use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
-use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
-use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
+use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\ApplicationStorage;
-use WebHemi\Middleware\MiddlewareInterface;
 use WebHemi\Middleware\Action;
+use WebHemi\Middleware\MiddlewareInterface;
 
 /**
  * Class AclMiddleware.
@@ -91,7 +90,7 @@ class AclMiddleware implements MiddlewareInterface
      * @throws Exception
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface&$request, ResponseInterface $response)
     {
         $actionMiddleware = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS);
         $identity = false;
@@ -117,6 +116,7 @@ class AclMiddleware implements MiddlewareInterface
             /** @var array<PolicyEntity> $userGroupPolicies */
             $userGroupPolicies = [];
             foreach ($userGroups as $userGroupEntity) {
+                /** @var array<PolicyEntity> $groupPolicies */
                 $groupPolicies = $this->userGroupToPolicyCoupler->getEntityDependencies($userGroupEntity);
                 $userGroupPolicies = array_merge($userGroupPolicies, $groupPolicies);
             }
