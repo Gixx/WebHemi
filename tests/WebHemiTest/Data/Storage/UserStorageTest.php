@@ -105,7 +105,7 @@ class UserStorageTest extends TestCase
         $storage = new UserStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getUserById(3);
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var UserEntity $actualResult */
         $actualResult = $storage->getUserById(1);
@@ -150,7 +150,7 @@ class UserStorageTest extends TestCase
         $storage = new UserStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getUserByEmail('wrong.address@foo.org');
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var UserEntity $actualResult */
         $actualResult = $storage->getUserByEmail('test.address@foo.org');
@@ -198,7 +198,7 @@ class UserStorageTest extends TestCase
         $storage = new UserStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getUserByUserName('Donald Trump');
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var UserEntity $actualResult */
         $actualResult = $storage->getUserByUserName('testUser');

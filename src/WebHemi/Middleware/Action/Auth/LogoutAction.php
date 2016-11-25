@@ -14,6 +14,7 @@ namespace WebHemi\Middleware\Action\Auth;
 
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Http\ResponseInterface;
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
 /**
@@ -23,15 +24,18 @@ class LogoutAction extends AbstractMiddlewareAction
 {
     /** @var AuthAdapterInterface */
     private $authAdapter;
+    private $environmentManager;
 
     /**
      * MetaDataAction constructor.
      *
      * @param AuthAdapterInterface $authAdapter
+     * @param EnvironmentManager   $environmentManager
      */
-    public function __construct(AuthAdapterInterface $authAdapter)
+    public function __construct(AuthAdapterInterface $authAdapter, EnvironmentManager $environmentManager)
     {
         $this->authAdapter = $authAdapter;
+        $this->environmentManager = $environmentManager;
     }
 
     /**
@@ -53,7 +57,7 @@ class LogoutAction extends AbstractMiddlewareAction
     {
         $this->authAdapter->clearIdentity();
         $this->response = $this->response->withStatus(ResponseInterface::STATUS_REDIRECT, 'Found')
-            ->withHeader('Location', '/');
+            ->withHeader('Location', $this->environmentManager->getSelectedApplicationUri());
 
         return [];
     }

@@ -85,10 +85,17 @@ class TwigRendererAdapterTest extends TestCase
     }
 
     /**
-     * Test renderer.
+     * Test renderer for website.
      */
-    public function testRenderer()
+    public function testRendererForWebsite()
     {
+        // Website pages are supported by the test_theme
+        $this->environmentManager->setSelectedApplication('website')
+            ->setSelectedApplicationUri('/')
+            ->setSelectedModule('Website')
+            ->setSelectedTheme('test_theme')
+            ->setRequestUri('/some/page');
+
         $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
 
         $result = $adapterObj->render('test-page');
@@ -104,9 +111,131 @@ class TwigRendererAdapterTest extends TestCase
 
         $result = $adapterObj->render('unit/test.twig');
         $resultDataOther = json_decode($result, true);
-
         $this->assertArraysAreSimilar($resultData, $resultDataOther);
 
+        // Website pages are supported by the test_theme_no_website
+        $this->environmentManager->setSelectedApplication('website')
+            ->setSelectedApplicationUri('/')
+            ->setSelectedModule('Website')
+            ->setSelectedTheme('test_theme_no_website')
+            ->setRequestUri('/some/page');
+
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+
+        $result = $adapterObj->render('test-page');
+        $resultData = json_decode($result, true);
+
+        $this->assertInternalType('array', $resultData);
+        $this->assertTrue(isset($resultData['template_resource_path']));
+        $this->assertEquals(
+            '/resources/default_theme/static',
+            $resultData['template_resource_path']
+        );
+
+
+        $this->setExpectedException(InvalidArgumentException::class);
+        $adapterObj->render('some_non_existing_theme_map_file');
+    }
+
+    /**
+     * Test renderer for admin login.
+     */
+    public function testRendererForAdminLogin()
+    {
+        // Admin login is supported by the test_theme
+        $this->environmentManager->setSelectedApplication('admin')
+            ->setSelectedApplicationUri('/')
+            ->setSelectedModule('Admin')
+            ->setSelectedTheme('test_theme')
+            ->setRequestUri('/auth/login');
+
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+
+        $result = $adapterObj->render('test-page');
+        $resultData = json_decode($result, true);
+
+        $this->assertInternalType('array', $resultData);
+        $this->assertTrue(isset($resultData['template_resource_path']));
+        $this->assertEquals(
+            $this->environmentManager->getResourcePath().'/static',
+            $resultData['template_resource_path']
+        );
+        $this->assertEquals('Hello World!', $resultData['message']);
+
+        $result = $adapterObj->render('unit/test.twig');
+        $resultDataOther = json_decode($result, true);
+        $this->assertArraysAreSimilar($resultData, $resultDataOther);
+
+        // Admin login is NOT supported by the test_theme_no_admin
+        $this->environmentManager->setSelectedApplication('admin')
+            ->setSelectedApplicationUri('/')
+            ->setSelectedModule('Admin')
+            ->setSelectedTheme('test_theme_no_admin')
+            ->setRequestUri('/auth/login');
+
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+
+        $result = $adapterObj->render('test-page');
+        $resultData = json_decode($result, true);
+
+        $this->assertInternalType('array', $resultData);
+        $this->assertTrue(isset($resultData['template_resource_path']));
+        $this->assertEquals(
+            '/resources/default_theme/static',
+            $resultData['template_resource_path']
+        );
+
+        $this->setExpectedException(InvalidArgumentException::class);
+        $adapterObj->render('some_non_existing_theme_map_file');
+    }
+
+    /**
+     * Test renderer for admin pages.
+     */
+    public function testRendererForAdminPage()
+    {
+        // Admin pages are supported by the test_theme
+        $this->environmentManager->setSelectedApplication('admin')
+            ->setSelectedApplicationUri('/')
+            ->setSelectedModule('Admin')
+            ->setSelectedTheme('test_theme')
+            ->setRequestUri('/some/page');
+
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+
+        $result = $adapterObj->render('test-page');
+        $resultData = json_decode($result, true);
+
+        $this->assertInternalType('array', $resultData);
+        $this->assertTrue(isset($resultData['template_resource_path']));
+        $this->assertEquals(
+            $this->environmentManager->getResourcePath().'/static',
+            $resultData['template_resource_path']
+        );
+        $this->assertEquals('Hello World!', $resultData['message']);
+
+        $result = $adapterObj->render('unit/test.twig');
+        $resultDataOther = json_decode($result, true);
+        $this->assertArraysAreSimilar($resultData, $resultDataOther);
+
+        // Admin pages are NOT supported by the test_theme_no_admin
+        $this->environmentManager->setSelectedApplication('admin')
+            ->setSelectedApplicationUri('/')
+            ->setSelectedModule('Admin')
+            ->setSelectedTheme('test_theme_no_admin')
+            ->setRequestUri('/some/page');
+
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+
+        $result = $adapterObj->render('test-page');
+        $resultData = json_decode($result, true);
+
+        $this->assertInternalType('array', $resultData);
+        $this->assertTrue(isset($resultData['template_resource_path']));
+        $this->assertEquals(
+            '/resources/default_theme/static',
+            $resultData['template_resource_path']
+        );
 
         $this->setExpectedException(InvalidArgumentException::class);
         $adapterObj->render('some_non_existing_theme_map_file');

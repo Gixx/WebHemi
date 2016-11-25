@@ -11,6 +11,8 @@
  */
 require_once __DIR__.'/functions.php';
 
+render_stat();
+
 return [
     'applications' => get_application_config(),
     'auth' => get_auth_config(),

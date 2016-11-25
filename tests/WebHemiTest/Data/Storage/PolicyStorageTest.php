@@ -137,7 +137,7 @@ class PolicyStorageTest extends TestCase
         $storage = new PolicyStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getPolicyById(4);
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var PolicyEntity $actualResult */
         $actualResult = $storage->getPolicyById(1);
@@ -184,7 +184,7 @@ class PolicyStorageTest extends TestCase
         $storage = new PolicyStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getPolicyByName('someName');
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var PolicyEntity $actualResult */
         $actualResult = $storage->getPolicyByName('test1');
@@ -253,7 +253,7 @@ class PolicyStorageTest extends TestCase
         $this->assertArraysAreSimilar($data[2], $actualData);
 
         $actualResult = $storage->getPoliciesByResourceId(100);
-        $this->assertEmpty($actualResult);
+        $this->assertNull($actualResult);
     }
 
     /**
@@ -309,7 +309,7 @@ class PolicyStorageTest extends TestCase
         $this->assertSame('Test Policy 3', $actualResult[0]->getTitle());
 
         $actualResult = $storage->getPoliciesByApplicationId(100);
-        $this->assertEmpty($actualResult);
+        $this->assertNull($actualResult);
     }
 
     public function testGetPoliciesByResourceAndApplicationIds()
@@ -364,12 +364,12 @@ class PolicyStorageTest extends TestCase
         $this->assertSame('Test Policy 3', $actualResult[0]->getTitle());
 
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(1, 100);
-        $this->assertEmpty($actualResult);
+        $this->assertNull($actualResult);
 
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(1, 3);
-        $this->assertEmpty($actualResult);
+        $this->assertNull($actualResult);
 
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(null, 1);
-        $this->assertEmpty($actualResult);
+        $this->assertNull($actualResult);
     }
 }

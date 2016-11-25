@@ -33,7 +33,7 @@ return [
                 'login' => [
                     'path'            => '/auth/login',
                     'middleware'      => Action\Auth\LoginAction::class,
-                    'allowed_methods' => ['GET'],
+                    'allowed_methods' => ['GET', 'POST'],
                 ],
                 'logout' => [
                     'path'            => '/auth/logout',
@@ -56,13 +56,14 @@ return [
             ],
             Action\Auth\LogoutAction::class => [
                 'arguments' => [
-                    AuthAdapterInterface::class
+                    AuthAdapterInterface::class,
+                    EnvironmentManager::class,
                 ]
             ],
             AclMiddleware::class => [
                 'arguments' => [
-                    EnvironmentManager::class,
                     AuthAdapterInterface::class,
+                    EnvironmentManager::class,
                     UserToPolicyCoupler::class,
                     UserToGroupCoupler::class,
                     UserGroupToPolicyCoupler::class,

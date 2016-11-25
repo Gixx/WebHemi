@@ -29,6 +29,8 @@ class TwigRendererAdapter implements RendererAdapterInterface
     private $adapter;
     /** @var ConfigInterface */
     private $configuration;
+    /** @var EnvironmentManager */
+    private $environmentManager;
     /** @var string */
     private $defaultViewPath;
     /** @var string */
@@ -46,11 +48,14 @@ class TwigRendererAdapter implements RendererAdapterInterface
      */
     public function __construct(ConfigInterface $configuration, EnvironmentManager $environmentManager)
     {
+        $this->environmentManager = $environmentManager;
         $documentRoot = $environmentManager->getDocumentRoot();
         $selectedTheme = $environmentManager->getSelectedTheme();
         $selectedThemeResourcePath = $environmentManager->getResourcePath();
 
-        if (!$configuration->has('themes/'.$selectedTheme)) {
+        if (!$configuration->has('themes/'.$selectedTheme)
+            || !$this->checkSelectedThemeFeatures($configuration->getConfig('themes/'.$selectedTheme))
+        ) {
             $selectedTheme = EnvironmentManager::DEFAULT_THEME;
             $selectedThemeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
         }
@@ -113,5 +118,46 @@ class TwigRendererAdapter implements RendererAdapterInterface
 
         // The ugliest shit ever. But that is how they made it... :/
         return \GuzzleHttp\Psr7\stream_for($output);
+    }
+
+    /**
+     * Checks if the selected theme can be used with the current application.
+     *
+     * @param ConfigInterface $themeConfig
+     * @return bool
+     */
+    private function checkSelectedThemeFeatures(ConfigInterface $themeConfig)
+    {
+        $canUseThisTheme = true;
+
+        // check the theme settings
+        // If no admin login support, then use default theme
+        if ('admin' == $this->environmentManager->getSelectedApplication()
+            && strpos($this->environmentManager->getRequestUri(), '/auth/login') !== false
+            && (!$themeConfig->has('features/admin_login_support')
+                || !$themeConfig->getData('features/admin_login_support')
+            )
+        ) {
+            $canUseThisTheme = false;
+        }
+
+        if ('admin' == $this->environmentManager->getSelectedApplication()
+            && strpos($this->environmentManager->getRequestUri(), '/auth/login') === false
+            && (!$themeConfig->has('features/admin_support')
+                || !$themeConfig->getData('features/admin_support')
+            )
+        ) {
+            $canUseThisTheme = false;
+        }
+
+        if ('admin' != $this->environmentManager->getSelectedApplication()
+            && (!$themeConfig->has('features/website_support')
+                || !$themeConfig->getData('features/website_support')
+            )
+        ) {
+            $canUseThisTheme = false;
+        }
+
+        return $canUseThisTheme;
     }
 }

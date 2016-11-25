@@ -84,14 +84,15 @@ class UserMetaStorage extends AbstractDataStorage
      *
      * @param int $identifier
      *
-     * @return bool|UserMetaEntity
+     * @return null|UserMetaEntity
      */
     public function getUserMetaById($identifier)
     {
-        $entity = false;
+        $entity = null;
         $data = $this->getDataAdapter()->getData($identifier);
 
         if (!empty($data)) {
+            /** @var UserMetaEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
         }

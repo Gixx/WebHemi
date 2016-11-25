@@ -7,14 +7,13 @@
     "homepage": "http://www.gixx-web.com",
     "license": "MIT"
   },
-  "options": {
-    "mdl_enabled": true,
-    "mdl_theme": "blue-grey-pink",
-    "admin_login_customized": true,
-    "admin_login_stylesheet": "style/login.css",
-    "admin_login_javascript": "script/login.js"
+  "features": {
+    "admin_support": true,
+    "admin_login_support": true,
+    "website_support": true
   },
   "map": {
+    "admin-login": "admin/login.twig",
     "admin-dashboard": "admin/dashboard.twig",
     "blog-list": "blog/index.twig",
     "blog-post": "blog/post.twig",

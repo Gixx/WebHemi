@@ -47,7 +47,7 @@ class Session implements AuthStorageInterface
         // for safety purposes
         $this->sessionManager->regenerateId();
         // set user entity into the session as read-only
-        $this->sessionManager->set($this->sessionKey, $dataEntity, true);
+        $this->sessionManager->set($this->sessionKey, $dataEntity);
 
         return $this;
     }

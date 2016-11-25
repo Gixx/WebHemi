@@ -37,11 +37,11 @@ trait GetEntityListFromDataSetTrait
      * Gets entity list from data storage set.
      *
      * @param bool|array $dataList
-     * @return bool|array<DataEntityInterface>
+     * @return null|array<DataEntityInterface>
      */
     protected function getEntityListFromDataSet($dataList)
     {
-        $entityList = false;
+        $entityList = null;
 
         if (!empty($dataList) && is_array($dataList)) {
             foreach ($dataList as $entityData) {

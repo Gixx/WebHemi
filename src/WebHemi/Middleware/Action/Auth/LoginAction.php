@@ -13,7 +13,9 @@
 namespace WebHemi\Middleware\Action\Auth;
 
 use Exception;
+use WebHemi\DateTime;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
+use WebHemi\Auth\Result;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Data\Entity\User\UserEntity;
@@ -68,7 +70,7 @@ class LoginAction extends AbstractMiddlewareAction
      */
     public function getTemplateName()
     {
-        return '';
+        return 'admin-login';
     }
 
     /**
@@ -79,40 +81,50 @@ class LoginAction extends AbstractMiddlewareAction
      */
     public function getTemplateData()
     {
-        /** @var null|string|UserEntity $userEntity */
-        $userEntity = $this->authAdapter->getIdentity();
+        if ($this->request->getMethod() == 'POST') {
+            /** @var Result $result */
+            $result = $this->authAdapter->authenticate();
 
-        // save new user if we have the username credentials and add him/her to the Guest group
-        if (!$userEntity instanceof UserEntity && !empty($userEntity)) {
-            /** @var string $userName */
-            $userName = $userEntity;
-            /** @var UserEntity $userEntity */
-            $userEntity = $this->userStorage->createEntity();
-            $userEntity->setUserName($userName)
-                ->setPassword('SSO-user')
-                ->setActive(true)
-                ->setEnabled(true)
-                ->setDateCreated(new DateTime('now'));
-
-            $userId = $this->userStorage->saveEntity($userEntity);
-            // add user to the Guests group.
-            if ($userId) {
-                $userGroupEntity = $this->userGroupStorage->getUserGroupByName('guest');
-                $this->userToGroupCoupler->setDependency($userEntity, $userGroupEntity);
+            if ($result->isValid()) {
+                $identity = $result->getIdentity();
+                $this->authAdapter->setIdentity($identity);
             }
+
+            /** @var null|string|UserEntity $userEntity */
+            $userEntity = $this->authAdapter->getIdentity();
+
+            // save new user if we have the username credentials and add him/her to the Guest group
+            if (!$userEntity instanceof UserEntity && !empty($userEntity)) {
+                /** @var string $userName */
+                $userName = $userEntity;
+                /** @var UserEntity $userEntity */
+                $userEntity = $this->userStorage->createEntity();
+                $userEntity->setUserName($userName)
+                    ->setPassword('SSO-user')
+                    ->setActive(true)
+                    ->setEnabled(true)
+                    ->setDateCreated(new DateTime('now'));
+
+                $userId = $this->userStorage->saveEntity($userEntity);
+                // add user to the Guests group.
+                if ($userId) {
+                    $userGroupEntity = $this->userGroupStorage->getUserGroupByName('guest');
+                    $this->userToGroupCoupler->setDependency($userEntity, $userGroupEntity);
+                }
+            }
+
+            if ($userEntity instanceof UserEntity) {
+                $this->authAdapter->setIdentity($userEntity);
+            }
+
+            $url = 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'.
+                $this->environmentManager->getApplicationDomain().
+                $this->environmentManager->getSelectedApplicationUri();
+
+            $this->response = $this->response
+                ->withStatus(302, 'Found')
+                ->withHeader('Location', $url);
         }
-
-        if ($userEntity instanceof UserEntity) {
-            $this->authAdapter->setIdentity($userEntity);
-        }
-
-        $url = 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'.
-            $this->environmentManager->getApplicationDomain().
-            $this->environmentManager->getSelectedApplicationUri();
-
-        $this->response = $this->response
-            ->withStatus(302, 'Found')
-            ->withHeader('Location', $url);
 
         return [];
     }

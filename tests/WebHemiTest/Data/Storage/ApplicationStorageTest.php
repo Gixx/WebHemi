@@ -103,7 +103,7 @@ class ApplicationStorageTest extends TestCase
         $storage = new ApplicationStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getApplicationById(3);
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var ApplicationEntity $actualResult */
         $actualResult = $storage->getApplicationById(1);
@@ -158,7 +158,7 @@ class ApplicationStorageTest extends TestCase
         $storage = new ApplicationStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getApplicationByName('someApplication');
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var ApplicationEntity $actualResult */
         $actualResult = $storage->getApplicationByName('test.application');

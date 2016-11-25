@@ -24,5 +24,9 @@ interface ResponseInterface extends PsrResponseInterface
 
     const STATUS_REDIRECT = 302;
 
+    const STATUS_UNAUTHORIZED = 401;
+    const STATUS_FORBIDDEN = 403;
+    const STATUS_BAD_METHOD = 405;
+
     const STATUS_INTERNAL_SERVER_ERROR = 500;
 }

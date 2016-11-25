@@ -84,14 +84,15 @@ class ResourceStorage extends AbstractDataStorage
      *
      * @param int $identifier
      *
-     * @return bool|ResourceEntity
+     * @return null|ResourceEntity
      */
     public function getResourceById($identifier)
     {
-        $entity = false;
+        $entity = null;
         $data = $this->getDataAdapter()->getData($identifier);
 
         if (!empty($data)) {
+            /** @var ResourceEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
         }
@@ -104,14 +105,15 @@ class ResourceStorage extends AbstractDataStorage
      *
      * @param string $name
      *
-     * @return bool|ResourceEntity
+     * @return null|ResourceEntity
      */
     public function getResourceByName($name)
     {
-        $entity = false;
+        $entity = null;
         $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
 
         if (!empty($dataList)) {
+            /** @var ResourceEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $dataList[0]);
         }

@@ -1,0 +1,19 @@
+{% import '@WebHemi/macros/renderForm.twig' as _FORM %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="{% if application_base_uri != '/' %}{{ application_base_uri }}{% endif %}/" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WebHemi</title>
+    <link rel="stylesheet" href="{{ template_resource_path }}/css/site.css" />
+</head>
+<body>
+    <h1>DEFAULT ADMIN LOGIN THEME</h1>
+    <p>Login form here!</p>
+    <form action="/auth/login" method="post">
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>

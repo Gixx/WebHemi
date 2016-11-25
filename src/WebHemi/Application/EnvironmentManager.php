@@ -160,6 +160,16 @@ class EnvironmentManager
     }
 
     /**
+     * Gets the request URI
+     *
+     * @return string
+     */
+    public function getRequestUri()
+    {
+        return $this->environmentData['SERVER']['REQUEST_URI'];
+    }
+
+    /**
      * Gets the selected module.
      *
      * @return string
