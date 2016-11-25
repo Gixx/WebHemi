@@ -101,7 +101,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      * @param DataEntityInterface &$entity
      * @return mixed The ID of the saved entity in the storage
      */
-    public function saveEntity(DataEntityInterface &$entity)
+    public function saveEntity(DataEntityInterface&$entity)
     {
         $entityClass = get_class($entity);
         $storageEntityClass = get_class($this->entityPrototype);

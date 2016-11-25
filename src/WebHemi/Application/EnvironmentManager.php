@@ -291,7 +291,7 @@ class EnvironmentManager
                 || $this->checkDomainIsValid($applicationName, $applicationData, $subDirectory)
             ) {
                 $this->selectedModule = $applicationData['module'];
-                $this->selectedApplication = (string)$applicationName;
+                $this->selectedApplication = (string) $applicationName;
                 $this->selectedTheme = $applicationData['theme'];
 
                 $this->selectedApplicationUri = '/'.$subDirectory;
