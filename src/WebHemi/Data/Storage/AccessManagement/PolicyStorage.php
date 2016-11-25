@@ -100,14 +100,15 @@ class PolicyStorage extends AbstractDataStorage
      *
      * @param int $identifier
      *
-     * @return bool|PolicyEntity
+     * @return null|PolicyEntity
      */
     public function getPolicyById($identifier)
     {
-        $entity = false;
+        $entity = null;
         $data = $this->getDataAdapter()->getData($identifier);
 
         if (!empty($data)) {
+            /** @var PolicyEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
         }
@@ -120,14 +121,15 @@ class PolicyStorage extends AbstractDataStorage
      *
      * @param string $name
      *
-     * @return bool|PolicyEntity
+     * @return null|PolicyEntity
      */
     public function getPolicyByName($name)
     {
-        $entity = false;
+        $entity = null;
         $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
 
         if (!empty($dataList)) {
+            /** @var PolicyEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $dataList[0]);
         }

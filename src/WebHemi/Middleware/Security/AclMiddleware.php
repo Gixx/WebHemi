@@ -55,8 +55,8 @@ class AclMiddleware implements MiddlewareInterface
 
     /**
      * AclMiddleware constructor.
-     * @param EnvironmentManager       $environmentManager
      * @param AuthAdapterInterface     $authAdapter
+     * @param EnvironmentManager       $environmentManager
      * @param UserToPolicyCoupler      $userToPolicyCoupler
      * @param UserToGroupCoupler       $userToGroupCoupler
      * @param UserGroupToPolicyCoupler $userGroupToPolicyCoupler
@@ -64,16 +64,16 @@ class AclMiddleware implements MiddlewareInterface
      * @param ResourceStorage          $resourceStorage
      */
     public function __construct(
-        EnvironmentManager $environmentManager,
         AuthAdapterInterface $authAdapter,
+        EnvironmentManager $environmentManager,
         UserToPolicyCoupler $userToPolicyCoupler,
         UserToGroupCoupler $userToGroupCoupler,
         UserGroupToPolicyCoupler $userGroupToPolicyCoupler,
         ApplicationStorage $applicationStorage,
         ResourceStorage $resourceStorage
     ) {
-        $this->environmentManager = $environmentManager;
         $this->authAdapter = $authAdapter;
+        $this->environmentManager = $environmentManager;
         $this->userToPolicyCoupler = $userToPolicyCoupler;
         $this->userToGroupCoupler = $userToGroupCoupler;
         $this->userGroupToPolicyCoupler = $userGroupToPolicyCoupler;
@@ -100,64 +100,78 @@ class AclMiddleware implements MiddlewareInterface
             return $response;
         }
 
-        if (!$this->authAdapter->hasIdentity()) {
-            /** @var Result $result */
-            $result = $this->authAdapter->authenticate();
-
-            if ($result->isValid()) {
-                $identity = $result->getIdentity();
-                $this->authAdapter->setIdentity($identity);
-            }
-        } else {
+        if ($this->authAdapter->hasIdentity()) {
             $identity = $this->authAdapter->getIdentity();
         }
 
         if ($identity instanceof UserEntity) {
-            /** @var array<UserGroupEntity> $userGroups */
-            $userGroups = $this->userToGroupCoupler->getEntityDependencies($identity);
-            /** @var array<PolicyEntity> $policies */
-            $policies = $this->userToPolicyCoupler->getEntityDependencies($identity);
-
-            foreach ($userGroups as $userGroupEntity) {
-                /** @var array<PolicyEntity> $userGroupPolicies */
-                $userGroupPolicies = $this->userGroupToPolicyCoupler->getEntityDependencies($userGroupEntity);
-                $policies = array_merge($userGroupPolicies, $policies);
-            }
-
             $selectedApplication = $this->environmentManager->getSelectedApplication();
             /** @var ApplicationEntity $applicationEntity */
             $applicationEntity = $this->applicationStorage->getApplicationByName($selectedApplication);
             /** @var ResourceEntity $resourceEntity */
             $resourceEntity = $this->resourceStorage->getResourceByName($actionMiddleware);
 
-            // We assume the worst case: no access
-            $hasAccess = false;
-
-            /** @var PolicyEntity $policyEntity */
-            foreach ($policies as $policyEntity) {
-                $policyApplication = $policyEntity->getApplicationId();
-                $policyResource = $policyEntity->getResourceId();
-
-                // The user has access when:
-                // - user has a policy which allows access AND
-                // - user has a policy that connected to the current application OR any application AND
-                // - user has a policy that connected to the current resource OR any resource
-                if ($policyEntity->getAllowed() &&
-                    ($policyApplication == null || $policyApplication == $applicationEntity->getApplicationId()) &&
-                    ($policyResource == null || $policyResource == $resourceEntity->getResourceId())
-                ) {
-                    $hasAccess = true;
-                    break;
-                }
+            // First we check the group policies
+            /** @var array<UserGroupEntity> $userGroups */
+            $userGroups = $this->userToGroupCoupler->getEntityDependencies($identity);
+            $userGroupPolicies = [];
+            foreach ($userGroups as $userGroupEntity) {
+                /** @var array<PolicyEntity> $userGroupPolicies */
+                $groupPolicies = $this->userGroupToPolicyCoupler->getEntityDependencies($userGroupEntity);
+                $userGroupPolicies = array_merge($userGroupPolicies, $groupPolicies);
             }
+            $hasAccess = $this->checkPolicies($userGroupPolicies, $applicationEntity, $resourceEntity);
+
+            // Then we check the personal policies
+            /** @var array<PolicyEntity> $policies */
+            $userPolicies = $this->userToPolicyCoupler->getEntityDependencies($identity);
+            $hasAccess = $hasAccess && $this->checkPolicies($userPolicies, $applicationEntity, $resourceEntity);
 
             if (!$hasAccess) {
-                $response = $response->withStatus(403, 'Forbidden');
+                $response = $response->withStatus(ResponseInterface::STATUS_FORBIDDEN, 'Forbidden');
             }
         } else {
-            $response = $response->withStatus(401, 'Unauthorized');
+            $appUri = rtrim($this->environmentManager->getSelectedApplicationUri(), '/');
+            $response = $response->withStatus(ResponseInterface::STATUS_REDIRECT, 'Found')
+                ->withHeader('Location', $appUri.'/auth/login');
         }
 
         return $response;
+    }
+
+    /**
+     * Checks policies for application and resource
+     *
+     * @param array<PolicyEntity> $policies
+     * @param ApplicationEntity   $applicationEntity
+     * @param ResourceEntity      $resourceEntity
+     * @return bool
+     */
+    private function checkPolicies(
+        array $policies,
+        ApplicationEntity $applicationEntity = null,
+        ResourceEntity $resourceEntity = null
+    ) {
+        // We assume the best case: the user has access
+        $hasAccess = true;
+        $applicationId = $applicationEntity ? $applicationEntity->getApplicationId() : null;
+        $resourceId = $resourceEntity ? $resourceEntity->getResourceId() : null;
+
+        /** @var PolicyEntity $policyEntity */
+        foreach ($policies as $policyEntity) {
+            $policyApplicationId = $policyEntity->getApplicationId();
+            $policyResourceId = $policyEntity->getResourceId();
+
+            // The user has access when:
+            // - user has a policy that connected to the current application OR any application AND
+            // - user has a policy that connected to the current resource OR any resource
+            if (($policyApplicationId == null || $policyApplicationId == $applicationId)
+                && ($policyResourceId == null || $policyResourceId == $resourceId)
+            ) {
+                $hasAccess = $hasAccess && $policyEntity->getAllowed();
+            }
+        }
+
+        return $hasAccess;
     }
 }

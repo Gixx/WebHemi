@@ -131,7 +131,7 @@ class UserGroupStorageTest extends TestCase
 
         /** @var bool $actualResult */
         $actualResult = $storage->getUserGroupById(3);
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
     }
 
     /**
@@ -204,6 +204,6 @@ class UserGroupStorageTest extends TestCase
 
         /** @var bool $actualResult */
         $actualResult = $storage->getUserGroupByName('someName');
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
     }
 }

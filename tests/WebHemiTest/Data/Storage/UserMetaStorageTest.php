@@ -127,7 +127,7 @@ class UserMetaStorageTest extends TestCase
 
         /** @var bool $actualResult */
         $actualResult = $storage->getUserMetaById(3);
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
     }
 
     /**
@@ -173,7 +173,7 @@ class UserMetaStorageTest extends TestCase
 
         /** @var bool $actualResult */
         $actualResult = $storage->getUserMetaForUserId(2);
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var UserMetaEntity[] $actualResult */
         $actualResult = $storage->getUserMetaForUserId(1);

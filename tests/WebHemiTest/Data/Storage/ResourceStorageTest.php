@@ -103,7 +103,7 @@ class ResourceStorageTest extends TestCase
         $storage = new ResourceStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getResourceById(3);
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var ResourceEntity $actualResult */
         $actualResult = $storage->getResourceById(1);
@@ -156,7 +156,7 @@ class ResourceStorageTest extends TestCase
         $storage = new ResourceStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getResourceByName('someResource');
-        $this->assertFalse($actualResult);
+        $this->assertNull($actualResult);
 
         /** @var ResourceEntity $actualResult */
         $actualResult = $storage->getResourceByName('test.resource');

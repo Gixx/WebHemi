@@ -83,14 +83,15 @@ class ApplicationStorage extends AbstractDataStorage
      *
      * @param int $identifier
      *
-     * @return bool|ApplicationEntity
+     * @return null|ApplicationEntity
      */
     public function getApplicationById($identifier)
     {
-        $entity = false;
+        $entity = null;
         $data = $this->getDataAdapter()->getData($identifier);
 
         if (!empty($data)) {
+            /** @var ApplicationEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
         }
@@ -103,14 +104,15 @@ class ApplicationStorage extends AbstractDataStorage
      *
      * @param string $name
      *
-     * @return bool|ApplicationEntity
+     * @return null|ApplicationEntity
      */
     public function getApplicationByName($name)
     {
-        $entity = false;
+        $entity = null;
         $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
 
         if (!empty($dataList)) {
+            /** @var ApplicationEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $dataList[0]);
         }

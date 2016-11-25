@@ -47,6 +47,8 @@ class EmptyEnvironmentManager extends EnvironmentManager
     /** @var string */
     protected $selectedApplicationUri = '/';
     /** @var string */
+    protected $requestUri = '/';
+    /** @var string */
     protected $selectedTheme = 'default';
     /** @var string */
     protected $selectedThemeResourcePath = '/resources/vendor_themes/test_theme';
@@ -143,6 +145,27 @@ class EmptyEnvironmentManager extends EnvironmentManager
     public function getSelectedApplicationUri()
     {
         return $this->selectedApplicationUri;
+    }
+
+    /**
+     * @param $requestUri
+     * @return $this
+     */
+    public function setRequestUri($requestUri)
+    {
+        $this->requestUri = $requestUri;
+
+        return $this;
+    }
+
+    /**
+     * Gets the request URI
+     *
+     * @return string
+     */
+    public function getRequestUri()
+    {
+        return $this->requestUri;
     }
 
     /**

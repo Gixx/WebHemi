@@ -33,6 +33,39 @@ function d(...$variables)
 }
 
 /**
+ * Collects and returns some information about the render time. First call will start start, the others will return.
+ */
+function render_stat()
+{
+    static $stat;
+
+    // Set timer
+    if (!isset($stat)) {
+        $stat = [
+            'time' => microtime(true),
+            'memory' => 0
+        ];
+
+        return true;
+    }
+
+    // Get time
+    $start_time = $stat['time'];
+    $end_time = microtime(true);
+    $stat['time'] = bcsub($end_time, $start_time, 4);
+
+    // Memory peak
+    $units = array('B', 'KB', 'MB', 'GB', 'TB');
+    $bytes = max(memory_get_peak_usage(true), 0);
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+    $pow = min($pow, count($units) - 1);
+    $bytes /= (1 << (10 * $pow));
+    $stat['memory'] = round($bytes, 2) . ' ' . $units[$pow];
+
+    return $stat;
+}
+
+/**
  * Merge config arrays in the correct way.
  * This rewrites the given key->value pairs and does not make key->array(value1, value2) like the
  * `array_merge_recursive` does.

@@ -84,14 +84,15 @@ class UserGroupStorage extends AbstractDataStorage
      *
      * @param int $identifier
      *
-     * @return bool|UserGroupEntity
+     * @return null|UserGroupEntity
      */
     public function getUserGroupById($identifier)
     {
-        $entity = false;
+        $entity = null;
         $data = $this->getDataAdapter()->getData($identifier);
 
         if (!empty($data)) {
+            /** @var UserGroupEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
         }
@@ -104,14 +105,15 @@ class UserGroupStorage extends AbstractDataStorage
      *
      * @param string $name
      *
-     * @return bool|UserGroupEntity
+     * @return null|UserGroupEntity
      */
     public function getUserGroupByName($name)
     {
-        $entity = false;
+        $entity = null;
         $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
 
         if (!empty($dataList)) {
+            /** @var UserGroupEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $dataList[0]);
         }

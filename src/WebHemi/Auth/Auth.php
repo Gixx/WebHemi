@@ -34,7 +34,7 @@ class Auth extends AbstractAuthAdapter
     {
         // TODO implement
         $result = $this->getAuthResult();
-        $user = $this->getDataStorage()->getUserById(8);
+        $user = $this->getDataStorage()->getUserById(1);
         if ($user instanceof UserEntity) {
             $result->setIdentity($user);
             $result->setCode(Result::SUCCESS);

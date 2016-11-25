@@ -33,6 +33,12 @@ return [
             'path'   => 'www',
             'theme'  => 'default'
         ],
+        'admin' => [
+            'module' => 'Admin',
+            'type'   => 'domain',
+            'path'   => 'admin',
+            'theme'  => 'test_theme'
+        ],
         'some_app' => [
             'module' => 'SomeApp',
             'type'   => 'directory',
@@ -166,11 +172,46 @@ return [
     ],
     'themes' => [
         'default' => [
+            'features' => [
+                'admin_support' => true,
+                'admin_login_support' => true,
+                'website_support' => true
+            ],
             'map' => [
+                'features' => [
+                    'admin_support' => false,
+                    'admin_login_support' => true,
+                    'website_support' => true
+                ],
                 'test-page' => 'unit/test.twig'
             ],
         ],
         'test_theme' => [
+            'features' => [
+                'admin_support' => true,
+                'admin_login_support' => true,
+                'website_support' => true
+            ],
+            'map' => [
+                'test-page' => 'unit/test.twig'
+            ],
+        ],
+        'test_theme_no_admin' => [
+            'features' => [
+                'admin_support' => false,
+                'admin_login_support' => false,
+                'website_support' => true
+            ],
+            'map' => [
+                'test-page' => 'unit/test.twig'
+            ],
+        ],
+        'test_theme_no_website' => [
+            'features' => [
+                'admin_support' => true,
+                'admin_login_support' => true,
+                'website_support' => false
+            ],
             'map' => [
                 'test-page' => 'unit/test.twig'
             ],

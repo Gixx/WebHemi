@@ -92,14 +92,15 @@ class UserStorage extends AbstractDataStorage
      *
      * @param int $identifier
      *
-     * @return bool|UserEntity
+     * @return null|UserEntity
      */
     public function getUserById($identifier)
     {
-        $entity = false;
+        $entity = null;
         $data = $this->getDataAdapter()->getData($identifier);
 
         if (!empty($data)) {
+            /** @var UserEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $data);
         }
@@ -112,14 +113,15 @@ class UserStorage extends AbstractDataStorage
      *
      * @param string $name
      *
-     * @return bool|UserEntity
+     * @return null|UserEntity
      */
     public function getUserByUserName($name)
     {
-        $entity = false;
+        $entity = null;
         $dataList = $this->getDataAdapter()->getDataSet([$this->userName => $name], 1);
 
         if (!empty($dataList)) {
+            /** @var UserEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $dataList[0]);
         }
@@ -132,14 +134,15 @@ class UserStorage extends AbstractDataStorage
      *
      * @param string $email
      *
-     * @return bool|UserEntity
+     * @return null|UserEntity
      */
     public function getUserByEmail($email)
     {
-        $entity = false;
+        $entity = null;
         $dataList = $this->getDataAdapter()->getDataSet([$this->email => $email], 1);
 
         if (!empty($dataList)) {
+            /** @var UserEntity $entity */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $dataList[0]);
         }
