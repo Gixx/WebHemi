@@ -12,9 +12,13 @@
 namespace WebHemi\Middleware;
 
 use RuntimeException;
+use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\ServerRequestInterface;
+use WebHemi\Adapter\Log\LogAdapterInterface;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
+use WebHemi\Application\EnvironmentManager;
+use WebHemi\Data\Entity\User\UserEntity;
 
 /**
  * Class FinalMiddleware.
@@ -23,15 +27,31 @@ class FinalMiddleware implements MiddlewareInterface
 {
     /** @var RendererAdapterInterface */
     private $templateRenderer;
+    /** @var AuthAdapterInterface */
+    private $authAdapter;
+    /** @var EnvironmentManager */
+    private $environmentManager;
+    /** @var LogAdapterInterface */
+    private $logAdapter;
 
     /**
      * FinalMiddleware constructor.
      *
      * @param RendererAdapterInterface $templateRenderer
+     * @param AuthAdapterInterface     $authAdapter
+     * @param EnvironmentManager       $environmentManager
+     * @param LogAdapterInterface      $logAdapter
      */
-    public function __construct(RendererAdapterInterface $templateRenderer)
-    {
+    public function __construct(
+        RendererAdapterInterface $templateRenderer,
+        AuthAdapterInterface $authAdapter,
+        EnvironmentManager $environmentManager,
+        LogAdapterInterface $logAdapter
+    ) {
         $this->templateRenderer = $templateRenderer;
+        $this->authAdapter = $authAdapter;
+        $this->environmentManager = $environmentManager;
+        $this->logAdapter = $logAdapter;
     }
 
     /**
@@ -46,7 +66,7 @@ class FinalMiddleware implements MiddlewareInterface
     {
         // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && headers_sent()) {
-            throw new RuntimeException('Unable to emit response; headers already sent');
+            throw new RuntimeException('Unable to emit response; headers already sent', 1000);
         }
         // @codeCoverageIgnoreEnd
 
@@ -54,8 +74,32 @@ class FinalMiddleware implements MiddlewareInterface
         if (!in_array($response->getStatusCode(), [ResponseInterface::STATUS_OK, ResponseInterface::STATUS_REDIRECT])) {
             $errorTemplate = 'error-'.$response->getStatusCode();
             $exception = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
-            $body = $this->templateRenderer->render($errorTemplate, ['exception' => $exception]);
+            /** @var array $data */
+            $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
+            $templateData['exception'] = $exception;
+            $body = $this->templateRenderer->render($errorTemplate, $templateData);
             $response = $response->withBody($body);
+
+            if ('admin' == $this->environmentManager->getSelectedModule()) {
+                $identity = 'Unauthenticated user';
+
+                if ($this->authAdapter->hasIdentity()) {
+                    /** @var UserEntity $userEntity */
+                    $userEntity = $this->authAdapter->getIdentity();
+                    $identity = $userEntity->getEmail();
+                }
+
+                $logData = [
+                    'User' => $identity,
+                    'IP' => $this->environmentManager->getClientIp(),
+                    'RequestUri' => $request->getUri()->getPath().'?'.$request->getUri()->getQuery(),
+                    'RequestMethod' => $request->getMethod(),
+                    'Error' => $response->getStatusCode().' '.$response->getReasonPhrase(),
+                    'Exception' => $exception,
+                    'Parameters' => $request->getParsedBody()
+                ];
+                $this->logAdapter->log('error', json_encode($logData));
+            }
         }
 
         $response = $this->injectContentLength($response);

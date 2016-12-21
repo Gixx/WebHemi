@@ -1,0 +1,15 @@
+<?php
+
+return [
+    'session' => [
+        'namespace' => '%session.namespace%',
+        'cookie_prefix' => '%session.cookie_prefix%',
+        'session_name_salt' => '%session.name_salt%',
+        'hash_function' => '%session.hash_function%',
+        'use_only_cookies' => %session.use_only_cookies%,
+        'use_cookies' => %session.use_cookies%,
+        'use_trans_sid' => %session.use_trans_sid%,
+        'cookie_http_only' => %session.cookie_http_only%,
+        'save_path' => '%session.save_path%',
+    ],
+];

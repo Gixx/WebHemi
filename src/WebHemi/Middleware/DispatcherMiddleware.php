@@ -66,7 +66,7 @@ class DispatcherMiddleware implements MiddlewareInterface
                 $response = $response->withBody($body);
             }
         } else {
-            throw new RuntimeException(sprintf('The given attribute is not a valid Action Middleware.'));
+            throw new RuntimeException(sprintf('The given attribute is not a valid Action Middleware.'), 1000);
         }
         return $response;
     }

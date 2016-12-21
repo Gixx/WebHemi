@@ -20,15 +20,18 @@ function d(...$variables)
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
     $FILE = __FILE__;
     $LINE = __LINE__;
+
     if (isset($backtrace[0])) {
         $FILE = $backtrace[0]['file'];
         $LINE = $backtrace[0]['line'];
     }
+
     if (php_sapi_name() !== 'cli') {
         echo '<strong>In file '.$FILE." at line ".$LINE.':</strong>';
     } else {
         echo 'In file '.$FILE." at line ".$LINE.':'.PHP_EOL;
     }
+
     var_dump(...$variables);
 }
 
@@ -288,4 +291,19 @@ function get_session_config()
     $sessionConfig = merge_array_overwrite($globalSessionConfig, $localSessionConfig);
 
     return $sessionConfig['session'];
+}
+
+/**
+ * Returns the logging config.
+ *
+ * @return mixed
+ */
+function get_logging_cofig()
+{
+    $globalLoggingConfig = require __DIR__.'/global.logging.php';
+    $localLoggingConfig = (file_exists(__DIR__.'/local.logging.php')) ? require __DIR__.'/local.logging.php' : [];
+
+    $loggingConfig = merge_array_overwrite($globalLoggingConfig, $localLoggingConfig);
+
+    return $loggingConfig['logging'];
 }

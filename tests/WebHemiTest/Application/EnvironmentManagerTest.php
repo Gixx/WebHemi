@@ -179,6 +179,56 @@ class EnvironmentManagerTest extends TestCase
     }
 
     /**
+     * Tests getting client IP.
+     */
+    public function testGetClientIp()
+    {
+        $config = new Config($this->getOrderedConfig());
+        $testObj = new EnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+        $this->assertEmpty($testObj->getClientIp());
+
+        $this->server['REMOTE_ADDR'] = 'some_ip';
+        $testObj = new EnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+        $this->assertSame('some_ip', $testObj->getClientIp());
+
+        $this->server['HTTP_X_FORWARDED_FOR'] = 'some_forwarded_ip';
+        $testObj = new EnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+        $this->assertSame('some_forwarded_ip', $testObj->getClientIp());
+
+        $this->server['REMOTE_ADDR'] = 'some_other_ip';
+        $testObj = new EnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+        $this->assertSame('some_forwarded_ip', $testObj->getClientIp());
+    }
+
+    /**
      * Tests vendor theme resource path.
      */
     public function testThemePathSettings()

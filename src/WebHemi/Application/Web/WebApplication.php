@@ -101,9 +101,21 @@ class WebApplication extends AbstractApplication
         $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
         /** @var PipelineManager $pipelineManager */
         $pipelineManager = $this->getContainer()->get(PipelineManager::class);
+        /** @var EnvironmentManager $environmentManager */
+        $environmentManager = $this->getContainer()->get(EnvironmentManager::class);
 
         /** @var ServerRequestInterface $request */
-        $request = $httpAdapter->getRequest();
+        $request = $httpAdapter->getRequest()
+            ->withAttribute(
+                ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA,
+                [
+                    'selected_module' => $environmentManager->getSelectedModule(),
+                    'application_domain' => 'http'.($environmentManager->isSecuredApplication() ? 's' : '')
+                        .'://'
+                        .$environmentManager->getApplicationDomain()
+                ]
+            );
+
         /** @var ResponseInterface $response */
         $response = $httpAdapter->getResponse();
         /** @var string $middlewareClass */

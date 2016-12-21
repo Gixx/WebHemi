@@ -72,7 +72,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      *
      * @param array  $setupData
      * @param string $alias
-     * @return mixed
+     * @return string
      */
     private function getRealServiceClass(array $setupData, $alias)
     {
@@ -275,7 +275,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * If a service is already registered, it will be skipped.
      *
      * @param string $moduleName
-     * @return DependencyInjectionAdapterInterface
+     * @return SymfonyAdapter
      */
     public function registerModuleServices($moduleName)
     {
@@ -290,12 +290,12 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     /**
      * Sets service argument.
      *
-     * @param Definition $service
-     * @param mixed      $parameter
+     * @param string|Definition $service
+     * @param mixed             $parameter
      *
      * @throws RuntimeException
      *
-     * @return DependencyInjectionAdapterInterface
+     * @return SymfonyAdapter
      */
     public function setServiceArgument($service, $parameter)
     {
@@ -350,7 +350,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
             $parameterName = self::$parameterIndex++;
         }
 
-        return $parameterName;
+        return (string) $parameterName;
     }
 
     /**
@@ -364,7 +364,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
         if (isset($this->instantiatedSharedServices[$serviceClass])
             && $this->instantiatedSharedServices[$serviceClass] === true
         ) {
-            throw new RuntimeException('Cannot add argument to an already initialized service.');
+            throw new RuntimeException('Cannot add argument to an already initialized service.', 1000);
         }
     }
 }

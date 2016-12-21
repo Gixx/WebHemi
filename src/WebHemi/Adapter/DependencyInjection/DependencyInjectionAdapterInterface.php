@@ -69,8 +69,8 @@ interface DependencyInjectionAdapterInterface
     /**
      * Sets service argument.
      *
-     * @param string $identifier
-     * @param mixed  $parameter
+     * @param mixed $identifier
+     * @param mixed $parameter
      * @return DependencyInjectionAdapterInterface
      */
     public function setServiceArgument($identifier, $parameter);

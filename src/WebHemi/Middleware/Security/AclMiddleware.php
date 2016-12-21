@@ -9,7 +9,6 @@
  *
  * @link      http://www.gixx-web.com
  */
-
 namespace WebHemi\Middleware\Security;
 
 use Exception;
@@ -23,9 +22,11 @@ use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
+use WebHemi\Data\Entity\User\UserMetaEntity;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\ApplicationStorage;
+use WebHemi\Data\Storage\User\UserMetaStorage;
 use WebHemi\Middleware\Action;
 use WebHemi\Middleware\MiddlewareInterface;
 
@@ -44,8 +45,12 @@ class AclMiddleware implements MiddlewareInterface
     private $userToGroupCoupler;
     /** @var UserGroupToPolicyCoupler */
     private $userGroupToPolicyCoupler;
+    /** @var ApplicationStorage */
     private $applicationStorage;
+    /** @var ResourceStorage */
     private $resourceStorage;
+    /** @var UserMetaStorage */
+    private $userMetaStorage;
     /** @var array */
     private $middlewareWhiteList = [
         Action\Auth\LoginAction::class,
@@ -61,6 +66,7 @@ class AclMiddleware implements MiddlewareInterface
      * @param UserGroupToPolicyCoupler $userGroupToPolicyCoupler
      * @param ApplicationStorage       $applicationStorage
      * @param ResourceStorage          $resourceStorage
+     * @param UserMetaStorage          $userMetaStorage
      */
     public function __construct(
         AuthAdapterInterface $authAdapter,
@@ -69,7 +75,8 @@ class AclMiddleware implements MiddlewareInterface
         UserToGroupCoupler $userToGroupCoupler,
         UserGroupToPolicyCoupler $userGroupToPolicyCoupler,
         ApplicationStorage $applicationStorage,
-        ResourceStorage $resourceStorage
+        ResourceStorage $resourceStorage,
+        UserMetaStorage $userMetaStorage
     ) {
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
@@ -78,6 +85,7 @@ class AclMiddleware implements MiddlewareInterface
         $this->userGroupToPolicyCoupler = $userGroupToPolicyCoupler;
         $this->applicationStorage = $applicationStorage;
         $this->resourceStorage = $resourceStorage;
+        $this->userMetaStorage = $userMetaStorage;
     }
 
     /**
@@ -109,7 +117,6 @@ class AclMiddleware implements MiddlewareInterface
             $applicationEntity = $this->applicationStorage->getApplicationByName($selectedApplication);
             /** @var ResourceEntity $resourceEntity */
             $resourceEntity = $this->resourceStorage->getResourceByName($actionMiddleware);
-
             // First we check the group policies
             /** @var array<UserGroupEntity> $userGroups */
             $userGroups = $this->userToGroupCoupler->getEntityDependencies($identity);
@@ -126,6 +133,8 @@ class AclMiddleware implements MiddlewareInterface
             /** @var array<PolicyEntity> $userPolicies */
             $userPolicies = $this->userToPolicyCoupler->getEntityDependencies($identity);
             $hasAccess = $hasAccess && $this->checkPolicies($userPolicies, $applicationEntity, $resourceEntity);
+
+            $request = $this->setIdentityForTemplate($request, $identity);
 
             if (!$hasAccess) {
                 $response = $response->withStatus(ResponseInterface::STATUS_FORBIDDEN, 'Forbidden');
@@ -191,5 +200,27 @@ class AclMiddleware implements MiddlewareInterface
         // At this point we know that the current policy doesn't belong to this application or resource, so no need
         // to block the user.
         return true;
+    }
+
+    /**
+     * Set identified user data for the templates
+     *
+     * @param ServerRequestInterface $request
+     * @param UserEntity             $identity
+     * @return ServerRequestInterface
+     */
+    private function setIdentityForTemplate(ServerRequestInterface $request, UserEntity $identity)
+    {
+        // Set authenticated user for the templates
+        $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, []);
+        $templateData['authenticated_user'] = $identity;
+        $templateData['authenticated_user_meta'] = [];
+        $userMeta = $this->userMetaStorage->getUserMetaForUserId($identity->getUserId());
+        /** @var UserMetaEntity $metaEntity */
+        foreach ($userMeta as $metaEntity) {
+            $templateData['authenticated_user_meta'][$metaEntity->getMetaKey()] = $metaEntity->getMetaData();
+        }
+
+        return $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
     }
 }

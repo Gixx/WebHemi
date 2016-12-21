@@ -24,4 +24,5 @@ interface ServerRequestInterface extends PsrServerRequestInterface
     const REQUEST_ATTR_ROUTING_PARAMETERS = 'routing_parameters';
     const REQUEST_ATTR_DISPATCH_TEMPLATE = 'dispatch_template';
     const REQUEST_ATTR_DISPATCH_DATA = 'dispatch_data';
+    const REQUEST_ATTR_AUTHENTICATED_USER = 'authenticated_user';
 }

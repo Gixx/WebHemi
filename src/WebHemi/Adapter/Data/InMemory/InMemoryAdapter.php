@@ -42,7 +42,10 @@ class InMemoryAdapter implements DataAdapterInterface
 
         foreach ($dataCollection as $rowData) {
             if (!is_array($rowData)) {
-                throw new InvalidArgumentException('The constructor parameter if present must be an array of arrays.');
+                throw new InvalidArgumentException(
+                    'The constructor parameter if present must be an array of arrays.',
+                    1001
+                );
             }
         }
 
@@ -72,7 +75,7 @@ class InMemoryAdapter implements DataAdapterInterface
     {
         // Allow to change only once.
         if ($this->dataGroup !== 'default') {
-            throw new RuntimeException('Can\'t re-initialize dataGroup property. Property is already set.');
+            throw new RuntimeException('Can\'t re-initialize dataGroup property. Property is already set.', 1002);
         }
 
         $this->dataGroup = $dataGroup;
@@ -91,13 +94,13 @@ class InMemoryAdapter implements DataAdapterInterface
      *
      * @throws RuntimeException
      *
-     * @return $this
+     * @return InMemoryAdapter
      */
     public function setIdKey($idKey)
     {
         // Allow to change only once.
         if ($this->idKey !== 'id') {
-            throw new RuntimeException('Can\'t re-initialize idKey property. Property is already set.');
+            throw new RuntimeException('Can\'t re-initialize idKey property. Property is already set.', 1003);
         }
 
         $this->idKey = $idKey;

@@ -14,6 +14,7 @@ use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Data\DataDriverInterface;
 use WebHemi\Adapter\Data\PDO\MySQLAdapter;
+use WebHemi\Adapter\Log\Klogger\KloggerAdapter;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Adapter\Renderer\Twig\TwigRendererAdapter;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
@@ -96,6 +97,20 @@ return [
                 ],
                 'shared'    => true,
             ],
+            'AccessLog' => [
+                'class'     => KloggerAdapter::class,
+                'arguments' => [
+                    ConfigInterface::class,
+                    '!:access'
+                ]
+            ],
+            'EventLog' => [
+                'class'     => KloggerAdapter::class,
+                'arguments' => [
+                    ConfigInterface::class,
+                    '!:event'
+                ]
+            ],
             // Middleware
             RoutingMiddleware::class => [
                 'arguments' => [
@@ -110,6 +125,9 @@ return [
             FinalMiddleware::class => [
                 'arguments' => [
                     RendererAdapterInterface::class,
+                    AuthAdapterInterface::class,
+                    EnvironmentManager::class,
+                    'AccessLog'
                 ]
             ],
             // AuthStorage
