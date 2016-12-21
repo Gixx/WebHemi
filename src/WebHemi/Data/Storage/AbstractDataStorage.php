@@ -112,7 +112,8 @@ abstract class AbstractDataStorage implements DataStorageInterface
                     'Cannot use %s with this data storage class. You must use %s.',
                     $entityClass,
                     $storageEntityClass
-                )
+                ),
+                1000
             );
         }
 

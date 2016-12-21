@@ -75,7 +75,7 @@ class Config implements ConfigInterface
     public function getData($path)
     {
         if (!$this->has($path)) {
-            throw new InvalidArgumentException(sprintf('Configuration for path "%s" not found', $path));
+            throw new InvalidArgumentException(sprintf('Configuration for path "%s" not found', $path), 1000);
         }
 
         return $this->pathMap[$path];
@@ -94,7 +94,7 @@ class Config implements ConfigInterface
     public function getConfig($path)
     {
         if (!$this->has($path)) {
-            throw new InvalidArgumentException(sprintf('Configuration for path "%s" not found', $path));
+            throw new InvalidArgumentException(sprintf('Configuration for path "%s" not found', $path), 1001);
         }
 
         return new self($this->getData($path));

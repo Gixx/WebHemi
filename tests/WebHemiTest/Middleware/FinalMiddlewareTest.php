@@ -14,10 +14,14 @@ namespace WebHemiTest\Middleware;
 use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\StreamInterface;
+use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\GuzzleHttp\ServerRequest;
 use WebHemi\Adapter\Http\GuzzleHttp\Response;
+use WebHemi\Adapter\Log\LogAdapterInterface;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
+use WebHemi\Application\EnvironmentManager;
+use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
@@ -43,11 +47,20 @@ class FinalMiddlewareTest extends TestCase
         $response = $response->withBody($body);
 
         $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
+        $authAdapterProphecy = $this->prophesize(AuthAdapterInterface::class);
+        $environmentProphecy = $this->prophesize(EnvironmentManager::class);
+        $logAdapterPropehcy = $this->prophesize(LogAdapterInterface::class);
 
         /** @var RendererAdapterInterface $templateRenderer */
         $templateRenderer = $templateRendererProphecy->reveal();
+        /** @var AuthAdapterInterface $authAdapter */
+        $authAdapter = $authAdapterProphecy->reveal();
+        /** @var EnvironmentManager $environmentManager */
+        $environmentManager = $environmentProphecy->reveal();
+        /** @var LogAdapterInterface $logAdapter */
+        $logAdapter = $logAdapterPropehcy->reveal();
 
-        $middleware = new FinalMiddleware($templateRenderer);
+        $middleware = new FinalMiddleware($templateRenderer, $authAdapter, $environmentManager, $logAdapter);
 
         /** @var ResponseInterface $result */
         $result = $middleware($request, $response);
@@ -69,10 +82,30 @@ class FinalMiddlewareTest extends TestCase
         $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
         $templateRendererProphecy->render(Argument::type('string'), Argument::type('array'))->willReturn($body);
 
+        $authAdapterProphecy = $this->prophesize(AuthAdapterInterface::class);
+        $authAdapterProphecy->hasIdentity()->willReturn(true);
+        $authAdapterProphecy->getIdentity()->will(
+            function () {
+                $userEntity = new UserEntity();
+                $userEntity->setEmail('php.unit.test@foo.org');
+                return $userEntity;
+            }
+        );
+        $environmentProphecy = $this->prophesize(EnvironmentManager::class);
+        $environmentProphecy->getSelectedModule()->willReturn("admin");
+        $environmentProphecy->getClientIp()->willReturn("127.0.0.1");
+        $logAdapterPropehcy = $this->prophesize(LogAdapterInterface::class);
+
         /** @var RendererAdapterInterface $templateRenderer */
         $templateRenderer = $templateRendererProphecy->reveal();
+        /** @var AuthAdapterInterface $authAdapter */
+        $authAdapter = $authAdapterProphecy->reveal();
+        /** @var EnvironmentManager $environmentManager */
+        $environmentManager = $environmentProphecy->reveal();
+        /** @var LogAdapterInterface $logAdapter */
+        $logAdapter = $logAdapterPropehcy->reveal();
 
-        $middleware = new FinalMiddleware($templateRenderer);
+        $middleware = new FinalMiddleware($templateRenderer, $authAdapter, $environmentManager, $logAdapter);
 
         /** @var ResponseInterface $result */
         $result = $middleware($request, $response);
@@ -109,7 +142,20 @@ class FinalMiddlewareTest extends TestCase
     public function testFilterHeaderName($inputData, $expectedResult)
     {
         $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
-        $middleware = new FinalMiddleware($templateRendererProphecy->reveal());
+        $authAdapterProphecy = $this->prophesize(AuthAdapterInterface::class);
+        $environmentProphecy = $this->prophesize(EnvironmentManager::class);
+        $logAdapterPropehcy = $this->prophesize(LogAdapterInterface::class);
+
+        /** @var RendererAdapterInterface $templateRenderer */
+        $templateRenderer = $templateRendererProphecy->reveal();
+        /** @var AuthAdapterInterface $authAdapter */
+        $authAdapter = $authAdapterProphecy->reveal();
+        /** @var EnvironmentManager $environmentManager */
+        $environmentManager = $environmentProphecy->reveal();
+        /** @var LogAdapterInterface $logAdapter */
+        $logAdapter = $logAdapterPropehcy->reveal();
+
+        $middleware = new FinalMiddleware($templateRenderer, $authAdapter, $environmentManager, $logAdapter);
 
         $actualResult = $this->invokePrivateMethod($middleware, 'filterHeaderName', [$inputData]);
 

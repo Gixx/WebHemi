@@ -10,7 +10,9 @@
  * @link      http://www.gixx-web.com
  */
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
+use WebHemi\Adapter\Log\LogAdapterInterface;
 use WebHemi\Application\EnvironmentManager;
+use WebHemi\Config\ConfigInterface;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
@@ -18,8 +20,10 @@ use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Storage\User\UserGroupStorage;
+use WebHemi\Data\Storage\User\UserMetaStorage;
 use WebHemi\Middleware\Action;
 use WebHemi\Middleware\Security\AclMiddleware;
+use WebHemi\Middleware\Security\AccessLogMiddleware;
 
 return [
     'modules' => [
@@ -69,7 +73,15 @@ return [
                     UserGroupToPolicyCoupler::class,
                     ApplicationStorage::class,
                     ResourceStorage::class,
+                    UserMetaStorage::class
                 ]
+            ],
+            AccessLogMiddleware::class => [
+              'arguments' => [
+                  'AccessLog',
+                  AuthAdapterInterface::class,
+                  EnvironmentManager::class
+              ]
             ],
             Action\Admin\DashboardAction::class => [
                 'arguments' => [
@@ -80,6 +92,7 @@ return [
     ],
     'middleware_pipeline' => [
         'Admin' => [
+            ['service' => AccessLogMiddleware::class, 'priority' => 9],
             ['service' => AclMiddleware::class, 'priority' => 10],
         ],
     ],

@@ -117,6 +117,15 @@ return [
         'Website' => [],
         'SomeApp' => [],
     ],
+    'logging' => [
+        'unit' => [
+            'path' => __DIR__.'/../../../data/log',
+            'file_name' => 'testlog-',
+            'file_extension' => 'log',
+            'date_format' => 'Y-m-d H:i:s.u',
+            'log_level' => 0
+        ],
+    ],
     'middleware_pipeline' => [
         'Global' => [
             ['service' => 'pipe1', 'priority' => 66],

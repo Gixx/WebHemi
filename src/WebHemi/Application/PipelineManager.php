@@ -83,10 +83,8 @@ class PipelineManager
     /**
      * Checks the given class against Middleware Criteria.
      *
-     * @param $middleWareClass
-     *
+     * @param string $middleWareClass
      * @throws RuntimeException
-     *
      * @return bool
      */
     private function checkMiddleware($middleWareClass)
@@ -117,7 +115,7 @@ class PipelineManager
     /**
      * Adds module specific pipeline.
      *
-     * @param $moduleName
+     * @param string $moduleName
      * @return PipelineManager
      */
     public function addModulePipeLine($moduleName)
@@ -132,9 +130,7 @@ class PipelineManager
      *
      * @param string $middleWareClass
      * @param int    $priority
-     *
      * @throws RuntimeException
-     *
      * @return PipelineManager
      */
     public function queueMiddleware($middleWareClass, $priority = 50)

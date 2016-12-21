@@ -17,6 +17,7 @@ return [
     'applications' => get_application_config(),
     'auth' => get_auth_config(),
     'dependencies' => get_dependencies_config(),
+    'logging' => get_logging_cofig(),
     'middleware_pipeline' => get_pipeline_config(),
     'modules' => get_module_config(),
     'session' => get_session_config(),

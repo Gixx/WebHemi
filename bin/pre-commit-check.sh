@@ -2,7 +2,7 @@
 
 # Define global variables
 PROJECT_ROOT="$(git rev-parse --show-toplevel)"
-FILES_NAME_TO_CHECK="$(git diff --cached --name-only --diff-filter=ACM  | egrep '*.php')"
+FILES_NAME_TO_CHECK="$(git diff --cached --name-only --diff-filter=ACM  | egrep '.*\.php')"
 ASK_PROMPT=0
 BOLD=$(tput bold)
 UNDERLINE=$(tput smul)

@@ -91,7 +91,7 @@ class Result
     /**
      * Gets the authenticated user if any.
      *
-     * @return UserEntity
+     * @return null|UserEntity
      */
     public function getIdentity()
     {

@@ -10,6 +10,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Create database `webhemi`
+--
+CREATE DATABASE IF NOT EXISTS `webhemi`;
+USE `gps_local`;
+
+--
 -- Table structure for table `webhemi_application`
 --
 

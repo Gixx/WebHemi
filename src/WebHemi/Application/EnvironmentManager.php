@@ -216,9 +216,26 @@ class EnvironmentManager
     }
 
     /**
+     * Gets the client IP address.
+     *
+     * @return string
+     */
+    public function getClientIp()
+    {
+        $ipAddress = '';
+
+        if (!empty($this->environmentData['SERVER']['HTTP_X_FORWARDED_FOR'])) {
+            $ipAddress = $this->environmentData['SERVER']['HTTP_X_FORWARDED_FOR'];
+        } elseif (!empty($this->environmentData['SERVER']['REMOTE_ADDR'])) {
+            $ipAddress = $this->environmentData['SERVER']['REMOTE_ADDR'];
+        }
+
+        return (string) $ipAddress;
+    }
+    /**
      * Parses server data and tries to set domain information.
      *
-     * @return $this
+     * @return EnvironmentManager
      */
     private function setDomain()
     {
@@ -266,7 +283,7 @@ class EnvironmentManager
     /**
      * From the parsed domain data, selects the application, module and theme.
      *
-     * @return $this
+     * @return EnvironmentManager
      */
     private function selectModuleApplicationAndTheme()
     {

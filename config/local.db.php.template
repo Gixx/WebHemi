@@ -1,14 +1,15 @@
 <?php
 
 use WebHemi\Adapter\Data\DataDriverInterface;
+use WebHemi\Adapter\Data\PDO\%pdo.sqldriver%;
 
 return [
     'dependencies' => [
         'Global' => [
             DataDriverInterface::class => [
-                'class' => PDO::class,
+                'class' => %pdo.sqldriver%::class,
                 'arguments' => [
-                    'dsn'      => 'mysql:dbname=%pdo.dbname%;charset=utf8;hostname=%pdo.hostname%',
+                    'dsn'      => '%pdo.sql.type%:dbname=%pdo.dbname%;charset=utf8;hostname=%pdo.hostname%',
                     'user'     => '%pdo.username%',
                     'password' => '%pdo.password%',
                     'options'  => [
