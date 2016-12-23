@@ -13,7 +13,7 @@
 -- Create database `webhemi`
 --
 CREATE DATABASE IF NOT EXISTS `webhemi`;
-USE `gps_local`;
+USE `webhemi`;
 
 --
 -- Table structure for table `webhemi_application`
