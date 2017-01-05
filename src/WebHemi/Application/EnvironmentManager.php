@@ -268,7 +268,7 @@ class EnvironmentManager
         // Redirecting when the app domain is not equal to the server data
         // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')
-            && $this->environmentData['SERVER']['SERVER_NAME'] != $this->applicationDomain
+            && $this->environmentData['SERVER']['HTTP_HOST'] != $this->applicationDomain
         ) {
             $schema = 'http'.($this->isSecuredApplication() ? 's' : '').'://';
             $uri = $this->environmentData['SERVER']['REQUEST_URI'];
