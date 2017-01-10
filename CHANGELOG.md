@@ -1,11 +1,24 @@
 Change log
 ==========
 
+Version 4.0.0-2.2
+-----------------
+* Create the [Docker Builder](https://github.com/Gixx/docker-builder) project to provide a PHP 7.1 dev environment:
+  * with nginx 
+  * with https (self-signed)
+  * with PHP 7.1
+  * with MySQL 5.7
+* Plan to refactor the codebase to PHP 7.1:
+  * will use strict type mode if possible
+  * will add parameter type hinting (try to eliminate "mixed" type),
+  * will add return types (also nullable),
+  * will refactor classes to use only interface declarations for parameters and return types.
+
 Version 4.0.0-2.1
 -----------------
-* Add AuthAdapterInterface
-* Add a very basic Auth adapter and ACL Middleware implementations
-* Refactor config structure and Application parameters
+* Add AuthAdapterInterface.
+* Add a very basic Auth adapter and ACL Middleware implementations.
+* Refactor config structure and Application parameters.
 * Solved to add core Services to the DI, so they can be injected into other services if needed.
 
 Version 4.0.0-2.0
