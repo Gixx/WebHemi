@@ -1,3 +1,4 @@
+{% import '@WebHemi/macros/renderForm.twig' as _FORM %}
 <div class="element radio{% if formElement.hasErrors() %} error{% endif %}">
     {% if formElement.hasOptions() %}
         <fieldset name="{{ formElement.getName() }}">
@@ -14,6 +15,6 @@
         <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     {% endif %}
     {% if formElement.hasErrors() %}
-        {% include '@WebHemi/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
+        {{ _FORM.renderErrorBlock(formElement) }}
     {% endif %}
 </div>
