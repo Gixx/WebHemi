@@ -1,9 +1,10 @@
+{% import '@WebHemi/macros/renderForm.twig' as _FORM %}
     <form id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
         <input type="hidden" name="form_base_name" value="{{  formElement.getName() }}" />
         {% if formElement.hasNodes() %}
             {{ _FORM.renderSubForm(formElement.getNodes()) }}
         {% endif %}
         {% if formElement.hasErrors() %}
-            {% include '@WebHemi/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
+            {{ _FORM.renderErrorBlock(formElement) }}
         {% endif %}
     </form>

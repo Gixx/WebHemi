@@ -1,3 +1,4 @@
+{% import '@WebHemi/macros/renderForm.twig' as _FORM %}
 <div class="element select{% if formElement.hasErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
@@ -19,6 +20,6 @@
         {% endif %}
     </select>
     {% if formElement.hasErrors() %}
-        {% include '@WebHemi/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
+        {{ _FORM.renderErrorBlock(formElement) }}
     {% endif %}
 </div>
