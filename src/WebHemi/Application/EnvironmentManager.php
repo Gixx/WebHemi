@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Application;
 
 use InvalidArgumentException;
@@ -19,19 +21,16 @@ use WebHemi\Config\ConfigInterface;
  */
 class EnvironmentManager
 {
-    const APPLICATION_TYPE_DIRECTORY = 'directory';
-    const APPLICATION_TYPE_DOMAIN = 'domain';
-
-    const COOKIE_AUTO_LOGIN_PREFIX = 'atln';
-    const COOKIE_SESSION_PREFIX = 'atsn';
-
-    const DEFAULT_APPLICATION = 'website';
-    const DEFAULT_APPLICATION_URI = '/';
-    const DEFAULT_MODULE = 'Website';
-    const DEFAULT_THEME = 'default';
-    const DEFAULT_THEME_RESOURCE_PATH = '/resources/default_theme';
-
-    const SESSION_SALT = 'WebHemi';
+    public const APPLICATION_TYPE_DIRECTORY = 'directory';
+    public const APPLICATION_TYPE_DOMAIN = 'domain';
+    public const COOKIE_AUTO_LOGIN_PREFIX = 'atln';
+    public const COOKIE_SESSION_PREFIX = 'atsn';
+    public const DEFAULT_APPLICATION = 'website';
+    public const DEFAULT_APPLICATION_URI = '/';
+    public const DEFAULT_MODULE = 'Website';
+    public const DEFAULT_THEME = 'default';
+    public const DEFAULT_THEME_RESOURCE_PATH = '/resources/default_theme';
+    public const SESSION_SALT = 'WebHemi';
 
     /** @var ConfigInterface */
     private $configuration;
@@ -113,7 +112,7 @@ class EnvironmentManager
      *
      * @return string
      */
-    public function getDocumentRoot()
+    public function getDocumentRoot() : string
     {
         return $this->documentRoot;
     }
@@ -123,7 +122,7 @@ class EnvironmentManager
      *
      * @return string
      */
-    public function getApplicationDomain()
+    public function getApplicationDomain() : string
     {
         return $this->applicationDomain;
     }
@@ -133,7 +132,7 @@ class EnvironmentManager
      *
      * @return bool
      */
-    public function isSecuredApplication()
+    public function isSecuredApplication() : bool
     {
         return $this->isHttps;
     }
@@ -143,7 +142,7 @@ class EnvironmentManager
      *
      * @return string
      */
-    public function getSelectedApplication()
+    public function getSelectedApplication() : string
     {
         return $this->selectedApplication;
     }
@@ -154,7 +153,7 @@ class EnvironmentManager
      *
      * @return string
      */
-    public function getSelectedApplicationUri()
+    public function getSelectedApplicationUri() : string
     {
         return $this->selectedApplicationUri;
     }
@@ -164,7 +163,7 @@ class EnvironmentManager
      *
      * @return string
      */
-    public function getRequestUri()
+    public function getRequestUri() : string
     {
         return $this->environmentData['SERVER']['REQUEST_URI'];
     }
@@ -174,7 +173,7 @@ class EnvironmentManager
      *
      * @return string
      */
-    public function getSelectedModule()
+    public function getSelectedModule() : string
     {
         return $this->selectedModule;
     }
@@ -184,7 +183,7 @@ class EnvironmentManager
      *
      * @return string
      */
-    public function getSelectedTheme()
+    public function getSelectedTheme() : string
     {
         return $this->selectedTheme;
     }
@@ -194,7 +193,7 @@ class EnvironmentManager
      *
      * @return string
      */
-    public function getResourcePath()
+    public function getResourcePath() : string
     {
         return $this->selectedThemeResourcePath;
     }
@@ -203,10 +202,9 @@ class EnvironmentManager
      * Gets environment data.
      *
      * @param string $key
-     *
      * @return array
      */
-    public function getEnvironmentData($key)
+    public function getEnvironmentData(string $key) : array
     {
         if (!isset($this->environmentData[$key])) {
             throw new InvalidArgumentException(sprintf('The "%s" is not a valid environment key.', $key));
@@ -220,7 +218,7 @@ class EnvironmentManager
      *
      * @return string
      */
-    public function getClientIp()
+    public function getClientIp() : string
     {
         $ipAddress = '';
 
@@ -237,7 +235,7 @@ class EnvironmentManager
      *
      * @return EnvironmentManager
      */
-    private function setDomain()
+    private function setDomain() : EnvironmentManager
     {
         $domain = $this->environmentData['SERVER']['SERVER_NAME'];
         $subDomain = '';
@@ -285,7 +283,7 @@ class EnvironmentManager
      *
      * @return EnvironmentManager
      */
-    private function selectModuleApplicationAndTheme()
+    private function selectModuleApplicationAndTheme() : EnvironmentManager
     {
         $urlParts = parse_url($this->url);
         $applications = $this->configuration->toArray();
@@ -330,10 +328,9 @@ class EnvironmentManager
      * @param string $applicationName
      * @param array  $applicationData
      * @param string $subDirectory
-     *
      * @return bool
      */
-    private function checkDirectoryIsValid($applicationName, $applicationData, $subDirectory)
+    private function checkDirectoryIsValid(string $applicationName, array $applicationData, string $subDirectory) : bool
     {
         return $this->subDomain == $this->configuration->getData('website/path')
             && $applicationName != 'website'
@@ -348,10 +345,9 @@ class EnvironmentManager
      * @param string $applicationName
      * @param array  $applicationData
      * @param string $subDirectory
-     *
      * @return bool
      */
-    private function checkDomainIsValid($applicationName, $applicationData, &$subDirectory)
+    private function checkDomainIsValid(string $applicationName, array $applicationData, string &$subDirectory) : bool
     {
         $isSubdomain = $applicationName == 'website'
             || (

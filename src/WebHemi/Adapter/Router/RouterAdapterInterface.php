@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Router;
 
 use WebHemi\Adapter\Http\ServerRequestInterface;
@@ -38,8 +40,7 @@ interface RouterAdapterInterface
      * Processes the Request and give a Result.
      *
      * @param ServerRequestInterface $request
-     *
      * @return Result
      */
-    public function match(ServerRequestInterface $request);
+    public function match(ServerRequestInterface $request) : Result;
 }

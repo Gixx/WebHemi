@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Application;
 
 use RuntimeException;
@@ -47,12 +49,12 @@ class SessionManager
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
             ini_set('session.entropy_file', '/dev/urandom');
             ini_set('session.entropy_length', '16');
-            ini_set('session.hash_function', $configuration['hash_function']);
-            ini_set('session.use_only_cookies', (int) $configuration['use_only_cookies']);
-            ini_set('session.use_cookies', (int) $configuration['use_cookies']);
-            ini_set('session.use_trans_sid', (int) $configuration['use_trans_sid']);
-            ini_set('session.cookie_httponly', (int) $configuration['cookie_http_only']);
-            ini_set('session.save_path', $configuration['save_path']);
+            ini_set('session.hash_function', (string) $configuration['hash_function']);
+            ini_set('session.use_only_cookies', (string) $configuration['use_only_cookies']);
+            ini_set('session.use_cookies', (string) $configuration['use_cookies']);
+            ini_set('session.use_trans_sid', (string) $configuration['use_trans_sid']);
+            ini_set('session.cookie_httponly', (string) $configuration['cookie_http_only']);
+            ini_set('session.save_path', (string) $configuration['save_path']);
         }
         // @codeCoverageIgnoreEnd
     }
@@ -73,9 +75,12 @@ class SessionManager
 
     /**
      * Reads PHP Session array to class property.
+     *
+     * @return void
+     *
      * @codeCoverageIgnore
      */
-    private function read()
+    private function read() : void
     {
         if (isset($_SESSION[$this->namespace])) {
             $this->data = $_SESSION[$this->namespace];
@@ -84,9 +89,12 @@ class SessionManager
 
     /**
      * Writes class property to PHP Session array.
+     *
+     * @return void
+     *
      * @codeCoverageIgnore
      */
-    private function write()
+    private function write() : void
     {
         if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
             return;
@@ -99,9 +107,10 @@ class SessionManager
      * Check whether the session has already been started.
      *
      * @return bool
+     *
      * @codeCoverageIgnore
      */
-    private function sessionStarted()
+    private function sessionStarted() : bool
     {
         // For unit test we give controllable result.
         if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
@@ -122,8 +131,14 @@ class SessionManager
      * @param bool   $httpOnly
      * @return SessionManager
      */
-    public function start($name, $timeOut = 3600, $path = '/', $domain = null, $secure = false, $httpOnly = false)
-    {
+    public function start(
+        string $name,
+        int $timeOut = 3600,
+        string $path = '/',
+        ?string $domain = null,
+        bool $secure = false,
+        bool $httpOnly = false
+    ) : SessionManager {
         if ($this->sessionStarted()) {
             throw new RuntimeException('Cannot start session. Session is already started.', 1000);
         }
@@ -146,7 +161,7 @@ class SessionManager
      *
      * @return SessionManager
      */
-    public function regenerateId()
+    public function regenerateId() : SessionManager
     {
         if (!$this->sessionStarted()) {
             throw new RuntimeException('Cannot regenerate session identifier. Session is not started yet.', 1001);
@@ -167,29 +182,6 @@ class SessionManager
     }
 
     /**
-     * Gets session data.
-     *
-     * @param string $name
-     * @param bool   $skipMissing
-     * @throws RuntimeException
-     * @return mixed
-     */
-    public function get($name, $skipMissing = true)
-    {
-        if (!$this->sessionStarted()) {
-            throw new RuntimeException('Cannot set session data. Session is not started yet.', 1003);
-        }
-
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
-        } elseif ($skipMissing) {
-            return null;
-        }
-
-        throw new RuntimeException('Cannot retrieve session data. Data is not set', 1004);
-    }
-
-    /**
      * Sets session data.
      *
      * @param string $name
@@ -198,7 +190,7 @@ class SessionManager
      * @throws RuntimeException
      * @return SessionManager
      */
-    public function set($name, $value, $readOnly = false)
+    public function set(string $name, $value, bool $readOnly = false) : SessionManager
     {
         if (!$this->sessionStarted()) {
             throw new RuntimeException('Cannot set session data. Session is not started yet.', 1005);
@@ -218,6 +210,45 @@ class SessionManager
     }
 
     /**
+     * Gets session data.
+     *
+     * @param string $name
+     * @throws RuntimeException
+     * @return bool
+     */
+    public function has(string $name) : bool
+    {
+        if (!$this->sessionStarted()) {
+            throw new RuntimeException('Cannot set session data. Session is not started yet.', 1003);
+        }
+
+        return isset($this->data[$name]);
+    }
+
+    /**
+     * Gets session data.
+     *
+     * @param string $name
+     * @param bool   $skipMissing
+     * @throws RuntimeException
+     * @return mixed
+     */
+    public function get(string $name, bool $skipMissing = true)
+    {
+        if (!$this->sessionStarted()) {
+            throw new RuntimeException('Cannot set session data. Session is not started yet.', 1003);
+        }
+
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        } elseif ($skipMissing) {
+            return null;
+        }
+
+        throw new RuntimeException('Cannot retrieve session data. Data is not set', 1004);
+    }
+
+    /**
      * Deletes session data.
      *
      * @param string $name
@@ -225,7 +256,7 @@ class SessionManager
      * @throws RuntimeException
      * @return SessionManager
      */
-    public function delete($name, $forceDelete = false)
+    public function delete(string $name, bool $forceDelete = false) : SessionManager
     {
         if (!$this->sessionStarted()) {
             throw new RuntimeException('Cannot delete session data. Session is not started.', 1007);
@@ -248,7 +279,7 @@ class SessionManager
      * @param string $name
      * @return SessionManager
      */
-    public function unlock($name)
+    public function unlock(string $name) : SessionManager
     {
         if (isset($this->readOnly[$name])) {
             unset($this->readOnly[$name]);
@@ -262,7 +293,7 @@ class SessionManager
      *
      * @return array
      */
-    public function toArray()
+    public function toArray() : array
     {
         return $this->data;
     }

@@ -9,6 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
 
 namespace WebHemi\Middleware\Action\Admin;
 
@@ -38,7 +39,7 @@ class DashboardAction extends AbstractMiddlewareAction
      *
      * @return string
      */
-    public function getTemplateName()
+    public function getTemplateName() : string
     {
         return 'admin-dashboard';
     }
@@ -48,7 +49,7 @@ class DashboardAction extends AbstractMiddlewareAction
      *
      * @return array
      */
-    public function getTemplateData()
+    public function getTemplateData() : array
     {
         // @TODO TBD
         return [

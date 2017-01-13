@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Data\InMemory;
 
 use InvalidArgumentException;
@@ -21,8 +23,8 @@ use WebHemi\Adapter\Data\DataDriverInterface;
  */
 class InMemoryAdapter implements DataAdapterInterface
 {
-    /** @var array */
-    private $dataStorage;
+    /** @var DataDriverInterface */
+    private $dataDriver;
     /** @var string */
     private $dataGroup = 'default';
     /** @var string */
@@ -32,7 +34,6 @@ class InMemoryAdapter implements DataAdapterInterface
      * MySQLAdapter constructor.
      *
      * @param DataDriverInterface $dataDriver
-     *
      * @throws InvalidArgumentException
      */
     public function __construct(DataDriverInterface $dataDriver)
@@ -49,29 +50,27 @@ class InMemoryAdapter implements DataAdapterInterface
             }
         }
 
-        $this->dataStorage[$this->dataGroup] = $dataCollection;
+        $this->dataDriver[$this->dataGroup] = $dataCollection;
     }
 
     /**
-     * Returns the Data Storage instance.
+     * Returns the Data Driver instance.
      *
-     * @return array
+     * @return DataDriverInterface
      */
-    public function getDataStorage()
+    public function getDataDriver() : DataDriverInterface
     {
-        return $this->dataStorage;
+        return $this->dataDriver;
     }
 
     /**
      * Set adapter data group.
      *
      * @param string $dataGroup
-     *
      * @throws RuntimeException
-     *
-     * @return InMemoryAdapter
+     * @return DataAdapterInterface
      */
-    public function setDataGroup($dataGroup)
+    public function setDataGroup(string $dataGroup) : DataAdapterInterface
     {
         // Allow to change only once.
         if ($this->dataGroup !== 'default') {
@@ -81,8 +80,8 @@ class InMemoryAdapter implements DataAdapterInterface
         $this->dataGroup = $dataGroup;
 
         // Copy all previous init data.
-        $this->dataStorage[$dataGroup] = $this->dataStorage['default'];
-        unset($this->dataStorage['default']);
+        $this->dataDriver[$dataGroup] = $this->dataDriver['default'];
+        unset($this->dataDriver['default']);
 
         return $this;
     }
@@ -91,12 +90,10 @@ class InMemoryAdapter implements DataAdapterInterface
      * Set adapter ID key. For Databases this can be the Primary key. Only simple key is allowed.
      *
      * @param string $idKey
-     *
      * @throws RuntimeException
-     *
-     * @return InMemoryAdapter
+     * @return DataAdapterInterface
      */
-    public function setIdKey($idKey)
+    public function setIdKey(string $idKey) : DataAdapterInterface
     {
         // Allow to change only once.
         if ($this->idKey !== 'id') {
@@ -111,18 +108,17 @@ class InMemoryAdapter implements DataAdapterInterface
     /**
      * Get exactly one "row" of data according to the expression.
      *
-     * @param mixed $identifier
-     *
+     * @param int $identifier
      * @return array
      */
-    public function getData($identifier)
+    public function getData(int $identifier) : array
     {
         $result = [];
 
-        $dataStorage = $this->getDataStorage()[$this->dataGroup];
+        $dataDriver = $this->dataDriver[$this->dataGroup];
 
-        if (isset($dataStorage[$identifier])) {
-            $result = $dataStorage[$identifier];
+        if (isset($dataDriver[$identifier])) {
+            $result = $dataDriver[$identifier];
         }
 
         return $result;
@@ -134,18 +130,17 @@ class InMemoryAdapter implements DataAdapterInterface
      * @param array $expression
      * @param int   $limit
      * @param int   $offset
-     *
      * @return array
      */
-    public function getDataSet(array $expression, $limit = PHP_INT_MAX, $offset = 0)
+    public function getDataSet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array
     {
         $result = [];
 
-        $dataStorage = $this->getDataStorage()[$this->dataGroup];
+        $dataDriver = $this->dataDriver[$this->dataGroup];
         $limitCounter = 0;
         $offsetCounter = 0;
 
-        foreach ($dataStorage as $data) {
+        foreach ($dataDriver as $data) {
             $match = $this->isExpressionMatch($expression, $data);
             $offsetReached = $offsetCounter >= $offset;
 
@@ -172,10 +167,9 @@ class InMemoryAdapter implements DataAdapterInterface
      *
      * @param array $expression
      * @param array $data
-     *
      * @return bool
      */
-    private function isExpressionMatch(array $expression, array $data)
+    private function isExpressionMatch(array $expression, array $data) : bool
     {
         foreach ($expression as $pattern => $subject) {
             $dataKey = '';
@@ -195,13 +189,12 @@ class InMemoryAdapter implements DataAdapterInterface
      *
      * @param string $expressionType
      * @param mixed  $data
-     * @param mixed $subject
+     * @param string $subject
+     * @return bool
      *
      * @todo handle 'NOT IN' and 'NOT LIKE' expressions too.
-     *
-     * @return bool
      */
-    private function match($expressionType, $data, $subject)
+    private function match(string $expressionType, $data, string $subject) : bool
     {
         if ($expressionType == 'LIKE') {
             $match = $this->checkWildcardMatch($data, $subject);
@@ -215,36 +208,40 @@ class InMemoryAdapter implements DataAdapterInterface
     }
 
     /**
-     * @param mixed $data
-     * @param mixed $subject
+     * Checks for wildcard match.
      *
+     * @param string $data
+     * @param string $subject
      * @return bool
      */
-    private function checkWildcardMatch($data, $subject)
+    private function checkWildcardMatch(string $data, string $subject) : bool
     {
         $subject = str_replace('%', '.*', $subject);
         return (bool) preg_match('/^'.$subject.'$/', $data);
     }
 
     /**
-     * @param mixed $data
-     * @param mixed $subject
+     * Checks for match in array.
+     *
+     * @param array  $data
+     * @param string $subject
      *
      * @return bool
      */
-    private function checkInArrayMatch($data, $subject)
+    private function checkInArrayMatch(array $data, string $subject) : bool
     {
         return in_array($data, (array) $subject);
     }
 
     /**
-     * @param string $relation
-     * @param mixed  $data
-     * @param mixed  $subject
+     * Checks for relation match.
      *
+     * @param string $relation
+     * @param string $data
+     * @param string $subject
      * @return bool
      */
-    private function checkRelation($relation, $data, $subject)
+    private function checkRelation(string $relation, string $data, string $subject) : bool
     {
         $expressionMap = [
             '<'  => $data < $subject,
@@ -263,10 +260,9 @@ class InMemoryAdapter implements DataAdapterInterface
      *
      * @param string $pattern
      * @param string $subject
-     *
      * @return string
      */
-    private function getExpressionType($pattern, &$subject)
+    private function getExpressionType(string $pattern, string &$subject) : string
     {
         $type = '=';
         $subject = $pattern;
@@ -296,10 +292,9 @@ class InMemoryAdapter implements DataAdapterInterface
      * Get the number of matched data in the set according to the expression.
      *
      * @param array $expression
-     *
      * @return int
      */
-    public function getDataCardinality(array $expression)
+    public function getDataCardinality(array $expression) : int
     {
         $list = $this->getDataSet($expression);
 
@@ -307,51 +302,47 @@ class InMemoryAdapter implements DataAdapterInterface
     }
 
     /**
-     * Insert or update entity in the storage.
+     * Insert or update entity in the Driver.
      *
-     * @param mixed $identifier
+     * @param int   $identifier
      * @param array $data
-     *
-     * @return mixed The ID of the saved entity in the storage
+     * @return int The ID of the saved entity in the Driver
      */
-    public function saveData($identifier, array $data)
+    public function saveData(int $identifier, array $data) : int
     {
-        $dataStorage = $this->getDataStorage()[$this->dataGroup];
+        $dataDriver = $this->dataDriver[$this->dataGroup];
 
-        if (empty($dataStorage) && empty($identifier)) {
+        if (empty($dataDriver) && empty($identifier)) {
             $identifier = 1;
         }
 
         if (empty($identifier)) {
-            $keys = array_keys($dataStorage);
+            $keys = array_keys($dataDriver);
             $maxKey = array_pop($keys);
 
             if (is_numeric($maxKey)) {
                 $identifier = (int) $maxKey + 1;
-            } else {
-                $identifier = $maxKey.'_1';
             }
         }
 
         // To make it sure, we always apply changes on the exact property.
-        $this->dataStorage[$this->dataGroup][$identifier] = $data;
+        $this->dataDriver[$this->dataGroup][$identifier] = $data;
 
         return $identifier;
     }
 
     /**
-     * Removes an entity from the storage.
+     * Removes an entity from the Driver.
      *
-     * @param mixed $identifier
-     *
+     * @param int $identifier
      * @return bool
      */
-    public function deleteData($identifier)
+    public function deleteData(int $identifier) : bool
     {
         $result = false;
         $dataFound = $this->getData($identifier);
         if (!empty($dataFound)) {
-            unset($this->dataStorage[$this->dataGroup][$identifier]);
+            unset($this->dataDriver[$this->dataGroup][$identifier]);
             $result = true;
         }
 

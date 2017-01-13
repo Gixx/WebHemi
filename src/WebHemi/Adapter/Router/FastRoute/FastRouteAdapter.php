@@ -8,6 +8,7 @@
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
 
 namespace WebHemi\Adapter\Router\FastRoute;
 
@@ -64,10 +65,9 @@ class FastRouteAdapter implements RouterAdapterInterface
      * According to the application path, determines the route uri
      *
      * @param ServerRequestInterface $request
-     *
      * @return string
      */
-    private function getApplicationRouteUri(ServerRequestInterface $request)
+    private function getApplicationRouteUri(ServerRequestInterface $request) : string
     {
         $uri = $request->getUri()->getPath();
 
@@ -82,10 +82,9 @@ class FastRouteAdapter implements RouterAdapterInterface
      * Processes the Request and give a Result.
      *
      * @param ServerRequestInterface $request
-     *
      * @return Result
      */
-    public function match(ServerRequestInterface $request)
+    public function match(ServerRequestInterface $request) : Result
     {
         $httpMethod = $request->getMethod();
         $uri        = $this->getApplicationRouteUri($request);

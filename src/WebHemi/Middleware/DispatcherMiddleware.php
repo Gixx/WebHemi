@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Middleware;
 
 use Psr\Http\Message\StreamInterface;
@@ -40,12 +42,10 @@ class DispatcherMiddleware implements MiddlewareInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     *
      * @throws RuntimeException
-     *
-     * @return ResponseInterface
+     * @return void
      */
-    public function __invoke(ServerRequestInterface&$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
     {
         /** @var MiddlewareInterface $actionMiddleware */
         $actionMiddleware = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE);
@@ -53,7 +53,7 @@ class DispatcherMiddleware implements MiddlewareInterface
         // If there is a valid action Middleware, then dispatch it.
         if (!is_null($actionMiddleware) && $actionMiddleware instanceof MiddlewareActionInterface) {
             /** @var ResponseInterface $response */
-            $response = $actionMiddleware($request, $response);
+            $actionMiddleware($request, $response);
 
             // Create template only when there's no redirect
             if (ResponseInterface::STATUS_REDIRECT != $response->getStatusCode()) {
@@ -68,6 +68,5 @@ class DispatcherMiddleware implements MiddlewareInterface
         } else {
             throw new RuntimeException(sprintf('The given attribute is not a valid Action Middleware.'), 1000);
         }
-        return $response;
     }
 }

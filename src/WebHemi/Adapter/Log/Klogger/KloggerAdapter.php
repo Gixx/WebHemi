@@ -9,6 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
 
 namespace WebHemi\Adapter\Log\Klogger;
 
@@ -45,7 +46,7 @@ class KloggerAdapter extends LogLevel implements LogAdapterInterface
      * @param ConfigInterface $configuration
      * @param string          $section
      */
-    public function __construct(ConfigInterface $configuration, $section)
+    public function __construct(ConfigInterface $configuration, string $section)
     {
         $this->configuration = $configuration->getData('logging/'.$section);
 
@@ -66,8 +67,9 @@ class KloggerAdapter extends LogLevel implements LogAdapterInterface
      * @param mixed $level
      * @param string $message
      * @param array $context
+     * @return void
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, string $message, array $context = []) : void
     {
         if (is_numeric($level)) {
             $level = isset($this->logLevel[$level]) ? $this->logLevel[$level] : $this->defaultLevel;

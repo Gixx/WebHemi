@@ -9,6 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
 
 namespace WebHemi\Middleware\Action\Auth;
 
@@ -68,7 +69,7 @@ class LoginAction extends AbstractMiddlewareAction
      *
      * @return string
      */
-    public function getTemplateName()
+    public function getTemplateName() : string
     {
         return 'admin-login';
     }
@@ -79,7 +80,7 @@ class LoginAction extends AbstractMiddlewareAction
      * @throws Exception
      * @return array
      */
-    public function getTemplateData()
+    public function getTemplateData() : array
     {
         if ($this->request->getMethod() == 'POST') {
             /** @var Result $result */

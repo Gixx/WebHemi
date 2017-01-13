@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Validator;
 
 /**
@@ -20,14 +22,14 @@ interface ValidatorInterface
      * Validates data.
      *
      * @param mixed $data
-     * @return boolean
+     * @return bool
      */
-    public function validate($data);
+    public function validate($data) : bool;
 
     /**
-     * Gets error from validation.
+     * Gets errors from validation.
      *
-     * @return mixed
+     * @return array
      */
-    public function getError();
+    public function getErrors() : array;
 }

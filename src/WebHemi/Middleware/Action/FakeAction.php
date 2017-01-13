@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace WebHemi\Middleware\Action;
 
@@ -50,12 +51,12 @@ class FakeAction extends AbstractMiddlewareAction
         $this->userGroupToPolicyCoupler = $userGroupToPolicyCoupler;
     }
 
-    public function getTemplateName()
+    public function getTemplateName() : string
     {
         return 'blog-list';
     }
 
-    public function getTemplateData()
+    public function getTemplateData() : array
     {
         /** @var UserEntity $userEntity */
         $userEntity = $this->userStorage->getUserById(1);

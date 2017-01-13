@@ -9,6 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
 
 namespace WebHemi\Auth\Storage;
 
@@ -40,9 +41,9 @@ class Session implements AuthStorageInterface
      * Sets the authenticated user.
      *
      * @param DataEntityInterface $dataEntity
-     * @return Session
+     * @return AuthStorageInterface
      */
-    public function setIdentity(DataEntityInterface $dataEntity)
+    public function setIdentity(DataEntityInterface $dataEntity) : AuthStorageInterface
     {
         // for safety purposes
         $this->sessionManager->regenerateId();
@@ -53,11 +54,21 @@ class Session implements AuthStorageInterface
     }
 
     /**
+     * Checks if there is any authenticated user.
+     *
+     * @return bool
+     */
+    public function hasIdentity() : bool
+    {
+        return $this->sessionManager->has($this->sessionKey);
+    }
+
+    /**
      * Gets the authenticated user.
      *
      * @return null|DataEntityInterface
      */
-    public function getIdentity()
+    public function getIdentity() : ?DataEntityInterface
     {
         return $this->sessionManager->get($this->sessionKey);
     }
@@ -65,9 +76,9 @@ class Session implements AuthStorageInterface
     /**
      * Clears the session.
      *
-     * @return Session
+     * @return AuthStorageInterface
      */
-    public function clearIdentity()
+    public function clearIdentity() : AuthStorageInterface
     {
         // force delete read-only data.
         $this->sessionManager->delete($this->sessionKey, true);

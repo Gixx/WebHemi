@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\DependencyInjection;
 
 use WebHemi\Config\ConfigInterface;
@@ -18,11 +20,6 @@ use WebHemi\Config\ConfigInterface;
  */
 interface DependencyInjectionAdapterInterface
 {
-    const SERVICE_CLASS = 'class';
-    const SERVICE_ARGUMENTS = 'arguments';
-    const SERVICE_METHOD_CALL = 'calls';
-    const SERVICE_SHARE = 'shared';
-
     /**
      * DependencyInjectionAdapterInterface constructor.
      *
@@ -37,25 +34,23 @@ interface DependencyInjectionAdapterInterface
      * @param string|object $serviceClass
      * @return DependencyInjectionAdapterInterface
      */
-    public function registerService($identifier, $serviceClass);
+    public function registerService(string $identifier, $serviceClass) : DependencyInjectionAdapterInterface;
 
     /**
      * Gets a service.
      *
      * @param string $identifier
-     *
      * @return object
      */
-    public function get($identifier);
+    public function get(string $identifier);
 
     /**
      * Returns true if the given service is defined.
      *
      * @param string $identifier
-     *
      * @return bool
      */
-    public function has($identifier);
+    public function has(string $identifier) : bool;
 
     /**
      * Register module specific services.
@@ -64,14 +59,14 @@ interface DependencyInjectionAdapterInterface
      * @param string $moduleName
      * @return DependencyInjectionAdapterInterface
      */
-    public function registerModuleServices($moduleName);
+    public function registerModuleServices(string $moduleName) : DependencyInjectionAdapterInterface;
 
     /**
      * Sets service argument.
      *
-     * @param mixed $identifier
+     * @param mixed $service
      * @param mixed $parameter
      * @return DependencyInjectionAdapterInterface
      */
-    public function setServiceArgument($identifier, $parameter);
+    public function setServiceArgument($service, $parameter) : DependencyInjectionAdapterInterface;
 }

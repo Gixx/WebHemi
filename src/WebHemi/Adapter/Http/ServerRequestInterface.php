@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Http;
 
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
@@ -18,11 +20,11 @@ use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
  */
 interface ServerRequestInterface extends PsrServerRequestInterface
 {
-    const REQUEST_ATTR_RESOLVED_ACTION_CLASS = 'resolved_action_middleware';
-    const REQUEST_ATTR_ACTION_MIDDLEWARE = 'action_middleware_instance';
-    const REQUEST_ATTR_MIDDLEWARE_EXCEPTION = 'middleware_exception';
-    const REQUEST_ATTR_ROUTING_PARAMETERS = 'routing_parameters';
-    const REQUEST_ATTR_DISPATCH_TEMPLATE = 'dispatch_template';
-    const REQUEST_ATTR_DISPATCH_DATA = 'dispatch_data';
-    const REQUEST_ATTR_AUTHENTICATED_USER = 'authenticated_user';
+    public const REQUEST_ATTR_RESOLVED_ACTION_CLASS = 'resolved_action_middleware';
+    public const REQUEST_ATTR_ACTION_MIDDLEWARE = 'action_middleware_instance';
+    public const REQUEST_ATTR_MIDDLEWARE_EXCEPTION = 'middleware_exception';
+    public const REQUEST_ATTR_ROUTING_PARAMETERS = 'routing_parameters';
+    public const REQUEST_ATTR_DISPATCH_TEMPLATE = 'dispatch_template';
+    public const REQUEST_ATTR_DISPATCH_DATA = 'dispatch_data';
+    public const REQUEST_ATTR_AUTHENTICATED_USER = 'authenticated_user';
 }

@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Config;
 
 use InvalidArgumentException;
@@ -37,10 +39,11 @@ class Config implements ConfigInterface
     /**
      * Processes the config into a one dimensional array.
      *
-     * @param $path
-     * @param $config
+     * @param string $path
+     * @param array $config
+     * @return void
      */
-    private function processConfig($path, $config)
+    private function processConfig(string $path, array $config) : void
     {
         foreach ($config as $key => $value) {
             $this->pathMap[$path.$key] = $value;
@@ -55,10 +58,9 @@ class Config implements ConfigInterface
      * Checks whether the key-path does exist or not.
      *
      * @param string $path
-     *
      * @return bool
      */
-    public function has($path)
+    public function has(string $path) : bool
     {
         return isset($this->pathMap[$path]);
     }
@@ -67,12 +69,10 @@ class Config implements ConfigInterface
      * Retrieves configuration data for a specific key.
      *
      * @param string $path
-     *
      * @throws InvalidArgumentException
-     *
      * @return mixed
      */
-    public function getData($path)
+    public function getData(string $path)
     {
         if (!$this->has($path)) {
             throw new InvalidArgumentException(sprintf('Configuration for path "%s" not found', $path), 1000);
@@ -86,12 +86,10 @@ class Config implements ConfigInterface
      * into it.
      *
      * @param string $path
-     *
      * @throws InvalidArgumentException
-     *
-     * @return Config
+     * @return ConfigInterface
      */
-    public function getConfig($path)
+    public function getConfig(string $path) : ConfigInterface
     {
         if (!$this->has($path)) {
             throw new InvalidArgumentException(sprintf('Configuration for path "%s" not found', $path), 1001);
@@ -105,7 +103,7 @@ class Config implements ConfigInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray() : array
     {
         return $this->rawConfig;
     }

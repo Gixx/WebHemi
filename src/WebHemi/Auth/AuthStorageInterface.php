@@ -9,6 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
 
 namespace WebHemi\Auth;
 
@@ -25,19 +26,26 @@ interface AuthStorageInterface
      * @param DataEntityInterface $dataEntity
      * @return AuthStorageInterface
      */
-    public function setIdentity(DataEntityInterface $dataEntity);
+    public function setIdentity(DataEntityInterface $dataEntity) : AuthStorageInterface;
+
+    /**
+     * Checks if there is any authenticated user.
+     *
+     * @return bool
+     */
+    public function hasIdentity() : bool;
 
     /**
      * Gets the authenticated user.
      *
-     * @return DataEntityInterface
+     * @return DataEntityInterface|null
      */
-    public function getIdentity();
+    public function getIdentity() : ?DataEntityInterface;
 
     /**
-     * Clears the session.
+     * Clears the storage.
      *
      * @return AuthStorageInterface
      */
-    public function clearIdentity();
+    public function clearIdentity() : AuthStorageInterface;
 }

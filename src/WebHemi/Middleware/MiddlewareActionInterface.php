@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Middleware;
 
 /**
@@ -21,12 +23,12 @@ interface MiddlewareActionInterface
      *
      * @return string
      */
-    public function getTemplateName();
+    public function getTemplateName() : string;
 
     /**
      * Gets template data.
      *
      * @return array
      */
-    public function getTemplateData();
+    public function getTemplateData() : array;
 }

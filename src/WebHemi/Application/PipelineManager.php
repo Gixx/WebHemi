@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Application;
 
 use RuntimeException;
@@ -66,8 +68,9 @@ class PipelineManager
      * Add middleware definitions to the pipeline.
      *
      * @param string $moduleName
+     * @return void
      */
-    private function buildPipeline($moduleName = 'Global')
+    private function buildPipeline(string $moduleName = 'Global') : void
     {
         $pipelineConfig = $this->configuration->getData($moduleName);
 
@@ -87,7 +90,7 @@ class PipelineManager
      * @throws RuntimeException
      * @return bool
      */
-    private function checkMiddleware($middleWareClass)
+    private function checkMiddleware(string $middleWareClass) : bool
     {
         if (isset($this->index)) {
             throw new RuntimeException('You are forbidden to add new middleware after start.', 1000);
@@ -118,7 +121,7 @@ class PipelineManager
      * @param string $moduleName
      * @return PipelineManager
      */
-    public function addModulePipeLine($moduleName)
+    public function addModulePipeLine(string $moduleName) : PipelineManager
     {
         $this->buildPipeline($moduleName);
 
@@ -133,7 +136,7 @@ class PipelineManager
      * @throws RuntimeException
      * @return PipelineManager
      */
-    public function queueMiddleware($middleWareClass, $priority = 50)
+    public function queueMiddleware(string $middleWareClass, int $priority = 50) : PipelineManager
     {
         $this->checkMiddleware($middleWareClass);
 
@@ -160,8 +163,10 @@ class PipelineManager
 
     /**
      * Sorts the pipeline elements according to the priority.
+     *
+     * @return void
      */
-    private function sortPipeline()
+    private function sortPipeline() : void
     {
         ksort($this->priorityList);
         $this->pipelineList = [];
@@ -176,7 +181,7 @@ class PipelineManager
      *
      * @return null|string
      */
-    public function start()
+    public function start() : ?string
     {
         $this->index = 0;
         $this->sortPipeline();
@@ -189,7 +194,7 @@ class PipelineManager
      *
      * @return null|string
      */
-    public function next()
+    public function next() : ?string
     {
         if (!isset($this->index)) {
             throw new RuntimeException('Unable to get the next element until the pipeline is not started.', 1003);
@@ -203,7 +208,7 @@ class PipelineManager
      *
      * @return array
      */
-    public function getPipelineList()
+    public function getPipelineList() : array
     {
         return $this->pipelineList;
     }

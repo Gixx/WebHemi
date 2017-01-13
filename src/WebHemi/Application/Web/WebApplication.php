@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Application\Web;
 
 use Exception;
@@ -31,9 +33,11 @@ class WebApplication extends AbstractApplication
     /**
      * Starts the session.
      *
+     * @return void
+     *
      * @codeCoverageIgnore - not testing session (yet)
      */
-    private function initSession()
+    private function initSession() : void
     {
         if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
             return;
@@ -92,7 +96,7 @@ class WebApplication extends AbstractApplication
      *
      * @return void
      */
-    public function run()
+    public function run() : void
     {
         // Start session.
         $this->initSession();
@@ -143,7 +147,8 @@ class WebApplication extends AbstractApplication
                         $actionMiddleware
                     );
                 }
-                $response = $middleware($request, $response);
+
+                $middleware($request, $response);
             } catch (Exception $exception) {
                 $response = $response->withStatus(ResponseInterface::STATUS_INTERNAL_SERVER_ERROR);
                 $request = $request->withAttribute(

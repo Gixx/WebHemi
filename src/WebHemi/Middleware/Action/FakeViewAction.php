@@ -2,7 +2,6 @@
 
 namespace WebHemi\Middleware\Action;
 
-use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\User\UserStorage;
@@ -25,12 +24,12 @@ class FakeViewAction extends AbstractMiddlewareAction
         $this->userStorage = $userStorage;
     }
 
-    public function getTemplateName()
+    public function getTemplateName() : string
     {
         return $this->template;
     }
 
-    public function getTemplateData()
+    public function getTemplateData() : array
     {
         /** @var UserEntity $userEntity */
         $userEntity = $this->userStorage->getUserById(1);

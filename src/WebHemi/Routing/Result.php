@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Routing;
 
 use InvalidArgumentException;
@@ -18,9 +20,9 @@ use InvalidArgumentException;
  */
 class Result
 {
-    const CODE_FOUND = 200;
-    const CODE_NOT_FOUND = 404;
-    const CODE_BAD_METHOD = 405;
+    public const CODE_FOUND = 200;
+    public const CODE_NOT_FOUND = 404;
+    public const CODE_BAD_METHOD = 405;
 
     /** @var int */
     private $status;
@@ -39,12 +41,10 @@ class Result
      * Sets status code.
      *
      * @param int $status
-     *
      * @throws InvalidArgumentException
-     *
-     * @return $this
+     * @return Result
      */
-    public function setStatus($status)
+    public function setStatus(int $status) : Result
     {
         if (!isset($this->statusReason[$status])) {
             throw new InvalidArgumentException(sprintf('The parameter "%s" is not a valid routing status.', $status));
@@ -60,7 +60,7 @@ class Result
      *
      * @return int
      */
-    public function getStatus()
+    public function getStatus() : int
     {
         return $this->status;
     }
@@ -68,21 +68,20 @@ class Result
     /**
      * Gets reason for the status set.
      *
-     * @return false|string
+     * @return string
      */
-    public function getStatusReason()
+    public function getStatusReason() : string
     {
-        return isset($this->statusReason[$this->status]) ? $this->statusReason[$this->status] : false;
+        return $this->statusReason[$this->status] ?? '';
     }
 
     /**
      * Sets matched middleware.
      *
      * @param string $matchedMiddleware
-     *
-     * @return $this
+     * @return Result
      */
-    public function setMatchedMiddleware($matchedMiddleware)
+    public function setMatchedMiddleware(string $matchedMiddleware)
     {
         $this->matchedMiddleware = $matchedMiddleware;
 
@@ -94,7 +93,7 @@ class Result
      *
      * @return string
      */
-    public function getMatchedMiddleware()
+    public function getMatchedMiddleware() : string
     {
         return $this->matchedMiddleware;
     }
@@ -103,10 +102,9 @@ class Result
      * Sets the parameters.
      *
      * @param array $parameters
-     *
-     * @return $this
+     * @return Result
      */
-    public function setParameters(array $parameters)
+    public function setParameters(array $parameters) : Result
     {
         $this->parameters = $parameters;
 
@@ -118,7 +116,7 @@ class Result
      *
      * @return array
      */
-    public function getParameters()
+    public function getParameters() : array
     {
         return $this->parameters;
     }

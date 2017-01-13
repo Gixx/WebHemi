@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Middleware;
 
 use Exception;
@@ -36,14 +38,13 @@ class RoutingMiddleware implements MiddlewareInterface
     }
 
     /**
-     * From the request .
+     * From the request the middleware determines whether the requested URI is valid or not.
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     *
-     * @return ResponseInterface
+     * @return void
      */
-    public function __invoke(ServerRequestInterface&$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
     {
         $routeResult = $this->routerAdapter->match($request);
 
@@ -64,7 +65,5 @@ class RoutingMiddleware implements MiddlewareInterface
                     $routeResult->getParameters()
                 );
         }
-
-        return $response;
     }
 }
