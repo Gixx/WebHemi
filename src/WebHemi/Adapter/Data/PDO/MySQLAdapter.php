@@ -9,12 +9,13 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Data\PDO;
 
 use InvalidArgumentException;
 use PDO;
 use PDOStatement;
-use RuntimeException;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Data\DataDriverInterface;
 
@@ -24,7 +25,7 @@ use WebHemi\Adapter\Data\DataDriverInterface;
 class MySQLAdapter implements DataAdapterInterface
 {
     /** @var PDO */
-    private $dataStorage;
+    private $dataDriver;
     /** @var string */
     private $dataGroup = null;
     /** @var string */
@@ -33,17 +34,16 @@ class MySQLAdapter implements DataAdapterInterface
     /**
      * MySQLAdapter constructor.
      *
-     * @param DataDriverInterface $dataStorage
-     *
+     * @param DataDriverInterface $dataDriver
      * @throws InvalidArgumentException
      */
-    public function __construct(DataDriverInterface $dataStorage)
+    public function __construct(DataDriverInterface $dataDriver)
     {
-        if (!$dataStorage instanceof PDO) {
-            $type = gettype($dataStorage);
+        if (!$dataDriver instanceof PDO) {
+            $type = gettype($dataDriver);
 
             if ($type == 'object') {
-                $type = get_class($dataStorage);
+                $type = get_class($dataDriver);
             }
 
             $message = sprintf(
@@ -55,29 +55,26 @@ class MySQLAdapter implements DataAdapterInterface
             throw new InvalidArgumentException($message);
         }
 
-        $this->dataStorage = $dataStorage;
+        $this->dataDriver = $dataDriver;
     }
 
     /**
      * Returns the Data Storage instance.
      *
-     * @return PDO
+     * @return DataDriverInterface
      */
-    public function getDataStorage()
+    public function getDataDriver() : DataDriverInterface
     {
-        return $this->dataStorage;
+        return $this->dataDriver;
     }
 
     /**
      * Set adapter data group. For Databases this can be the Tables.
      *
      * @param string $dataGroup
-     *
-     * @throws RuntimeException
-     *
-     * @return MySQLAdapter
+     * @return DataAdapterInterface
      */
-    public function setDataGroup($dataGroup)
+    public function setDataGroup(string $dataGroup) : DataAdapterInterface
     {
         $this->dataGroup = $dataGroup;
 
@@ -88,12 +85,9 @@ class MySQLAdapter implements DataAdapterInterface
      * Set adapter ID key. For Databases this can be the Primary key. Only simple key is allowed.
      *
      * @param string $idKey
-     *
-     * @throws RuntimeException
-     *
-     * @return MySQLAdapter
+     * @return DataAdapterInterface
      */
-    public function setIdKey($idKey)
+    public function setIdKey(string $idKey) : DataAdapterInterface
     {
         $this->idKey = $idKey;
 
@@ -103,18 +97,17 @@ class MySQLAdapter implements DataAdapterInterface
     /**
      * Get exactly one "row" of data according to the expression.
      *
-     * @param mixed $identifier
-     *
+     * @param int $identifier
      * @return array
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function getData($identifier)
+    public function getData(int $identifier) : array
     {
         $queryBind = [];
 
         $query = $this->getSelectQueryForExpression([$this->idKey => $identifier], $queryBind, 1, 0);
-        $statement = $this->getDataStorage()->prepare($query);
+        $statement = $this->dataDriver->prepare($query);
         $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
@@ -127,17 +120,16 @@ class MySQLAdapter implements DataAdapterInterface
      * @param array $expression
      * @param int   $limit
      * @param int   $offset
-     *
      * @return array
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function getDataSet(array $expression, $limit = PHP_INT_MAX, $offset = 0)
+    public function getDataSet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array
     {
         $queryBind = [];
 
         $query = $this->getSelectQueryForExpression($expression, $queryBind, $limit, $offset);
-        $statement = $this->getDataStorage()->prepare($query);
+        $statement = $this->dataDriver->prepare($query);
         $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
@@ -148,17 +140,16 @@ class MySQLAdapter implements DataAdapterInterface
      * Get the number of matched data in the set according to the expression.
      *
      * @param array $expression
-     *
      * @return int
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function getDataCardinality(array $expression)
+    public function getDataCardinality(array $expression) : int
     {
         $queryBind = [];
 
         $query = $this->getSelectQueryForExpression($expression, $queryBind);
-        $statement = $this->getDataStorage()->prepare($query);
+        $statement = $this->dataDriver->prepare($query);
         $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
@@ -172,15 +163,14 @@ class MySQLAdapter implements DataAdapterInterface
      * @param array $queryBind
      * @param int   $limit
      * @param int   $offset
-     *
      * @return string
      */
     private function getSelectQueryForExpression(
         array $expression,
         array &$queryBind,
-        $limit = PHP_INT_MAX,
-        $offset = 0
-    ) {
+        int $limit = PHP_INT_MAX,
+        int $offset = 0
+    ) : string {
         $query = "SELECT * FROM {$this->dataGroup}";
 
         // Prepare WHERE expression.
@@ -199,10 +189,9 @@ class MySQLAdapter implements DataAdapterInterface
      *
      * @param array $expression
      * @param array $queryBind
-     *
      * @return string
      */
-    private function getWhereExpression(array $expression, array &$queryBind)
+    private function getWhereExpression(array $expression, array &$queryBind) : string
     {
         $whereExpression = '';
         $queryParams = [];
@@ -211,7 +200,7 @@ class MySQLAdapter implements DataAdapterInterface
             if (is_array($value)) {
                 $queryParams[] = $this->getInColumnCondition($column, count($value));
                 $queryBind = array_merge($queryBind, $value);
-            } elseif (strpos($column, ' LIKE') !== false || strpos($value, '%') !== false) {
+            } elseif (strpos($column, ' LIKE') !== false || (is_string($value) && strpos($value, '%') !== false)) {
                 $queryParams[] = $this->getLikeColumnCondition($column);
                 $queryBind[] = $value;
             } else {
@@ -233,7 +222,7 @@ class MySQLAdapter implements DataAdapterInterface
      * @param string $column
      * @return string 'my_column = ?'
      */
-    private function getSimpleColumnCondition($column)
+    private function getSimpleColumnCondition(string $column) : string
     {
         return strpos($column, '?') === false ? "{$column} = ?" : $column;
     }
@@ -249,7 +238,7 @@ class MySQLAdapter implements DataAdapterInterface
      * @param string $column
      * @return string 'my_column LIKE ?'
      */
-    private function getLikeColumnCondition($column)
+    private function getLikeColumnCondition(string $column) : string
     {
         list($columnNameOnly) = explode(' ', $column);
 
@@ -269,7 +258,7 @@ class MySQLAdapter implements DataAdapterInterface
      * @param int    $parameterCount
      * @return string 'my_column IN (?,?,?)'
      */
-    private function getInColumnCondition($column, $parameterCount = 1)
+    private function getInColumnCondition(string $column, int $parameterCount = 1) : string
     {
         list($columnNameOnly) = explode(' ', $column);
 
@@ -281,14 +270,14 @@ class MySQLAdapter implements DataAdapterInterface
     /**
      * Insert or update entity in the storage.
      *
-     * @param mixed $identifier
+     * @param int $identifier
      * @param array $data
      *
-     * @return mixed The ID of the saved entity in the storage
+     * @return int The ID of the saved entity in the storage
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function saveData($identifier, array $data)
+    public function saveData(int $identifier, array $data) : int
     {
         if (empty($identifier)) {
             $query = "INSERT INTO {$this->dataGroup}";
@@ -311,11 +300,11 @@ class MySQLAdapter implements DataAdapterInterface
             $queryBind[] = $identifier;
         }
 
-        $statement = $this->getDataStorage()->prepare($query);
+        $statement = $this->dataDriver->prepare($query);
         $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
-        return empty($identifier) ? $this->getDataStorage()->lastInsertId() : $identifier;
+        return empty($identifier) ? (int)$this->dataDriver->lastInsertId() : $identifier;
     }
 
     /**
@@ -323,10 +312,11 @@ class MySQLAdapter implements DataAdapterInterface
      *
      * @param PDOStatement $statement
      * @param array        $queryBind
+     * @return void
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    private function bindValuesToStatement(PDOStatement&$statement, array $queryBind)
+    private function bindValuesToStatement(PDOStatement&$statement, array $queryBind) : void
     {
         foreach ($queryBind as $index => $data) {
             $paramType = PDO::PARAM_STR;
@@ -344,15 +334,14 @@ class MySQLAdapter implements DataAdapterInterface
     /**
      * Removes an entity from the storage.
      *
-     * @param mixed $identifier
-     *
+     * @param int $identifier
      * @return bool
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function deleteData($identifier)
+    public function deleteData(int $identifier) : bool
     {
-        $statement = $this->getDataStorage()->prepare("DELETE FROM WHERE {$this->idKey} = ?");
+        $statement = $this->dataDriver->prepare("DELETE FROM WHERE {$this->idKey} = ?");
 
         return $statement->execute([$identifier]);
     }

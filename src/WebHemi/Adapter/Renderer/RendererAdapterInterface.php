@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Renderer;
 
 use Psr\Http\Message\StreamInterface;
@@ -36,5 +38,5 @@ interface RendererAdapterInterface
      *
      * @return StreamInterface
      */
-    public function render($template, $parameters = []);
+    public function render(string $template, array $parameters = []) : StreamInterface;
 }

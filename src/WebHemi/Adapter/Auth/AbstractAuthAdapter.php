@@ -9,6 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
 
 namespace WebHemi\Adapter\Auth;
 
@@ -57,7 +58,7 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
      *
      * @return AuthStorageInterface
      */
-    protected function getAuthStorage()
+    protected function getAuthStorage() : AuthStorageInterface
     {
         return $this->authStorage;
     }
@@ -67,7 +68,7 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
      *
      * @return DataStorageInterface
      */
-    protected function getDataStorage()
+    protected function getDataStorage() : DataStorageInterface
     {
         return $this->dataStorage;
     }
@@ -77,7 +78,7 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
      *
      * @return Result
      */
-    protected function getAuthResult()
+    protected function getAuthResult() : Result
     {
         return clone $this->authResult;
     }
@@ -87,25 +88,15 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
      *
      * @return Result
      */
-    abstract public function authenticate();
-
-    /**
-     * Checks whether the user is authenticated or not.
-     *
-     * @return bool
-     */
-    public function hasIdentity()
-    {
-        return $this->authStorage->getIdentity() instanceof DataEntityInterface;
-    }
+    abstract public function authenticate() : Result;
 
     /**
      * Sets the authenticated user.
      *
      * @param DataEntityInterface $dataEntity
-     * @return AbstractAuthAdapter
+     * @return AuthAdapterInterface
      */
-    public function setIdentity(DataEntityInterface $dataEntity)
+    public function setIdentity(DataEntityInterface $dataEntity) : AuthAdapterInterface
     {
         $this->authStorage->setIdentity($dataEntity);
 
@@ -113,11 +104,21 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
     }
 
     /**
+     * Checks whether the user is authenticated or not.
+     *
+     * @return bool
+     */
+    public function hasIdentity() : bool
+    {
+        return $this->authStorage->hasIdentity();
+    }
+
+    /**
      * Gets the authenticated user's entity.
      *
-     * @return null|string|DataEntityInterface
+     * @return DataEntityInterface|null
      */
-    public function getIdentity()
+    public function getIdentity() : ?DataEntityInterface
     {
         return $this->authStorage->getIdentity();
     }
@@ -125,9 +126,9 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
     /**
      * Clears the session.
      *
-     * @return AbstractAuthAdapter
+     * @return AuthAdapterInterface
      */
-    public function clearIdentity()
+    public function clearIdentity() : AuthAdapterInterface
     {
         $this->authStorage->clearIdentity();
         return $this;

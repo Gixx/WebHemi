@@ -9,6 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
 
 namespace WebHemi\Adapter\Auth;
 
@@ -43,14 +44,7 @@ interface AuthAdapterInterface
      *
      * @return Result
      */
-    public function authenticate();
-
-    /**
-     * Checks whether the user is authenticated or not.
-     *
-     * @return bool
-     */
-    public function hasIdentity();
+    public function authenticate() : Result;
 
     /**
      * Sets the authenticated user.
@@ -58,19 +52,26 @@ interface AuthAdapterInterface
      * @param DataEntityInterface $dataEntity
      * @return AuthAdapterInterface
      */
-    public function setIdentity(DataEntityInterface $dataEntity);
+    public function setIdentity(DataEntityInterface $dataEntity) : AuthAdapterInterface;
+
+    /**
+     * Checks whether the user is authenticated or not.
+     *
+     * @return bool
+     */
+    public function hasIdentity() : bool;
 
     /**
      * Gets the authenticated user's entity.
      *
-     * @return null|string|DataEntityInterface
+     * @return DataEntityInterface|null
      */
-    public function getIdentity();
+    public function getIdentity() : ?DataEntityInterface;
 
     /**
      * Clears the session.
      *
      * @return AuthAdapterInterface
      */
-    public function clearIdentity();
+    public function clearIdentity() : AuthAdapterInterface;
 }

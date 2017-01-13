@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Renderer\Twig;
 
 use InvalidArgumentException;
@@ -26,6 +28,7 @@ use WebHemi\Config\ConfigInterface;
  */
 class TwigRendererAdapter implements RendererAdapterInterface
 {
+    /** @var Twig_Environment */
     private $adapter;
     /** @var ConfigInterface */
     private $configuration;
@@ -89,12 +92,10 @@ class TwigRendererAdapter implements RendererAdapterInterface
      *
      * @param string $template
      * @param array  $parameters
-     *
      * @throws InvalidArgumentException
-     *
      * @return StreamInterface
      */
-    public function render($template, $parameters = [])
+    public function render(string $template, array $parameters = []) : StreamInterface
     {
         if ($this->configuration->has('map/'.$template)) {
             $template = $this->configuration->getData('map/'.$template);
@@ -126,7 +127,7 @@ class TwigRendererAdapter implements RendererAdapterInterface
      * @param ConfigInterface $themeConfig
      * @return bool
      */
-    private function checkSelectedThemeFeatures(ConfigInterface $themeConfig)
+    private function checkSelectedThemeFeatures(ConfigInterface $themeConfig) : bool
     {
         $canUseThisTheme = true;
 
@@ -149,7 +150,7 @@ class TwigRendererAdapter implements RendererAdapterInterface
      * @param bool $checkIfLogin
      * @return bool
      */
-    private function isAdminApplication($checkIfLogin = false)
+    private function isAdminApplication(bool $checkIfLogin = false) : bool
     {
         $isAdmin = 'admin' == $this->environmentManager->getSelectedApplication();
         $isLogin = strpos($this->environmentManager->getRequestUri(), '/auth/login') !== false;
@@ -164,7 +165,7 @@ class TwigRendererAdapter implements RendererAdapterInterface
      * @param string          $feature
      * @return bool
      */
-    private function isFeatureSupported(ConfigInterface $themeConfig, $feature)
+    private function isFeatureSupported(ConfigInterface $themeConfig, string $feature) : bool
     {
         return $themeConfig->has('features/'.$feature.'_support')
             && $themeConfig->getData('features/'.$feature.'_support');

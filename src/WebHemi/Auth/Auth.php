@@ -9,32 +9,34 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Auth;
 
-use Exception;
 use WebHemi\Adapter\Auth\AbstractAuthAdapter;
 use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class Auth
  *
- * @method UserStorage getDataStorage()
- *
  * @codeCoverageIgnore - unfinished code
  */
-class Auth extends AbstractAuthAdapter
+final class Auth extends AbstractAuthAdapter
 {
     /**
      * Authenticates the user.
      *
      * @return Result
      */
-    public function authenticate()
+    public function authenticate() : Result
     {
         // TODO implement
         $result = $this->getAuthResult();
-        $user = $this->getDataStorage()->getUserById(1);
+        /** @var UserStorage $dataStorage */
+        $dataStorage = $this->getDataStorage();
+        $user = $dataStorage->getUserById(1);
         if ($user instanceof UserEntity) {
             $result->setIdentity($user);
             $result->setCode(Result::SUCCESS);
@@ -47,10 +49,9 @@ class Auth extends AbstractAuthAdapter
     /**
      * Gets the authenticated user's entity.
      *
-     * @throws Exception
-     * @return null|string|UserEntity
+     * @return DataEntityInterface|null
      */
-    public function getIdentity()
+    public function getIdentity() : ?DataEntityInterface
     {
         $identity = parent::getIdentity();
         // TODO implement
@@ -58,8 +59,10 @@ class Auth extends AbstractAuthAdapter
         if (!$identity instanceof UserEntity) {
             $userName = 'admin';
 
+            /** @var UserStorage $dataStorage */
+            $dataStorage = $this->getDataStorage();
             /** @var UserEntity $userEntity */
-            $userEntity = $this->getDataStorage()->getUserByUserName($userName);
+            $userEntity = $dataStorage->getUserByUserName($userName);
 
             if (!$userEntity) {
                 $identity = $userName;

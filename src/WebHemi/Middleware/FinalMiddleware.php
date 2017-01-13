@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Middleware;
 
 use RuntimeException;
@@ -59,10 +61,9 @@ class FinalMiddleware implements MiddlewareInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     *
-     * @return ResponseInterface
+     * @return void
      */
-    public function __invoke(ServerRequestInterface&$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
     {
         // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && headers_sent()) {
@@ -102,7 +103,7 @@ class FinalMiddleware implements MiddlewareInterface
             }
         }
 
-        $response = $this->injectContentLength($response);
+        $this->injectContentLength($response);
 
         // Skip sending output when PHP Unit is running.
         // @codeCoverageIgnoreStart
@@ -113,8 +114,6 @@ class FinalMiddleware implements MiddlewareInterface
             echo $response->getBody();
         }
         // @codeCoverageIgnoreEnd
-
-        return $response;
     }
 
     /**
@@ -123,26 +122,22 @@ class FinalMiddleware implements MiddlewareInterface
      * NOTE: if there will be chunk content displayed, check if the response getSize counts the real size correctly
      *
      * @param ResponseInterface $response
-     *
-     * @return ResponseInterface
+     * @return void
      */
-    private function injectContentLength(ResponseInterface $response)
+    private function injectContentLength(ResponseInterface&$response) : void
     {
         if (!$response->hasHeader('Content-Length') && !is_null($response->getBody()->getSize())) {
             $response = $response->withHeader('Content-Length', (string) $response->getBody()->getSize());
         }
-
-        return $response;
     }
 
     /**
      * Filter a header name to word case.
      *
      * @param string $headerName
-     *
      * @return string
      */
-    private function filterHeaderName($headerName)
+    private function filterHeaderName(string $headerName) : string
     {
         $filtered = str_replace('-', ' ', $headerName);
         $filtered = ucwords($filtered);
@@ -153,10 +148,11 @@ class FinalMiddleware implements MiddlewareInterface
      * Sends the HTTP header.
      *
      * @param ResponseInterface $response
+     * @return void
      *
      * @codeCoverageIgnore - vendor and core function calls
      */
-    private function sendHttpHeader(ResponseInterface $response)
+    private function sendHttpHeader(ResponseInterface $response) : void
     {
         $reasonPhrase = $response->getReasonPhrase();
         header(sprintf(
@@ -171,10 +167,11 @@ class FinalMiddleware implements MiddlewareInterface
      * Sends out output headers.
      *
      * @param array $headers
+     * @return void
      *
      * @codeCoverageIgnore - vendor and core function calls in loop
      */
-    private function sendOutputHeaders(array $headers)
+    private function sendOutputHeaders(array $headers) : void
     {
         foreach ($headers as $headerName => $values) {
             $name  = $this->filterHeaderName($headerName);

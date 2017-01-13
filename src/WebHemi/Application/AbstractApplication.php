@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Application;
 
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
@@ -36,7 +38,7 @@ abstract class AbstractApplication implements ApplicationInterface
      *
      * @return DependencyInjectionAdapterInterface
      */
-    final public function getContainer()
+    final public function getContainer() : DependencyInjectionAdapterInterface
     {
         return $this->container;
     }
@@ -48,5 +50,5 @@ abstract class AbstractApplication implements ApplicationInterface
      *
      * @return void
      */
-    abstract public function run();
+    abstract public function run() : void;
 }

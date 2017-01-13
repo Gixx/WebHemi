@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Data;
 
 /**
@@ -17,45 +19,42 @@ namespace WebHemi\Adapter\Data;
 interface DataAdapterInterface
 {
     /**
-     * MySQLAdapter constructor.
+     * DataAdapterInterface constructor.
      *
-     * @param mixed $dataStorage
+     * @param DataDriverInterface $dataDriver
      */
-    public function __construct(DataDriverInterface $dataStorage);
+    public function __construct(DataDriverInterface $dataDriver);
 
     /**
-     * Returns the Data Storage instance.
+     * Returns the DataDriverInterface instance.
      *
-     * @return mixed
+     * @return DataDriverInterface
      */
-    public function getDataStorage();
+    public function getDataDriver() : DataDriverInterface;
 
     /**
      * Set adapter data group. For Databases this can be the Tables.
      *
      * @param string $dataGroup
-     *
      * @return DataAdapterInterface
      */
-    public function setDataGroup($dataGroup);
+    public function setDataGroup(string $dataGroup) : DataAdapterInterface;
 
     /**
      * Set adapter ID key. For Databases this can be the Primary key. Only simple key is allowed.
      *
      * @param string $idKey
-     *
      * @return DataAdapterInterface
      */
-    public function setIdKey($idKey);
+    public function setIdKey(string $idKey) : DataAdapterInterface;
 
     /**
      * Get exactly one "row" of data according to the expression.
      *
-     * @param mixed $identifier
-     *
+     * @param int $identifier
      * @return array
      */
-    public function getData($identifier);
+    public function getData(int $identifier) : array;
 
     /**
      * Get a set of data according to the expression and the chunk.
@@ -63,36 +62,32 @@ interface DataAdapterInterface
      * @param array $expression
      * @param int   $limit
      * @param int   $offset
-     *
      * @return array
      */
-    public function getDataSet(array $expression, $limit = PHP_INT_MAX, $offset = 0);
+    public function getDataSet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array;
 
     /**
      * Get the number of matched data in the set according to the expression.
      *
      * @param array $expression
-     *
      * @return int
      */
-    public function getDataCardinality(array $expression);
+    public function getDataCardinality(array $expression) : int;
 
     /**
      * Insert or update entity in the storage.
      *
-     * @param mixed $identifier
+     * @param int $identifier
      * @param array $data
-     *
-     * @return mixed The ID of the saved entity in the storage
+     * @return int The ID of the saved entity in the storage
      */
-    public function saveData($identifier, array $data);
+    public function saveData(int $identifier, array $data) : int;
 
     /**
      * Removes an entity from the storage.
      *
      * @param int $identifier
-     *
      * @return bool
      */
-    public function deleteData($identifier);
+    public function deleteData(int $identifier) : bool;
 }

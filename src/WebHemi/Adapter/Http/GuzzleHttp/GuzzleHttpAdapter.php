@@ -9,11 +9,15 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Http\GuzzleHttp;
 
 use GuzzleHttp\Psr7\LazyOpenStream;
 use GuzzleHttp\Psr7\Uri;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
+use WebHemi\Adapter\Http\ServerRequestInterface;
+use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Application\EnvironmentManager;
 
 /**
@@ -25,7 +29,6 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     private $request;
     /** @var Response */
     private $response;
-
     /** @var array */
     private $get;
     /** @var array */
@@ -55,13 +58,15 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
 
     /**
      * Initialize adapter: create the ServerRequest and Response instances.
+     *
+     * @return void
      */
-    private function initialize()
+    private function initialize() : void
     {
         $uri = new Uri('');
         $uri = $uri->withScheme($this->getScheme())
             ->withHost($this->getHost())
-            ->withPort($this->getServerData('SERVER_PORT', 80))
+            ->withPort($this->getServerData('SERVER_PORT', '80'))
             ->withPath($this->getRequestUri())
             ->withQuery($this->getServerData('QUERY_STRING', ''));
 
@@ -85,11 +90,10 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
      * Gets the specific server data, or a default value if not present.
      *
      * @param string $keyName
-     * @param mixed  $defaultValue
-     *
+     * @param string $defaultValue
      * @return string
      */
-    private function getServerData($keyName, $defaultValue = '')
+    private function getServerData(string $keyName, string $defaultValue = '') : string
     {
         if (isset($this->server[$keyName])) {
             $defaultValue = $this->server[$keyName];
@@ -103,16 +107,11 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
      *
      * @return string
      */
-    private function getScheme()
+    private function getScheme() : string
     {
-        $scheme = 'http';
         $https = $this->getServerData('HTTPS', 'off');
 
-        if ($https == 'on') {
-            $scheme = 'https';
-        }
-
-        return $scheme;
+        return $https == 'on' ? 'https' : 'http';
     }
 
     /**
@@ -120,7 +119,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
      *
      * @return string
      */
-    private function getHost()
+    private function getHost() : string
     {
         $host = $this->getServerData('HTTP_HOST');
         $name = $this->getServerData('SERVER_NAME');
@@ -137,7 +136,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
      *
      * @return string
      */
-    private function getRequestUri()
+    private function getRequestUri() : string
     {
         $requestUri = $this->getServerData('REQUEST_URI', '/');
 
@@ -149,7 +148,7 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
      *
      * @return string
      */
-    private function getProtocol()
+    private function getProtocol() : string
     {
         $protocol = '1.1';
         $serverProtocol = $this->getServerData('SERVER_PROTOCOL');
@@ -164,9 +163,9 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     /**
      * Returns the HTTP request.
      *
-     * @return ServerRequest
+     * @return ServerRequestInterface
      */
-    public function getRequest()
+    public function getRequest() : ServerRequestInterface
     {
         return $this->request;
     }
@@ -174,9 +173,9 @@ class GuzzleHttpAdapter implements HttpAdapterInterface
     /**
      * Returns the response being sent.
      *
-     * @return Response
+     * @return ResponseInterface
      */
-    public function getResponse()
+    public function getResponse() : ResponseInterface
     {
         return $this->response;
     }

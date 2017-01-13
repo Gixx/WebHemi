@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Http;
 
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
@@ -18,15 +20,11 @@ use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
  */
 interface ResponseInterface extends PsrResponseInterface
 {
-    const STATUS_PROCESSING = 102;
-
-    const STATUS_OK = 200;
-
-    const STATUS_REDIRECT = 302;
-
-    const STATUS_UNAUTHORIZED = 401;
-    const STATUS_FORBIDDEN = 403;
-    const STATUS_BAD_METHOD = 405;
-
-    const STATUS_INTERNAL_SERVER_ERROR = 500;
+    public const STATUS_PROCESSING = 102;
+    public const STATUS_OK = 200;
+    public const STATUS_REDIRECT = 302;
+    public const STATUS_UNAUTHORIZED = 401;
+    public const STATUS_FORBIDDEN = 403;
+    public const STATUS_BAD_METHOD = 405;
+    public const STATUS_INTERNAL_SERVER_ERROR = 500;
 }

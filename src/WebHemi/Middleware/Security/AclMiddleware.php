@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Middleware\Security;
 
 use Exception;
@@ -96,15 +98,15 @@ class AclMiddleware implements MiddlewareInterface
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
      * @throws Exception
-     * @return ResponseInterface
+     * @return void
      */
-    public function __invoke(ServerRequestInterface&$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
     {
         $actionMiddleware = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS);
         $identity = false;
 
         if (in_array($actionMiddleware, $this->middlewareWhiteList)) {
-            return $response;
+            return;
         }
 
         if ($this->authAdapter->hasIdentity()) {
@@ -144,8 +146,6 @@ class AclMiddleware implements MiddlewareInterface
             $response = $response->withStatus(ResponseInterface::STATUS_REDIRECT, 'Found')
                 ->withHeader('Location', $appUri.'/auth/login');
         }
-
-        return $response;
     }
 
     /**
@@ -158,9 +158,9 @@ class AclMiddleware implements MiddlewareInterface
      */
     private function checkPolicies(
         array $policies,
-        ApplicationEntity $applicationEntity = null,
-        ResourceEntity $resourceEntity = null
-    ) {
+        ?ApplicationEntity $applicationEntity = null,
+        ?ResourceEntity $resourceEntity = null
+    ) : bool {
         // We assume the best case: the user has access
         $hasAccess = true;
 
@@ -173,6 +173,8 @@ class AclMiddleware implements MiddlewareInterface
     }
 
     /**
+     * Check a concrete policy.
+     *
      * @param PolicyEntity           $policyEntity
      * @param ApplicationEntity|null $applicationEntity
      * @param ResourceEntity|null    $resourceEntity
@@ -180,9 +182,9 @@ class AclMiddleware implements MiddlewareInterface
      */
     private function checkPolicy(
         PolicyEntity $policyEntity,
-        ApplicationEntity $applicationEntity = null,
-        ResourceEntity $resourceEntity = null
-    ) {
+        ?ApplicationEntity $applicationEntity = null,
+        ?ResourceEntity $resourceEntity = null
+    ) : bool {
         $applicationId = $applicationEntity ? $applicationEntity->getApplicationId() : null;
         $resourceId = $resourceEntity ? $resourceEntity->getResourceId() : null;
         $policyApplicationId = $policyEntity->getApplicationId();
@@ -209,8 +211,10 @@ class AclMiddleware implements MiddlewareInterface
      * @param UserEntity             $identity
      * @return ServerRequestInterface
      */
-    private function setIdentityForTemplate(ServerRequestInterface $request, UserEntity $identity)
-    {
+    private function setIdentityForTemplate(
+        ServerRequestInterface $request,
+        UserEntity $identity
+    ) : ServerRequestInterface {
         // Set authenticated user for the templates
         $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, []);
         $templateData['authenticated_user'] = $identity;

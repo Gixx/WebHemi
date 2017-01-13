@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Middleware\Security;
 
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
@@ -55,9 +57,9 @@ class AccessLogMiddleware implements MiddlewareInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     * @return ResponseInterface
+     * @return void
      */
-    public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface &$request, ResponseInterface&$response) : void
     {
         $identity = 'Unauthenticated user';
         $requestAttributes = $request->getAttributes();
@@ -81,7 +83,5 @@ class AccessLogMiddleware implements MiddlewareInterface
         ];
 
         $this->logger->log('info', json_encode($data));
-
-        return $response;
     }
 }

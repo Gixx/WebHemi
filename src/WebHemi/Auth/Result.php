@@ -9,6 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
 
 namespace WebHemi\Auth;
 
@@ -17,13 +18,13 @@ use WebHemi\Data\Entity\User\UserEntity;
 /**
  * Class Result.
  */
-class Result
+final class Result
 {
-    const FAILURE = 0;
-    const FAILURE_IDENTITY_NOT_FOUND = -1;
-    const FAILURE_CREDENTIAL_INVALID = -2;
-    const FAILURE_OTHER = -3;
-    const SUCCESS = 1;
+    public const FAILURE = 0;
+    public const FAILURE_IDENTITY_NOT_FOUND = -1;
+    public const FAILURE_CREDENTIAL_INVALID = -2;
+    public const FAILURE_OTHER = -3;
+    public const SUCCESS = 1;
 
     /** @var int */
     private $code;
@@ -43,7 +44,7 @@ class Result
      *
      * @return bool
      */
-    public function isValid()
+    public function isValid() : bool
     {
         return $this->code == 1 && !empty($this->userEntity);
     }
@@ -54,7 +55,7 @@ class Result
      * @param int $code
      * @return Result
      */
-    public function setCode($code)
+    public function setCode(int $code) : Result
     {
         if (!isset($this->messages[$code])) {
             $code = -3;
@@ -70,7 +71,7 @@ class Result
      *
      * @return int
      */
-    public function getCode()
+    public function getCode() : int
     {
         return $this->code;
     }
@@ -81,7 +82,7 @@ class Result
      * @param UserEntity $userEntity
      * @return Result
      */
-    public function setIdentity(UserEntity $userEntity)
+    public function setIdentity(UserEntity $userEntity) : Result
     {
         $this->userEntity = $userEntity;
 
@@ -91,9 +92,9 @@ class Result
     /**
      * Gets the authenticated user if any.
      *
-     * @return null|UserEntity
+     * @return UserEntity|null
      */
-    public function getIdentity()
+    public function getIdentity() :?UserEntity
     {
         return $this->userEntity;
     }
@@ -101,9 +102,9 @@ class Result
     /**
      * Gets the result message.
      *
-     * @return mixed
+     * @return string
      */
-    public function getMessage()
+    public function getMessage() : string
     {
         return $this->messages[$this->code];
     }

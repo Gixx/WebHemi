@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\DependencyInjection\Symfony;
 
 use RuntimeException;
@@ -23,6 +25,11 @@ use WebHemi\Config\ConfigInterface;
  */
 class SymfonyAdapter implements DependencyInjectionAdapterInterface
 {
+    private const SERVICE_CLASS = 'class';
+    private const SERVICE_ARGUMENTS = 'arguments';
+    private const SERVICE_METHOD_CALL = 'calls';
+    private const SERVICE_SHARE = 'shared';
+
     /** @var ContainerBuilder */
     private $container;
     /** @var array */
@@ -51,9 +58,9 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * Initializes the DI container from the config.
      *
      * @param array  $dependencies
-     * @return SymfonyAdapter
+     * @return DependencyInjectionAdapterInterface
      */
-    private function registerServices(array $dependencies)
+    private function registerServices(array $dependencies) : DependencyInjectionAdapterInterface
     {
         // Collect the name information about the services to be registered
         foreach ($dependencies as $alias => $setupData) {
@@ -74,7 +81,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * @param string $alias
      * @return string
      */
-    private function getRealServiceClass(array $setupData, $alias)
+    private function getRealServiceClass(array $setupData, string $alias) : string
     {
         if (isset($setupData[self::SERVICE_CLASS])) {
             $serviceClass = $setupData[self::SERVICE_CLASS];
@@ -90,9 +97,9 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      *
      * @param string        $identifier
      * @param string|object $serviceClass
-     * @return SymfonyAdapter
+     * @return DependencyInjectionAdapterInterface
      */
-    public function registerService($identifier, $serviceClass)
+    public function registerService(string $identifier, $serviceClass) : DependencyInjectionAdapterInterface
     {
         // Do nothing if the service has been already registered with the same alias.
         // It is allowed to register the same service multiple times with different aliases.
@@ -145,7 +152,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * @param string $serviceClass
      * @return array
      */
-    private function getServiceSetupData($identifier, $serviceClass)
+    private function getServiceSetupData(string $identifier, string $serviceClass) : array
     {
         // Init settings.
         $setUpData = [
@@ -172,8 +179,9 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * @param Definition $service
      * @param string     $method
      * @param array      $parameterList
+     * @return void
      */
-    private function addMethodCall(Definition $service, $method, $parameterList = [])
+    private function addMethodCall(Definition $service, string $method, array $parameterList = []) : void
     {
         // Check the parameter list for reference services
         foreach ($parameterList as &$parameter) {
@@ -187,7 +195,6 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * If possible create register the parameter as a service and give it back as a reference.
      *
      * @param mixed $classOrServiceName
-     *
      * @return mixed|Reference
      */
     private function getReferenceServiceIfAvailable($classOrServiceName)
@@ -224,10 +231,9 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      *
      * @param string $className
      * @param string $argumentName
-     *
      * @return string
      */
-    private function getNormalizedName($className, $argumentName)
+    private function getNormalizedName(string $className, string $argumentName) : string
     {
         $className = 'C_'.preg_replace('/[^a-z0-9]/', '', strtolower($className));
         $argumentName = 'A_'.preg_replace('/[^a-z0-9]/', '', strtolower($argumentName));
@@ -239,10 +245,9 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * Gets a service. It also tries to register the one without arguments which not yet registered.
      *
      * @param string $identifier
-     *
      * @return object
      */
-    public function get($identifier)
+    public function get(string $identifier)
     {
         if (!$this->container->has($identifier) && class_exists($identifier)) {
             $this->registerService($identifier, $identifier);
@@ -262,10 +267,9 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * Returns true if the given service is defined.
      *
      * @param string $identifier
-     *
      * @return bool
      */
-    public function has($identifier)
+    public function has(string $identifier) : bool
     {
         return $this->container->has($identifier);
     }
@@ -275,9 +279,9 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * If a service is already registered, it will be skipped.
      *
      * @param string $moduleName
-     * @return SymfonyAdapter
+     * @return DependencyInjectionAdapterInterface
      */
-    public function registerModuleServices($moduleName)
+    public function registerModuleServices(string $moduleName) : DependencyInjectionAdapterInterface
     {
         if (isset($this->configuration[$moduleName])) {
             $this->moduleNamespace = $moduleName;
@@ -292,12 +296,10 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      *
      * @param string|Definition $service
      * @param mixed             $parameter
-     *
      * @throws RuntimeException
-     *
-     * @return SymfonyAdapter
+     * @return DependencyInjectionAdapterInterface
      */
-    public function setServiceArgument($service, $parameter)
+    public function setServiceArgument($service, $parameter) : DependencyInjectionAdapterInterface
     {
         $service = $this->getRealService($service);
         $parameterName = $this->getRealParameterName($parameter);
@@ -329,7 +331,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * @param mixed $service
      * @return Definition
      */
-    private function getRealService($service)
+    private function getRealService($service) : Definition
     {
         if (!$service instanceof Definition) {
             $service = $this->container->getDefinition($service);
@@ -344,7 +346,7 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      * @param mixed $parameterName
      * @return string
      */
-    private function getRealParameterName($parameterName)
+    private function getRealParameterName($parameterName) : string
     {
         if (!is_scalar($parameterName)) {
             $parameterName = self::$parameterIndex++;
@@ -358,8 +360,9 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
      *
      * @param string $serviceClass
      * @throws RuntimeException
+     * @return void
      */
-    private function checkSharedServiceClassState($serviceClass)
+    private function checkSharedServiceClassState(string $serviceClass) : void
     {
         if (isset($this->instantiatedSharedServices[$serviceClass])
             && $this->instantiatedSharedServices[$serviceClass] === true

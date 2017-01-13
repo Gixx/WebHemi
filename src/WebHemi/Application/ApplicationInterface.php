@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Application;
 
 use WebHemi\Adapter\DependencyInjection\DependencyInjectionAdapterInterface;
@@ -30,7 +32,7 @@ interface ApplicationInterface
      *
      * @return DependencyInjectionAdapterInterface
      */
-    public function getContainer();
+    public function getContainer() : DependencyInjectionAdapterInterface;
 
     /**
      * Runs the application. This is where the magic happens.
@@ -39,5 +41,5 @@ interface ApplicationInterface
      *
      * @return void
      */
-    public function run();
+    public function run() : void;
 }

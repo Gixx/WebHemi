@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Config;
 
 use InvalidArgumentException;
@@ -29,38 +31,33 @@ interface ConfigInterface
      * Checks whether the key-path does exist or not.
      *
      * @param string $path
-     *
      * @return bool
      */
-    public function has($path);
+    public function has(string $path) : bool;
 
     /**
      * Returns the configuration data for a specific key.
      *
      * @param string $path
-     *
      * @throws InvalidArgumentException
-     *
      * @return mixed
      */
-    public function getData($path);
+    public function getData(string $path);
 
     /**
      * Returns the configuration instance for a specific key. Also add the possibility to merge additional information
      * into it.
      *
      * @param string $path
-     *
      * @throws InvalidArgumentException
-     *
      * @return ConfigInterface
      */
-    public function getConfig($path);
+    public function getConfig(string $path) : ConfigInterface;
 
     /**
      * Returns the stored raw config array.
      *
      * @return array
      */
-    public function toArray();
+    public function toArray() : array;
 }

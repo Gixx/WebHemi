@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types=1);
+
 namespace WebHemi\Adapter\Http;
 
 use WebHemi\Application\EnvironmentManager;
@@ -30,12 +32,12 @@ interface HttpAdapterInterface
      *
      * @return ServerRequestInterface
      */
-    public function getRequest();
+    public function getRequest() : ServerRequestInterface;
 
     /**
      * Returns the response being sent.
      *
      * @return ResponseInterface
      */
-    public function getResponse();
+    public function getResponse() : ResponseInterface;
 }
