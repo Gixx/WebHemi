@@ -10,9 +10,7 @@
  * @link      http://www.gixx-web.com
  */
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Adapter\Log\LogAdapterInterface;
 use WebHemi\Application\EnvironmentManager;
-use WebHemi\Config\ConfigInterface;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;

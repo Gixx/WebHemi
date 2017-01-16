@@ -1,0 +1,8 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <h1 class="page-header">{{ blogPost.title }}</h1>
+    <p>On {{ blogPost.publishedAt.format('Y-m-d') }} by {{ blogPost.author.name }}</p>
+    <p>{{ blogPost.content }}</p>
+    <p>Parameter: {{ blogPost.parameter.id }}</p>
+{% endblock %}

@@ -1,8 +1,9 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element input textarea{% if formElement.hasErrors() %} error{% endif %}">
+<div class="element input textarea{% if formElement.getErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
-    <textarea id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>{{ formElement.getValue() }}</textarea>
-    {% if formElement.hasErrors() %}
+    {% set value = formElement.getValues() %}
+    <textarea id="{{ formElement.getId() }}" name="{{ formElement.getName() }}">{{ value[0] }}</textarea>
+    {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement) }}
     {% endif %}
 </div>

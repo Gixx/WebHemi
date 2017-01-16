@@ -1,25 +1,22 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element select{% if formElement.hasErrors() %} error{% endif %}">
+<div class="element select{% if formElement.getErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
-    <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
-        {% if formElement.hasOptions() %}
-            {% set elementOptions = formElement.getOptions() %}
-            {% if formElement.isGroupedSelect() %}
-                {% for groupName, groupOptions in elementOptions %}
-                    <optgroup label="{{ groupName }}">
-                        {% for option in groupOptions %}
-                            <option value="{{ option.value }}"{% if option.checked %} selected="selected"{% endif %}>{{ option.label }}</option>
-                        {% endfor %}
-                    </optgroup>
-                {% endfor %}
-            {% else %}
-                {% for option in elementOptions['Default'] %}
-                    <option value="{{ option.value }}"{% if option.checked %} selected="selected"{% endif %}>{{ option.label }}</option>
-                {% endfor %}
-            {% endif %}
-        {% endif %}
+    <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}">
+        {% set range = formElement.getValueRange() %}
+            {% for label, option in range %}
+                {% if option is iterable %}
+        <optgroup label="{{ label }}">
+                    {% for rowLabel, rowValue in option %}
+                        {{ dump(row) }}
+                        <option value="{{ rowValue }}"{% if rowValue in formElement.getValues() %} selected="selected"{% endif %}>{{ rowLabel }}</option>
+                    {% endfor %}
+        </optgroup>
+                {% else %}
+        <option value="{{ option }}"{% if option in formElement.getValues() %} selected="selected"{% endif %}>{{ label }}</option>
+                {% endif %}
+            {% endfor %}
     </select>
-    {% if formElement.hasErrors() %}
+    {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement) }}
     {% endif %}
 </div>

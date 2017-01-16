@@ -1,10 +1,6 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-    <form id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
-        <input type="hidden" name="form_base_name" value="{{  formElement.getName() }}" />
-        {% if formElement.hasNodes() %}
-            {{ _FORM.renderSubForm(formElement.getNodes()) }}
-        {% endif %}
-        {% if formElement.hasErrors() %}
-            {{ _FORM.renderErrorBlock(formElement) }}
-        {% endif %}
-    </form>
+<form id="{{ form.getName() }}" name="{{ form.getName() }}" action="{{ form.getAction }}" method="{{ form.getMethod() }}">
+    {% for formElement in form.getElements() %}
+        {{ _FORM.renderElement(formElement) }}
+    {% endfor %}
+</form>

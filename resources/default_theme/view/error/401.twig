@@ -1,4 +1,4 @@
-{% extends "layout.twig" %}
+{% extends selected_module == 'Admin' ? 'admin-layout.twig' : 'layout.twig' %}
 
 {% block content %}
     <h1 class="page-header">Unauthorized!</h1>
