@@ -1,0 +1,10 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <h1>Post list</h1>
+    {% for blogPost in blogPosts %}
+        <h2><a href="posts/view/{{ blogPost.slug|url_encode }}">{{ blogPost.title }}</a></h2>
+        <p>On {{ blogPost.publishedAt.format('Y-m-d') }} by {{ blogPost.author.name }}</p>
+        <p>{{ blogPost.content }}</p>
+    {% endfor %}
+{% endblock %}

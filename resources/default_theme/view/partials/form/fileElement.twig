@@ -1,8 +1,8 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element file{% if formElement.hasErrors() %} error{% endif %}">
+<div class="element file{% if formElement.getErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
-    <input type="file" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
-    {% if formElement.hasErrors() %}
+    <input type="file" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" />
+    {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement) }}
     {% endif %}
 </div>

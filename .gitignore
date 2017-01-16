@@ -15,3 +15,5 @@ data/session/*
 !data/session/.gitkeep
 data/log/*
 !data/log/.gitkeep
+/data/temp/*
+!/data/temp/.gitkeep

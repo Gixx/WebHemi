@@ -9,14 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-
-use WebHemi\Data\Storage\User\UserStorage;
-use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
-use WebHemi\Data\Coupler\UserToPolicyCoupler;
-use WebHemi\Data\Coupler\UserToGroupCoupler;
-use WebHemi\Form\Element\FormElementContainerInterface;
-use WebHemi\Form\Web as WebForm;
-use WebHemi\Application\SessionManager;
+use WebHemi\Middleware\Action;
 
 return [
     'modules' => [
@@ -24,12 +17,17 @@ return [
             'routing' => [
                 'index' => [
                     'path'            => '/',
-                    'middleware'      => \WebHemi\Middleware\Action\FakeAction::class,
+                    'middleware'      => Action\Website\IndexAction::class,
                     'allowed_methods' => ['GET', 'POST'],
                 ],
+                'list' => [
+                    'path'            => '/posts',
+                    'middleware'      => Action\Website\PostListAction::class,
+                    'allowed_methods' => ['GET'],
+                ],
                 'view' => [
-                    'path'            => '/view/{id:.*}',
-                    'middleware'      => \WebHemi\Middleware\Action\FakeViewAction::class,
+                    'path'            => '/posts/view/{id:.*}',
+                    'middleware'      => Action\Website\PostViewAction::class,
                     'allowed_methods' => ['GET'],
                 ],
             ],
@@ -37,26 +35,7 @@ return [
     ],
     'dependencies' => [
         'Website' => [
-            \WebHemi\Middleware\Action\FakeAction::class => [
-                'arguments' => [
-                    UserStorage::class,
-                    WebForm\TestForm::class,
-                    SessionManager::class,
-                    UserToPolicyCoupler::class,
-                    UserToGroupCoupler::class,
-                    UserGroupToPolicyCoupler::class,
-                ],
-            ],
-            WebForm\TestForm::class => [
-                'arguments' => [
-                    FormElementContainerInterface::class
-                ]
-            ],
-            \WebHemi\Middleware\Action\FakeViewAction::class => [
-                'arguments' => [
-                    UserStorage::class
-                ],
-            ],
+
         ],
     ],
     'middleware_pipeline' => [

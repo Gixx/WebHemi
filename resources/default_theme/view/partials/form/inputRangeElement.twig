@@ -1,8 +1,10 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element input range{% if formElement.hasErrors() %} error{% endif %}">
+<div class="element input range{% if formElement.getErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
-    <input type="range" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ formElement.getValue() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }} />
-    {% if formElement.hasErrors() %}
+    {% set value = formElement.getValues() %}
+    {% set range = formElement.getValueRange() %}
+    <input type="range" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ value[0] }}"{% if range[0] %} min="{{ range[0] }}"{% endif %}{% if range[1] %} max="{{ range[1] }}"{% endif %}{% if range[2] %} step="{{ range[2] }}"{% endif %} />
+    {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement) }}
     {% endif %}
 </div>

@@ -1,22 +1,24 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element checkbox{% if formElement.hasErrors() %} error{% endif %}">
-    {% if formElement.hasOptions() %}
+<div class="element checkbox{% if formElement.getErrors() %} error{% endif %}">
+    {% set range = formElement.getValueRange() %}
+    {% if range|length > 1 %}
         <fieldset name="{{ formElement.getName() }}">
             <legend>{{ formElement.getLabel() }}</legend>
-            {% for label, option in formElement.getOptions() %}
+            {% for label, option in range %}
                 <label>
-                    <input type="hidden" name="{{ formElement.getName() }}[{{ option.value }}]" value="0" />
-                    <input type="checkbox" name="{{ formElement.getName() }}[{{ option.value }}]" value="1"{{ _FORM.renderFormElementAttributes(option.attributes) }}{% if option.checked %}checked="checked"{% endif %} />
+                    <input type="hidden" name="{{ formElement.getName() }}[{{ option }}]" value="0" />
+                    <input type="checkbox" name="{{ formElement.getName() }}[{{ option }}]" value="1"{% if option in formElement.getValues() %}checked="checked"{% endif %} />
                     {{ label }}
                 </label>
             {% endfor %}
         </fieldset>
     {% else %}
+        {% set value = formElement.getValues() %}
         <input type="hidden" name="{{ formElement.getName() }}" value="0" />
-        <input type="checkbox" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="1" {{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}{% if formElement.getValue() %} checked="checked"{% endif %} />
+        <input type="checkbox" name="{{ formElement.getName() }}" id="{{ formElement.getId() }}" value="1"{% if value[0] %} checked="checked"{% endif %} />
         <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     {% endif %}
-    {% if formElement.hasErrors() %}
+    {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement) }}
     {% endif %}
 </div>

@@ -1,10 +1,10 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
 <div class="element datalist">
     <datalist id="{{ formElement.getId() }}"{{ _FORM.renderFormElementAttributes(formElement.getAttributes()) }}>
-        {% if formElement.hasOptions() %}
-            {% set elementOptions = formElement.getOptions() %}
-            {% for option in elementOptions['Default'] %}
-                <option value="{{ option.value }}">{{ option.label }}</option>
+        {%  set range = formElement.getValueRange() %}
+        {% if range|length > 1 %}
+            {% for label, option in range %}
+                <option value="{{ option }}">{{ label }}</option>
             {% endfor %}
         {% endif %}
     </datalist>

@@ -9,9 +9,9 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\Form;
+declare(strict_types=1);
 
-use WebHemi\Form\Element\FormElementContainerInterface;
+namespace WebHemi\Form;
 
 /**
  * Interface FormInterface
@@ -19,94 +19,47 @@ use WebHemi\Form\Element\FormElementContainerInterface;
 interface FormInterface
 {
     /**
-     * FormInterface constructor. Creates <FORM> element.
-     *
-     * @param FormElementContainerInterface $formElementContainer
-     * @param string                        $name
-     * @param string                        $action
-     * @param string                        $method
-     */
-    public function __construct(
-        FormElementContainerInterface $formElementContainer,
-        $name = '',
-        $action = '',
-        $method = 'POST'
-    );
-
-    /**
-     * Sets form name.
+     * FormInterface constructor.
      *
      * @param string $name
-     * @return FormInterface
+     * @param string $action
+     * @param string $method
      */
-    public function setName($name);
+    public function __construct(string $name, string $action, string $method = 'POST');
 
     /**
      * Gets form name.
      *
      * @return string
      */
-    public function getName();
+    public function getName() : string;
 
     /**
-     * Set unique identifier for the form. Activates only when the auto-complete feature is in 'false' state.
+     * Gets form action.
      *
-     * @param string $salt
+     * @return string
+     */
+    public function getAction() : string;
+
+    /**
+     * Gets form method.
+     *
+     * @return string
+     */
+    public function getMethod() : string;
+
+    /**
+     * Adds an element to the form.
+     *
+     * @param FormElementInterface $formElement
      * @return FormInterface
      */
-    public function setNameSalt($salt);
+    public function addElement(FormElementInterface $formElement) : FormInterface;
 
     /**
-     * Sets form action.
+     * Returns all the elements assigned.
      *
-     * @param string $action
-     * @return FormInterface
+     * @return array<FormElementInterface>
      */
-    public function setAction($action);
-
-    /**
-     * Sets form submit.
-     *
-     * @param string $method
-     * @return FormInterface
-     */
-    public function setMethod($method = 'POST');
-
-    /**
-     * Sets form auto-complete feature on/off.
-     *
-     * @param bool $autoComplete
-     * @return FormInterface
-     */
-    public function setAutoComplete($autoComplete = true);
-
-    /**
-     * Validates the form.
-     *
-     * @param bool $reValidate
-     * @return bool
-     */
-    public function isValid($reValidate = false);
-
-    /**
-     * Gets validation errors.
-     *
-     * @return array
-     */
-    public function getErrors();
-
-    /**
-     * Sets form data.
-     *
-     * @param array $data
-     * @return FormInterface
-     */
-    public function setData(array $data);
-
-    /**
-     * Returns the form data.
-     *
-     * @return array
-     */
-    public function getData();
+    public function getElements() : array;
 }

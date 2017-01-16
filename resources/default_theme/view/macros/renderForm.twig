@@ -1,50 +1,13 @@
 {% macro renderForm(form) %}
-    {% import _self as _FORM %}
-    {% if form.current().getType() == 'form' %}
-        {{ _FORM.renderSubForm(form) }}
+    {% if defined('@Theme/partials/form/formElement.twig') %}
+        {% include '@Theme/partials/form/formElement.twig' with {'form': form} %}
+    {% else %}
+        {% include '@WebHemi/partials/form/formElement.twig' with {'form': form} %}
     {% endif %}
 {% endmacro %}
 
-{% macro renderSubForm(form) %}
-    {% import _self as _FORM %}
-    {% for formElement in form %}
-        {{ _FORM.renderElement(formElement) }}
-    {% endfor %}
-{% endmacro %}
-
-{% macro renderFormElementAttributes(formElementAttributes) %}
-    {% for key,value in formElementAttributes %}
-        {% if key == 'autofocus' %}
-            autofocus="autofocus"
-        {% elseif key == 'required' %}
-            required="required"
-        {% elseif key == 'selected' %}
-            selected="selected"
-        {% elseif key == 'checked' %}
-            checked="checked"
-        {% elseif key == 'multiple' %}
-            multiple="multiple"
-        {% elseif key == 'autocomplete' %}
-            {% if (value == 1) or (value == true) or (value == 'on') %}
-                autocomplete="on"
-            {% else %}
-                autocomplete="off"
-            {% endif %}
-        {% else %}
-            {{ key }}="{{ value|escape }}"
-        {% endif %}
-    {% endfor %}
-{% endmacro %}
-
 {% macro renderElement(formElement) %}
-    {% if formElement.getType() == 'form' %}
-        {% if defined('@Theme/partials/form/formElement.twig') %}
-            {% include '@Theme/partials/form/formElement.twig' with {'formElement': formElement} %}
-        {% else %}
-            {% include '@WebHemi/partials/form/formElement.twig' with {'formElement': formElement} %}
-        {% endif %}
-
-    {% elseif formElement.getType() == 'checkbox' %}
+    {% if formElement.getType() == 'checkbox' %}
         {% if defined('@Theme/partials/form/checkboxElement.twig') %}
             {% include '@Theme/partials/form/checkboxElement.twig' with {'formElement': formElement} %}
         {% else %}
@@ -192,13 +155,6 @@
             {% include '@WebHemi/partials/form/textareaElement.twig' with {'formElement': formElement} %}
         {% endif %}
 
-    {% elseif formElement.getType() == 'fieldset' %}
-        {% if defined('@Theme/partials/form/fieldsetElement.twig') %}
-            {% include '@Theme/partials/form/fieldsetElement.twig' with {'formElement': formElement} %}
-        {% else %}
-            {% include '@WebHemi/partials/form/fieldsetElement.twig' with {'formElement': formElement} %}
-        {% endif %}
-
     {% elseif formElement.getType() == 'submit' %}
         {% if defined('@Theme/partials/form/submitElement.twig') %}
             {% include '@Theme/partials/form/submitElement.twig' with {'formElement': formElement} %}
@@ -246,13 +202,6 @@
             {% include '@Theme/partials/form/outputElement.twig' with {'formElement': formElement} %}
         {% else %}
             {% include '@WebHemi/partials/form/outputElement.twig' with {'formElement': formElement} %}
-        {% endif %}
-
-    {% elseif formElement.getType() == 'static-content' %}
-        {% if defined('@Theme/partials/form/staticContentElement.twig') %}
-            {% include '@Theme/partials/form/staticContentElement.twig' with {'formElement': formElement} %}
-        {% else %}
-            {% include '@WebHemi/partials/form/staticContentElement.twig' with {'formElement': formElement} %}
         {% endif %}
 
     {% endif %}

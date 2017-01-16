@@ -9,7 +9,9 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi\Form\Traits;
+declare(strict_types=1);
+
+namespace WebHemi\Traits;
 
 /**
  * Class CamelCaseToUnderScoreTrait.
@@ -19,18 +21,18 @@ trait CamelCaseToUnderScoreTrait
     /**
      * Converts CamelCase text to under_score equivalent.
      *
-     * @param $input
+     * @param string $input
      * @return string
      */
-    protected function camelCaseToUnderscore($input)
+    protected function camelCaseToUnderscore(string $input) : string
     {
         preg_match_all('/([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)/', $input, $matches);
-        $return = $matches[0];
+        $output = $matches[0];
 
-        foreach ($return as &$match) {
+        foreach ($output as &$match) {
             $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
         }
 
-        return implode('_', $return);
+        return implode('_', $output);
     }
 }

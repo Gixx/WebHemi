@@ -49,12 +49,15 @@ abstract class AbstractMiddlewareAction implements MiddlewareInterface, Middlewa
      */
     final public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
     {
+        // Init
         $this->request = $request;
         $this->response = $response;
 
+        // Process
         $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, []);
         $templateData = array_merge($templateData, $this->getTemplateData());
 
+        // Save
         $request = $this->request
             ->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_TEMPLATE, $this->getTemplateName())
             ->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
