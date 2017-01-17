@@ -37,8 +37,8 @@ class UserStorageTest extends TestCase
     protected function setUp()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
 
         $this->defaultAdapter = $defaultAdapter;
     }
@@ -95,7 +95,7 @@ class UserStorageTest extends TestCase
                         return $data;
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -105,7 +105,7 @@ class UserStorageTest extends TestCase
         $storage = new UserStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getUserById(3);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var UserEntity $actualResult */
         $actualResult = $storage->getUserById(1);
@@ -140,7 +140,7 @@ class UserStorageTest extends TestCase
                     if ($args[0]['email'] == 'test.address@foo.org') {
                         return [$data];
                     }
-                    return false;
+                    return [];
                 }
             );
 
@@ -150,7 +150,7 @@ class UserStorageTest extends TestCase
         $storage = new UserStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getUserByEmail('wrong.address@foo.org');
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var UserEntity $actualResult */
         $actualResult = $storage->getUserByEmail('test.address@foo.org');
@@ -188,7 +188,7 @@ class UserStorageTest extends TestCase
                     if ($args[0]['username'] == 'testUser') {
                         return [$data];
                     }
-                    return false;
+                    return [];
                 }
             );
 
@@ -198,7 +198,7 @@ class UserStorageTest extends TestCase
         $storage = new UserStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getUserByUserName('Donald Trump');
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var UserEntity $actualResult */
         $actualResult = $storage->getUserByUserName('testUser');

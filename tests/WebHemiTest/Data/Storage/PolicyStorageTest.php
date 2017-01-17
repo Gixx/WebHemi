@@ -39,8 +39,8 @@ class PolicyStorageTest extends TestCase
     protected function setUp()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
 
         $this->data =  [
             0 => [
@@ -127,7 +127,7 @@ class PolicyStorageTest extends TestCase
                         return $data[$index];
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -137,7 +137,7 @@ class PolicyStorageTest extends TestCase
         $storage = new PolicyStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getPolicyById(4);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var PolicyEntity $actualResult */
         $actualResult = $storage->getPolicyById(1);
@@ -174,7 +174,7 @@ class PolicyStorageTest extends TestCase
                         }
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -184,7 +184,7 @@ class PolicyStorageTest extends TestCase
         $storage = new PolicyStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getPolicyByName('someName');
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var PolicyEntity $actualResult */
         $actualResult = $storage->getPolicyByName('test1');
@@ -222,7 +222,7 @@ class PolicyStorageTest extends TestCase
                         return [$data[2]];
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -253,7 +253,7 @@ class PolicyStorageTest extends TestCase
         $this->assertArraysAreSimilar($data[2], $actualData);
 
         $actualResult = $storage->getPoliciesByResourceId(100);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
     }
 
     /**
@@ -280,7 +280,7 @@ class PolicyStorageTest extends TestCase
                         return [$data[2]];
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -309,7 +309,7 @@ class PolicyStorageTest extends TestCase
         $this->assertSame('Test Policy 3', $actualResult[0]->getTitle());
 
         $actualResult = $storage->getPoliciesByApplicationId(100);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
     }
 
     public function testGetPoliciesByResourceAndApplicationIds()
@@ -335,7 +335,7 @@ class PolicyStorageTest extends TestCase
                         return [$data[2]];
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -364,12 +364,12 @@ class PolicyStorageTest extends TestCase
         $this->assertSame('Test Policy 3', $actualResult[0]->getTitle());
 
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(1, 100);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(1, 3);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(null, 1);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
     }
 }

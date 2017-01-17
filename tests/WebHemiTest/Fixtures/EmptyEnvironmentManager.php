@@ -88,7 +88,7 @@ class EmptyEnvironmentManager extends EnvironmentManager
     /**
      * @return string
      */
-    public function getDocumentRoot()
+    public function getDocumentRoot() : string
     {
         return $this->documentRoot;
     }
@@ -96,7 +96,7 @@ class EmptyEnvironmentManager extends EnvironmentManager
     /**
      * @return string
      */
-    public function getApplicationDomain()
+    public function getApplicationDomain() : string
     {
         return $this->applicationDomain;
     }
@@ -104,16 +104,16 @@ class EmptyEnvironmentManager extends EnvironmentManager
     /**
      * @return bool
      */
-    public function isSecuredApplication()
+    public function isSecuredApplication() : bool
     {
         return $this->isHttps;
     }
 
     /**
      * @param $application
-     * @return $this
+     * @return EmptyEnvironmentManager
      */
-    public function setSelectedApplication($application)
+    public function setSelectedApplication($application) : EmptyEnvironmentManager
     {
         $this->selectedApplication = $application;
 
@@ -123,16 +123,16 @@ class EmptyEnvironmentManager extends EnvironmentManager
     /**
      * @return string
      */
-    public function getSelectedApplication()
+    public function getSelectedApplication() : string
     {
         return $this->selectedApplication;
     }
 
     /**
      * @param $uri
-     * @return $this
+     * @return EmptyEnvironmentManager
      */
-    public function setSelectedApplicationUri($uri)
+    public function setSelectedApplicationUri($uri) : EmptyEnvironmentManager
     {
         $this->selectedApplicationUri = $uri;
 
@@ -142,16 +142,16 @@ class EmptyEnvironmentManager extends EnvironmentManager
     /**
      * @return string
      */
-    public function getSelectedApplicationUri()
+    public function getSelectedApplicationUri() : string
     {
         return $this->selectedApplicationUri;
     }
 
     /**
      * @param $requestUri
-     * @return $this
+     * @return EmptyEnvironmentManager
      */
-    public function setRequestUri($requestUri)
+    public function setRequestUri($requestUri) : EmptyEnvironmentManager
     {
         $this->requestUri = $requestUri;
 
@@ -163,16 +163,16 @@ class EmptyEnvironmentManager extends EnvironmentManager
      *
      * @return string
      */
-    public function getRequestUri()
+    public function getRequestUri() : string
     {
         return $this->requestUri;
     }
 
     /**
      * @param $module
-     * @return $this
+     * @return EmptyEnvironmentManager
      */
-    public function setSelectedModule($module)
+    public function setSelectedModule($module) : EmptyEnvironmentManager
     {
         $this->selectedModule = $module;
 
@@ -182,16 +182,16 @@ class EmptyEnvironmentManager extends EnvironmentManager
     /**
      * @return string
      */
-    public function getSelectedModule()
+    public function getSelectedModule() : string
     {
         return $this->selectedModule;
     }
 
     /**
      * @param $theme
-     * @return $this
+     * @return EmptyEnvironmentManager
      */
-    public function setSelectedTheme($theme)
+    public function setSelectedTheme($theme) : EmptyEnvironmentManager
     {
         $this->selectedTheme = $theme;
 
@@ -201,7 +201,7 @@ class EmptyEnvironmentManager extends EnvironmentManager
     /**
      * @return string
      */
-    public function getSelectedTheme()
+    public function getSelectedTheme() : string
     {
         return $this->selectedTheme;
     }
@@ -209,16 +209,16 @@ class EmptyEnvironmentManager extends EnvironmentManager
     /**
      * @return string
      */
-    public function getResourcePath()
+    public function getResourcePath() : string
     {
         return $this->selectedThemeResourcePath;
     }
 
     /**
      * @param $key
-     * @return mixed
+     * @return array
      */
-    public function getEnvironmentData($key)
+    public function getEnvironmentData(string $key) : array
     {
         if (!isset($this->environmentData[$key])) {
             throw new InvalidArgumentException(sprintf('The "%s" is not a valid environment key.', $key));

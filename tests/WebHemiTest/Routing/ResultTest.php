@@ -62,7 +62,7 @@ class ResultTest extends TestCase
      */
     public function testException()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $result = new Result();
         $result->setStatus(102);

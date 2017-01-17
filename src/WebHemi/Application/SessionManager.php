@@ -219,7 +219,7 @@ class SessionManager
     public function has(string $name) : bool
     {
         if (!$this->sessionStarted()) {
-            throw new RuntimeException('Cannot set session data. Session is not started yet.', 1003);
+            throw new RuntimeException('Cannot set session data. Session is not started yet.', 1009);
         }
 
         return isset($this->data[$name]);

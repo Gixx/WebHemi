@@ -34,7 +34,6 @@ interface LogAdapterInterface
      * @param mixed  $level Either the numeric level (0-7) or the name of the level (debug ... emergency)
      * @param string $message
      * @param array  $context
-     * @return void
      */
-    public function log($level, string $message, array $context = []) : void;
+    public function log($level, string $message, array $context = []);
 }

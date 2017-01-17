@@ -47,9 +47,11 @@ class SessionStorageTest extends TestCase
         $userEntity = new UserEntity();
 
         $storage = new SessionStorage($sessionManager);
+        $this->assertFalse($storage->hasIdentity());
         $this->assertEmpty($storage->getIdentity());
 
         $storage->setIdentity($userEntity);
+        $this->assertTrue($storage->hasIdentity());
         $this->assertTrue($userEntity === $storage->getIdentity());
 
         $storage->clearIdentity();

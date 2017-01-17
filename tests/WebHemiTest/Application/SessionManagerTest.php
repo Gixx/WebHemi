@@ -173,6 +173,7 @@ class SessionManagerTest extends TestCase
 
         // return NULL when non exists
         $skipMissing = true;
+        $this->assertFalse($sessionManager->has('something non existing'));
         $this->assertNull($sessionManager->get('something non existing', $skipMissing));
 
         // get exception otherwise
@@ -193,6 +194,13 @@ class SessionManagerTest extends TestCase
         } catch (Exception $e) {
             $this->assertInstanceOf(RuntimeException::class, $e);
             $this->assertSame(1003, $e->getCode());
+        }
+
+        try {
+            $sessionManager->has('something');
+        } catch (Exception $e) {
+            $this->assertInstanceOf(RuntimeException::class, $e);
+            $this->assertSame(1009, $e->getCode());
         }
     }
 

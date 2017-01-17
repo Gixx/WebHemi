@@ -37,8 +37,8 @@ class ApplicationStorageTest extends TestCase
     protected function setUp()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
 
         $this->defaultAdapter = $defaultAdapter;
     }
@@ -93,7 +93,7 @@ class ApplicationStorageTest extends TestCase
                         return $data;
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -103,7 +103,7 @@ class ApplicationStorageTest extends TestCase
         $storage = new ApplicationStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getApplicationById(3);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var ApplicationEntity $actualResult */
         $actualResult = $storage->getApplicationById(1);
@@ -148,7 +148,7 @@ class ApplicationStorageTest extends TestCase
                         }
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -158,7 +158,7 @@ class ApplicationStorageTest extends TestCase
         $storage = new ApplicationStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getApplicationByName('someApplication');
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var ApplicationEntity $actualResult */
         $actualResult = $storage->getApplicationByName('test.application');

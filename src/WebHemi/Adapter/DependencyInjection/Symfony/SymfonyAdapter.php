@@ -40,6 +40,14 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     private $servicesToDefine = [];
     /** @var array */
     private $instantiatedSharedServices = [];
+    /** @var array */
+    private $defaultSetUpData = [
+        self::SERVICE_CLASS       => '',
+        self::SERVICE_ARGUMENTS   => [],
+        self::SERVICE_METHOD_CALL => [],
+        // By default the Symfony DI shares all services. In WebHemi by default nothing is shared.
+        self::SERVICE_SHARE       => false,
+    ];
     /** @var int */
     private static $parameterIndex = 0;
 
@@ -155,13 +163,8 @@ class SymfonyAdapter implements DependencyInjectionAdapterInterface
     private function getServiceSetupData(string $identifier, string $serviceClass) : array
     {
         // Init settings.
-        $setUpData = [
-            self::SERVICE_CLASS       => $serviceClass,
-            self::SERVICE_ARGUMENTS   => [],
-            self::SERVICE_METHOD_CALL => [],
-            // By default the Symfony DI shares all services. In WebHemi by default nothing is shared.
-            self::SERVICE_SHARE       => false,
-        ];
+        $setUpData = $this->defaultSetUpData;
+        $setUpData[self::SERVICE_CLASS] = $serviceClass;
 
         // Override settings from the configuration if exists.
         if (isset($this->configuration['Global'][$identifier])) {

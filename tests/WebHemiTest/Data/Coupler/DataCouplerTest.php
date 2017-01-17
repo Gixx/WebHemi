@@ -13,12 +13,12 @@ namespace WebHemiTest\Data\Coupler;
 
 use InvalidArgumentException;
 use PDO;
-use WebHemi\Adapter\Data\PDO\MySQLAdapter;
+use WebHemi\Adapter\Data\PDO\SQLiteAdapter;
+use WebHemi\Adapter\Data\PDO\SQLiteDriver;
 use WebHemi\Adapter\Data\DataDriverInterface;
 use WebHemi\Data\Coupler;
 use WebHemi\Data\Entity;
 use WebHemi\Data\Storage;
-use WebHemiTest\Fixtures\EmptySqliteDataDriver;
 use PHPUnit_Framework_TestCase as TestCase;
 use PHPUnit_Framework_IncompleteTestError;
 use PHPUnit_Framework_SkippedTestError;
@@ -30,7 +30,7 @@ class DataCouplerTest extends TestCase
 {
     /** @var DataDriverInterface */
     protected static $dataDriver;
-    /** @var MySQLAdapter */
+    /** @var SQLiteAdapter */
     protected static $adapter;
 
     /**
@@ -55,7 +55,7 @@ class DataCouplerTest extends TestCase
 
         $databaseFile = realpath(__DIR__ . '/../../../../build/webhemi_schema.sqlite3');
 
-        self::$dataDriver = new EmptySqliteDataDriver('sqlite:' . $databaseFile);
+        self::$dataDriver = new SQLiteDriver('sqlite:' . $databaseFile);
 
         $fixture = realpath(__DIR__.'/../../Fixtures/sql/data_coupler_test.sql');
         $setUpSql = file($fixture);
@@ -72,7 +72,7 @@ class DataCouplerTest extends TestCase
             }
         }
 
-        self::$adapter = new MySQLAdapter(self::$dataDriver);
+        self::$adapter = new SQLiteAdapter(self::$dataDriver);
     }
 
     /**
@@ -133,7 +133,7 @@ class DataCouplerTest extends TestCase
         $this->assertInstanceOf(Coupler\UserToPolicyCoupler::class, $coupler);
 
         // test error
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new Coupler\UserToPolicyCoupler(self::$adapter, $userEntityPrototype, $userEntityPrototype);
     }
 
@@ -190,7 +190,7 @@ class DataCouplerTest extends TestCase
         $this->assertInstanceOf(Coupler\UserToGroupCoupler::class, $coupler);
 
         // test error
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new Coupler\UserToGroupCoupler(self::$adapter, $userGroupEntityPrototype, $userGroupEntityPrototype);
     }
 
@@ -259,7 +259,7 @@ class DataCouplerTest extends TestCase
         $this->assertInstanceOf(Coupler\UserGroupToPolicyCoupler::class, $coupler);
 
         // test error
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new Coupler\UserGroupToPolicyCoupler(self::$adapter, $userGroupEntityPrototype, $userGroupEntityPrototype);
     }
 

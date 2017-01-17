@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace WebHemi\Middleware\Action\Website;
 
+use WebHemi\Form\Html\HtmlMultipleFormElement;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 use WebHemi\Form\Html\HtmlForm;
 use WebHemi\Form\Html\HtmlFormElement;
@@ -72,11 +73,11 @@ class IndexAction extends AbstractMiddlewareAction
             ]
         );
 
-        $select = new Html5FormElement(
-            Html5FormElement::HTML_ELEMENT_SELECT,
+        $select = new HtmlMultipleFormElement(
+            HtmlMultipleFormElement::HTML_ELEMENT_SELECT,
             'something',
             null,
-            ['australia'],
+            ['australia', 'india'],
             [
                 'Default' => [
                     'Europe' => 'europe',
@@ -89,26 +90,27 @@ class IndexAction extends AbstractMiddlewareAction
                 'India' => 'india'
             ]
         );
+        $select->setMultiple(true);
 
         $form = new HtmlForm('test', '', 'POST');
         $form->addElement(
-                new Html5FormElement(
-                    Html5FormElement::HTML_ELEMENT_INPUT_HIDDEN,
+                new HtmlFormElement(
+                    HtmlFormElement::HTML_ELEMENT_INPUT_HIDDEN,
                     'csrf',
                     null,
                     [md5('something')]
                 )
             )
             ->addElement(
-                new Html5FormElement(
-                    Html5FormElement::HTML_ELEMENT_INPUT_TEXT,
+                new HtmlFormElement(
+                    HtmlFormElement::HTML_ELEMENT_INPUT_TEXT,
                     'name',
                     'Login name',
                     ['Joker']
                 )
             )
             ->addElement(
-                new Html5FormElement(
+                new HtmlFormElement(
                     HtmlFormElement::HTML_ELEMENT_INPUT_PASSWORD,
                     'password',
                     'Password'
