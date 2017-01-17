@@ -26,9 +26,9 @@ class EmptyAuthStorage implements AuthStorageInterface
      * Sets the authenticated user.
      *
      * @param DataEntityInterface $dataEntity
-     * @return EmptyAuthStorage
+     * @return AuthStorageInterface
      */
-    public function setIdentity(DataEntityInterface $dataEntity)
+    public function setIdentity(DataEntityInterface $dataEntity) : AuthStorageInterface
     {
         $this->identity = $dataEntity;
 
@@ -36,11 +36,21 @@ class EmptyAuthStorage implements AuthStorageInterface
     }
 
     /**
+     * Checks if there is any authenticated user.
+     *
+     * @return bool
+     */
+    public function hasIdentity() : bool
+    {
+        return !empty($this->identity);
+    }
+
+    /**
      * Gets the authenticated user.
      *
-     * @return DataEntityInterface
+     * @return DataEntityInterface|null
      */
-    public function getIdentity()
+    public function getIdentity() : ?DataEntityInterface
     {
         return $this->identity;
     }
@@ -48,9 +58,9 @@ class EmptyAuthStorage implements AuthStorageInterface
     /**
      * Clears the session.
      *
-     * @return EmptyAuthStorage
+     * @return AuthStorageInterface
      */
-    public function clearIdentity()
+    public function clearIdentity() : AuthStorageInterface
     {
         $this->identity = null;
 

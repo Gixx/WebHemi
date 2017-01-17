@@ -49,10 +49,9 @@ class TestMiddleware implements MiddlewareInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
-     *
-     * @return ResponseInterface
+     * @return void
      */
-    public function __invoke(ServerRequestInterface &$request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface &$request, ResponseInterface&$response) : void
     {
         self::$counter++;
 
@@ -60,7 +59,5 @@ class TestMiddleware implements MiddlewareInterface
             self::$responseStatus = $response->getStatusCode();
             self::$responseBody = $response->getBody()->__toString();
         }
-
-        return $response;
     }
 }

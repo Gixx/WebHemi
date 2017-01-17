@@ -1,7 +1,7 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
 <div class="element select{% if formElement.getErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
-    <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}">
+    <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" {% if formElement.getMultiple() %}multiple="multiple"{% endif %}>
         {% set range = formElement.getValueRange() %}
             {% for label, option in range %}
                 {% if option is iterable %}

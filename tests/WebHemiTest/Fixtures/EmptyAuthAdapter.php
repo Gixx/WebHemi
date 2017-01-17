@@ -28,7 +28,7 @@ class EmptyAuthAdapter extends AbstractAuthAdapter
      *
      * @return Result
      */
-    public function authenticate()
+    public function authenticate() : Result
     {
         if ($this->authResultShouldBe < 1) {
             return $this->getAuthResult()

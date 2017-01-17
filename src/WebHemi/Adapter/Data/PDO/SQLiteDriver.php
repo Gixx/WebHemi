@@ -9,14 +9,18 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTest\Fixtures;
+declare(strict_types=1);
+
+namespace WebHemi\Adapter\Data\PDO;
 
 use PDO;
 use WebHemi\Adapter\Data\DataDriverInterface;
 
 /**
- * Class EmptySqliteDataDriver
+ * Class SQLiteDriver.
+ *
+ * Extends PDO and implements the DataDriverInterface, so the Dependency Injector can reference it.
  */
-class EmptySqliteDataDriver extends PDO implements DataDriverInterface
+class SQLiteDriver extends PDO implements DataDriverInterface
 {
 }

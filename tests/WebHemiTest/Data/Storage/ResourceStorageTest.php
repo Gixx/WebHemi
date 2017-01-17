@@ -37,8 +37,8 @@ class ResourceStorageTest extends TestCase
     protected function setUp()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
 
         $this->defaultAdapter = $defaultAdapter;
     }
@@ -93,7 +93,7 @@ class ResourceStorageTest extends TestCase
                         return $data;
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -103,7 +103,7 @@ class ResourceStorageTest extends TestCase
         $storage = new ResourceStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getResourceById(3);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var ResourceEntity $actualResult */
         $actualResult = $storage->getResourceById(1);
@@ -146,7 +146,7 @@ class ResourceStorageTest extends TestCase
                         }
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -156,7 +156,7 @@ class ResourceStorageTest extends TestCase
         $storage = new ResourceStorage($defaultAdapterInstance, $dataEntity);
 
         $actualResult = $storage->getResourceByName('someResource');
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var ResourceEntity $actualResult */
         $actualResult = $storage->getResourceByName('test.resource');

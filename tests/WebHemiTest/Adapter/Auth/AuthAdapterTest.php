@@ -56,8 +56,8 @@ class AuthAdapterTest extends TestCase
     public function testConstructor()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
         /** @var DataAdapterInterface $defaultAdapterInstance */
         $defaultAdapterInstance = $defaultAdapter->reveal();
 
@@ -90,8 +90,8 @@ class AuthAdapterTest extends TestCase
     public function testAuthenticate()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
         /** @var DataAdapterInterface $defaultAdapterInstance */
         $defaultAdapterInstance = $defaultAdapter->reveal();
 
@@ -151,8 +151,8 @@ class AuthAdapterTest extends TestCase
     public function testSetIdentity()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
         /** @var DataAdapterInterface $defaultAdapterInstance */
         $defaultAdapterInstance = $defaultAdapter->reveal();
 
@@ -187,8 +187,8 @@ class AuthAdapterTest extends TestCase
     public function testResult()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
         /** @var DataAdapterInterface $defaultAdapterInstance */
         $defaultAdapterInstance = $defaultAdapter->reveal();
 

@@ -133,7 +133,7 @@ class TwigRendererAdapterTest extends TestCase
         );
 
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $adapterObj->render('some_non_existing_theme_map_file');
     }
 
@@ -185,7 +185,7 @@ class TwigRendererAdapterTest extends TestCase
             $resultData['template_resource_path']
         );
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $adapterObj->render('some_non_existing_theme_map_file');
     }
 
@@ -237,7 +237,7 @@ class TwigRendererAdapterTest extends TestCase
             $resultData['template_resource_path']
         );
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $adapterObj->render('some_non_existing_theme_map_file');
     }
 }

@@ -240,7 +240,7 @@ class SymfonyAdapterTest extends TestCase
 
         // Set a new parameter after instantiate is forbidden.
         $timeZone = new DateTimeZone('Europe/London');
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $adapter->setServiceArgument('alias', $timeZone);
     }
 
@@ -301,5 +301,36 @@ class SymfonyAdapterTest extends TestCase
         $this->assertInstanceOf(EmptyEntity::class, $actualObject);
         $this->assertInternalType('string', $actualObject->getKeyData());
         $this->assertSame($keyData, $actualObject->getKeyData());
+    }
+
+    /**
+     * Tests getServiceSetupData
+     */
+    public function testGetServiceSetupData()
+    {
+        $config = new Config(
+            [
+                'dependencies' => [
+                    'Global' => [
+                        'alias' => [
+                            'class' => DateTime::class,
+                            'shared' => true
+                        ]
+                    ]
+                ],
+            ]
+        );
+
+        $adapter = new SymfonyAdapter($config);
+
+        $expectedResult = [
+            'class' => 'someServiceClassName',
+            'arguments' => [],
+            'calls' => [],
+            'shared' => false,
+        ];
+
+        $actualResult = $this->invokePrivateMethod($adapter, 'getServiceSetupData', ['someService', 'someServiceClassName']);
+        $this->assertArraysAreSimilar($expectedResult, $actualResult);
     }
 }

@@ -136,7 +136,7 @@ class ConfigTest extends TestCase
      */
     public function testExceptionData()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $config = new Config($this->testConfig);
 
@@ -150,7 +150,7 @@ class ConfigTest extends TestCase
      */
     public function testExceptionConfig()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $config = new Config($this->testConfig);
 

@@ -24,7 +24,7 @@ class TestTrueValidator implements ValidatorInterface
      * @param mixed $data
      * @return boolean
      */
-    public function validate($data)
+    public function validate($data) : bool
     {
         unset($data);
         return true;
@@ -33,10 +33,10 @@ class TestTrueValidator implements ValidatorInterface
     /**
      * Gets error from validation.
      *
-     * @return mixed
+     * @return array
      */
-    public function getError()
+    public function getErrors() : array
     {
-        return null;
+        return [];
     }
 }

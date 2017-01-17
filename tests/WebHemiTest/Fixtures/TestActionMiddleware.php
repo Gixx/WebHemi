@@ -39,7 +39,7 @@ class TestActionMiddleware extends AbstractMiddlewareAction
      *
      * @return string
      */
-    public function getTemplateName()
+    public function getTemplateName() : string
     {
         return 'test-page';
     }
@@ -51,7 +51,7 @@ class TestActionMiddleware extends AbstractMiddlewareAction
      *
      * @return array
      */
-    public function getTemplateData()
+    public function getTemplateData() : array
     {
         if ($this->shouldSimulateError) {
             throw new Exception('Simulated error');

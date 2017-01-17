@@ -68,12 +68,12 @@ class DispatcherMiddlewareTest extends TestCase
         $templateRenderer = $templateRendererProphecy->reveal();
 
         $middleware = new DispatcherMiddleware($templateRenderer);
+        $responseBeforeMiddleware = $response;
+        $this->assertTrue($response === $responseBeforeMiddleware);
 
-        /** @var ResponseInterface $result */
-        $result = $middleware($request, $response);
-
-        $this->assertInstanceOf(ResponseInterface::class, $result);
-        $this->assertEquals(Response::STATUS_PROCESSING, $result->getStatusCode());
+        $middleware($request, $response);
+        $this->assertTrue($response !== $responseBeforeMiddleware);
+        $this->assertEquals(Response::STATUS_PROCESSING, $response->getStatusCode());
     }
 
     /**
@@ -89,7 +89,7 @@ class DispatcherMiddlewareTest extends TestCase
         $templateRenderer = $templateRendererProphecy->reveal();
         $middleware = new DispatcherMiddleware($templateRenderer);
 
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $middleware($request, $response);
     }
 
@@ -109,7 +109,7 @@ class DispatcherMiddlewareTest extends TestCase
         $templateRenderer = $templateRendererProphecy->reveal();
         $middleware = new DispatcherMiddleware($templateRenderer);
 
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $middleware($request, $response);
     }
 }

@@ -50,6 +50,11 @@ class FinalMiddlewareTest extends TestCase
         $authAdapterProphecy = $this->prophesize(AuthAdapterInterface::class);
         $environmentProphecy = $this->prophesize(EnvironmentManager::class);
         $logAdapterPropehcy = $this->prophesize(LogAdapterInterface::class);
+        $logAdapterPropehcy->log(Argument::any(), Argument::type('string'), Argument::type('array'))->will(
+            function () {
+                return;
+            }
+        );
 
         /** @var RendererAdapterInterface $templateRenderer */
         $templateRenderer = $templateRendererProphecy->reveal();
@@ -63,11 +68,10 @@ class FinalMiddlewareTest extends TestCase
         $middleware = new FinalMiddleware($templateRenderer, $authAdapter, $environmentManager, $logAdapter);
 
         /** @var ResponseInterface $result */
-        $result = $middleware($request, $response);
+        $middleware($request, $response);
 
-        $this->assertInstanceOf(ResponseInterface::class, $result);
-        $this->assertSame(Response::STATUS_OK, $result->getStatusCode());
-        $this->assertEquals(strlen($output), $result->getHeader('Content-Length')[0]);
+        $this->assertSame(Response::STATUS_OK, $response->getStatusCode());
+        $this->assertEquals(strlen($output), $response->getHeader('Content-Length')[0]);
     }
 
     /**
@@ -108,11 +112,11 @@ class FinalMiddlewareTest extends TestCase
         $middleware = new FinalMiddleware($templateRenderer, $authAdapter, $environmentManager, $logAdapter);
 
         /** @var ResponseInterface $result */
-        $result = $middleware($request, $response);
+        $middleware($request, $response);
 
-        $this->assertInstanceOf(ResponseInterface::class, $result);
-        $this->assertSame(404, $result->getStatusCode());
-        $this->assertEmpty($result->getHeader('Content-Length')[0]);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(404, $response->getStatusCode());
+        $this->assertEmpty($response->getHeader('Content-Length')[0]);
     }
 
     /**

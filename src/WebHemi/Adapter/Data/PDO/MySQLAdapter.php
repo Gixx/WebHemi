@@ -16,6 +16,7 @@ namespace WebHemi\Adapter\Data\PDO;
 use InvalidArgumentException;
 use PDO;
 use PDOStatement;
+use RuntimeException;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Data\DataDriverInterface;
 
@@ -25,11 +26,11 @@ use WebHemi\Adapter\Data\DataDriverInterface;
 class MySQLAdapter implements DataAdapterInterface
 {
     /** @var PDO */
-    private $dataDriver;
+    protected $dataDriver;
     /** @var string */
-    private $dataGroup = null;
+    protected $dataGroup = null;
     /** @var string */
-    private $idKey = null;
+    protected $idKey = null;
 
     /**
      * MySQLAdapter constructor.
@@ -39,7 +40,7 @@ class MySQLAdapter implements DataAdapterInterface
      */
     public function __construct(DataDriverInterface $dataDriver)
     {
-        if (!$dataDriver instanceof PDO) {
+        if (!$dataDriver instanceof MySQLDriver) {
             $type = gettype($dataDriver);
 
             if ($type == 'object') {
@@ -47,12 +48,12 @@ class MySQLAdapter implements DataAdapterInterface
             }
 
             $message = sprintf(
-                'Can\'t create %s instance. The parameter must be an instance of PDO, %s given.',
+                'Can\'t create %s instance. The parameter must be an instance of MySQLDriver, %s given.',
                 __CLASS__,
                 $type
             );
 
-            throw new InvalidArgumentException($message);
+            throw new InvalidArgumentException($message, 1001);
         }
 
         $this->dataDriver = $dataDriver;
@@ -165,7 +166,7 @@ class MySQLAdapter implements DataAdapterInterface
      * @param int   $offset
      * @return string
      */
-    private function getSelectQueryForExpression(
+    protected function getSelectQueryForExpression(
         array $expression,
         array &$queryBind,
         int $limit = PHP_INT_MAX,
@@ -191,7 +192,7 @@ class MySQLAdapter implements DataAdapterInterface
      * @param array $queryBind
      * @return string
      */
-    private function getWhereExpression(array $expression, array &$queryBind) : string
+    protected function getWhereExpression(array $expression, array &$queryBind) : string
     {
         $whereExpression = '';
         $queryParams = [];
@@ -222,7 +223,7 @@ class MySQLAdapter implements DataAdapterInterface
      * @param string $column
      * @return string 'my_column = ?'
      */
-    private function getSimpleColumnCondition(string $column) : string
+    protected function getSimpleColumnCondition(string $column) : string
     {
         return strpos($column, '?') === false ? "{$column} = ?" : $column;
     }
@@ -238,7 +239,7 @@ class MySQLAdapter implements DataAdapterInterface
      * @param string $column
      * @return string 'my_column LIKE ?'
      */
-    private function getLikeColumnCondition(string $column) : string
+    protected function getLikeColumnCondition(string $column) : string
     {
         list($columnNameOnly) = explode(' ', $column);
 
@@ -258,7 +259,7 @@ class MySQLAdapter implements DataAdapterInterface
      * @param int    $parameterCount
      * @return string 'my_column IN (?,?,?)'
      */
-    private function getInColumnCondition(string $column, int $parameterCount = 1) : string
+    protected function getInColumnCondition(string $column, int $parameterCount = 1) : string
     {
         list($columnNameOnly) = explode(' ', $column);
 
@@ -272,12 +273,12 @@ class MySQLAdapter implements DataAdapterInterface
      *
      * @param int $identifier
      * @param array $data
-     *
+     * @throws RuntimeException
      * @return int The ID of the saved entity in the storage
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function saveData(int $identifier, array $data) : int
+    public function saveData(?int $identifier = null, array $data) : int
     {
         if (empty($identifier)) {
             $query = "INSERT INTO {$this->dataGroup}";
@@ -301,6 +302,9 @@ class MySQLAdapter implements DataAdapterInterface
         }
 
         $statement = $this->dataDriver->prepare($query);
+        if (!$statement) {
+            throw new RuntimeException('Query error', 1002);
+        }
         $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
@@ -316,7 +320,7 @@ class MySQLAdapter implements DataAdapterInterface
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    private function bindValuesToStatement(PDOStatement&$statement, array $queryBind) : void
+    protected function bindValuesToStatement(PDOStatement&$statement, array $queryBind) : void
     {
         foreach ($queryBind as $index => $data) {
             $paramType = PDO::PARAM_STR;

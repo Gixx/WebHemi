@@ -13,8 +13,9 @@ namespace WebHemiTest\Data\Coupler;
 
 use Exception;
 use InvalidArgumentException;
-use Prophecy\Argument;
 use RuntimeException;
+use WebHemi\Adapter\Data\PDO\SQLiteAdapter;
+use WebHemi\Adapter\Data\PDO\SQLiteDriver;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemiTest\Fixtures\EmptyCoupler;
@@ -23,14 +24,47 @@ use WebHemiTest\Fixtures\EmptyEntity2;
 use WebHemiTest\InvokePrivateMethodTrait;
 use WebHemiTest\AssertTrait;
 use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit_Framework_IncompleteTestError;
+use PHPUnit_Framework_SkippedTestError;
 
 /**
  * Class GeneralCouplerTest. Tests the AbstractDataCoupler's methods mostly.
  */
 class GeneralCouplerTest extends TestCase
 {
-    use InvokePrivateMethodTrait;
+    /** @var SQLiteDriver */
+    protected static $dataDriver;
+    /** @var SQLiteAdapter */
+    protected static $adapter;
+
     use AssertTrait;
+    use InvokePrivateMethodTrait;
+
+    /**
+     * Check requirements - also checks SQLite availability.
+     */
+    protected function checkRequirements()
+    {
+        if (!extension_loaded('pdo_sqlite')) {
+            throw new PHPUnit_Framework_SkippedTestError('No SQLite Available');
+        }
+
+        parent::checkRequirements();
+    }
+
+    /**
+     * Sets up the fixture, for example, open a network connection.
+     * This method is called before a test is executed.
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        $databaseFile = realpath(__DIR__ . '/../../../../build/webhemi_schema.sqlite3');
+
+        self::$dataDriver = new SQLiteDriver('sqlite:' . $databaseFile);
+        self::$adapter = new SQLiteAdapter(self::$dataDriver);
+    }
 
     /**
      * Test constructor.
@@ -39,28 +73,21 @@ class GeneralCouplerTest extends TestCase
      */
     public function testConstructor()
     {
-        $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
-
-        /** @var DataAdapterInterface $defaultAdapterInstance */
-        $defaultAdapterInstance = $defaultAdapter->reveal();
-
         $entityA = new EmptyEntity();
         $entityB = new EmptyEntity2();
 
         // Test constructor: The EmptyCoupler requires EmptyEntities
-        $coupler = new EmptyCoupler($defaultAdapterInstance, $entityA, $entityB);
+        $coupler = new EmptyCoupler(self::$adapter, $entityA, $entityB);
         $this->assertInstanceOf(EmptyCoupler::class, $coupler);
 
         // Test constructor: The EmptyCoupler requires EmptyEntities, changed order
-        $coupler2 = new EmptyCoupler($defaultAdapterInstance, $entityB, $entityA);
+        $coupler2 = new EmptyCoupler(self::$adapter, $entityB, $entityA);
         $this->assertInstanceOf(EmptyCoupler::class, $coupler2);
 
         // Test constructor error:
         $applicationEntity = new ApplicationEntity();
-        $this->setExpectedException(InvalidArgumentException::class);
-        new EmptyCoupler($defaultAdapterInstance, $applicationEntity, $entityA);
+        $this->expectException(InvalidArgumentException::class);
+        new EmptyCoupler(self::$adapter, $applicationEntity, $entityA);
     }
 
     /**
@@ -70,17 +97,10 @@ class GeneralCouplerTest extends TestCase
      */
     public function testCouplerFunctions()
     {
-        $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
-
-        /** @var DataAdapterInterface $defaultAdapterInstance */
-        $defaultAdapterInstance = $defaultAdapter->reveal();
-
         $entityA = new EmptyEntity();
         $entityB = new EmptyEntity2();
 
-        $coupler = new EmptyCoupler($defaultAdapterInstance, $entityA, $entityB);
+        $coupler = new EmptyCoupler(self::$adapter, $entityA, $entityB);
         $this->assertInstanceOf(EmptyCoupler::class, $coupler);
         $this->assertInstanceOf(DataAdapterInterface::class, $coupler->getDataAdapter());
 
@@ -100,16 +120,9 @@ class GeneralCouplerTest extends TestCase
      */
     public function testDependencyResolver()
     {
-        $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
-
-        /** @var DataAdapterInterface $defaultAdapterInstance */
-        $defaultAdapterInstance = $defaultAdapter->reveal();
-
         $entityA = new EmptyEntity();
         $entityB = new EmptyEntity2();
-        $coupler = new EmptyCoupler($defaultAdapterInstance, $entityA, $entityB);
+        $coupler = new EmptyCoupler(self::$adapter, $entityA, $entityB);
 
         $entityList = $coupler->getEntityDependencies($entityA);
         $this->assertEquals(3, count($entityList));
@@ -122,7 +135,7 @@ class GeneralCouplerTest extends TestCase
         $this->assertInstanceOf(EmptyEntity2::class, $entityList[0]);
         $this->assertInstanceOf(EmptyEntity2::class, $entityList[1]);
 
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $applicationEntity = new ApplicationEntity();
         $coupler->getEntityDependencies($applicationEntity);
     }
@@ -132,33 +145,24 @@ class GeneralCouplerTest extends TestCase
      */
     public function testDependencySetter()
     {
-        $defaultAdapter = $adapterProphecy = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($adapterProphecy->reveal());
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($adapterProphecy->reveal());
-        $defaultAdapter->saveData(Argument::type('null'), Argument::type('array'))->will(
-            function ($args) {
-                return $args;
-            }
-        );
-
-        /** @var DataAdapterInterface $defaultAdapterInstance */
-        $defaultAdapterInstance = $defaultAdapter->reveal();
+        $this->runFixtureQueries(realpath(__DIR__.'/../../Fixtures/sql/general_coupler_test.sql'));
 
         $entityA = new EmptyEntity('empty_id_1');
         $entityA->setKeyData(1);
         $entityB = new EmptyEntity2('empty_id_2');
         $entityB->setKeyData(3);
-        $coupler = new EmptyCoupler($defaultAdapterInstance, $entityA, $entityB);
+        $entityC = new EmptyEntity2('empty_id_3');
+        $entityC->setKeyData(3);
+        $coupler = new EmptyCoupler(self::$adapter, $entityA, $entityB);
 
-        $saveDataArgs = $coupler->setDependency($entityA, $entityB);
-        $expectedSaveData = [
-            'empty_fk_1' => 1,
-            'empty_fk_2' => 3,
-        ];
-        $this->assertNull($saveDataArgs[0]);
-        $this->assertArraysAreSimilar($expectedSaveData, $saveDataArgs[1]);
+        $saveDataId = $coupler->setDependency($entityA, $entityB);
+        $this->assertEquals(1, $saveDataId);
 
-        $coupler = new EmptyCoupler($defaultAdapterInstance, $entityA, $entityB);
+        $saveDataId = $coupler->setDependency($entityA, $entityC);
+        $this->assertEquals(2, $saveDataId);
+
+
+        $coupler = new EmptyCoupler(self::$adapter, $entityA, $entityB);
         $applicationEntity = new ApplicationEntity();
 
         // Set dependency for wrong data entity #1
@@ -183,6 +187,30 @@ class GeneralCouplerTest extends TestCase
         } catch (Exception $e) {
             $this->assertInstanceOf(InvalidArgumentException::class, $e);
             $this->assertSame(1004, $e->getCode());
+        }
+
+        $this->runFixtureQueries(realpath(__DIR__.'/../../Fixtures/sql/general_coupler_test.rollback.sql'));
+    }
+
+    /**
+     * Runs queries
+     *
+     * @param string $fixtureFile
+     */
+    private function runFixtureQueries($fixtureFile)
+    {
+        $setUpSql = file($fixtureFile);
+
+        if ($setUpSql) {
+            foreach ($setUpSql as $sql) {
+                $result = self::$dataDriver->query($sql);
+
+                if (!$result) {
+                    throw new PHPUnit_Framework_IncompleteTestError(
+                        'Cannot run query: '.$sql.'; Error: '.json_encode(self::$dataDriver->errorInfo())
+                    );
+                }
+            }
         }
     }
 }

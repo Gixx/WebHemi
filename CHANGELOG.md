@@ -1,6 +1,15 @@
 Change log
 ==========
 
+Version 4.0.0-3.0
+-----------------
+* Refactor the WebHemi namespace to PHP 7.1.
+* Refactor the WebHemi\Form to be more simple but still be flexible (experimental) - TODO: Unit Tests needed.
+* Refactor the WebHemi\Form view templates to let user take the render process into their hands.
+* Inroduce SQLiteDriver and SQLiteAdapter to be more proper in Unit Tests.
+* Refactor Middlewares to change Request and Response via parameter reference (no need return value).
+* Fix codes with 'mixed' argument and return type to be more consistent where possible.
+
 Version 4.0.0-2.2
 -----------------
 * Create the [Docker Builder](https://github.com/Gixx/docker-builder) project to provide a PHP 7.1 dev environment:

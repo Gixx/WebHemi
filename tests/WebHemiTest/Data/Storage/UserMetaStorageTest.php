@@ -36,8 +36,8 @@ class UserMetaStorageTest extends TestCase
     protected function setUp()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
 
         $this->defaultAdapter = $defaultAdapter;
     }
@@ -101,7 +101,7 @@ class UserMetaStorageTest extends TestCase
                         return $data[($args[0] - 1)];
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -125,9 +125,8 @@ class UserMetaStorageTest extends TestCase
         $this->assertEquals($data[1]['meta_key'], $actualResult->getMetaKey());
         $this->assertEquals($data[1]['meta_data'], $actualResult->getMetaData());
 
-        /** @var bool $actualResult */
         $actualResult = $storage->getUserMetaById(3);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
     }
 
     /**
@@ -162,7 +161,7 @@ class UserMetaStorageTest extends TestCase
                         return $data;
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -171,9 +170,8 @@ class UserMetaStorageTest extends TestCase
         $defaultAdapterInstance = $this->defaultAdapter->reveal();
         $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
 
-        /** @var bool $actualResult */
         $actualResult = $storage->getUserMetaForUserId(2);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
 
         /** @var UserMetaEntity[] $actualResult */
         $actualResult = $storage->getUserMetaForUserId(1);

@@ -81,7 +81,7 @@ interface DataAdapterInterface
      * @param array $data
      * @return int The ID of the saved entity in the storage
      */
-    public function saveData(int $identifier, array $data) : int;
+    public function saveData(?int $identifier, array $data) : int;
 
     /**
      * Removes an entity from the storage.

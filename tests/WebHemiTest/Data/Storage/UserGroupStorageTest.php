@@ -36,8 +36,8 @@ class UserGroupStorageTest extends TestCase
     protected function setUp()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
 
         $this->defaultAdapter = $defaultAdapter;
     }
@@ -103,7 +103,7 @@ class UserGroupStorageTest extends TestCase
                         return $data[($args[0] - 1)];
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -129,9 +129,8 @@ class UserGroupStorageTest extends TestCase
         $this->assertEquals($data[1]['description'], $actualResult->getDescription());
         $this->assertFalse($actualResult->getReadOnly());
 
-        /** @var bool $actualResult */
         $actualResult = $storage->getUserGroupById(3);
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
     }
 
     /**
@@ -172,7 +171,7 @@ class UserGroupStorageTest extends TestCase
                         }
                     }
 
-                    return false;
+                    return [];
                 }
             );
 
@@ -202,8 +201,7 @@ class UserGroupStorageTest extends TestCase
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
         $this->assertArraysAreSimilar($data[1], $actualData);
 
-        /** @var bool $actualResult */
         $actualResult = $storage->getUserGroupByName('someName');
-        $this->assertNull($actualResult);
+        $this->assertEmpty($actualResult);
     }
 }

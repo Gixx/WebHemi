@@ -73,7 +73,7 @@ class PipelineTest extends TestCase
         $pipeline = new Pipeline($this->config);
 
         // Exception for not started pipeline
-        $this->setExpectedException(RuntimeException::class, '', 1003);
+        $this->expectException(RuntimeException::class, '', 1003);
         $pipeline->next();
     }
 
@@ -86,7 +86,7 @@ class PipelineTest extends TestCase
         $pipeline->start();
 
         // Exception for already started pipeline
-        $this->setExpectedException(RuntimeException::class, '', 1000);
+        $this->expectException(RuntimeException::class, '', 1000);
         $this->invokePrivateMethod($pipeline, 'checkMiddleware', ['newService']);
     }
 
@@ -98,7 +98,7 @@ class PipelineTest extends TestCase
         $pipeline = new Pipeline($this->config);
 
         // Exception for already registered item
-        $this->setExpectedException(RuntimeException::class, '', 1001);
+        $this->expectException(RuntimeException::class, '', 1001);
         $this->invokePrivateMethod($pipeline, 'checkMiddleware', ['pipe1']);
     }
 
@@ -110,7 +110,7 @@ class PipelineTest extends TestCase
         $pipeline = new Pipeline($this->config);
 
         // Exception for not-middleware class
-        $this->setExpectedException(RuntimeException::class, '', 1002);
+        $this->expectException(RuntimeException::class, '', 1002);
         $this->invokePrivateMethod($pipeline, 'checkMiddleware', [DateTime::class]);
     }
 }

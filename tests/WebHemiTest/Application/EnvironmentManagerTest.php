@@ -115,7 +115,7 @@ class EnvironmentManagerTest extends TestCase
 
         $this->assertArraysAreSimilar($actualServerData, $expectedServerData);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $testObj->getEnvironmentData('WEBSERVER');
     }
 

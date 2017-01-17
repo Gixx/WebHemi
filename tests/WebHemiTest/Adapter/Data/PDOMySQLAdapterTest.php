@@ -15,12 +15,11 @@ use InvalidArgumentException;
 use PDO;
 use RuntimeException;
 use WebHemi\Adapter\Data\PDO\MySQLAdapter;
-use WebHemi\Adapter\Data\InMemory\InMemoryDriver;
+use WebHemi\Adapter\Data\PDO\MySQLDriver;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Data\DataDriverInterface;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
-use WebHemiTest\Fixtures\EmptySqliteDataDriver;
 use PHPUnit_Framework_TestCase as TestCase;
 use PHPUnit_Framework_SkippedTestError;
 
@@ -54,10 +53,10 @@ class PDOMySQLAdapterTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-
         $databaseFile = realpath(__DIR__ . '/../../../../build/webhemi_schema.sqlite3');
-
-        $this->dataDriver = new EmptySqliteDataDriver('sqlite:' . $databaseFile);
+        // The trick is that the MySQLDriver is a simple extension to the PDO class, so it can be used for the SQLite
+        // as well without issue.
+        $this->dataDriver = new MySQLDriver('sqlite:' . $databaseFile);
     }
 
     /**
@@ -72,19 +71,21 @@ class PDOMySQLAdapterTest extends TestCase
         $this->assertAttributeEmpty('dataGroup', $adapter);
         $this->assertAttributeEmpty('idKey', $adapter);
 
-        $this->setExpectedException(InvalidArgumentException::class);
-        new MySQLAdapter(new InMemoryDriver());
+        $fakeDriver = $this->prophesize(DataDriverInterface::class);
+
+        $this->expectException(InvalidArgumentException::class);
+        new MySQLAdapter($fakeDriver->reveal());
     }
 
     /**
-     * Tests the getDataStorage method.
+     * Tests the getDataDriver method.
      */
-    public function testGetDataStorage()
+    public function testGetDataDriver()
     {
         $adapter = new MySQLAdapter($this->dataDriver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
-        $actualStorage = $adapter->getDataStorage();
+        $actualStorage = $adapter->getDataDriver();
         $this->assertInstanceOf(PDO::class, $actualStorage);
         $this->assertTrue($this->dataDriver === $actualStorage);
     }

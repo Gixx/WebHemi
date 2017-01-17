@@ -33,8 +33,8 @@ class GeneralStorageTest extends TestCase
     public function testAbstractClassMethods()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
 
         $dataEntity = new EmptyEntity();
 
@@ -80,8 +80,8 @@ class GeneralStorageTest extends TestCase
             ->setEmail('test@foo.org');
 
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn(1);
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn(1);
+        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
         $defaultAdapter->saveData(Argument::any(), Argument::type('array'))->will(
             function ($args) use ($randNewId) {
                 if (is_null($args[0])) {
@@ -123,7 +123,7 @@ class GeneralStorageTest extends TestCase
         $this->assertSame($randNewId, $userEntity->getKeyData());
         $this->assertSame('2016-11-11 11:11:11', $userEntity->getDateCreated()->format('Y-m-d H:i:s'));
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $otherEntity = new EmptyEntity();
         $storage->saveEntity($otherEntity);
     }
