@@ -9,14 +9,14 @@
  *
  * @link      http://www.gixx-web.com
  */
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace WebHemi\Auth;
 
 use WebHemi\Adapter\Auth\AbstractAuthAdapter;
-use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\Storage\User\UserStorage;
 
 /**
  * Class Auth
