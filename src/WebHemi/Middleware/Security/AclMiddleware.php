@@ -9,7 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Security;
 
@@ -24,8 +24,8 @@ use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemi\Data\Entity\User\UserMetaEntity;
 use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\User\UserMetaEntity;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Data\Storage\User\UserMetaStorage;
