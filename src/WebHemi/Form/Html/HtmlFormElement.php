@@ -98,7 +98,8 @@ class HtmlFormElement implements FormElementInterface
                     'The given type "%s" is not a valid %s type.',
                     $type,
                     __CLASS__
-                )
+                ),
+                1001
             );
         }
 
@@ -120,7 +121,7 @@ class HtmlFormElement implements FormElementInterface
     public function setName(string $name) : FormElementInterface
     {
         if (empty($name)) {
-            throw new InvalidArgumentException('During conversion the argument value become an empty string!');
+            throw new InvalidArgumentException('During conversion the argument value become an empty string!', 1002);
         }
 
         $this->name = $name;

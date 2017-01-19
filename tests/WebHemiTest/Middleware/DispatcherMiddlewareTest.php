@@ -15,7 +15,6 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
-use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\GuzzleHttp\ServerRequest;
 use WebHemi\Adapter\Http\GuzzleHttp\Response;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
