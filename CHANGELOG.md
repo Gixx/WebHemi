@@ -1,13 +1,19 @@
 Change log
 ==========
 
+Version 4.0.0-3.1
+-----------------
+* Refactor the WebHemi\Data to PHP 7.1 and fix the Unit Tests.
+* Add missing functionality of loading data back into the form after submit.
+* Fix issue of multi-select box submitted only the last value.
+
 Version 4.0.0-3.0
 -----------------
-* Refactor the WebHemi namespace to PHP 7.1.
+* Refactor almost the complete WebHemi namespace to PHP 7.1.
 * Refactor the WebHemi\Form to be more simple but still be flexible (experimental) - TODO: Unit Tests needed.
 * Refactor the WebHemi\Form view templates to let user take the render process into their hands.
-* Inroduce SQLiteDriver and SQLiteAdapter to be more proper in Unit Tests.
-* Refactor Middlewares to change Request and Response via parameter reference (no need return value).
+* Introduce SQLiteDriver and SQLiteAdapter to be more proper in Unit Tests.
+* Refactor Middleware classes to change Request and Response via parameter reference (no need return value).
 * Fix codes with 'mixed' argument and return type to be more consistent where possible.
 
 Version 4.0.0-2.2

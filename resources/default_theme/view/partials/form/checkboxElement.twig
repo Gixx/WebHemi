@@ -4,10 +4,12 @@
     {% if range|length > 1 %}
         <fieldset name="{{ formElement.getName() }}">
             <legend>{{ formElement.getLabel() }}</legend>
+            {% set values = formElement.getValues() %}
             {% for label, option in range %}
+                {% set selected = (option in values) or (values[option]) %}
                 <label>
                     <input type="hidden" name="{{ formElement.getName() }}[{{ option }}]" value="0" />
-                    <input type="checkbox" name="{{ formElement.getName() }}[{{ option }}]" value="1"{% if option in formElement.getValues() %}checked="checked"{% endif %} />
+                    <input type="checkbox" name="{{ formElement.getName() }}[{{ option }}]" value="1"{% if selected %}checked="checked"{% endif %} />
                     {{ label }}
                 </label>
             {% endfor %}
