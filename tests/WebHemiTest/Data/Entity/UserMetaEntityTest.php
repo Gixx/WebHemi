@@ -47,9 +47,7 @@ class UserMetaEntityTest extends TestCase
     {
         return [
             ['userMetaId', 1, 1],
-            ['userMetaId', 'someId', 'someId'],
             ['userId', 2, 2],
-            ['userId', 'someUserId', 'someUserId'],
             ['metaKey', 'someKey', 'someKey'],
             ['metaData', 'someData', 'someData'],
         ];

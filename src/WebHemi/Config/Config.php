@@ -70,15 +70,17 @@ class Config implements ConfigInterface
      *
      * @param string $path
      * @throws InvalidArgumentException
-     * @return mixed
+     * @return array
      */
-    public function getData(string $path)
+    public function getData(string $path) : array
     {
         if (!$this->has($path)) {
             throw new InvalidArgumentException(sprintf('Configuration for path "%s" not found', $path), 1000);
         }
 
-        return $this->pathMap[$path];
+        $data = $this->pathMap[$path];
+
+        return is_array($data) ? $data : [$data];
     }
 
     /**

@@ -14,8 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Auth;
 
 use WebHemi\Adapter\Auth\AbstractAuthAdapter;
-use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\User\UserStorage;
 
 /**
@@ -32,13 +32,14 @@ final class Auth extends AbstractAuthAdapter
      */
     public function authenticate() : Result
     {
-        // TODO implement
-        $result = $this->getAuthResult();
+        $result = $this->getNewAuthResultInstace();
+
+
         /** @var UserStorage $dataStorage */
         $dataStorage = $this->getDataStorage();
         $user = $dataStorage->getUserById(1);
         if ($user instanceof UserEntity) {
-            $result->setIdentity($user);
+            $this->setIdentity($user);
             $result->setCode(Result::SUCCESS);
         } else {
             $result->setCode(Result::FAILURE_IDENTITY_NOT_FOUND);
@@ -55,21 +56,6 @@ final class Auth extends AbstractAuthAdapter
     {
         $identity = parent::getIdentity();
         // TODO implement
-
-        if (!$identity instanceof UserEntity) {
-            $userName = 'admin';
-
-            /** @var UserStorage $dataStorage */
-            $dataStorage = $this->getDataStorage();
-            /** @var UserEntity $userEntity */
-            $userEntity = $dataStorage->getUserByUserName($userName);
-
-            if (!$userEntity) {
-                $identity = $userName;
-            } else {
-                return $userEntity;
-            }
-        }
 
         return $identity;
     }

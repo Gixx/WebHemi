@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Entity\AccessManagement;
 
 use WebHemi\DateTime;
@@ -40,7 +42,7 @@ class ResourceEntity implements DataEntityInterface
      * @param int $entityId
      * @return ResourceEntity
      */
-    public function setKeyData($entityId)
+    public function setKeyData(int $entityId) : ResourceEntity
     {
         $this->resourceId = $entityId;
 
@@ -50,19 +52,18 @@ class ResourceEntity implements DataEntityInterface
     /**
      * Gets the value of the entity identifier.
      *
-     * @return int
+     * @return null|int
      */
-    public function getKeyData()
+    public function getKeyData() : ? int
     {
         return $this->resourceId;
     }
 
     /**
      * @param int $resourceId
-     *
      * @return ResourceEntity
      */
-    public function setResourceId($resourceId)
+    public function setResourceId(int $resourceId) : ResourceEntity
     {
         $this->resourceId = $resourceId;
 
@@ -70,19 +71,18 @@ class ResourceEntity implements DataEntityInterface
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getResourceId()
+    public function getResourceId() : ? int
     {
         return $this->resourceId;
     }
 
     /**
      * @param string $name
-     *
      * @return ResourceEntity
      */
-    public function setName($name)
+    public function setName(string $name) : ResourceEntity
     {
         $this->name = $name;
 
@@ -90,19 +90,18 @@ class ResourceEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getName()
+    public function getName() : ? string
     {
         return $this->name;
     }
 
     /**
      * @param string $title
-     *
      * @return ResourceEntity
      */
-    public function setTitle($title)
+    public function setTitle(string $title) : ResourceEntity
     {
         $this->title = $title;
 
@@ -110,19 +109,18 @@ class ResourceEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getTitle()
+    public function getTitle() : ? string
     {
         return $this->title;
     }
 
     /**
      * @param string $description
-     *
      * @return ResourceEntity
      */
-    public function setDescription($description)
+    public function setDescription(string $description) : ResourceEntity
     {
         $this->description = $description;
 
@@ -130,21 +128,20 @@ class ResourceEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getDescription()
+    public function getDescription() : ? string
     {
         return $this->description;
     }
 
     /**
      * @param bool $state
-     *
      * @return ResourceEntity
      */
-    public function setReadOnly($state)
+    public function setReadOnly(bool $state) : ResourceEntity
     {
-        $this->isReadOnly = (bool) $state;
+        $this->isReadOnly = $state;
 
         return $this;
     }
@@ -152,17 +149,16 @@ class ResourceEntity implements DataEntityInterface
     /**
      * @return bool
      */
-    public function getReadOnly()
+    public function getReadOnly() : bool
     {
-        return $this->isReadOnly;
+        return $this->isReadOnly ?? false;
     }
 
     /**
      * @param DateTime $dateCreated
-     *
      * @return ResourceEntity
      */
-    public function setDateCreated(DateTime $dateCreated)
+    public function setDateCreated(DateTime $dateCreated) : ResourceEntity
     {
         $this->dateCreated = $dateCreated;
 
@@ -170,19 +166,18 @@ class ResourceEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateCreated()
+    public function getDateCreated() : ? DateTime
     {
         return $this->dateCreated;
     }
 
     /**
      * @param DateTime $dateModified
-     *
      * @return ResourceEntity
      */
-    public function setDateModified(DateTime $dateModified)
+    public function setDateModified(DateTime $dateModified) : ResourceEntity
     {
         $this->dateModified = $dateModified;
 
@@ -190,9 +185,9 @@ class ResourceEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateModified()
+    public function getDateModified() : ? DateTime
     {
         return $this->dateModified;
     }

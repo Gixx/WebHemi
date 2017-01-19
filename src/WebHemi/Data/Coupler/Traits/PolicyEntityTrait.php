@@ -9,11 +9,14 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Coupler\Traits;
 
 use WebHemi\DateTime;
 use RuntimeException;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
+use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class PolicyEntityTrait.
@@ -25,9 +28,9 @@ trait PolicyEntityTrait
      *
      * @param string $entityClassName
      * @throws RuntimeException
-     * @return PolicyEntity
+     * @return DataEntityInterface
      */
-    abstract protected function getNewEntityInstance($entityClassName);
+    abstract protected function getNewEntityInstance(string $entityClassName) : DataEntityInterface;
 
     /**
      * Creates a new Policy Entity instance form the data.
@@ -35,20 +38,21 @@ trait PolicyEntityTrait
      * @param array $data
      * @return PolicyEntity
      */
-    protected function createPolicyEntity(array $data)
+    protected function createPolicyEntity(array $data) : PolicyEntity
     {
+        /** @var PolicyEntity $entity */
         $entity = $this->getNewEntityInstance(PolicyEntity::class);
 
-        $entity->setPolicyId($data['id_am_policy'])
-            ->setResourceId($data['fk_am_resource'])
-            ->setApplicationId($data['fk_application'])
+        $entity->setPolicyId((int) $data['id_am_policy'])
+            ->setResourceId(!empty($data['fk_am_resource']) ? (int) $data['fk_am_resource'] : null)
+            ->setApplicationId(!empty($data['fk_application']) ? (int) $data['fk_application'] : null)
             ->setName($data['name'])
             ->setTitle($data['title'])
             ->setDescription($data['description'])
-            ->setReadOnly($data['is_read_only'])
-            ->setAllowed($data['is_allowed'])
-            ->setDateCreated(new DateTime($data['date_created']))
-            ->setDateModified(new DateTime($data['date_created']));
+            ->setReadOnly((bool) $data['is_read_only'])
+            ->setAllowed((bool) $data['is_allowed'])
+            ->setDateCreated(new DateTime($data['date_created'] ?? 'now'))
+            ->setDateModified(new DateTime($data['date_created'] ?? 'now'));
 
         return $entity;
     }

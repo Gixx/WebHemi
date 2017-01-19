@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Entity\User;
 
 use WebHemi\DateTime;
@@ -38,7 +40,7 @@ class UserMetaEntity implements DataEntityInterface
      * @param int $entityId
      * @return UserMetaEntity
      */
-    public function setKeyData($entityId)
+    public function setKeyData(int $entityId) : UserMetaEntity
     {
         $this->userMetaId = $entityId;
 
@@ -48,19 +50,18 @@ class UserMetaEntity implements DataEntityInterface
     /**
      * Gets the value of the entity identifier.
      *
-     * @return int
+     * @return null|int
      */
-    public function getKeyData()
+    public function getKeyData() : ? int
     {
         return $this->userMetaId;
     }
 
     /**
      * @param int $userMetaId
-     *
      * @return UserMetaEntity
      */
-    public function setUserMetaId($userMetaId)
+    public function setUserMetaId(int $userMetaId) : UserMetaEntity
     {
         $this->userMetaId = $userMetaId;
 
@@ -68,19 +69,18 @@ class UserMetaEntity implements DataEntityInterface
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getUserMetaId()
+    public function getUserMetaId() : ? int
     {
         return $this->userMetaId;
     }
 
     /**
      * @param int $userId
-     *
      * @return UserMetaEntity
      */
-    public function setUserId($userId)
+    public function setUserId(int $userId) : UserMetaEntity
     {
         $this->userId = $userId;
 
@@ -88,19 +88,18 @@ class UserMetaEntity implements DataEntityInterface
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getUserId()
+    public function getUserId() : ? int
     {
         return $this->userId;
     }
 
     /**
      * @param string $metaKey
-     *
      * @return UserMetaEntity
      */
-    public function setMetaKey($metaKey)
+    public function setMetaKey(string $metaKey) : UserMetaEntity
     {
         $this->metaKey = $metaKey;
 
@@ -108,19 +107,18 @@ class UserMetaEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getMetaKey()
+    public function getMetaKey() : ? string
     {
         return $this->metaKey;
     }
 
     /**
-     * @param mixed $metaData
-     *
+     * @param string $metaData
      * @return UserMetaEntity
      */
-    public function setMetaData($metaData)
+    public function setMetaData(string $metaData) : UserMetaEntity
     {
         $this->metaData = $metaData;
 
@@ -128,19 +126,18 @@ class UserMetaEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getMetaData()
+    public function getMetaData() : ? string
     {
         return $this->metaData;
     }
 
     /**
      * @param DateTime $dateCreated
-     *
      * @return UserMetaEntity
      */
-    public function setDateCreated(DateTime $dateCreated)
+    public function setDateCreated(DateTime $dateCreated) : UserMetaEntity
     {
         $this->dateCreated = $dateCreated;
 
@@ -148,19 +145,18 @@ class UserMetaEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateCreated()
+    public function getDateCreated() : ? DateTime
     {
         return $this->dateCreated;
     }
 
     /**
      * @param DateTime $dateModified
-     *
      * @return UserMetaEntity
      */
-    public function setDateModified(DateTime $dateModified)
+    public function setDateModified(DateTime $dateModified) : UserMetaEntity
     {
         $this->dateModified = $dateModified;
 
@@ -168,9 +164,9 @@ class UserMetaEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateModified()
+    public function getDateModified() : ? DateTime
     {
         return $this->dateModified;
     }

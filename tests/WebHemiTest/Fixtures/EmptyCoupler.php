@@ -46,7 +46,7 @@ class EmptyCoupler extends AbstractDataCoupler
      * @param array               $entityData
      * @return DataEntityInterface
      */
-    protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData)
+    protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData) : DataEntityInterface
     {
         $entityClass = get_class($referenceEntity);
         $entity = $this->getNewEntityInstance($entityClass);
@@ -68,7 +68,7 @@ class EmptyCoupler extends AbstractDataCoupler
      * @param DataEntityInterface $entity
      * @return array
      */
-    protected function getEntityDataSet(DataEntityInterface $entity)
+    protected function getEntityDataSet(DataEntityInterface $entity) : array
     {
         if ($entity instanceof EmptyEntity2) {
             return [

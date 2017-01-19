@@ -46,7 +46,7 @@ final class Result
      */
     public function isValid() : bool
     {
-        return $this->code == 1 && !empty($this->userEntity);
+        return $this->code == 1;
     }
 
     /**
@@ -74,29 +74,6 @@ final class Result
     public function getCode() : int
     {
         return $this->code;
-    }
-
-    /**
-     * Sets the authenticated user.
-     *
-     * @param UserEntity $userEntity
-     * @return Result
-     */
-    public function setIdentity(UserEntity $userEntity) : Result
-    {
-        $this->userEntity = $userEntity;
-
-        return $this;
-    }
-
-    /**
-     * Gets the authenticated user if any.
-     *
-     * @return UserEntity|null
-     */
-    public function getIdentity() :?UserEntity
-    {
-        return $this->userEntity;
     }
 
     /**

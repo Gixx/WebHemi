@@ -11,12 +11,10 @@
  */
 namespace WebHemiTest\Fixtures;
 
-use WebHemi\Data\Entity\DataEntityInterface;
-
 /**
- * Class EmptyEntity.
+ * Class EmptyService
  */
-class EmptyEntity implements DataEntityInterface
+class EmptyService
 {
     /** @var array */
     public $storage = [];
@@ -31,33 +29,8 @@ class EmptyEntity implements DataEntityInterface
      */
     public function __construct($key = null, $keyData = null)
     {
-        $this->key = $key;
-        $this->storage[$this->key] = $keyData;
+        $this->storage[$key] = $keyData;
     }
-
-    /**
-     * Sets the value of the entity identifier.
-     *
-     * @param int $entityId
-     * @return DataEntityInterface
-     */
-    public function setKeyData(int $entityId) : DataEntityInterface
-    {
-        $this->storage[$this->key] = $entityId;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of the entity identifier.
-     *
-     * @return int
-     */
-    public function getKeyData() : int
-    {
-        return isset($this->key) ? $this->storage[$this->key] : null;
-    }
-
     /**
      * Handle getters and setters.
      *

@@ -9,13 +9,14 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Storage\AccessManagement;
 
 use WebHemi\DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Storage\AbstractDataStorage;
-use WebHemi\Data\Storage\Traits\GetEntityListFromDataSetTrait;
 
 /**
  * Class PolicyStorage.
@@ -45,28 +46,26 @@ class PolicyStorage extends AbstractDataStorage
     /** @var string */
     private $dateModified = 'date_modified';
 
-    /** @method bool|array<PolicyEntity> getEntityListFromDataSet(array $dataList) */
-    use GetEntityListFromDataSetTrait;
-
     /**
      * Populates an entity with storage data.
      *
      * @param DataEntityInterface $entity
      * @param array               $data
+     * @param void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
     {
         /* @var PolicyEntity $entity */
-        $entity->setPolicyId($data[$this->idKey])
-            ->setResourceId($data[$this->resourceId])
-            ->setApplicationId($data[$this->applicationId])
+        $entity->setPolicyId((int) $data[$this->idKey])
+            ->setResourceId(!empty($data[$this->resourceId]) ? (int) $data[$this->resourceId] : null)
+            ->setApplicationId(!empty($data[$this->applicationId]) ? (int) $data[$this->applicationId] : null)
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
-            ->setReadOnly($data[$this->isReadOnly])
-            ->setAllowed($data[$this->isAllowed])
-            ->setDateCreated(new DateTime($data[$this->dateCreated]))
-            ->setDateModified(new DateTime($data[$this->dateModified]));
+            ->setReadOnly((bool) $data[$this->isReadOnly])
+            ->setAllowed((bool) $data[$this->isAllowed])
+            ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
+            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
     }
 
     /**
@@ -75,7 +74,7 @@ class PolicyStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity)
+    protected function getEntityData(DataEntityInterface $entity) : array
     {
         /** @var PolicyEntity $entity */
         $dateCreated = $entity->getDateCreated();
@@ -99,19 +98,12 @@ class PolicyStorage extends AbstractDataStorage
      * Returns a Policy entity identified by (unique) ID.
      *
      * @param int $identifier
-     *
      * @return null|PolicyEntity
      */
     public function getPolicyById($identifier)
     {
-        $entity = null;
-        $data = $this->getDataAdapter()->getData($identifier);
-
-        if (!empty($data)) {
-            /** @var PolicyEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $data);
-        }
+        /** @var null|PolicyEntity $entity */
+        $entity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $entity;
     }
@@ -120,19 +112,12 @@ class PolicyStorage extends AbstractDataStorage
      * Returns a Policy entity by name.
      *
      * @param string $name
-     *
      * @return null|PolicyEntity
      */
     public function getPolicyByName($name)
     {
-        $entity = null;
-        $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
-
-        if (!empty($dataList)) {
-            /** @var PolicyEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $dataList[0]);
-        }
+        /** @var null|PolicyEntity $entity */
+        $entity = $this->getDataEntity([$this->name => $name]);
 
         return $entity;
     }
@@ -141,28 +126,22 @@ class PolicyStorage extends AbstractDataStorage
      * Returns a set of Policy entities identified by Resource ID.
      *
      * @param int $resourceId
-     *
-     * @return bool|array<PolicyEntity>
+     * @return array<PolicyEntity>
      */
-    public function getPoliciesByResourceId($resourceId)
+    public function getPoliciesByResourceId($resourceId) : array
     {
-        $dataList = $this->getDataAdapter()->getDataSet([$this->resourceId => $resourceId]);
-
-        return $this->getEntityListFromDataSet($dataList);
+        return $this->getDataEntitySet([$this->resourceId => $resourceId]);
     }
 
     /**
      * Returns a set of Policy entities identified by Application ID.
      *
      * @param int $applicationId
-     *
-     * @return bool|array<PolicyEntity>
+     * @return array<PolicyEntity>
      */
-    public function getPoliciesByApplicationId($applicationId)
+    public function getPoliciesByApplicationId($applicationId) : array
     {
-        $dataList = $this->getDataAdapter()->getDataSet([$this->applicationId => $applicationId]);
-
-        return $this->getEntityListFromDataSet($dataList);
+        return $this->getDataEntitySet([$this->applicationId => $applicationId]);
     }
 
     /**
@@ -170,18 +149,15 @@ class PolicyStorage extends AbstractDataStorage
      *
      * @param int $resourceId
      * @param int $applicationId
-     *
-     * @return bool|array<PolicyEntity>
+     * @return array<PolicyEntity>
      */
-    public function getPoliciesByResourceAndApplicationIds($resourceId, $applicationId)
+    public function getPoliciesByResourceAndApplicationIds($resourceId, $applicationId) : array
     {
-        $dataList = $this->getDataAdapter()->getDataSet(
+        return $this->getDataEntitySet(
             [
                 $this->resourceId => $resourceId,
                 $this->applicationId => $applicationId
             ]
         );
-
-        return $this->getEntityListFromDataSet($dataList);
     }
 }

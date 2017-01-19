@@ -21,7 +21,7 @@ class TestAdapter
     /**
      * Returns the HTTP request.
      *
-     * @return ServerRequestInterface
+     * @return ServerRequest
      */
     public function getRequest()
     {
@@ -50,7 +50,7 @@ class TestAdapter
     /**
      * Returns the response being sent.
      *
-     * @return ResponseInterface
+     * @return Response
      */
     public function getResponse()
     {

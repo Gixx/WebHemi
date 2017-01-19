@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Storage\User;
 
 use WebHemi\DateTime;
@@ -43,17 +45,18 @@ class UserGroupStorage extends AbstractDataStorage
      *
      * @param DataEntityInterface $entity
      * @param array               $data
+     * @return void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
     {
         /* @var UserGroupEntity $entity */
-        $entity->setUserGroupId($data[$this->idKey])
+        $entity->setUserGroupId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
-            ->setReadOnly($data[$this->isReadOnly])
-            ->setDateCreated(new DateTime($data[$this->dateCreated]))
-            ->setDateModified(new DateTime($data[$this->dateModified]));
+            ->setReadOnly((bool) $data[$this->isReadOnly])
+            ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
+            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
     }
 
     /**
@@ -62,7 +65,7 @@ class UserGroupStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity)
+    protected function getEntityData(DataEntityInterface $entity) : array
     {
         /** @var UserGroupEntity $entity */
         $dateCreated = $entity->getDateCreated();
@@ -83,19 +86,12 @@ class UserGroupStorage extends AbstractDataStorage
      * Returns a User Group entity identified by (unique) ID.
      *
      * @param int $identifier
-     *
      * @return null|UserGroupEntity
      */
-    public function getUserGroupById($identifier)
+    public function getUserGroupById($identifier) : ? UserGroupEntity
     {
-        $entity = null;
-        $data = $this->getDataAdapter()->getData($identifier);
-
-        if (!empty($data)) {
-            /** @var UserGroupEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $data);
-        }
+        /** @var null|UserGroupEntity $entity */
+        $entity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $entity;
     }
@@ -104,19 +100,12 @@ class UserGroupStorage extends AbstractDataStorage
      * Returns a User Group entity by name.
      *
      * @param string $name
-     *
      * @return null|UserGroupEntity
      */
-    public function getUserGroupByName($name)
+    public function getUserGroupByName($name) : ? UserGroupEntity
     {
-        $entity = null;
-        $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
-
-        if (!empty($dataList)) {
-            /** @var UserGroupEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $dataList[0]);
-        }
+        /** @var null|UserGroupEntity $entity */
+        $entity = $this->getDataEntity([$this->name => $name]);
 
         return $entity;
     }

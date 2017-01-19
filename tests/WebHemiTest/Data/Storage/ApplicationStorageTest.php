@@ -76,20 +76,22 @@ class ApplicationStorageTest extends TestCase
     public function testGetApplicationById()
     {
         $data = [
-            'id_application' => 1,
-            'name' => 'test.application',
-            'title' => 'Test Application',
-            'description' => 'A test application record',
-            'is_read_only' => 1,
-            'date_created' =>  '2016-03-24 16:25:12',
-            'date_modified' =>  '2016-03-24 16:25:12',
+            0 => [
+                'id_application' => 1,
+                'name' => 'test.application',
+                'title' => 'Test Application',
+                'description' => 'A test application record',
+                'is_read_only' => 1,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ]
         ];
 
         $this->defaultAdapter
-            ->getData(Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
-                    if ($args[0] == 1) {
+                    if ($args[0]['id_application'] == 1) {
                         return $data;
                     }
 
@@ -110,12 +112,12 @@ class ApplicationStorageTest extends TestCase
         $this->assertInstanceOf(ApplicationEntity::class, $actualResult);
         $this->assertFalse($dataEntity === $actualResult);
         $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
-        $this->assertEquals($data['name'], $actualResult->getName());
-        $this->assertEquals($data['title'], $actualResult->getTitle());
+        $this->assertEquals($data[0]['name'], $actualResult->getName());
+        $this->assertEquals($data[0]['title'], $actualResult->getTitle());
         $this->assertTrue($actualResult->getReadOnly());
 
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
-        $this->assertArraysAreSimilar($data, $actualData);
+        $this->assertArraysAreSimilar($data[0], $actualData);
     }
 
     /**
@@ -137,7 +139,7 @@ class ApplicationStorageTest extends TestCase
 
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
                     if (isset($args[0]['name'])) {

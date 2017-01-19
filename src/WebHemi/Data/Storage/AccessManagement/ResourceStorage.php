@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Storage\AccessManagement;
 
 use WebHemi\DateTime;
@@ -43,17 +45,18 @@ class ResourceStorage extends AbstractDataStorage
      *
      * @param DataEntityInterface $entity
      * @param array               $data
+     * @return void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
     {
         /* @var ResourceEntity $entity */
-        $entity->setResourceId($data[$this->idKey])
+        $entity->setResourceId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
-            ->setReadOnly($data[$this->isReadOnly])
-            ->setDateCreated(new DateTime($data[$this->dateCreated]))
-            ->setDateModified(new DateTime($data[$this->dateModified]));
+            ->setReadOnly((bool) $data[$this->isReadOnly])
+            ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
+            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
     }
 
     /**
@@ -62,7 +65,7 @@ class ResourceStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity)
+    protected function getEntityData(DataEntityInterface $entity) : array
     {
         /** @var ResourceEntity $entity */
         $dateCreated = $entity->getDateCreated();
@@ -83,19 +86,12 @@ class ResourceStorage extends AbstractDataStorage
      * Returns a Resource entity identified by (unique) ID.
      *
      * @param int $identifier
-     *
      * @return null|ResourceEntity
      */
     public function getResourceById($identifier)
     {
-        $entity = null;
-        $data = $this->getDataAdapter()->getData($identifier);
-
-        if (!empty($data)) {
-            /** @var ResourceEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $data);
-        }
+        /** @var null|ResourceEntity $entity */
+        $entity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $entity;
     }
@@ -104,19 +100,12 @@ class ResourceStorage extends AbstractDataStorage
      * Returns an Resource entity by name.
      *
      * @param string $name
-     *
      * @return null|ResourceEntity
      */
     public function getResourceByName($name)
     {
-        $entity = null;
-        $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
-
-        if (!empty($dataList)) {
-            /** @var ResourceEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $dataList[0]);
-        }
+        /** @var null|ResourceEntity $entity */
+        $entity = $this->getDataEntity([$this->name => $name]);
 
         return $entity;
     }

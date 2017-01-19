@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Coupler;
 
 use WebHemi\Data\Coupler\Traits\UserEntityTrait;
@@ -52,7 +54,7 @@ class UserToGroupCoupler extends AbstractDataCoupler
      * @param array               $entityData
      * @return DataEntityInterface
      */
-    protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData)
+    protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData) : DataEntityInterface
     {
         return $referenceEntity instanceof UserEntity
             ? $this->createUserGroupEntity($entityData)

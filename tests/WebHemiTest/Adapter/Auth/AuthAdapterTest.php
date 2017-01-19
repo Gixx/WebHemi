@@ -79,7 +79,7 @@ class AuthAdapterTest extends TestCase
         $this->assertInstanceOf(AuthStorageInterface::class, $actualObject);
         $actualObject = $this->invokePrivateMethod($adapter, 'getDataStorage', []);
         $this->assertInstanceOf(DataStorageInterface::class, $actualObject);
-        $actualObject = $this->invokePrivateMethod($adapter, 'getAuthResult', []);
+        $actualObject = $this->invokePrivateMethod($adapter, 'getNewAuthResultInstance', []);
         $this->assertInstanceOf(Result::class, $actualObject);
         $this->assertFalse($result === $actualObject);
     }
@@ -114,32 +114,32 @@ class AuthAdapterTest extends TestCase
         $adapter->authResultShouldBe = Result::FAILURE_OTHER;
         $result = $adapter->authenticate();
         $this->assertSame(Result::FAILURE_OTHER, $result->getCode());
-        $this->assertNull($result->getIdentity());
+        $this->assertNull($adapter->getIdentity());
         $this->assertNotEmpty($result->getMessage());
 
         $adapter->authResultShouldBe = Result::FAILURE_CREDENTIAL_INVALID;
         $result = $adapter->authenticate();
         $this->assertSame(Result::FAILURE_CREDENTIAL_INVALID, $result->getCode());
-        $this->assertNull($result->getIdentity());
+        $this->assertNull($adapter->getIdentity());
         $this->assertNotEmpty($result->getMessage());
 
         $adapter->authResultShouldBe = Result::FAILURE_IDENTITY_NOT_FOUND;
         $result = $adapter->authenticate();
         $this->assertSame(Result::FAILURE_IDENTITY_NOT_FOUND, $result->getCode());
-        $this->assertNull($result->getIdentity());
+        $this->assertNull($adapter->getIdentity());
         $this->assertNotEmpty($result->getMessage());
 
         $adapter->authResultShouldBe = Result::FAILURE;
         $result = $adapter->authenticate();
         $this->assertSame(Result::FAILURE, $result->getCode());
-        $this->assertNull($result->getIdentity());
+        $this->assertNull($adapter->getIdentity());
         $this->assertNotEmpty($result->getMessage());
 
         $adapter->authResultShouldBe = Result::SUCCESS;
         $result = $adapter->authenticate();
         $this->assertSame(Result::SUCCESS, $result->getCode());
-        $this->assertInstanceOf(UserEntity::class, $result->getIdentity());
-        $this->assertSame('test', $result->getIdentity()->getUserName());
+        $this->assertInstanceOf(UserEntity::class, $adapter->getIdentity());
+        $this->assertSame('test', $adapter->getIdentity()->getUserName());
 
         $adapter->clearIdentity();
         $this->assertNull($adapter->getIdentity());

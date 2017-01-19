@@ -76,20 +76,22 @@ class ResourceStorageTest extends TestCase
     public function testGetResourceById()
     {
         $data = [
-            'id_am_resource' => 1,
-            'name' => 'test.resource',
-            'title' => 'Test Resource',
-            'description' => 'A test resource record',
-            'is_read_only' => 0,
-            'date_created' =>  '2016-03-24 16:25:12',
-            'date_modified' =>  '2016-03-24 16:25:12',
+            0 => [
+                'id_am_resource' => 1,
+                'name' => 'test.resource',
+                'title' => 'Test Resource',
+                'description' => 'A test resource record',
+                'is_read_only' => 0,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ]
         ];
 
         $this->defaultAdapter
-            ->getData(Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
-                    if ($args[0] == 1) {
+                    if ($args[0]['id_am_resource'] == 1) {
                         return $data;
                     }
 
@@ -110,11 +112,11 @@ class ResourceStorageTest extends TestCase
         $this->assertInstanceOf(ResourceEntity::class, $actualResult);
         $this->assertFalse($dataEntity === $actualResult);
         $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
-        $this->assertEquals($data['name'], $actualResult->getName());
-        $this->assertEquals($data['title'], $actualResult->getTitle());
+        $this->assertEquals($data[0]['name'], $actualResult->getName());
+        $this->assertEquals($data[0]['title'], $actualResult->getTitle());
         $this->assertFalse($actualResult->getReadOnly());
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
-        $this->assertArraysAreSimilar($data, $actualData);
+        $this->assertArraysAreSimilar($data[0], $actualData);
     }
 
     /**
@@ -135,7 +137,7 @@ class ResourceStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
                     if (isset($args[0]['name'])) {

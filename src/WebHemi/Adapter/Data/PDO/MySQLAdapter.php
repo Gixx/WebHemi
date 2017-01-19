@@ -112,7 +112,9 @@ class MySQLAdapter implements DataAdapterInterface
         $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
-        return $statement->fetch(PDO::FETCH_ASSOC);
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return $data ? $data : [];
     }
 
     /**
@@ -134,7 +136,9 @@ class MySQLAdapter implements DataAdapterInterface
         $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $data ? $data : [];
     }
 
     /**
@@ -168,7 +172,7 @@ class MySQLAdapter implements DataAdapterInterface
      */
     protected function getSelectQueryForExpression(
         array $expression,
-        array &$queryBind,
+        array&$queryBind,
         int $limit = PHP_INT_MAX,
         int $offset = 0
     ) : string {
@@ -192,7 +196,7 @@ class MySQLAdapter implements DataAdapterInterface
      * @param array $queryBind
      * @return string
      */
-    protected function getWhereExpression(array $expression, array &$queryBind) : string
+    protected function getWhereExpression(array $expression, array&$queryBind) : string
     {
         $whereExpression = '';
         $queryParams = [];
@@ -278,7 +282,7 @@ class MySQLAdapter implements DataAdapterInterface
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function saveData(?int $identifier = null, array $data) : int
+    public function saveData(? int $identifier = null, array $data) : int
     {
         if (empty($identifier)) {
             $query = "INSERT INTO {$this->dataGroup}";
@@ -308,7 +312,7 @@ class MySQLAdapter implements DataAdapterInterface
         $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
-        return empty($identifier) ? (int)$this->dataDriver->lastInsertId() : $identifier;
+        return empty($identifier) ? (int) $this->dataDriver->lastInsertId() : $identifier;
     }
 
     /**

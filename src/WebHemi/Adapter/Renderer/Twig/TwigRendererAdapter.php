@@ -98,7 +98,7 @@ class TwigRendererAdapter implements RendererAdapterInterface
     public function render(string $template, array $parameters = []) : StreamInterface
     {
         if ($this->configuration->has('map/'.$template)) {
-            $template = $this->configuration->getData('map/'.$template);
+            $template = $this->configuration->getData('map/'.$template)[0];
         }
 
         if (!file_exists($this->templateViewPath.'/'.$template)) {
@@ -168,6 +168,6 @@ class TwigRendererAdapter implements RendererAdapterInterface
     private function isFeatureSupported(ConfigInterface $themeConfig, string $feature) : bool
     {
         return $themeConfig->has('features/'.$feature.'_support')
-            && $themeConfig->getData('features/'.$feature.'_support');
+            && (bool) $themeConfig->getData('features/'.$feature.'_support')[0];
     }
 }

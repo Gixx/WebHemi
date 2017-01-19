@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Coupler;
 
 use WebHemi\Adapter\Data\DataAdapterInterface;
@@ -39,7 +41,7 @@ interface DataCouplerInterface
      *
      * @return DataAdapterInterface
      */
-    public function getDataAdapter();
+    public function getDataAdapter() : DataAdapterInterface;
 
     /**
      * Gets all the entities those are depending from the given entity.
@@ -47,14 +49,14 @@ interface DataCouplerInterface
      * @param DataEntityInterface $entity
      * @return array<DataEntityInterface>
      */
-    public function getEntityDependencies(DataEntityInterface $entity);
+    public function getEntityDependencies(DataEntityInterface $entity) : array;
 
     /**
      * Sets dependency for the entities
      *
      * @param DataEntityInterface $entityA
      * @param DataEntityInterface $entityB
-     * @return mixed The ID of the saved entity in the storage
+     * @return int The ID of the saved entity in the storage
      */
-    public function setDependency(DataEntityInterface $entityA, DataEntityInterface $entityB);
+    public function setDependency(DataEntityInterface $entityA, DataEntityInterface $entityB) : int;
 }

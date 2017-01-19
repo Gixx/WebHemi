@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Storage;
 
 use InvalidArgumentException;
@@ -52,7 +54,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      *
      * @return DataStorageInterface
      */
-    public function init()
+    public function init() : DataStorageInterface
     {
         // They always walk in pair.
         if (!empty($this->dataGroup) && !empty($this->idKey)) {
@@ -70,7 +72,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      *
      * @return bool
      */
-    final public function initialized()
+    final public function initialized() : bool
     {
         return $this->initialized;
     }
@@ -80,7 +82,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      *
      * @return DataAdapterInterface
      */
-    final public function getDataAdapter()
+    final public function getDataAdapter() : DataAdapterInterface
     {
         return $this->defaultAdapter;
     }
@@ -90,7 +92,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      *
      * @return DataEntityInterface
      */
-    final public function createEntity()
+    final public function createEntity() : DataEntityInterface
     {
         return clone $this->entityPrototype;
     }
@@ -99,9 +101,9 @@ abstract class AbstractDataStorage implements DataStorageInterface
      * Saves data.
      *
      * @param DataEntityInterface &$entity
-     * @return int The ID of the saved entity in the storage
+     * @return DataStorageInterface
      */
-    public function saveEntity(DataEntityInterface&$entity) : int
+    public function saveEntity(DataEntityInterface&$entity) : DataStorageInterface
     {
         $entityClass = get_class($entity);
         $storageEntityClass = get_class($this->entityPrototype);
@@ -125,7 +127,48 @@ abstract class AbstractDataStorage implements DataStorageInterface
             $this->populateEntity($entity, $entityData);
         }
 
-        return $dataId;
+        return $this;
+    }
+
+    /**
+     * Gets one Entity from the data adapter by expression.
+     *
+     * @param array $expression
+     * @return null|DataEntityInterface
+     */
+    protected function getDataEntity(array $expression) : ? DataEntityInterface
+    {
+        $entity = null;
+        $dataList = $this->getDataEntitySet($expression, 1);
+
+        if (!empty($dataList)) {
+            $entity = $dataList[0];
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Gets a set of Entities from the data adapter by expression.
+     *
+     * @param array $expression
+     * @param int   $limit
+     * @param int   $offset
+     * @return array<DataEntityInterface>
+     */
+    protected function getDataEntitySet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array
+    {
+        $entityList = [];
+        $dataList = $this->getDataAdapter()->getDataSet($expression, $limit, $offset);
+
+        foreach ($dataList as $data) {
+            /** @var DataEntityInterface $entity */
+            $entity = $this->createEntity();
+            $this->populateEntity($entity, $data);
+            $entityList[] = $entity;
+        }
+
+        return $entityList;
     }
 
     /**
@@ -134,13 +177,14 @@ abstract class AbstractDataStorage implements DataStorageInterface
      * @param DataEntityInterface $entity
      * @return array
      */
-    abstract protected function getEntityData(DataEntityInterface $entity);
+    abstract protected function getEntityData(DataEntityInterface $entity) : array;
 
     /**
      * Populates an entity with storage data.
      *
      * @param DataEntityInterface $entity
      * @param array               $data
+     * @return void
      */
-    abstract protected function populateEntity(DataEntityInterface&$entity, array $data);
+    abstract protected function populateEntity(DataEntityInterface&$entity, array $data) : void;
 }

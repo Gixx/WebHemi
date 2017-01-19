@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Storage;
 
 use WebHemi\DateTime;
@@ -42,17 +44,18 @@ class ApplicationStorage extends AbstractDataStorage
      *
      * @param DataEntityInterface $entity
      * @param array               $data
+     * @return void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
     {
         /* @var ApplicationEntity $entity */
-        $entity->setApplicationId($data[$this->idKey])
+        $entity->setApplicationId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
-            ->setReadOnly($data[$this->isReadOnly])
-            ->setDateCreated(new DateTime($data[$this->dateCreated]))
-            ->setDateModified(new DateTime($data[$this->dateModified]));
+            ->setReadOnly((bool) $data[$this->isReadOnly])
+            ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
+            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
     }
 
     /**
@@ -61,7 +64,7 @@ class ApplicationStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity)
+    protected function getEntityData(DataEntityInterface $entity) : array
     {
         /** @var ApplicationEntity $entity */
         $dateCreated = $entity->getDateCreated();
@@ -82,19 +85,12 @@ class ApplicationStorage extends AbstractDataStorage
      * Returns a Application entity identified by (unique) ID.
      *
      * @param int $identifier
-     *
      * @return null|ApplicationEntity
      */
-    public function getApplicationById($identifier)
+    public function getApplicationById($identifier) : ? ApplicationEntity
     {
-        $entity = null;
-        $data = $this->getDataAdapter()->getData($identifier);
-
-        if (!empty($data)) {
-            /** @var ApplicationEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $data);
-        }
+        /** @var null|ApplicationEntity $entity */
+        $entity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $entity;
     }
@@ -103,19 +99,12 @@ class ApplicationStorage extends AbstractDataStorage
      * Returns an Application entity by name.
      *
      * @param string $name
-     *
      * @return null|ApplicationEntity
      */
-    public function getApplicationByName($name)
+    public function getApplicationByName($name) : ? ApplicationEntity
     {
-        $entity = null;
-        $dataList = $this->getDataAdapter()->getDataSet([$this->name => $name], 1);
-
-        if (!empty($dataList)) {
-            /** @var ApplicationEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $dataList[0]);
-        }
+        /** @var null|ApplicationEntity $entity */
+        $entity = $this->getDataEntity([$this->name => $name]);
 
         return $entity;
     }

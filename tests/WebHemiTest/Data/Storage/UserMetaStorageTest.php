@@ -94,11 +94,11 @@ class UserMetaStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getData(Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
-                    if (in_array($args[0], [1, 2])) {
-                        return $data[($args[0] - 1)];
+                    if (in_array($args[0]['id_user_meta'], [1, 2])) {
+                        return [$data[($args[0]['id_user_meta'] - 1)]];
                     }
 
                     return [];
@@ -154,7 +154,7 @@ class UserMetaStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['fk_user'] == 1) {

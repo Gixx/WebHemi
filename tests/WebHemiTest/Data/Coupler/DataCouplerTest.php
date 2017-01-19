@@ -66,7 +66,7 @@ class DataCouplerTest extends TestCase
 
                 if (!$result) {
                     throw new PHPUnit_Framework_IncompleteTestError(
-                        'Cannot set up test database: '.json_encode(self::$dataDriver->errorInfo())
+                        'Cannot set up test database: '.json_encode(self::$dataDriver->errorInfo()).'; query: '.$sql
                     );
                 }
             }

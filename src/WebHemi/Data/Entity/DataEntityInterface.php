@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Entity;
 
 /**
@@ -22,14 +24,14 @@ interface DataEntityInterface
      * Sets the value of the entity identifier.
      *
      * @param int $entityId
-     * @return DataEntityInterface
+     * @return DataEntityInterface - declare specific return type in the implementations
      */
-    public function setKeyData($entityId);
+    public function setKeyData(int $entityId);
 
     /**
      * Gets the value of the entity identifier.
      *
-     * @return int
+     * @return null|int
      */
-    public function getKeyData();
+    public function getKeyData() : ? int;
 }
