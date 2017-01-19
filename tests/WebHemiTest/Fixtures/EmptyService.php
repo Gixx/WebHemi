@@ -45,10 +45,9 @@ class EmptyService
 
         if (preg_match('/^(?P<type>(get|set))(?P<property>.+)$/', $name, $matches)) {
             $property = lcfirst($matches['property']);
-            $value = $arguments[0];
 
             if ($matches['type'] == 'set') {
-                $this->storage[$property] = $value;
+                $this->storage[$property] = $arguments[0];
                 $return = true;
             } else {
                 if (isset($this->storage[$property])) {
