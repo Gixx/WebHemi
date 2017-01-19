@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Entity\User;
 
 use WebHemi\DateTime;
@@ -40,7 +42,7 @@ class UserGroupEntity implements DataEntityInterface
      * @param int $entityId
      * @return UserGroupEntity
      */
-    public function setKeyData($entityId)
+    public function setKeyData(int $entityId) : UserGroupEntity
     {
         $this->userGroupId = $entityId;
 
@@ -50,19 +52,18 @@ class UserGroupEntity implements DataEntityInterface
     /**
      * Gets the value of the entity identifier.
      *
-     * @return int
+     * @return null|int
      */
-    public function getKeyData()
+    public function getKeyData() : ? int
     {
         return $this->userGroupId;
     }
 
     /**
      * @param int $userGroupId
-     *
      * @return UserGroupEntity
      */
-    public function setUserGroupId($userGroupId)
+    public function setUserGroupId(int $userGroupId) : UserGroupEntity
     {
         $this->userGroupId = $userGroupId;
 
@@ -70,19 +71,18 @@ class UserGroupEntity implements DataEntityInterface
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getUserGroupId()
+    public function getUserGroupId() : ? int
     {
         return $this->userGroupId;
     }
 
     /**
      * @param string $name
-     *
      * @return UserGroupEntity
      */
-    public function setName($name)
+    public function setName(string $name) : UserGroupEntity
     {
         $this->name = $name;
 
@@ -90,19 +90,18 @@ class UserGroupEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getName()
+    public function getName() : ? string
     {
         return $this->name;
     }
 
     /**
      * @param string $title
-     *
      * @return UserGroupEntity
      */
-    public function setTitle($title)
+    public function setTitle(string $title) : UserGroupEntity
     {
         $this->title = $title;
 
@@ -110,19 +109,18 @@ class UserGroupEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getTitle()
+    public function getTitle() : ? string
     {
         return $this->title;
     }
 
     /**
      * @param string $description
-     *
      * @return UserGroupEntity
      */
-    public function setDescription($description)
+    public function setDescription(string $description) : UserGroupEntity
     {
         $this->description = $description;
 
@@ -130,21 +128,20 @@ class UserGroupEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getDescription()
+    public function getDescription() : ? string
     {
         return $this->description;
     }
 
     /**
      * @param bool $state
-     *
      * @return UserGroupEntity
      */
-    public function setReadOnly($state)
+    public function setReadOnly(bool $state) : UserGroupEntity
     {
-        $this->isReadOnly = (bool) $state;
+        $this->isReadOnly = $state;
 
         return $this;
     }
@@ -152,17 +149,16 @@ class UserGroupEntity implements DataEntityInterface
     /**
      * @return bool
      */
-    public function getReadOnly()
+    public function getReadOnly() : bool
     {
-        return $this->isReadOnly;
+        return $this->isReadOnly ?? false;
     }
 
     /**
      * @param DateTime $dateCreated
-     *
      * @return UserGroupEntity
      */
-    public function setDateCreated(DateTime $dateCreated)
+    public function setDateCreated(DateTime $dateCreated) : UserGroupEntity
     {
         $this->dateCreated = $dateCreated;
 
@@ -170,19 +166,18 @@ class UserGroupEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateCreated()
+    public function getDateCreated() : ? DateTime
     {
         return $this->dateCreated;
     }
 
     /**
      * @param DateTime $dateModified
-     *
      * @return UserGroupEntity
      */
-    public function setDateModified(DateTime $dateModified)
+    public function setDateModified(DateTime $dateModified) : UserGroupEntity
     {
         $this->dateModified = $dateModified;
 
@@ -190,9 +185,9 @@ class UserGroupEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateModified()
+    public function getDateModified() : ? DateTime
     {
         return $this->dateModified;
     }

@@ -48,10 +48,18 @@ class SessionManagerTest extends TestCase
     {
         $sessionManager = new SessionManager($this->config);
         $this->assertAttributeEmpty('data', $sessionManager);
-        $this->assertAttributeEquals($this->config->getData('session/namespace'), 'namespace', $sessionManager);
-        $this->assertAttributeEquals($this->config->getData('session/cookie_prefix'), 'cookiePrefix', $sessionManager);
         $this->assertAttributeEquals(
-            $this->config->getData('session/session_name_salt'),
+            $this->config->getData('session/namespace')[0],
+            'namespace',
+            $sessionManager
+        );
+        $this->assertAttributeEquals(
+            $this->config->getData('session/cookie_prefix')[0],
+            'cookiePrefix',
+            $sessionManager
+        );
+        $this->assertAttributeEquals(
+            $this->config->getData('session/session_name_salt')[0],
             'sessionNameSalt',
             $sessionManager
         );

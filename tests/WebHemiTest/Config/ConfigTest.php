@@ -119,7 +119,7 @@ class ConfigTest extends TestCase
         $this->assertFalse($config->has('A/A1/A11/'));
         $this->assertArraysAreSimilar($config->getData('A/A1/A11'), $this->testConfig['A']['A1']['A11']);
 
-        $this->assertEquals('deepest level', $config->getData('A/A1/A12/some other key/A12x4'));
+        $this->assertEquals('deepest level', $config->getData('A/A1/A12/some other key/A12x4')[0]);
 
         $this->assertArraysAreSimilar($config->getData('C/C1'), $this->testConfig['A']['A1']['A11']);
 

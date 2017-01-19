@@ -76,22 +76,24 @@ class UserStorageTest extends TestCase
     public function testGetUserById()
     {
         $data = [
-            'id_user' => 1,
-            'username' => 'testUser',
-            'email' => 'test.address@foo.org',
-            'password' => md5('testPassword'),
-            'hash' => null,
-            'is_active' => true,
-            'is_enabled' => true,
-            'date_created' =>  '2016-03-24 16:25:12',
-            'date_modified' =>  null,
+            0 => [
+                'id_user' => 1,
+                'username' => 'testUser',
+                'email' => 'test.address@foo.org',
+                'password' => md5('testPassword'),
+                'hash' => '',
+                'is_active' => true,
+                'is_enabled' => true,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  null,
+            ]
         ];
 
         $this->defaultAdapter
-            ->getData(Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
-                    if ($args[0] == 1) {
+                    if ($args[0]['id_user'] == 1) {
                         return $data;
                     }
 
@@ -112,7 +114,7 @@ class UserStorageTest extends TestCase
         $this->assertInstanceOf(UserEntity::class, $actualResult);
         $this->assertFalse($dataEntity === $actualResult);
         $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
-        $this->assertEquals($data['password'], $actualResult->getPassword());
+        $this->assertEquals($data[0]['password'], $actualResult->getPassword());
         $this->assertSame(true, $actualResult->getEnabled());
     }
 
@@ -122,23 +124,25 @@ class UserStorageTest extends TestCase
     public function testGetUserByEmail()
     {
         $data = [
-            'id_user' => 1,
-            'username' => 'testUser',
-            'email' => 'test.address@foo.org',
-            'password' => md5('testPassword'),
-            'hash' => null,
-            'is_active' => 1,
-            'is_enabled' => 1,
-            'date_created' =>  '2016-03-24 16:25:12',
-            'date_modified' =>  '2016-03-24 16:25:12',
+            0 => [
+                'id_user' => 1,
+                'username' => 'testUser',
+                'email' => 'test.address@foo.org',
+                'password' => md5('testPassword'),
+                'hash' => '',
+                'is_active' => 1,
+                'is_enabled' => 1,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ]
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['email'] == 'test.address@foo.org') {
-                        return [$data];
+                        return $data;
                     }
                     return [];
                 }
@@ -157,11 +161,11 @@ class UserStorageTest extends TestCase
         $this->assertInstanceOf(UserEntity::class, $actualResult);
         $this->assertFalse($dataEntity === $actualResult);
         $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
-        $this->assertEquals($data['password'], $actualResult->getPassword());
+        $this->assertEquals($data[0]['password'], $actualResult->getPassword());
         $this->assertSame(true, $actualResult->getEnabled());
 
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
-        $this->assertArraysAreSimilar($data, $actualData);
+        $this->assertArraysAreSimilar($data[0], $actualData);
     }
 
     /**
@@ -174,7 +178,7 @@ class UserStorageTest extends TestCase
             'username' => 'testUser',
             'email' => 'test.address@foo.org',
             'password' => md5('testPassword'),
-            'hash' => null,
+            'hash' => '',
             'is_active' => 1,
             'is_enabled' => 1,
             'date_created' =>  '2016-03-24 16:25:12',
@@ -182,7 +186,7 @@ class UserStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['username'] == 'testUser') {

@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Entity\User;
 
 use WebHemi\DateTime;
@@ -44,7 +46,7 @@ class UserEntity implements DataEntityInterface
      * @param int $entityId
      * @return UserEntity
      */
-    public function setKeyData($entityId)
+    public function setKeyData(int $entityId) : UserEntity
     {
         $this->userId = $entityId;
 
@@ -54,19 +56,18 @@ class UserEntity implements DataEntityInterface
     /**
      * Gets the value of the entity identifier.
      *
-     * @return int
+     * @return null|int
      */
-    public function getKeyData()
+    public function getKeyData() : ? int
     {
         return $this->userId;
     }
 
     /**
      * @param int $userId
-     *
      * @return UserEntity
      */
-    public function setUserId($userId)
+    public function setUserId(int $userId) : UserEntity
     {
         $this->userId = $userId;
 
@@ -74,19 +75,18 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getUserId()
+    public function getUserId() : ? int
     {
         return $this->userId;
     }
 
     /**
      * @param string $userName
-     *
      * @return UserEntity
      */
-    public function setUserName($userName)
+    public function setUserName(string $userName) : UserEntity
     {
         $this->userName = $userName;
 
@@ -94,19 +94,18 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getUserName()
+    public function getUserName() : ? string
     {
         return $this->userName;
     }
 
     /**
      * @param string $email
-     *
      * @return UserEntity
      */
-    public function setEmail($email)
+    public function setEmail(string $email) : UserEntity
     {
         $this->email = $email;
 
@@ -114,19 +113,18 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getEmail()
+    public function getEmail() : ? string
     {
         return $this->email;
     }
 
     /**
      * @param string $password
-     *
      * @return UserEntity
      */
-    public function setPassword($password)
+    public function setPassword(string $password) : UserEntity
     {
         $this->password = $password;
 
@@ -134,19 +132,18 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getPassword()
+    public function getPassword() : ? string
     {
         return $this->password;
     }
 
     /**
      * @param string $hash
-     *
      * @return UserEntity
      */
-    public function setHash($hash)
+    public function setHash(string $hash) : UserEntity
     {
         $this->hash = $hash;
 
@@ -154,21 +151,20 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getHash()
+    public function getHash() : ? string
     {
         return $this->hash;
     }
 
     /**
      * @param bool $state
-     *
      * @return UserEntity
      */
-    public function setActive($state)
+    public function setActive(bool $state) : UserEntity
     {
-        $this->isActive = (bool) $state;
+        $this->isActive = $state;
 
         return $this;
     }
@@ -176,19 +172,18 @@ class UserEntity implements DataEntityInterface
     /**
      * @return bool
      */
-    public function getActive()
+    public function getActive() : bool
     {
-        return $this->isActive;
+        return $this->isActive ?? false;
     }
 
     /**
      * @param bool $state
-     *
      * @return UserEntity
      */
-    public function setEnabled($state)
+    public function setEnabled(bool $state) : UserEntity
     {
-        $this->isEnabled = (bool) $state;
+        $this->isEnabled = $state;
 
         return $this;
     }
@@ -196,17 +191,16 @@ class UserEntity implements DataEntityInterface
     /**
      * @return bool
      */
-    public function getEnabled()
+    public function getEnabled() : bool
     {
-        return $this->isEnabled;
+        return $this->isEnabled ?? false;
     }
 
     /**
      * @param DateTime $dateCreated
-     *
      * @return UserEntity
      */
-    public function setDateCreated(DateTime $dateCreated)
+    public function setDateCreated(DateTime $dateCreated) : UserEntity
     {
         $this->dateCreated = $dateCreated;
 
@@ -214,19 +208,18 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateCreated()
+    public function getDateCreated() : ? DateTime
     {
         return $this->dateCreated;
     }
 
     /**
      * @param DateTime $dateModified
-     *
      * @return UserEntity
      */
-    public function setDateModified(DateTime $dateModified)
+    public function setDateModified(DateTime $dateModified) : UserEntity
     {
         $this->dateModified = $dateModified;
 
@@ -234,9 +227,9 @@ class UserEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateModified()
+    public function getDateModified() : ? DateTime
     {
         return $this->dateModified;
     }

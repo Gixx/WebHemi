@@ -9,10 +9,13 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Coupler\Traits;
 
 use WebHemi\DateTime;
 use RuntimeException;
+use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 
 /**
@@ -25,9 +28,9 @@ trait UserGroupEntityTrait
      *
      * @param string $entityClassName
      * @throws RuntimeException
-     * @return UserGroupEntity
+     * @return DataEntityInterface
      */
-    abstract protected function getNewEntityInstance($entityClassName);
+    abstract protected function getNewEntityInstance(string $entityClassName) : DataEntityInterface;
 
     /**
      * Creates a new Policy Entity instance form the data.
@@ -35,17 +38,18 @@ trait UserGroupEntityTrait
      * @param array $data
      * @return UserGroupEntity
      */
-    protected function createUserGroupEntity(array $data)
+    protected function createUserGroupEntity(array $data) : UserGroupEntity
     {
+        /** @var UserGroupEntity $entity */
         $entity = $this->getNewEntityInstance(UserGroupEntity::class);
 
-        $entity->setUserGroupId($data['id_user_group'])
+        $entity->setUserGroupId((int) $data['id_user_group'])
             ->setName($data['name'])
             ->setTitle($data['title'])
             ->setDescription($data['description'])
-            ->setReadOnly($data['is_read_only'])
-            ->setDateCreated(new DateTime($data['date_created']))
-            ->setDateModified(new DateTime($data['date_created']));
+            ->setReadOnly((bool) $data['is_read_only'])
+            ->setDateCreated(new DateTime($data['date_created'] ?? 'now'))
+            ->setDateModified(new DateTime($data['date_created'] ?? 'now'));
 
         return $entity;
     }

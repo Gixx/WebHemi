@@ -9,13 +9,14 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Storage\User;
 
 use WebHemi\DateTime;
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\User\UserMetaEntity;
 use WebHemi\Data\Storage\AbstractDataStorage;
-use WebHemi\Data\Storage\Traits\GetEntityListFromDataSetTrait;
 
 /**
  * Class UserMetaStorage.
@@ -37,24 +38,22 @@ class UserMetaStorage extends AbstractDataStorage
     /** @var string */
     private $dateModified = 'date_modified';
 
-    /** @method bool|array<UserMetaEntity> getEntityListFromDataSet(array $dataList) */
-    use GetEntityListFromDataSetTrait;
-
     /**
      * Populates an entity with storage data.
      *
      * @param DataEntityInterface $entity
      * @param array               $data
+     * @return void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
     {
         /* @var UserMetaEntity $entity */
-        $entity->setUserMetaId($data[$this->idKey])
-            ->setUserId($data[$this->userId])
+        $entity->setUserMetaId((int) $data[$this->idKey])
+            ->setUserId((int) $data[$this->userId])
             ->setMetaKey($data[$this->metaKey])
             ->setMetaData($data[$this->metaData])
-            ->setDateCreated(new DateTime($data[$this->dateCreated]))
-            ->setDateModified(new DateTime($data[$this->dateModified]));
+            ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
+            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
     }
 
     /**
@@ -63,7 +62,7 @@ class UserMetaStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity)
+    protected function getEntityData(DataEntityInterface $entity) : array
     {
         /** @var UserMetaEntity $entity */
         $dateCreated = $entity->getDateCreated();
@@ -83,19 +82,12 @@ class UserMetaStorage extends AbstractDataStorage
      * Returns a User Meta entity identified by (unique) ID.
      *
      * @param int $identifier
-     *
      * @return null|UserMetaEntity
      */
-    public function getUserMetaById($identifier)
+    public function getUserMetaById($identifier) : ? UserMetaEntity
     {
-        $entity = null;
-        $data = $this->getDataAdapter()->getData($identifier);
-
-        if (!empty($data)) {
-            /** @var UserMetaEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $data);
-        }
+        /** @var null|UserMetaEntity $entity */
+        $entity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $entity;
     }
@@ -104,13 +96,10 @@ class UserMetaStorage extends AbstractDataStorage
      * Returns a User Meta entity list identified by user ID.
      *
      * @param mixed $userId
-     *
      * @return array<UserMetaEntity>
      */
-    public function getUserMetaForUserId($userId)
+    public function getUserMetaForUserId($userId) : array
     {
-        $dataList = $this->getDataAdapter()->getDataSet([$this->userId => $userId]);
-
-        return $this->getEntityListFromDataSet($dataList);
+        return $this->getDataEntitySet([$this->userId => $userId]);
     }
 }

@@ -86,12 +86,11 @@ class LoginAction extends AbstractMiddlewareAction
             /** @var Result $result */
             $result = $this->authAdapter->authenticate();
 
-            if ($result->isValid()) {
-                $identity = $result->getIdentity();
-                $this->authAdapter->setIdentity($identity);
+            if (!$result->isValid()) {
+
             }
 
-            /** @var null|string|UserEntity $userEntity */
+            /** @var UserEntity|null $userEntity */
             $userEntity = $this->authAdapter->getIdentity();
 
             // save new user if we have the username credentials and add him/her to the Guest group

@@ -30,8 +30,9 @@ class EmptyStorage extends AbstractDataStorage
      *
      * @param DataEntityInterface $entity
      * @param array               $data
+     * @return void
      */
-    protected function populateEntity(DataEntityInterface &$entity, array $data)
+    protected function populateEntity(DataEntityInterface &$entity, array $data) : void
     {
         foreach ($data as $key => $value) {
             $method = 'set' . ucfirst($key);
@@ -45,7 +46,7 @@ class EmptyStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity)
+    protected function getEntityData(DataEntityInterface $entity) : array
     {
         /** @var EmptyEntity $entity */
         return $entity->storage;
@@ -56,7 +57,7 @@ class EmptyStorage extends AbstractDataStorage
      *
      * @param string $idKey
      *
-     * @return $this
+     * @return EmptyStorage
      */
     public function setIdKey($idKey)
     {
@@ -69,7 +70,7 @@ class EmptyStorage extends AbstractDataStorage
      *
      * @param string $dataGroup
      *
-     * @return $this
+     * @return EmptyStorage
      */
     public function setDataGroup($dataGroup)
     {

@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Coupler;
 
 use InvalidArgumentException;
@@ -72,7 +74,7 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      *
      * @return DataAdapterInterface
      */
-    public function getDataAdapter()
+    public function getDataAdapter() : DataAdapterInterface
     {
         return $this->defaultAdapter;
     }
@@ -84,7 +86,7 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      * @throws RuntimeException
      * @return array<DataEntityInterface>
      */
-    public function getEntityDependencies(DataEntityInterface $entity)
+    public function getEntityDependencies(DataEntityInterface $entity) : array
     {
         $entityClass = get_class($entity);
         if (!isset($this->dataEntityPrototypes[$entityClass])) {
@@ -109,9 +111,9 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      *
      * @param DataEntityInterface $entityA
      * @param DataEntityInterface $entityB
-     * @return mixed The ID of the saved entity in the storage
+     * @return int The ID of the saved entity in the storage
      */
-    public function setDependency(DataEntityInterface $entityA, DataEntityInterface $entityB)
+    public function setDependency(DataEntityInterface $entityA, DataEntityInterface $entityB) : int
     {
         $entityClassA = get_class($entityA);
         if (!isset($this->dataEntityPrototypes[$entityClassA])) {
@@ -149,7 +151,10 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      * @param array               $entityData
      * @return DataEntityInterface
      */
-    abstract protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData);
+    abstract protected function getDependingEntity(
+        DataEntityInterface $referenceEntity,
+        array $entityData
+    ) : DataEntityInterface;
 
     /**
      * Returns a new instance of the required entity.
@@ -158,7 +163,7 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      * @throws RuntimeException
      * @return DataEntityInterface
      */
-    protected function getNewEntityInstance($entityClassName)
+    protected function getNewEntityInstance(string $entityClassName) : DataEntityInterface
     {
         return clone $this->dataEntityPrototypes[$entityClassName];
     }
@@ -169,7 +174,7 @@ abstract class AbstractDataCoupler implements DataCouplerInterface
      * @param DataEntityInterface $entity
      * @return array
      */
-    protected function getEntityDataSet(DataEntityInterface $entity)
+    protected function getEntityDataSet(DataEntityInterface $entity) : array
     {
         $entityClassName = get_class($entity);
         $entityDataSet = [];

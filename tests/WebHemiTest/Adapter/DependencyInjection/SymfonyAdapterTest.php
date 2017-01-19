@@ -25,6 +25,7 @@ use WebHemi\Config\ConfigInterface;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
 use WebHemiTest\Fixtures\EmptyEntity;
+use WebHemiTest\Fixtures\EmptyService;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -256,7 +257,7 @@ class SymfonyAdapterTest extends TestCase
                 'dependencies' => [
                     'Global' => [
                         'alias' => [
-                            'class' => EmptyEntity::class,
+                            'class' => EmptyService::class,
                             'arguments' => [
                                 'theKey',
                                 $keyData
@@ -273,15 +274,15 @@ class SymfonyAdapterTest extends TestCase
 
         /** @var EmptyEntity $actualDate */
         $actualObject = $adapter->get('alias');
-        $this->assertInstanceOf(EmptyEntity::class, $actualObject);
-        $this->assertInstanceOf(DateTime::class, $actualObject->getKeyData());
+        $this->assertInstanceOf(EmptyService::class, $actualObject);
+        $this->assertInstanceOf(DateTime::class, $actualObject->getTheKey());
 
         $config = new Config(
             [
                 'dependencies' => [
                     'Global' => [
                         'alias' => [
-                            'class' => EmptyEntity::class,
+                            'class' => EmptyService::class,
                             'arguments' => [
                                 'theKey',
                                 '!:'.$keyData
@@ -298,9 +299,9 @@ class SymfonyAdapterTest extends TestCase
 
         /** @var EmptyEntity $actualDate */
         $actualObject = $adapter->get('alias');
-        $this->assertInstanceOf(EmptyEntity::class, $actualObject);
-        $this->assertInternalType('string', $actualObject->getKeyData());
-        $this->assertSame($keyData, $actualObject->getKeyData());
+        $this->assertInstanceOf(EmptyService::class, $actualObject);
+        $this->assertInternalType('string', $actualObject->getTheKey());
+        $this->assertSame($keyData, $actualObject->getTheKey());
     }
 
     /**

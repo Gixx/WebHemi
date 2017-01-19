@@ -40,9 +40,9 @@ interface ConfigInterface
      *
      * @param string $path
      * @throws InvalidArgumentException
-     * @return mixed
+     * @return array
      */
-    public function getData(string $path);
+    public function getData(string $path) : array;
 
     /**
      * Returns the configuration instance for a specific key. Also add the possibility to merge additional information

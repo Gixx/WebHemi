@@ -52,7 +52,7 @@ class UserGroupToPolicyCoupler extends AbstractDataCoupler
      * @param array               $entityData
      * @return DataEntityInterface
      */
-    protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData)
+    protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData) : DataEntityInterface
     {
         return $referenceEntity instanceof UserGroupEntity
             ? $this->createPolicyEntity($entityData)

@@ -66,7 +66,7 @@ interface AuthAdapterInterface
      *
      * @return DataEntityInterface|null
      */
-    public function getIdentity() : ?DataEntityInterface;
+    public function getIdentity() : ? DataEntityInterface;
 
     /**
      * Clears the session.

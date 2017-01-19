@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Storage\User;
 
 use WebHemi\DateTime;
@@ -47,19 +49,20 @@ class UserStorage extends AbstractDataStorage
      *
      * @param DataEntityInterface $entity
      * @param array               $data
+     * @return void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data)
+    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
     {
         /* @var UserEntity $entity */
-        $entity->setUserId($data[$this->idKey])
+        $entity->setUserId((int) $data[$this->idKey])
             ->setUserName($data[$this->userName])
             ->setEmail($data[$this->email])
             ->setPassword($data[$this->password])
             ->setHash($data[$this->hash])
-            ->setActive($data[$this->isActive])
-            ->setEnabled($data[$this->isEnabled])
-            ->setDateCreated(new DateTime($data[$this->dateCreated]))
-            ->setDateModified(new DateTime($data[$this->dateModified]));
+            ->setActive((bool) $data[$this->isActive])
+            ->setEnabled((bool) $data[$this->isEnabled])
+            ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
+            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
     }
 
     /**
@@ -68,7 +71,7 @@ class UserStorage extends AbstractDataStorage
      * @param DataEntityInterface $entity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity)
+    protected function getEntityData(DataEntityInterface $entity) : array
     {
         /** @var UserEntity $entity */
         $dateCreated = $entity->getDateCreated();
@@ -91,19 +94,12 @@ class UserStorage extends AbstractDataStorage
      * Returns a User entity identified by (unique) ID.
      *
      * @param int $identifier
-     *
      * @return null|UserEntity
      */
-    public function getUserById($identifier)
+    public function getUserById(int $identifier) : ? UserEntity
     {
-        $entity = null;
-        $data = $this->getDataAdapter()->getData($identifier);
-
-        if (!empty($data)) {
-            /** @var UserEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $data);
-        }
+        /** @var null|UserEntity $entity */
+        $entity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $entity;
     }
@@ -112,19 +108,12 @@ class UserStorage extends AbstractDataStorage
      * Returns a User entity by user name.
      *
      * @param string $name
-     *
      * @return null|UserEntity
      */
-    public function getUserByUserName($name)
+    public function getUserByUserName(string $name) : ? UserEntity
     {
-        $entity = null;
-        $dataList = $this->getDataAdapter()->getDataSet([$this->userName => $name], 1);
-
-        if (!empty($dataList)) {
-            /** @var UserEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $dataList[0]);
-        }
+        /** @var null|UserEntity $entity */
+        $entity = $this->getDataEntity([$this->userName => $name]);
 
         return $entity;
     }
@@ -133,19 +122,27 @@ class UserStorage extends AbstractDataStorage
      * Returns a User entity by email.
      *
      * @param string $email
-     *
      * @return null|UserEntity
      */
-    public function getUserByEmail($email)
+    public function getUserByEmail($email) : ? UserEntity
     {
-        $entity = null;
-        $dataList = $this->getDataAdapter()->getDataSet([$this->email => $email], 1);
+        /** @var null|UserEntity $entity */
+        $entity = $this->getDataEntity([$this->email => $email]);
 
-        if (!empty($dataList)) {
-            /** @var UserEntity $entity */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $dataList[0]);
-        }
+        return $entity;
+    }
+
+    /**
+     * Return a User entity by credentials.
+     *
+     * @param string $username
+     * @param string $password
+     * @return null|UserEntity
+     */
+    public function getUserByCredentials(string $username, string $password) : ? UserEntity
+    {
+        /** @var null|UserEntity $entity */
+        $entity = $this->getDataEntity([$this->userName => $username, $this->password => $password]);
 
         return $entity;
     }

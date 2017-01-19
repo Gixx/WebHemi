@@ -49,7 +49,7 @@ interface DataAdapterInterface
     public function setIdKey(string $idKey) : DataAdapterInterface;
 
     /**
-     * Get exactly one "row" of data according to the expression.
+     * Get exactly one "row" of data according to the identifier.
      *
      * @param int $identifier
      * @return array
@@ -81,7 +81,7 @@ interface DataAdapterInterface
      * @param array $data
      * @return int The ID of the saved entity in the storage
      */
-    public function saveData(?int $identifier, array $data) : int;
+    public function saveData(? int $identifier, array $data) : int;
 
     /**
      * Removes an entity from the storage.

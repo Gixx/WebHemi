@@ -9,10 +9,13 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Coupler\Traits;
 
 use WebHemi\DateTime;
 use RuntimeException;
+use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 
 /**
@@ -25,9 +28,9 @@ trait UserEntityTrait
      *
      * @param string $entityClassName
      * @throws RuntimeException
-     * @return UserEntity
+     * @return DataEntityInterface
      */
-    abstract protected function getNewEntityInstance($entityClassName);
+    abstract protected function getNewEntityInstance(string $entityClassName) : DataEntityInterface;
 
     /**
      * Creates a new User Entity instance form the data.
@@ -35,19 +38,20 @@ trait UserEntityTrait
      * @param array $data
      * @return UserEntity
      */
-    protected function createUserEntity(array $data)
+    protected function createUserEntity(array $data) : UserEntity
     {
+        /** @var UserEntity $entity */
         $entity = $this->getNewEntityInstance(UserEntity::class);
 
-        $entity->setUserId($data['id_user'])
+        $entity->setUserId((int) $data['id_user'])
             ->setUserName($data['username'])
             ->setEmail($data['email'])
             ->setPassword($data['password'])
             ->setHash($data['hash'])
-            ->setActive($data['is_active'])
-            ->setEnabled($data['is_enabled'])
-            ->setDateCreated(new DateTime($data['date_created']))
-            ->setDateModified(new DateTime($data['date_modified']));
+            ->setActive((bool) $data['is_active'])
+            ->setEnabled((bool) $data['is_enabled'])
+            ->setDateCreated(new DateTime($data['date_created'] ?? 'now'))
+            ->setDateModified(new DateTime($data['date_modified'] ?? 'now'));
 
         return $entity;
     }

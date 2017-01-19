@@ -59,7 +59,7 @@ class SQLiteAdapter extends MySQLAdapter
      * @throws RuntimeException
      * @return int The ID of the saved entity in the storage
      */
-    public function saveData(?int $identifier = null, array $data) : int
+    public function saveData(? int $identifier = null, array $data) : int
     {
         return empty($identifier) ? $this->insertData($data) : $this->updateData($identifier, $data);
     }
@@ -94,7 +94,7 @@ class SQLiteAdapter extends MySQLAdapter
         $this->bindValuesToStatement($statement, $queryBind);
         $statement->execute();
 
-        return (int)$this->dataDriver->lastInsertId();
+        return (int) $this->dataDriver->lastInsertId();
     }
 
     /**

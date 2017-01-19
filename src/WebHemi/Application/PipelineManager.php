@@ -181,7 +181,7 @@ class PipelineManager
      *
      * @return null|string
      */
-    public function start() : ?string
+    public function start() : ? string
     {
         $this->index = 0;
         $this->sortPipeline();
@@ -194,7 +194,7 @@ class PipelineManager
      *
      * @return null|string
      */
-    public function next() : ?string
+    public function next() : ? string
     {
         if (!isset($this->index)) {
             throw new RuntimeException('Unable to get the next element until the pipeline is not started.', 1003);

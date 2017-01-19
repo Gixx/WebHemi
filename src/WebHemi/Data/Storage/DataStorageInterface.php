@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Storage;
 
 use WebHemi\Adapter\Data\DataAdapterInterface;
@@ -36,21 +38,21 @@ interface DataStorageInterface
      *
      * @return DataStorageInterface
      */
-    public function init();
+    public function init() : DataStorageInterface;
 
     /**
      * Checks if the storage is initialized.
      *
      * @return bool
      */
-    public function initialized();
+    public function initialized() : bool;
 
     /**
      * Creates an empty entity.
      *
      * @return DataEntityInterface
      */
-    public function createEntity();
+    public function createEntity() : DataEntityInterface;
 
     /**
      * Saves data.
@@ -58,12 +60,12 @@ interface DataStorageInterface
      * @param DataEntityInterface &$entity
      * @return DataStorageInterface
      */
-    public function saveEntity(DataEntityInterface&$entity);
+    public function saveEntity(DataEntityInterface&$entity) : DataStorageInterface;
 
     /**
      * Returns the DataAdapter instance.
      *
      * @return DataAdapterInterface
      */
-    public function getDataAdapter();
+    public function getDataAdapter() : DataAdapterInterface;
 }

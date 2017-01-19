@@ -9,6 +9,8 @@
  *
  * @link      http://www.gixx-web.com
  */
+declare(strict_types = 1);
+
 namespace WebHemi\Data\Entity;
 
 use WebHemi\DateTime;
@@ -39,7 +41,7 @@ class ApplicationEntity implements DataEntityInterface
      * @param int $entityId
      * @return ApplicationEntity
      */
-    public function setKeyData($entityId)
+    public function setKeyData(int $entityId) : ApplicationEntity
     {
         $this->applicationId = $entityId;
 
@@ -49,19 +51,18 @@ class ApplicationEntity implements DataEntityInterface
     /**
      * Gets the value of the entity identifier.
      *
-     * @return int
+     * @return null|int
      */
-    public function getKeyData()
+    public function getKeyData() : ? int
     {
         return $this->applicationId;
     }
 
     /**
      * @param int $applicationId
-     *
      * @return ApplicationEntity
      */
-    public function setApplicationId($applicationId)
+    public function setApplicationId(int $applicationId) : ApplicationEntity
     {
         $this->applicationId = $applicationId;
 
@@ -69,19 +70,18 @@ class ApplicationEntity implements DataEntityInterface
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getApplicationId()
+    public function getApplicationId() : ? int
     {
         return $this->applicationId;
     }
 
     /**
      * @param string $name
-     *
      * @return ApplicationEntity
      */
-    public function setName($name)
+    public function setName(string $name) : ApplicationEntity
     {
         $this->name = $name;
 
@@ -89,19 +89,18 @@ class ApplicationEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getName()
+    public function getName() : ? string
     {
         return $this->name;
     }
 
     /**
      * @param string $title
-     *
      * @return ApplicationEntity
      */
-    public function setTitle($title)
+    public function setTitle(string $title) : ApplicationEntity
     {
         $this->title = $title;
 
@@ -109,19 +108,18 @@ class ApplicationEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getTitle()
+    public function getTitle() : ? string
     {
         return $this->title;
     }
 
     /**
      * @param string $description
-     *
      * @return ApplicationEntity
      */
-    public function setDescription($description)
+    public function setDescription(string $description) : ApplicationEntity
     {
         $this->description = $description;
 
@@ -129,21 +127,20 @@ class ApplicationEntity implements DataEntityInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getDescription()
+    public function getDescription() : ? string
     {
         return $this->description;
     }
 
     /**
      * @param bool $state
-     *
      * @return ApplicationEntity
      */
-    public function setReadOnly($state)
+    public function setReadOnly(bool $state) : ApplicationEntity
     {
-        $this->isReadOnly = (bool) $state;
+        $this->isReadOnly = $state;
 
         return $this;
     }
@@ -151,17 +148,16 @@ class ApplicationEntity implements DataEntityInterface
     /**
      * @return bool
      */
-    public function getReadOnly()
+    public function getReadOnly() : bool
     {
-        return $this->isReadOnly;
+        return $this->isReadOnly ?? false;
     }
 
     /**
      * @param DateTime $dateCreated
-     *
      * @return ApplicationEntity
      */
-    public function setDateCreated(DateTime $dateCreated)
+    public function setDateCreated(DateTime $dateCreated) : ApplicationEntity
     {
         $this->dateCreated = $dateCreated;
 
@@ -169,19 +165,18 @@ class ApplicationEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateCreated()
+    public function getDateCreated() : ? DateTime
     {
         return $this->dateCreated;
     }
 
     /**
      * @param DateTime $dateModified
-     *
      * @return ApplicationEntity
      */
-    public function setDateModified(DateTime $dateModified)
+    public function setDateModified(DateTime $dateModified) : ApplicationEntity
     {
         $this->dateModified = $dateModified;
 
@@ -189,9 +184,9 @@ class ApplicationEntity implements DataEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getDateModified()
+    public function getDateModified() : ? DateTime
     {
         return $this->dateModified;
     }

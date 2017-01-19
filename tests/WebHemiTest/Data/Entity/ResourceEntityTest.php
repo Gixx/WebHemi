@@ -56,7 +56,6 @@ class ResourceEntityTest extends TestCase
             ['name','Some name','Some name', false],
             ['title','some title','some title', false],
             ['description','some description','some description', false],
-            ['isReadOnly',1, true, true],
             ['isReadOnly',true, true, true],
             ['dateCreated', $dateTest, $dateTest, true],
             ['dateModified', $dateTest, $dateTest, true],

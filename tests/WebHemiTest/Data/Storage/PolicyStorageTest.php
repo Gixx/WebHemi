@@ -119,12 +119,12 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getData(Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
-                    $index = $args[0] - 1;
+                    $index = $args[0]['id_am_policy'] - 1;
                     if (isset($data[$index])) {
-                        return $data[$index];
+                        return [$data[$index]];
                     }
 
                     return [];
@@ -163,7 +163,7 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
                     if (isset($args[0]['name'])) {
@@ -210,7 +210,7 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
                     $resourceId = $args[0]['fk_am_resource'];
@@ -264,7 +264,7 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
                     $applicationId = $args[0]['fk_application'];
@@ -317,7 +317,7 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'))
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
             ->will(
                 function ($args) use ($data) {
                     $resourceId = $args[0]['fk_am_resource'];

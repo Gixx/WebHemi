@@ -53,11 +53,10 @@ class UserGroupEntityTest extends TestCase
 
         return [
             ['userGroupId', 1, 1, false],
-            ['userGroupId', 'someId', 'someId', false],
             ['name','some name','some name', false],
             ['title','some title','some title', false],
             ['description','some description','some description', false],
-            ['isReadOnly',1, true, true],
+            ['isReadOnly',true, true, true],
             ['dateCreated', $dateTest, $dateTest, true],
             ['dateModified', $dateTest, $dateTest, true],
         ];

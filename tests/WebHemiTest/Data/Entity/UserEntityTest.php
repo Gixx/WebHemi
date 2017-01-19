@@ -53,17 +53,12 @@ class UserEntityTest extends TestCase
 
         return [
             ['userId', 1, 1, false],
-            ['userId', 'someId', 'someId', false],
             ['userName', 'someName', 'someName', false],
             ['email', 'someEmail', 'someEmail', false],
             ['password', 'somePassword', 'somePassword', false],
             ['hash', 'someHash', 'someHash', false],
-            ['isActive', 1, true, true],
-            ['isActive', null, false, true],
-            ['isActive', 'yes', true, true],
-            ['isEnabled', 'someValue', true, true],
-            ['isEnabled', 'no', true, true],
-            ['isEnabled', 0, false, true],
+            ['isActive', false, false, true],
+            ['isEnabled', true, true, true],
             ['dateCreated', $dateTest, $dateTest, true],
             ['dateModified', $dateTest, $dateTest, true],
         ];

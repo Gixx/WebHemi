@@ -31,7 +31,7 @@ class EmptyAuthAdapter extends AbstractAuthAdapter
     public function authenticate() : Result
     {
         if ($this->authResultShouldBe < 1) {
-            return $this->getAuthResult()
+            return $this->getNewAuthResultInstance()
                 ->setCode($this->authResultShouldBe);
         }
 
@@ -40,8 +40,10 @@ class EmptyAuthAdapter extends AbstractAuthAdapter
         $userEntity->setKeyData(123)
             ->setUserName('test');
 
-        return $this->getAuthResult()
-            ->setCode(Result::SUCCESS)
-            ->setIdentity($userEntity);
+        $this->setIdentity($userEntity);
+
+        return $this->getNewAuthResultInstance()
+            ->setCode(Result::SUCCESS);
+
     }
 }

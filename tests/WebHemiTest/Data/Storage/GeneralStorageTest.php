@@ -97,8 +97,8 @@ class GeneralStorageTest extends TestCase
                     'id_user' => $args[0],
                     'username' => $userEntity->getUserName(),
                     'email' => $userEntity->getEmail(),
-                    'password' => null,
-                    'hash' => null,
+                    'password' => 'some password',
+                    'hash' => md5('salt'),
                     'is_active' => 1,
                     'is_enabled' => 1,
                     'date_created' => '2016-11-11 11:11:11',
@@ -110,16 +110,11 @@ class GeneralStorageTest extends TestCase
         /** @var DataAdapterInterface $defaultAdapterInstance */
         $defaultAdapterInstance = $defaultAdapter->reveal();
 
-        // User is not in data storage yet
-        $this->assertEmpty($userEntity->getKeyData());
-        $this->assertEmpty($userEntity->getUserId());
-        $this->assertEmpty($userEntity->getDateCreated());
-
         $storage = new UserStorage($defaultAdapterInstance, $userEntity);
 
         // save new entity assumes it will have a new ID.
-        $actualId = $storage->saveEntity($userEntity);
-        $this->assertSame($randNewId, $actualId);
+        $actualResult = $storage->saveEntity($userEntity);
+        $this->assertInstanceOf(UserStorage::class, $actualResult);
         $this->assertSame($randNewId, $userEntity->getKeyData());
         $this->assertSame('2016-11-11 11:11:11', $userEntity->getDateCreated()->format('Y-m-d H:i:s'));
 

@@ -135,7 +135,7 @@ class SessionManager
         string $name,
         int $timeOut = 3600,
         string $path = '/',
-        ?string $domain = null,
+        ? string $domain = null,
         bool $secure = false,
         bool $httpOnly = false
     ) : SessionManager {

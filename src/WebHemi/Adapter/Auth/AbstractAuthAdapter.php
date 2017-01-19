@@ -78,7 +78,7 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
      *
      * @return Result
      */
-    protected function getAuthResult() : Result
+    protected function getNewAuthResultInstance() : Result
     {
         return clone $this->authResult;
     }
@@ -118,7 +118,7 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
      *
      * @return DataEntityInterface|null
      */
-    public function getIdentity() : ?DataEntityInterface
+    public function getIdentity() : ? DataEntityInterface
     {
         return $this->authStorage->getIdentity();
     }
