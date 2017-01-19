@@ -28,8 +28,6 @@ final class Result
 
     /** @var int */
     private $code;
-    /** @var null|UserEntity */
-    private $userEntity;
     /** @var array */
     private $messages = [
         self::FAILURE => 'Authentication failed.',

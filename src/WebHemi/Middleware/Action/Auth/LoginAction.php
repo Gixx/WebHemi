@@ -87,7 +87,7 @@ class LoginAction extends AbstractMiddlewareAction
             $result = $this->authAdapter->authenticate();
 
             if (!$result->isValid()) {
-
+                ;
             }
 
             /** @var UserEntity|null $userEntity */

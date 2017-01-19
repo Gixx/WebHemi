@@ -18,6 +18,9 @@ use WebHemi\Form\FormElementInterface;
 use WebHemi\Traits\CamelCaseToUnderScoreTrait;
 use WebHemi\Validator\ValidatorInterface;
 
+/**
+ * Class HtmlFormElement
+ */
 class HtmlFormElement implements FormElementInterface
 {
     public const HTML_ELEMENT_BUTTON = 'button';
@@ -237,6 +240,8 @@ class HtmlFormElement implements FormElementInterface
     public function addValidator(ValidatorInterface $validator) : FormElementInterface
     {
         $this->validators[] = $validator;
+
+        return $this;
     }
 
     /**
