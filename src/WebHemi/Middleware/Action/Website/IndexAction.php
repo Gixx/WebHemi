@@ -41,6 +41,26 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
+        $form = $this->getTestForm();
+
+        $data = [];
+
+        if ($this->request->getMethod() == 'POST') {
+            $data = $this->request->getParsedBody();
+            $form->loadData($data);
+        }
+
+        return [
+            'form' => $form,
+            'data' => $data,
+        ];
+    }
+
+    /**
+     * @return HtmlForm
+     */
+    private function getTestForm()
+    {
         // Test refactore Form elements
         $singleCheckbox = new HtmlFormElement(
             HtmlFormElement::HTML_ELEMENT_INPUT_CHECKBOX,
@@ -93,7 +113,8 @@ class IndexAction extends AbstractMiddlewareAction
         $select->setMultiple(true);
 
         $form = new HtmlForm('test', '', 'POST');
-        $form->addElement(
+        $form
+            ->addElement(
                 new HtmlFormElement(
                     HtmlFormElement::HTML_ELEMENT_INPUT_HIDDEN,
                     'csrf',
@@ -120,20 +141,16 @@ class IndexAction extends AbstractMiddlewareAction
             ->addElement($multiCheckbox)
             ->addElement($radioGroup)
             ->addElement($select)
-            ->addElement(new Html5FormElement(Html5FormElement::HTML_ELEMENT_INPUT_NUMBER, 'num', 'Num', [4], [1, 16]))
-            ->addElement(new Html5FormElement(Html5FormElement::HTML_ELEMENT_INPUT_RANGE, 'range', 'Range', [4], [1, 6, 0.2]))
-            ->addElement(new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Submit'));
+            ->addElement(
+                new Html5FormElement(Html5FormElement::HTML_ELEMENT_INPUT_NUMBER, 'num', 'Num', [4], [1, 16])
+            )
+            ->addElement(
+                new Html5FormElement(Html5FormElement::HTML_ELEMENT_INPUT_RANGE, 'range', 'Range', [4], [1, 6, 0.2])
+            )
+            ->addElement(
+                new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Submit')
+            );
 
-        $data = [];
-
-        if ($this->request->getMethod() == 'POST') {
-            $data = $this->request->getParsedBody();
-            $form->loadData($data);
-        }
-
-        return [
-            'form' => $form,
-            'data' => $data,
-        ];
+        return $form;
     }
 }

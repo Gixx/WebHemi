@@ -111,8 +111,7 @@ class HtmlForm implements FormInterface
     {
         $formData = $data[$this->name] ?? [];
 
-        foreach ($formData as $elementName => $elementValue)
-        {
+        foreach ($formData as $elementName => $elementValue) {
             $fullName = $this->name.'['.$elementName.']';
             /** @var FormElementInterface $formElement */
             $formElement = $this->formElements[$fullName] ?? null;

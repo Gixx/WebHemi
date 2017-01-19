@@ -16,6 +16,9 @@ namespace WebHemi\Middleware\Action\Website;
 use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
+/**
+ * Class PostViewAction
+ */
 class PostViewAction extends AbstractMiddlewareAction
 {
     /**

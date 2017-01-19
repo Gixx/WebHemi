@@ -32,8 +32,8 @@ final class Auth extends AbstractAuthAdapter
      */
     public function authenticate() : Result
     {
-        $result = $this->getNewAuthResultInstace();
-
+        /** @var Result $result */
+        $result = $this->getNewAuthResultInstance();
 
         /** @var UserStorage $dataStorage */
         $dataStorage = $this->getDataStorage();
