@@ -62,4 +62,12 @@ interface FormInterface
      * @return array<FormElementInterface>
      */
     public function getElements() : array;
+
+    /**
+     * Loads data into the form.
+     *
+     * @param array $data
+     * @return FormInterface
+     */
+    public function loadData(array $data) : FormInterface;
 }

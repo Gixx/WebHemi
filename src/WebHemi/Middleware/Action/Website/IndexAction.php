@@ -122,10 +122,18 @@ class IndexAction extends AbstractMiddlewareAction
             ->addElement($select)
             ->addElement(new Html5FormElement(Html5FormElement::HTML_ELEMENT_INPUT_NUMBER, 'num', 'Num', [4], [1, 16]))
             ->addElement(new Html5FormElement(Html5FormElement::HTML_ELEMENT_INPUT_RANGE, 'range', 'Range', [4], [1, 6, 0.2]))
-            ->addElement(new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_BUTTON, 'submit', 'Submit'));
+            ->addElement(new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Submit'));
+
+        $data = [];
+
+        if ($this->request->getMethod() == 'POST') {
+            $data = $this->request->getParsedBody();
+            $form->loadData($data);
+        }
 
         return [
-            'form' => $form
+            'form' => $form,
+            'data' => $data,
         ];
     }
 }

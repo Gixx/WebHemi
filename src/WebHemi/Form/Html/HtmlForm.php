@@ -100,4 +100,31 @@ class HtmlForm implements FormInterface
     {
         return $this->formElements;
     }
+
+    /**
+     * Loads data into the form.
+     *
+     * @param array $data
+     * @return FormInterface
+     */
+    public function loadData(array $data) : FormInterface
+    {
+        $formData = $data[$this->name] ?? [];
+
+        foreach ($formData as $elementName => $elementValue)
+        {
+            $fullName = $this->name.'['.$elementName.']';
+            /** @var FormElementInterface $formElement */
+            $formElement = $this->formElements[$fullName] ?? null;
+
+            if ($formElement) {
+                if (!is_array($elementValue)) {
+                    $elementValue = [$elementValue];
+                }
+                $formElement->setValues($elementValue);
+            }
+        }
+
+        return $this;
+    }
 }

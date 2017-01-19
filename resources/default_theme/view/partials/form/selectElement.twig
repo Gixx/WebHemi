@@ -1,22 +1,25 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
 <div class="element select{% if formElement.getErrors() %} error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
-    <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" {% if formElement.getMultiple() %}multiple="multiple"{% endif %}>
-        {% set range = formElement.getValueRange() %}
-            {% for label, option in range %}
-                {% if option is iterable %}
+    <select id="{{ formElement.getId() }}" name="{{ formElement.getName() }}{% if formElement.getMultiple() %}[]" multiple="multiple{% endif %}">
+{% set range = formElement.getValueRange() %}
+{% set values = formElement.getValues() %}
+{% for label, option in range %}
+    {% if option is iterable %}
         <optgroup label="{{ label }}">
-                    {% for rowLabel, rowValue in option %}
-                        {{ dump(row) }}
-                        <option value="{{ rowValue }}"{% if rowValue in formElement.getValues() %} selected="selected"{% endif %}>{{ rowLabel }}</option>
-                    {% endfor %}
+        {% for rowLabel, rowValue in option %}
+            {% set selected = (rowValue in values) or (values[rowValue]) %}
+            <option value="{{ rowValue }}"{% if selected %} selected="selected"{% endif %}>{{ rowLabel }}</option>
+        {% endfor %}
         </optgroup>
-                {% else %}
-        <option value="{{ option }}"{% if option in formElement.getValues() %} selected="selected"{% endif %}>{{ label }}</option>
-                {% endif %}
-            {% endfor %}
-    </select>
-    {% if formElement.getErrors() %}
-        {{ _FORM.renderErrorBlock(formElement) }}
+    {% else %}
+        {% set selected = (option in values) or (values[option]) %}
+        <option value="{{ option }}"{% if selected %} selected="selected"{% endif %}>{{ label }}</option>
     {% endif %}
+{% endfor %}
+    </select>
+{% if formElement.getErrors() %}
+    {{ _FORM.renderErrorBlock(formElement) }}
+{% endif %}
 </div>
+{{ dump(formElement.getMultiple()) }}
