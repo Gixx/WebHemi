@@ -7,3 +7,6 @@ linting: true
 finder:
   name:
     - "*.php"
+
+disabled:
+  - declare_equal_normalize
