@@ -13,8 +13,6 @@ namespace WebHemiTest\Form;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
-use Psr\Http\Message\StreamInterface;
-use RuntimeException;
 use WebHemi\Form\FormElementInterface;
 use WebHemi\Form\FormInterface;
 use WebHemi\Form\Html\HtmlForm;

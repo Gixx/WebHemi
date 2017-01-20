@@ -16,42 +16,42 @@ namespace WebHemi\Form\Html;
 /**
  * Class Html5FormElement
  */
-class Html5FormElement extends HtmlFormElement
+class Html5FormElement extends AbstractHtmlFormElement
 {
-    public const HTML_ELEMENT_DATALIST = 'datalist';
-    public const HTML_ELEMENT_INPUT_COLOR = 'color';
-    public const HTML_ELEMENT_INPUT_DATE = 'date';
-    public const HTML_ELEMENT_INPUT_DATETIME = 'datetime';
-    public const HTML_ELEMENT_INPUT_DATETIMELOCAL = 'datetime-local';
-    public const HTML_ELEMENT_INPUT_EMAIL = 'email';
-    public const HTML_ELEMENT_INPUT_MONTH = 'month';
-    public const HTML_ELEMENT_INPUT_NUMBER = 'number';
-    public const HTML_ELEMENT_INPUT_RANGE = 'range';
-    public const HTML_ELEMENT_INPUT_SEARCH = 'search';
-    public const HTML_ELEMENT_INPUT_TEL = 'tel';
-    public const HTML_ELEMENT_INPUT_TIME = 'time';
-    public const HTML_ELEMENT_INPUT_URL = 'url';
-    public const HTML_ELEMENT_INPUT_WEEK = 'week';
-    public const HTML_ELEMENT_KEYGEN = 'keygen';
-    public const HTML_ELEMENT_OUTPUT = 'output';
+    public const HTML5_ELEMENT_DATALIST = 'datalist';
+    public const HTML5_ELEMENT_INPUT_COLOR = 'color';
+    public const HTML5_ELEMENT_INPUT_DATE = 'date';
+    public const HTML5_ELEMENT_INPUT_DATETIME = 'datetime';
+    public const HTML5_ELEMENT_INPUT_DATETIMELOCAL = 'datetime-local';
+    public const HTML5_ELEMENT_INPUT_EMAIL = 'email';
+    public const HTML5_ELEMENT_INPUT_MONTH = 'month';
+    public const HTML5_ELEMENT_INPUT_NUMBER = 'number';
+    public const HTML5_ELEMENT_INPUT_RANGE = 'range';
+    public const HTML5_ELEMENT_INPUT_SEARCH = 'search';
+    public const HTML5_ELEMENT_INPUT_TEL = 'tel';
+    public const HTML5_ELEMENT_INPUT_TIME = 'time';
+    public const HTML5_ELEMENT_INPUT_URL = 'url';
+    public const HTML5_ELEMENT_INPUT_WEEK = 'week';
+    public const HTML5_ELEMENT_KEYGEN = 'keygen';
+    public const HTML5_ELEMENT_OUTPUT = 'output';
 
     /** @var array */
     protected $validTypes = [
-        self::HTML_ELEMENT_DATALIST,
-        self::HTML_ELEMENT_INPUT_COLOR,
-        self::HTML_ELEMENT_INPUT_DATE,
-        self::HTML_ELEMENT_INPUT_DATETIME,
-        self::HTML_ELEMENT_INPUT_DATETIMELOCAL,
-        self::HTML_ELEMENT_INPUT_EMAIL,
-        self::HTML_ELEMENT_INPUT_MONTH,
-        self::HTML_ELEMENT_INPUT_NUMBER,
-        self::HTML_ELEMENT_INPUT_RANGE,
-        self::HTML_ELEMENT_INPUT_SEARCH,
-        self::HTML_ELEMENT_INPUT_TEL,
-        self::HTML_ELEMENT_INPUT_TIME,
-        self::HTML_ELEMENT_INPUT_URL,
-        self::HTML_ELEMENT_INPUT_WEEK,
-        self::HTML_ELEMENT_KEYGEN,
-        self::HTML_ELEMENT_OUTPUT,
+        self::HTML5_ELEMENT_DATALIST,
+        self::HTML5_ELEMENT_INPUT_COLOR,
+        self::HTML5_ELEMENT_INPUT_DATE,
+        self::HTML5_ELEMENT_INPUT_DATETIME,
+        self::HTML5_ELEMENT_INPUT_DATETIMELOCAL,
+        self::HTML5_ELEMENT_INPUT_EMAIL,
+        self::HTML5_ELEMENT_INPUT_MONTH,
+        self::HTML5_ELEMENT_INPUT_NUMBER,
+        self::HTML5_ELEMENT_INPUT_RANGE,
+        self::HTML5_ELEMENT_INPUT_SEARCH,
+        self::HTML5_ELEMENT_INPUT_TEL,
+        self::HTML5_ELEMENT_INPUT_TIME,
+        self::HTML5_ELEMENT_INPUT_URL,
+        self::HTML5_ELEMENT_INPUT_WEEK,
+        self::HTML5_ELEMENT_KEYGEN,
+        self::HTML5_ELEMENT_OUTPUT,
     ];
 }
