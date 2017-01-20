@@ -5,7 +5,8 @@ Version 4.0.0-3.1
 -----------------
 * Refactor the WebHemi\Data to PHP 7.1 and fix the Unit Tests.
 * Add missing functionality of loading data back into the form after submit.
-* Fix issue of multi-select box submitted only the last value.
+* Fix issues with WebHemi\Form.
+* Add unit tests to WebHemi\Form.
 
 Version 4.0.0-3.0
 -----------------
