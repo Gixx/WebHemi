@@ -94,7 +94,7 @@ class IndexAction extends AbstractMiddlewareAction
         );
 
         $select = new HtmlMultipleFormElement(
-            HtmlMultipleFormElement::HTML_ELEMENT_SELECT,
+            HtmlMultipleFormElement::HTML_MULTIPLE_ELEMENT_SELECT,
             'something',
             null,
             ['australia', 'india'],
@@ -142,10 +142,10 @@ class IndexAction extends AbstractMiddlewareAction
             ->addElement($radioGroup)
             ->addElement($select)
             ->addElement(
-                new Html5FormElement(Html5FormElement::HTML_ELEMENT_INPUT_NUMBER, 'num', 'Num', [4], [1, 16])
+                new Html5FormElement(Html5FormElement::HTML5_ELEMENT_INPUT_NUMBER, 'num', 'Num', [4], [1, 16])
             )
             ->addElement(
-                new Html5FormElement(Html5FormElement::HTML_ELEMENT_INPUT_RANGE, 'range', 'Range', [4], [1, 6, 0.2])
+                new Html5FormElement(Html5FormElement::HTML5_ELEMENT_INPUT_RANGE, 'range', 'Range', [4], [1, 6, 0.2])
             )
             ->addElement(
                 new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Submit')

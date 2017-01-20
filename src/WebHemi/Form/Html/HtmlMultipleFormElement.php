@@ -16,19 +16,19 @@ namespace WebHemi\Form\Html;
 use WebHemi\Form\MultipleFormElementInterface;
 
 /**
- * Class Html5FormElement
+ * Class HtmlMultipleFormElement
  */
-class HtmlMultipleFormElement extends HtmlFormElement implements MultipleFormElementInterface
+class HtmlMultipleFormElement extends AbstractHtmlFormElement implements MultipleFormElementInterface
 {
-    public const HTML_ELEMENT_INPUT_FILE = 'file';
-    public const HTML_ELEMENT_SELECT = 'select';
+    public const HTML_MULTIPLE_ELEMENT_INPUT_FILE = 'file';
+    public const HTML_MULTIPLE_ELEMENT_SELECT = 'select';
 
     /** @var bool */
     private $isMultiple = false;
     /** @var array */
     protected $validTypes = [
-        self::HTML_ELEMENT_INPUT_FILE,
-        self::HTML_ELEMENT_SELECT,
+        self::HTML_MULTIPLE_ELEMENT_INPUT_FILE,
+        self::HTML_MULTIPLE_ELEMENT_SELECT,
     ];
 
     /**
