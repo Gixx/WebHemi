@@ -3,6 +3,6 @@
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     <output id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"></output>
     {% if formElement.getErrors() %}
-        {{ _FORM.renderErrorBlock(formElement) }}
+        {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
     {% endif %}
 </div>

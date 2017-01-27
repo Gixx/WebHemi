@@ -15,6 +15,7 @@ namespace WebHemi\Middleware\Action\Auth;
 
 use Exception;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
+use WebHemi\Adapter\Auth\AuthCredentialInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Auth\Result;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
@@ -22,6 +23,8 @@ use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\User\UserGroupStorage;
 use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\DateTime;
+use WebHemi\Form\Html\HtmlForm;
+use WebHemi\Form\Html\HtmlFormElement;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
 /**
@@ -31,6 +34,8 @@ class LoginAction extends AbstractMiddlewareAction
 {
     /** @var AuthAdapterInterface */
     private $authAdapter;
+    /** @var AuthCredentialInterface */
+    private $authCredential;
     /** @var EnvironmentManager */
     private $environmentManager;
     /** @var UserStorage */
@@ -43,20 +48,23 @@ class LoginAction extends AbstractMiddlewareAction
     /**
      * MetaDataAction constructor.
      *
-     * @param AuthAdapterInterface $authAdapter
-     * @param EnvironmentManager   $environmentManager
-     * @param UserStorage          $userStorage
-     * @param UserGroupStorage     $userGroupStorage
-     * @param UserToGroupCoupler   $userToGroupCoupler
+     * @param AuthAdapterInterface    $authAdapter
+     * @param AuthCredentialInterface $authCredential
+     * @param EnvironmentManager      $environmentManager
+     * @param UserStorage             $userStorage
+     * @param UserGroupStorage        $userGroupStorage
+     * @param UserToGroupCoupler      $userToGroupCoupler
      */
     public function __construct(
         AuthAdapterInterface $authAdapter,
+        AuthCredentialInterface $authCredential,
         EnvironmentManager $environmentManager,
         UserStorage $userStorage,
         UserGroupStorage $userGroupStorage,
         UserToGroupCoupler $userToGroupCoupler
     ) {
         $this->authAdapter = $authAdapter;
+        $this->authCredential = $authCredential;
         $this->environmentManager = $environmentManager;
         $this->userStorage = $userStorage;
         $this->userGroupStorage = $userGroupStorage;
@@ -82,36 +90,48 @@ class LoginAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
+        $form = $this->getLoginForm();
+
         if ($this->request->getMethod() == 'POST') {
+            $postData = $this->request->getParsedBody() ;
+            $this->authCredential->addCredential('username', $postData['login']['identification'] ?? '')
+                ->addCredential('password', $postData['login']['password'] ?? '');
+
             /** @var Result $result */
-            $result = $this->authAdapter->authenticate();
+            $result = $this->authAdapter->authenticate($this->authCredential);
 
             if (!$result->isValid()) {
-                ;
+                $form = $this->getLoginForm($result->getMessage());
+
+                // load back faild data.
+                unset($postData['login']['password']);
+                $form->loadData($postData);
+            } else {
+                /** @var null|UserEntity $userEntity */
+                $userEntity = $this->authAdapter->getIdentity();
+
+                // save new user if we have the username credentials and add him/her to the Guest group
+                if (!$userEntity instanceof UserEntity && !empty($userEntity)) {
+                    $userEntity = $this->registerGuestUser((string)$userEntity);
+                }
+
+                if ($userEntity instanceof UserEntity) {
+                    $this->authAdapter->setIdentity($userEntity);
+                }
+
+                $url = 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'.
+                    $this->environmentManager->getApplicationDomain().
+                    $this->environmentManager->getSelectedApplicationUri();
+
+                $this->response = $this->response
+                    ->withStatus(302, 'Found')
+                    ->withHeader('Location', $url);
             }
-
-            /** @var UserEntity|null $userEntity */
-            $userEntity = $this->authAdapter->getIdentity();
-
-            // save new user if we have the username credentials and add him/her to the Guest group
-            if (!$userEntity instanceof UserEntity && !empty($userEntity)) {
-                $userEntity = $this->registerGuestUser($userEntity);
-            }
-
-            if ($userEntity instanceof UserEntity) {
-                $this->authAdapter->setIdentity($userEntity);
-            }
-
-            $url = 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'.
-                $this->environmentManager->getApplicationDomain().
-                $this->environmentManager->getSelectedApplicationUri();
-
-            $this->response = $this->response
-                ->withStatus(302, 'Found')
-                ->withHeader('Location', $url);
         }
 
-        return [];
+        return [
+            'loginForm' => $form
+        ];
     }
 
     /**
@@ -120,10 +140,9 @@ class LoginAction extends AbstractMiddlewareAction
      * @param string $identity
      * @return UserEntity
      */
-    private function registerGuestUser($identity)
+    private function registerGuestUser(string $identity) : UserEntity
     {
-        /** @var string $userName */
-        $userName = (string) $identity;
+        $userName = $identity;
         /** @var UserEntity $userEntity */
         $userEntity = $this->userStorage->createEntity();
         $userEntity->setUserName($userName)
@@ -140,5 +159,29 @@ class LoginAction extends AbstractMiddlewareAction
         }
 
         return $userEntity;
+    }
+
+    /**
+     * Gets the login form.
+     *
+     * @param string $customError
+     * @return HtmlForm
+     */
+    private function getLoginForm(string $customError = '') : HtmlForm
+    {
+        $form = new HtmlForm('login', '', 'POST');
+
+        $userName = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_TEXT, 'identification', 'Identification');
+        if (!empty($customError)) {
+            $userName->setError(AuthAdapterInterface::class, $customError);
+        }
+        $passWord = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_PASSWORD, 'password', 'Password');
+        $submit = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Login');
+
+        $form->addElement($userName)
+            ->addElement($passWord)
+            ->addElement($submit);
+
+        return $form;
     }
 }

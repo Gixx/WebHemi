@@ -19,6 +19,7 @@ use WebHemi\Config\Config;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemiTest\Fixtures\EmptyAuthAdapter;
 use WebHemiTest\Fixtures\EmptyAuthStorage;
+use WebHemiTest\Fixtures\EmptyCredential;
 use WebHemiTest\Fixtures\EmptyStorage;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
@@ -72,19 +73,22 @@ class ResultTest extends TestCase
             $dataStorage
         );
 
-        $adapter->authResultShouldBe = Result::SUCCESS;
-        $result = $adapter->authenticate();
+        $emptyCredential = new EmptyCredential();
+
+
+        $emptyCredential->addCredential('authResultShouldBe', Result::SUCCESS);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertTrue($result->isValid());
         $this->assertSame(Result::SUCCESS, $result->getCode());
 
-        $adapter->authResultShouldBe = Result::FAILURE;
-        $result = $adapter->authenticate();
+        $emptyCredential->addCredential('authResultShouldBe', Result::FAILURE);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE, $result->getCode());
 
         // set it to a non-valid result code
-        $adapter->authResultShouldBe = -100;
-        $result = $adapter->authenticate();
+        $emptyCredential->addCredential('authResultShouldBe', -100);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE_OTHER, $result->getCode());
     }

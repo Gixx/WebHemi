@@ -12,7 +12,7 @@
 
 namespace WebHemiTest\Fixtures;
 
-use WebHemi\Auth\AuthStorageInterface;
+use WebHemi\Adapter\Auth\AuthStorageInterface;
 use WebHemi\Data\Entity\DataEntityInterface;
 
 /**

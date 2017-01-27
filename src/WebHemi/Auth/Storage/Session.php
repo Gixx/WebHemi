@@ -13,8 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Auth\Storage;
 
+use WebHemi\Adapter\Auth\AuthStorageInterface;
 use WebHemi\Application\SessionManager;
-use WebHemi\Auth\AuthStorageInterface;
 use WebHemi\Data\Entity\DataEntityInterface;
 
 /**

@@ -10,6 +10,7 @@
  * @link      http://www.gixx-web.com
  */
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
+use WebHemi\Adapter\Auth\AuthCredentialInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
@@ -50,6 +51,7 @@ return [
             Action\Auth\LoginAction::class => [
                 'arguments' => [
                     AuthAdapterInterface::class,
+                    AuthCredentialInterface::class,
                     EnvironmentManager::class,
                     UserStorage::class,
                     UserGroupStorage::class,

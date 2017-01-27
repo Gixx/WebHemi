@@ -14,7 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Auth;
 
 use WebHemi\Adapter\Auth\AbstractAuthAdapter;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Adapter\Auth\AuthCredentialInterface;
+use WebHemi\Adapter\Auth\AuthResultInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\User\UserStorage;
 
@@ -28,35 +29,28 @@ final class Auth extends AbstractAuthAdapter
     /**
      * Authenticates the user.
      *
-     * @return Result
+     * @param AuthCredentialInterface $credential
+     * @return AuthResultInterface
      */
-    public function authenticate() : Result
+    public function authenticate(AuthCredentialInterface $credential) : AuthResultInterface
     {
-        /** @var Result $result */
+        /** @var AuthResultInterface $result */
         $result = $this->getNewAuthResultInstance();
+        $credentials = $credential->getCredentials();
 
         /** @var UserStorage $dataStorage */
         $dataStorage = $this->getDataStorage();
-        $user = $dataStorage->getUserById(1);
-        if ($user instanceof UserEntity) {
-            $this->setIdentity($user);
-            $result->setCode(Result::SUCCESS);
+        $user = $dataStorage->getUserByUserName($credentials['username']);
+
+        if (!$user instanceof UserEntity) {
+            $result->setCode(AuthResultInterface::FAILURE_IDENTITY_NOT_FOUND);
+        } elseif (!password_verify($credentials['password'], $user->getPassword())) {
+            $result->setCode(AuthResultInterface::FAILURE_CREDENTIAL_INVALID);
         } else {
-            $result->setCode(Result::FAILURE_IDENTITY_NOT_FOUND);
+            $this->setIdentity($user);
+            $result->setCode(AuthResultInterface::SUCCESS);
         }
+
         return $result;
-    }
-
-    /**
-     * Gets the authenticated user's entity.
-     *
-     * @return DataEntityInterface|null
-     */
-    public function getIdentity() : ?DataEntityInterface
-    {
-        $identity = parent::getIdentity();
-        // TODO implement
-
-        return $identity;
     }
 }

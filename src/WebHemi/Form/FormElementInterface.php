@@ -127,6 +127,15 @@ interface FormElementInterface
     public function validate() : FormElementInterface;
 
     /**
+     * Set custom error.
+     *
+     * @param string $validator
+     * @param string $error
+     * @return FormElementInterface
+     */
+    public function setError(string $validator, string $error) : FormElementInterface;
+
+    /**
      * Returns the errors collected during the validation.
      *
      * @return array

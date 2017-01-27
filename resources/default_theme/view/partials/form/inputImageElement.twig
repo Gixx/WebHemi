@@ -3,6 +3,6 @@
     {% set value = formElement.getValues() %}
     <input type="image" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" src="{{ value[0] }}" alt="{{ formElement.getLabel() }}" />
     {% if formElement.getErrors() %}
-        {{ _FORM.renderErrorBlock(formElement) }}
+        {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
     {% endif %}
 </div>

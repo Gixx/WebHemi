@@ -13,19 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Auth;
 
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Adapter\Auth\AuthResultInterface;
 
 /**
  * Class Result.
  */
-final class Result
+final class Result implements AuthResultInterface
 {
-    public const FAILURE = 0;
-    public const FAILURE_IDENTITY_NOT_FOUND = -1;
-    public const FAILURE_CREDENTIAL_INVALID = -2;
-    public const FAILURE_OTHER = -3;
-    public const SUCCESS = 1;
-
     /** @var int */
     private $code;
     /** @var array */
@@ -51,9 +45,9 @@ final class Result
      * Sets the result code.
      *
      * @param int $code
-     * @return Result
+     * @return AuthResultInterface
      */
-    public function setCode(int $code) : Result
+    public function setCode(int $code) : AuthResultInterface
     {
         if (!isset($this->messages[$code])) {
             $code = -3;

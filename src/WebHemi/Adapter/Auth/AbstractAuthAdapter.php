@@ -13,8 +13,6 @@ declare(strict_types = 1);
 
 namespace WebHemi\Adapter\Auth;
 
-use WebHemi\Auth\Result;
-use WebHemi\Auth\AuthStorageInterface;
 use WebHemi\Config\ConfigInterface;
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Storage\DataStorageInterface;
@@ -24,7 +22,7 @@ use WebHemi\Data\Storage\DataStorageInterface;
  */
 abstract class AbstractAuthAdapter implements AuthAdapterInterface
 {
-    /** @var Result */
+    /** @var AuthResultInterface */
     private $authResult;
     /** @var AuthStorageInterface */
     private $authStorage;
@@ -37,13 +35,13 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
      * AbstractAuthAdapter constructor.
      *
      * @param ConfigInterface      $configuration
-     * @param Result               $authResultPrototype
+     * @param AuthResultInterface  $authResultPrototype
      * @param AuthStorageInterface $authStorage
      * @param DataStorageInterface $dataStorage
      */
     public function __construct(
         ConfigInterface $configuration,
-        Result $authResultPrototype,
+        AuthResultInterface $authResultPrototype,
         AuthStorageInterface $authStorage,
         DataStorageInterface $dataStorage
     ) {
@@ -76,9 +74,9 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
     /**
      * Gets a new instance of the auth result container.
      *
-     * @return Result
+     * @return AuthResultInterface
      */
-    protected function getNewAuthResultInstance() : Result
+    protected function getNewAuthResultInstance() : AuthResultInterface
     {
         return clone $this->authResult;
     }
@@ -86,9 +84,10 @@ abstract class AbstractAuthAdapter implements AuthAdapterInterface
     /**
      * Authenticates the user.
      *
-     * @return Result
+     * @param AuthCredentialInterface $credential
+     * @return AuthResultInterface
      */
-    abstract public function authenticate() : Result;
+    abstract public function authenticate(AuthCredentialInterface $credential) : AuthResultInterface;
 
     /**
      * Sets the authenticated user.

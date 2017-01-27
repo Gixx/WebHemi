@@ -1,19 +1,22 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <base href="{% if application_base_uri != '/' %}{{ application_base_uri }}{% endif %}/" />
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>WebHemi</title>
-    <link rel="stylesheet" href="{{ template_resource_path }}/css/site.css" />
-</head>
-<body>
-    <h1>DEFAULT ADMIN LOGIN THEME</h1>
-    <p>Login form here!</p>
-    <form action="/auth/login" method="post">
-        <input type="submit" value="Login">
-    </form>
-</body>
+    <head>
+        <base href="{% if application_base_uri != '/' %}{{ application_base_uri }}{% endif %}/" />
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+        <title>{{ title|default('WebHemi Admin') }}</title>
+        <link rel="stylesheet" href="{{ template_resource_path }}/css/site.css" />
+    </head>
+    <body>
+        <h1>DEFAULT ADMIN LOGIN THEME</h1>
+        <div id="loginForm">
+            {% if loginForm %}
+                {{ _FORM.renderForm(loginForm) }}
+            {% endif %}
+        </div>
+    </body>
 </html>
