@@ -119,13 +119,16 @@ class LoginAction extends AbstractMiddlewareAction
                     $this->authAdapter->setIdentity($userEntity);
                 }
 
-                $url = 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'.
-                    $this->environmentManager->getApplicationDomain().
-                    $this->environmentManager->getSelectedApplicationUri();
+                // Don't redirect upon Ajax request
+                if (!$this->request->isXmlHttpRequest()) {
+                    $url = 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'.
+                        $this->environmentManager->getApplicationDomain().
+                        $this->environmentManager->getSelectedApplicationUri();
 
-                $this->response = $this->response
-                    ->withStatus(302, 'Found')
-                    ->withHeader('Location', $url);
+                    $this->response = $this->response
+                        ->withStatus(302, 'Found')
+                        ->withHeader('Location', $url);
+                }
             }
         }
 
