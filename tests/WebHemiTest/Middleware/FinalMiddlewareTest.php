@@ -16,6 +16,7 @@ use Prophecy\Argument;
 use Psr\Http\Message\StreamInterface;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Http\ResponseInterface;
+use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Http\GuzzleHttp\ServerRequest;
 use WebHemi\Adapter\Http\GuzzleHttp\Response;
 use WebHemi\Adapter\Log\LogAdapterInterface;
@@ -71,7 +72,7 @@ class FinalMiddlewareTest extends TestCase
         $middleware($request, $response);
 
         $this->assertSame(Response::STATUS_OK, $response->getStatusCode());
-        $this->assertEquals(strlen($output), $response->getHeader('Content-Length')[0]);
+        $this->assertFalse($request->isXmlHttpRequest());
     }
 
     /**
@@ -116,7 +117,60 @@ class FinalMiddlewareTest extends TestCase
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertEmpty($response->getHeader('Content-Length')[0]);
+    }
+
+    /**
+     * Tests Ajax request.
+     */
+    public function testAjax()
+    {
+        $request = new ServerRequest(
+            'GET',
+            '/',
+            [],
+            null,
+            '1.1',
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']
+        );
+        $templateData = ['test' => 'data'];
+        $request = $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
+        $body = \GuzzleHttp\Psr7\stream_for('');
+        $response = new Response(404);
+
+        $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
+        $templateRendererProphecy->render(Argument::type('string'), Argument::type('array'))->willReturn($body);
+
+        $authAdapterProphecy = $this->prophesize(AuthAdapterInterface::class);
+        $authAdapterProphecy->hasIdentity()->willReturn(true);
+        $authAdapterProphecy->getIdentity()->will(
+            function () {
+                $userEntity = new UserEntity();
+                $userEntity->setEmail('php.unit.test@foo.org');
+                return $userEntity;
+            }
+        );
+        $environmentProphecy = $this->prophesize(EnvironmentManager::class);
+        $environmentProphecy->getSelectedModule()->willReturn("admin");
+        $environmentProphecy->getClientIp()->willReturn("127.0.0.1");
+        $logAdapterPropehcy = $this->prophesize(LogAdapterInterface::class);
+
+        /** @var RendererAdapterInterface $templateRenderer */
+        $templateRenderer = $templateRendererProphecy->reveal();
+        /** @var AuthAdapterInterface $authAdapter */
+        $authAdapter = $authAdapterProphecy->reveal();
+        /** @var EnvironmentManager $environmentManager */
+        $environmentManager = $environmentProphecy->reveal();
+        /** @var LogAdapterInterface $logAdapter */
+        $logAdapter = $logAdapterPropehcy->reveal();
+
+        $middleware = new FinalMiddleware($templateRenderer, $authAdapter, $environmentManager, $logAdapter);
+
+        /** @var ResponseInterface $result */
+        $middleware($request, $response);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(404, $response->getStatusCode());
+        $this->assertTrue($request->isXmlHttpRequest());
     }
 
     /**

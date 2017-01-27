@@ -78,8 +78,13 @@ class FinalMiddleware implements MiddlewareInterface
             /** @var array $data */
             $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
             $templateData['exception'] = $exception;
-            $body = $this->templateRenderer->render($errorTemplate, $templateData);
-            $response = $response->withBody($body);
+
+            if ($request->isXmlHttpRequest()) {
+                $request = $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
+            } else {
+                $body = $this->templateRenderer->render($errorTemplate, $templateData);
+                $response = $response->withBody($body);
+            }
 
             if ('admin' == $this->environmentManager->getSelectedModule()) {
                 $identity = 'Unauthenticated user';
@@ -103,15 +108,10 @@ class FinalMiddleware implements MiddlewareInterface
             }
         }
 
-        $this->injectContentLength($response);
-
         // Skip sending output when PHP Unit is running.
         // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
-            $this->sendHttpHeader($response);
-            $this->sendOutputHeaders($response->getHeaders());
-
-            echo $response->getBody();
+            $this->sendOutput($request, $response);
         }
         // @codeCoverageIgnoreEnd
     }
@@ -123,6 +123,8 @@ class FinalMiddleware implements MiddlewareInterface
      *
      * @param ResponseInterface $response
      * @return void
+     *
+     * @codeCoverageIgnore - no putput for tests.
      */
     private function injectContentLength(ResponseInterface&$response) : void
     {
@@ -181,5 +183,31 @@ class FinalMiddleware implements MiddlewareInterface
                 $first = false;
             }
         }
+    }
+
+    /**
+     * Sends output according to the request.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return void
+     *
+     * @codeCoverageIgnore - no output for tests
+     */
+    private function sendOutput(ServerRequestInterface $request, ResponseInterface $response) : void
+    {
+        if ($request->isXmlHttpRequest()) {
+            $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
+
+            $output = json_encode($templateData);
+        } else {
+            $this->injectContentLength($response);
+            $output = $response->getBody();
+        }
+
+        $this->sendHttpHeader($response);
+        $this->sendOutputHeaders($response->getHeaders());
+
+        echo $output;
     }
 }

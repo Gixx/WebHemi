@@ -61,9 +61,12 @@ class DispatcherMiddleware implements MiddlewareInterface
                 $template = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_TEMPLATE);
                 /** @var array $data */
                 $data = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
-                /** @var StreamInterface $body */
-                $body = $this->templateRenderer->render($template, $data);
-                $response = $response->withBody($body);
+
+                if (!$request->isXmlHttpRequest()) {
+                    /** @var StreamInterface $body */
+                    $body = $this->templateRenderer->render($template, $data);
+                    $response = $response->withBody($body);
+                }
             }
         } else {
             throw new RuntimeException(sprintf('The given attribute is not a valid Action Middleware.'), 1000);
