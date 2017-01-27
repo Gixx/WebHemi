@@ -21,5 +21,18 @@ use WebHemi\Adapter\Http\ServerRequestInterface;
  */
 class ServerRequest extends GuzzleServerRequest implements ServerRequestInterface
 {
-    // The only purpose of this extension is to be able to implement the WebHemi's ServerRequestInterface.
+    /**
+     * Checks if it is an XML HTTP Request (Ajax) or not.
+     *
+     * @return bool
+     */
+    public function isXmlHttpRequest() : bool
+    {
+        $serverParams = $this->getServerParams();
+
+        return (
+            isset($serverParams['HTTP_X_REQUESTED_WITH'])
+            && $serverParams['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
+        );
+    }
 }
