@@ -130,7 +130,7 @@ class LoginAction extends AbstractMiddlewareAction
         }
 
         return [
-            'loginForm' => $form
+            'loginForm' => $form,
         ];
     }
 
@@ -172,14 +172,14 @@ class LoginAction extends AbstractMiddlewareAction
         $form = new HtmlForm('login', '', 'POST');
 
         $userName = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_TEXT, 'identification', 'Identification');
+        $password = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_PASSWORD, 'password', 'Password');
         if (!empty($customError)) {
-            $userName->setError(AuthAdapterInterface::class, $customError);
+            $password->setError(AuthAdapterInterface::class, $customError);
         }
-        $passWord = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_PASSWORD, 'password', 'Password');
         $submit = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Login');
 
         $form->addElement($userName)
-            ->addElement($passWord)
+            ->addElement($password)
             ->addElement($submit);
 
         return $form;

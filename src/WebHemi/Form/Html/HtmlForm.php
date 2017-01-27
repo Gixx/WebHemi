@@ -13,13 +13,14 @@ declare(strict_types = 1);
 
 namespace WebHemi\Form\Html;
 
+use JsonSerializable;
 use WebHemi\Form\FormElementInterface;
 use WebHemi\Form\FormInterface;
 
 /**
  * Class HtmlForm
  */
-class HtmlForm implements FormInterface
+class HtmlForm implements FormInterface, JsonSerializable
 {
     /** @var string */
     private $name;
@@ -125,5 +126,32 @@ class HtmlForm implements FormInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Defines the data which are presented during the json serialization.
+     *
+     * @return array
+     */
+    public function jsonSerialize() : array
+    {
+        $formData = [
+            'name' => $this->name,
+            'action' => $this->action,
+            'method' => $this->method,
+            'data' => [],
+            'errors' => []
+        ];
+
+        /**
+         * @var string $elementName
+         * @var FormElementInterface $formElement
+         */
+        foreach ($this->formElements as $formElement) {
+            $formData['data'][$formElement->getId()] = $formElement->getValues();
+            $formData['errors'][$formElement->getId()] = $formElement->getErrors();
+        }
+
+        return $formData;
     }
 }
