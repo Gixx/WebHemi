@@ -120,5 +120,9 @@ class HtmlFormElementTest extends TestCase
         $formElement->addValidator($falseValidator);
         $formElement->validate();
         $this->assertArraysAreSimilar($expectedErrors, $formElement->getErrors());
+
+        $expectedErrors = [TestFalseValidator::class => ['The data is not valid'], 'something' => ['error']];
+        $formElement->setError('something', 'error');
+        $this->assertArraysAreSimilar($expectedErrors, $formElement->getErrors());
     }
 }

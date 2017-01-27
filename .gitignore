@@ -13,7 +13,9 @@ resources/vendor_themes/*
 !resources/vendor_themes/.gitkeep
 data/session/*
 !data/session/.gitkeep
-data/log/*
-!data/log/.gitkeep
+data/log/access/*
+!data/log/access/.gitkeep
+data/log/event/*
+!data/log/event/.gitkeep
 /data/temp/*
 !/data/temp/.gitkeep

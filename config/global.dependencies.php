@@ -11,6 +11,9 @@
  */
 
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
+use WebHemi\Adapter\Auth\AuthCredentialInterface;
+use WebHemi\Adapter\Auth\AuthResultInterface;
+use WebHemi\Adapter\Auth\AuthStorageInterface;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Data\DataDriverInterface;
 use WebHemi\Adapter\Data\PDO\MySQLAdapter;
@@ -25,8 +28,8 @@ use WebHemi\Application\EnvironmentManager;
 use WebHemi\Application\SessionManager;
 use WebHemi\Auth\Auth as AuthAdapter;
 use WebHemi\Auth\Result as AuthResult;
-use WebHemi\Auth\AuthStorageInterface;
-use WebHemi\Auth\Storage\Session;
+use WebHemi\Auth\Credential\NameAndPasswordCredential as AuthCredential;
+use WebHemi\Auth\Storage\Session as AuthStorage;
 use WebHemi\Config\ConfigInterface;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
@@ -57,9 +60,24 @@ return [
                 'class'     => AuthAdapter::class,
                 'arguments' => [
                     ConfigInterface::class,
-                    AuthResult::class,
+                    AuthResultInterface::class,
                     AuthStorageInterface::class,
                     UserStorage::class,
+                ],
+                'shared'    => true,
+            ],
+            AuthCredentialInterface::class => [
+                'class'     => AuthCredential::class,
+                'shared'    => true,
+            ],
+            AuthResultInterface::class => [
+                'class'     => AuthResult::class,
+                'shared'    => true,
+            ],
+            AuthStorageInterface::class => [
+                'class'     => AuthStorage::class,
+                'arguments' => [
+                    SessionManager::class
                 ],
                 'shared'    => true,
             ],
@@ -126,14 +144,6 @@ return [
                     EnvironmentManager::class,
                     'AccessLog'
                 ]
-            ],
-            // AuthStorage
-            AuthStorageInterface::class => [
-                'class'     => Session::class,
-                'arguments' => [
-                    SessionManager::class
-                ],
-                'shared'    => true,
             ],
             // DataStorage
             ApplicationStorage::class => [

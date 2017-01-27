@@ -14,14 +14,15 @@ namespace WebHemiTest\Adapter\Auth;
 
 use Prophecy\Argument;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
+use WebHemi\Adapter\Auth\AuthStorageInterface;
 use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Auth\Result;
-use WebHemi\Auth\AuthStorageInterface;
 use WebHemi\Config\Config;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\DataStorageInterface;
 use WebHemiTest\Fixtures\EmptyAuthAdapter;
 use WebHemiTest\Fixtures\EmptyAuthStorage;
+use WebHemiTest\Fixtures\EmptyCredential;
 use WebHemiTest\Fixtures\EmptyEntity;
 use WebHemiTest\Fixtures\EmptyStorage;
 use WebHemiTest\AssertTrait;
@@ -111,32 +112,34 @@ class AuthAdapterTest extends TestCase
         $this->assertFalse($adapter->hasIdentity());
         $this->assertNull($adapter->getIdentity());
 
-        $adapter->authResultShouldBe = Result::FAILURE_OTHER;
-        $result = $adapter->authenticate();
+        $emptyCredential = new EmptyCredential();
+
+        $emptyCredential->addCredential('authResultShouldBe', Result::FAILURE_OTHER);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertSame(Result::FAILURE_OTHER, $result->getCode());
         $this->assertNull($adapter->getIdentity());
         $this->assertNotEmpty($result->getMessage());
 
-        $adapter->authResultShouldBe = Result::FAILURE_CREDENTIAL_INVALID;
-        $result = $adapter->authenticate();
+        $emptyCredential->addCredential('authResultShouldBe', Result::FAILURE_CREDENTIAL_INVALID);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertSame(Result::FAILURE_CREDENTIAL_INVALID, $result->getCode());
         $this->assertNull($adapter->getIdentity());
         $this->assertNotEmpty($result->getMessage());
 
-        $adapter->authResultShouldBe = Result::FAILURE_IDENTITY_NOT_FOUND;
-        $result = $adapter->authenticate();
+        $emptyCredential->addCredential('authResultShouldBe', Result::FAILURE_IDENTITY_NOT_FOUND);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertSame(Result::FAILURE_IDENTITY_NOT_FOUND, $result->getCode());
         $this->assertNull($adapter->getIdentity());
         $this->assertNotEmpty($result->getMessage());
 
-        $adapter->authResultShouldBe = Result::FAILURE;
-        $result = $adapter->authenticate();
+        $emptyCredential->addCredential('authResultShouldBe', Result::FAILURE);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertSame(Result::FAILURE, $result->getCode());
         $this->assertNull($adapter->getIdentity());
         $this->assertNotEmpty($result->getMessage());
 
-        $adapter->authResultShouldBe = Result::SUCCESS;
-        $result = $adapter->authenticate();
+        $emptyCredential->addCredential('authResultShouldBe', Result::SUCCESS);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertSame(Result::SUCCESS, $result->getCode());
         $this->assertInstanceOf(UserEntity::class, $adapter->getIdentity());
         $this->assertSame('test', $adapter->getIdentity()->getUserName());
@@ -205,19 +208,21 @@ class AuthAdapterTest extends TestCase
             $dataStorage
         );
 
-        $adapter->authResultShouldBe = Result::SUCCESS;
-        $result = $adapter->authenticate();
+        $emptyCredential = new EmptyCredential();
+
+        $emptyCredential->addCredential('authResultShouldBe', Result::SUCCESS);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertTrue($result->isValid());
         $this->assertSame(Result::SUCCESS, $result->getCode());
 
-        $adapter->authResultShouldBe = Result::FAILURE;
-        $result = $adapter->authenticate();
+        $emptyCredential->addCredential('authResultShouldBe', Result::FAILURE);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE, $result->getCode());
 
         // set it to a non-valid result code
-        $adapter->authResultShouldBe = -100;
-        $result = $adapter->authenticate();
+        $emptyCredential->addCredential('authResultShouldBe', -100);
+        $result = $adapter->authenticate($emptyCredential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE_OTHER, $result->getCode());
     }

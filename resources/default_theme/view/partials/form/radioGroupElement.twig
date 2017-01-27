@@ -17,6 +17,6 @@
         <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     {% endif %}
     {% if formElement.getErrors() %}
-        {{ _FORM.renderErrorBlock(formElement) }}
+        {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
     {% endif %}
 </div>

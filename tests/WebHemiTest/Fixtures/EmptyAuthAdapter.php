@@ -13,7 +13,8 @@
 namespace WebHemiTest\Fixtures;
 
 use WebHemi\Adapter\Auth\AbstractAuthAdapter;
-use WebHemi\Auth\Result;
+use WebHemi\Adapter\Auth\AuthCredentialInterface;
+use WebHemi\Adapter\Auth\AuthResultInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 
 /**
@@ -21,18 +22,20 @@ use WebHemi\Data\Entity\User\UserEntity;
  */
 class EmptyAuthAdapter extends AbstractAuthAdapter
 {
-    public $authResultShouldBe = 1;
-
     /**
      * Authenticates the user.
      *
-     * @return Result
+     * @param AuthCredentialInterface $credential
+     * @return AuthResultInterface
      */
-    public function authenticate() : Result
+    public function authenticate(AuthCredentialInterface $credential) : AuthResultInterface
     {
-        if ($this->authResultShouldBe < 1) {
+        $crentialData = $credential->getCredentials();
+        $authResultShouldBe = $crentialData['authResultShouldBe'];
+
+        if ($authResultShouldBe < 1) {
             return $this->getNewAuthResultInstance()
-                ->setCode($this->authResultShouldBe);
+                ->setCode($authResultShouldBe);
         }
 
         /** @var UserEntity $userEntity */
@@ -43,7 +46,6 @@ class EmptyAuthAdapter extends AbstractAuthAdapter
         $this->setIdentity($userEntity);
 
         return $this->getNewAuthResultInstance()
-            ->setCode(Result::SUCCESS);
-
+            ->setCode(AuthResultInterface::SUCCESS);
     }
 }

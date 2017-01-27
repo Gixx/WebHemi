@@ -17,14 +17,14 @@ return [
             'file_name' => 'access-',
             'file_extension' => 'log',
             'date_format' => 'Y-m-d H:i:s.u',
-            'log_level' => 0
+            'log_level' => 3
         ],
         'event' => [
             'path' => __DIR__.'/../data/log',
             'file_name' => 'event-',
             'file_extension' => 'log',
             'date_format' => 'Y-m-d H:i:s.u',
-            'log_level' => 3
+            'log_level' => 1
         ]
     ],
 ];

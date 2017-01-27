@@ -11,7 +11,7 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Auth;
+namespace WebHemi\Adapter\Auth;
 
 use WebHemi\Data\Entity\DataEntityInterface;
 

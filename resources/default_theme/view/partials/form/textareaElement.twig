@@ -4,6 +4,6 @@
     {% set value = formElement.getValues() %}
     <textarea id="{{ formElement.getId() }}" name="{{ formElement.getName() }}">{{ value[0] }}</textarea>
     {% if formElement.getErrors() %}
-        {{ _FORM.renderErrorBlock(formElement) }}
+        {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
     {% endif %}
 </div>

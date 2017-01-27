@@ -207,10 +207,10 @@
     {% endif %}
 {% endmacro %}
 
-{% macro renderErrorBlock(formElement) %}
+{% macro renderErrorBlock(errorMessages) %}
     {% if defined('@Theme/partials/errorBlock.twig') %}
-        {% include '@Theme/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
+        {% include '@Theme/partials/errorBlock.twig' with {'errorMessages': errorMessages} %}
     {% else %}
-        {% include '@WebHemi/partials/errorBlock.twig' with {'errors': formElement.getErrors()} %}
+        {% include '@WebHemi/partials/errorBlock.twig' with {'errorMessages': errorMessages} %}
     {% endif %}
 {% endmacro %}

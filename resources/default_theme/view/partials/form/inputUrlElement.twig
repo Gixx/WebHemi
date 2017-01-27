@@ -4,6 +4,6 @@
     {% set value = formElement.getValues() %}
     <input type="url" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ value[0] }}" />
     {% if formElement.getErrors() %}
-        {{ _FORM.renderErrorBlock(formElement) }}
+        {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
     {% endif %}
 </div>

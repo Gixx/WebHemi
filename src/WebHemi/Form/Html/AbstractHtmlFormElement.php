@@ -229,6 +229,20 @@ abstract class AbstractHtmlFormElement implements FormElementInterface
     }
 
     /**
+     * Set custom error.
+     *
+     * @param string $validator
+     * @param string $error
+     * @return FormElementInterface
+     */
+    public function setError(string $validator, string $error) : FormElementInterface
+    {
+        $this->errors[$validator] = [$error];
+
+        return $this;
+    }
+
+    /**
      * Returns the errors collected during the validation.
      *
      * @return array
