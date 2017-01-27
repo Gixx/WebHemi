@@ -149,7 +149,12 @@ class HtmlForm implements FormInterface, JsonSerializable
          */
         foreach ($this->formElements as $formElement) {
             $formData['data'][$formElement->getId()] = $formElement->getValues();
-            $formData['errors'][$formElement->getId()] = $formElement->getErrors();
+
+            $errors = $formElement->getErrors();
+
+            if (!empty($errors)) {
+                $formData['errors'][$formElement->getId()] = $errors;
+            }
         }
 
         return $formData;
