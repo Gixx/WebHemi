@@ -13,14 +13,14 @@
 return [
     'logging' => [
         'access' => [
-            'path' => __DIR__.'/../data/log',
+            'path' => __DIR__.'/../data/log/access',
             'file_name' => 'access-',
             'file_extension' => 'log',
             'date_format' => 'Y-m-d H:i:s.u',
             'log_level' => 3
         ],
         'event' => [
-            'path' => __DIR__.'/../data/log',
+            'path' => __DIR__.'/../data/log/event',
             'file_name' => 'event-',
             'file_extension' => 'log',
             'date_format' => 'Y-m-d H:i:s.u',
