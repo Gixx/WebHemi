@@ -139,7 +139,7 @@ class AclMiddleware implements MiddlewareInterface
             $request = $this->setIdentityForTemplate($request, $identity);
 
             if (!$hasAccess) {
-                $response = $response->withStatus(ResponseInterface::STATUS_FORBIDDEN, 'Forbidden');
+                throw new Exception('Forbidden', 403);
             }
         } else {
             $appUri = rtrim($this->environmentManager->getSelectedApplicationUri(), '/');
