@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Application\Web;
 
-use Exception;
+use Throwable;
 use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Http\HttpAdapterInterface;
@@ -149,8 +149,14 @@ class WebApplication extends AbstractApplication
                 }
 
                 $middleware($request, $response);
-            } catch (Exception $exception) {
-                $response = $response->withStatus(ResponseInterface::STATUS_INTERNAL_SERVER_ERROR);
+            } catch (Throwable $exception) {
+                $code = ResponseInterface::STATUS_INTERNAL_SERVER_ERROR;
+
+                if (in_array($exception->getCode(), [403, 404])) {
+                    $code = $exception->getCode();
+                }
+
+                $response = $response->withStatus($code);
                 $request = $request->withAttribute(
                     ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION,
                     $exception

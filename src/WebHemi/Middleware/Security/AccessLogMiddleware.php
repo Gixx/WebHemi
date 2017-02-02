@@ -82,6 +82,8 @@ class AccessLogMiddleware implements MiddlewareInterface
             'Parameters' => $request->getParsedBody()
         ];
 
+        $response = $response->withStatus(ResponseInterface::STATUS_PROCESSING);
+
         $this->logger->log('info', json_encode($data));
     }
 }
