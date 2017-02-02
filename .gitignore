@@ -17,5 +17,7 @@ data/log/access/*
 !data/log/access/.gitkeep
 data/log/event/*
 !data/log/event/.gitkeep
-/data/temp/*
-!/data/temp/.gitkeep
+data/upload/favicons/*
+!data/upload/favicons/.gitkeep
+data/temp/*
+!data/temp/.gitkeep

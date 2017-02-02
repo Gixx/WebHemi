@@ -15,6 +15,7 @@
   "map": {
     "admin-login": "admin/login.twig",
     "admin-dashboard": "admin/dashboard.twig",
+    "admin-applications-index": "admin/applications/index.twig",
     "website-index": "website/index.twig",
     "website-post-list": "website/post-list.twig",
     "website-post-view": "website/post-view.twig",
