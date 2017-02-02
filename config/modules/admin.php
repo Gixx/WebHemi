@@ -12,6 +12,7 @@
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Auth\AuthCredentialInterface;
 use WebHemi\Application\EnvironmentManager;
+use WebHemi\Config\ConfigInterface;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
@@ -33,13 +34,18 @@ return [
                     'middleware'      => Action\Admin\DashboardAction::class,
                     'allowed_methods' => ['GET'],
                 ],
+                'applications-index' => [
+                    'path'            => '/applications[/]',
+                    'middleware'      => Action\Admin\Applications\IndexAction::class,
+                    'allowed_methods' => ['GET'],
+                ],
                 'login' => [
-                    'path'            => '/auth/login',
+                    'path'            => '/auth/login[/]',
                     'middleware'      => Action\Auth\LoginAction::class,
                     'allowed_methods' => ['GET', 'POST'],
                 ],
                 'logout' => [
-                    'path'            => '/auth/logout',
+                    'path'            => '/auth/logout[/]',
                     'middleware'      => Action\Auth\LogoutAction::class,
                     'allowed_methods' => ['GET'],
                 ],
@@ -89,6 +95,13 @@ return [
                     EnvironmentManager::class
                 ],
             ],
+            Action\Admin\Applications\IndexAction::class => [
+                'arguments' => [
+                    ConfigInterface::class,
+                    AuthAdapterInterface::class,
+                    EnvironmentManager::class
+                ],
+            ]
         ]
     ],
     'middleware_pipeline' => [

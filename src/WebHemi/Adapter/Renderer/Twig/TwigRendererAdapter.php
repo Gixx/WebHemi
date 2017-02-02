@@ -104,6 +104,7 @@ class TwigRendererAdapter implements RendererAdapterInterface
 
         // Tell the template where the resources are.
         $parameters['template_resource_path'] = $this->templateResourcePath;
+        $parameters['document_root'] = $this->environmentManager->getDocumentRoot();
         $parameters['application_base_uri'] = $this->applicationBaseUri;
 
         $output = $this->adapter->render($template, $parameters);
