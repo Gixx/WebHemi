@@ -37,7 +37,7 @@ class WebHemiTwigExtension extends Twig_Extension
     /**
      * Returns extension functions.
      *
-     * @return array<Twig_SimpleFunction)
+     * @return array<Twig_SimpleFunction>
      */
     public function getFunctions() : array
     {
