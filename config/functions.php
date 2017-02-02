@@ -13,7 +13,9 @@
 /**
  * Damn var dumping in a user-friendly way.
  *
- * @param mixed $variable
+ * @param array $variables
+ *
+ * @internal
  */
 function d(...$variables)
 {
@@ -37,25 +39,28 @@ function d(...$variables)
 
 /**
  * Collects and returns some information about the render time. First call will start start, the others will return.
+ *
+ * @return array
  */
-function render_stat()
+function render_stat() : array
 {
     static $stat;
 
     // Set timer
     if (!isset($stat)) {
         $stat = [
-            'time' => microtime(true),
+            'start_time' => microtime(true),
+            'end_time' => null,
+            'duration' => 0,
             'memory' => 0
         ];
 
-        return true;
+        return $stat;
     }
 
     // Get time
-    $start_time = $stat['time'];
-    $end_time = microtime(true);
-    $stat['time'] = bcsub($end_time, $start_time, 4);
+    $stat['end_time'] = microtime(true);
+    $stat['duration'] = bcsub($stat['end_time'], $stat['start_time'], 4);
 
     // Memory peak
     $units = array('B', 'KB', 'MB', 'GB', 'TB');

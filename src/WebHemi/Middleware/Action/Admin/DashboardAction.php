@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin;
 
+use WebHemi\Application\EnvironmentManager;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
@@ -23,15 +24,21 @@ class DashboardAction extends AbstractMiddlewareAction
 {
     /** @var AuthAdapterInterface */
     private $authAdapter;
+    /** @var EnvironmentManager */
+    private $environmentManager;
 
     /**
      * DashboardAction constructor.
      *
      * @param AuthAdapterInterface $authAdapter
+     * @param EnvironmentManager $environmentManager
      */
-    public function __construct(AuthAdapterInterface $authAdapter)
-    {
+    public function __construct(
+        AuthAdapterInterface $authAdapter,
+        EnvironmentManager $environmentManager
+    ) {
         $this->authAdapter = $authAdapter;
+        $this->environmentManager = $environmentManager;
     }
 
     /**
@@ -53,7 +60,7 @@ class DashboardAction extends AbstractMiddlewareAction
     {
         // @TODO TBD
         return [
-            'user' => $this->authAdapter->getIdentity()
+            'user' => $this->authAdapter->getIdentity(),
         ];
     }
 }

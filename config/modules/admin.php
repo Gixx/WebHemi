@@ -86,6 +86,7 @@ return [
             Action\Admin\DashboardAction::class => [
                 'arguments' => [
                     AuthAdapterInterface::class,
+                    EnvironmentManager::class
                 ],
             ],
         ]
