@@ -11,6 +11,7 @@
  */
 require_once __DIR__.'/functions.php';
 
+// Start render stat logging
 render_stat();
 
 return [

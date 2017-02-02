@@ -18,7 +18,6 @@ use Psr\Http\Message\StreamInterface;
 use Twig_Environment;
 use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
-use Twig_SimpleFunction;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
@@ -73,18 +72,10 @@ class TwigRendererAdapter implements RendererAdapterInterface
         $loader = new Twig_Loader_Filesystem($this->templateViewPath);
         $loader->addPath($this->defaultViewPath, 'WebHemi');
         $loader->addPath($this->templateViewPath, 'Theme');
+
         $this->adapter = new Twig_Environment($loader, array('debug' => true, 'cache' => false));
         $this->adapter->addExtension(new Twig_Extension_Debug());
-
-        $viewPath = $this->templateViewPath;
-        // @codeCoverageIgnoreStart
-        // link a core function into template level
-        $function = new Twig_SimpleFunction('defined', function ($fileName) use ($viewPath) {
-            $fileName = str_replace('@Theme', $viewPath, $fileName);
-            return file_exists($fileName);
-        });
-        $this->adapter->addFunction($function);
-        // @codeCoverageIgnoreEnd
+        $this->adapter->addExtension(new WebHemiTwigExtension($this->templateViewPath));
     }
 
     /**
