@@ -30,6 +30,8 @@ class ApplicationEntity implements DataEntityInterface
     private $description;
     /** @var bool */
     private $isReadOnly;
+    /** @var bool */
+    private $isEnabled;
     /** @var DateTime */
     private $dateCreated;
     /** @var DateTime */
@@ -151,6 +153,25 @@ class ApplicationEntity implements DataEntityInterface
     public function getReadOnly() : bool
     {
         return $this->isReadOnly ?? false;
+    }
+
+    /**
+     * @param bool $state
+     * @return ApplicationEntity
+     */
+    public function setEnabled(bool $state) : ApplicationEntity
+    {
+        $this->isEnabled = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getEnabled() : bool
+    {
+        return $this->isEnabled ?? false;
     }
 
     /**
