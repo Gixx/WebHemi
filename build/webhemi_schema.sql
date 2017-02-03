@@ -95,7 +95,11 @@ CREATE TABLE `webhemi_am_resource` (
 LOCK TABLES `webhemi_am_resource` WRITE;
 /*!40000 ALTER TABLE `webhemi_am_resource` DISABLE KEYS */;
 INSERT INTO `webhemi_am_resource` VALUES
-  (1,  '\WebHemi\Middleware\Action\Admin\DashboardAction', 'The Dashboard page', '', 1, NOW(), NULL);
+  (1,  '\WebHemi\Middleware\Action\Admin\DashboardAction', 'The Dashboard page', '', 1, NOW(), NULL),
+  (2,  '\WebHemi\Middleware\Action\Admin\Applications\IndexAction', 'The Applications page', '', 1, NOW(), NULL),
+  (3,  '\WebHemi\Middleware\Action\Admin\Applications\ViewAction', 'View application details', '', 1, NOW(), NULL),
+  (4,  '\WebHemi\Middleware\Action\Admin\Applications\EditAction', 'Edit a specific application', '', 1, NOW(), NULL),
+  (5,  '\WebHemi\Middleware\Action\Admin\Applications\AddAction', 'Add new application', '', 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_am_resource` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +141,11 @@ LOCK TABLES `webhemi_am_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_am_policy` DISABLE KEYS */;
 INSERT INTO `webhemi_am_policy` VALUES
   (1, NULL, NULL, 'supervisor', 'Supervisor access', 'Access to all resources in every application.', 1, 1, NOW(), NULL),
-  (2, 1, 1, 'dashboard', 'Dashboard visitor', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL);
+  (2, 1, 1, 'dashboard', 'Dashboard visitor', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL),
+  (3, 2, 1, 'dashboard', 'Application lister', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL),
+  (4, 3, 1, 'dashboard', 'Application viewer', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL),
+  (5, 4, 1, 'dashboard', 'Application editor', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL),
+  (6, 5, 1, 'dashboard', 'Application publisher', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
 

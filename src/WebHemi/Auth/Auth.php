@@ -21,8 +21,6 @@ use WebHemi\Data\Storage\User\UserStorage;
 
 /**
  * Class Auth
- *
- * @codeCoverageIgnore - unfinished code
  */
 final class Auth extends AbstractAuthAdapter
 {

@@ -9,17 +9,14 @@
  *
  * @link      http://www.gixx-web.com
  */
+
+use WebHemi\Adapter\Acl\AclAdapterInterface;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Auth\AuthCredentialInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
-use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
-use WebHemi\Data\Coupler\UserToPolicyCoupler;
-use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
-use WebHemi\Data\Storage\User\UserStorage;
-use WebHemi\Data\Storage\User\UserGroupStorage;
 use WebHemi\Data\Storage\User\UserMetaStorage;
 use WebHemi\Middleware\Action;
 use WebHemi\Middleware\Security\AclMiddleware;
@@ -38,6 +35,21 @@ return [
                     'path'            => '/applications[/]',
                     'middleware'      => Action\Admin\Applications\IndexAction::class,
                     'allowed_methods' => ['GET'],
+                ],
+                'applications-view' => [
+                    'path'            => '/applications/view/{name:[a-z0-9\-\_]+}[/]',
+                    'middleware'      => Action\Admin\Applications\ViewAction::class,
+                    'allowed_methods' => ['GET'],
+                ],
+                'applications-edit' => [
+                    'path'            => '/applications/edit/{name:[a-z0-9\-\_]+}[/]',
+                    'middleware'      => Action\Admin\Applications\EditAction::class,
+                    'allowed_methods' => ['GET', 'POST'],
+                ],
+                'applications-add' => [
+                    'path'            => '/applications/add',
+                    'middleware'      => Action\Admin\Applications\AddAction::class,
+                    'allowed_methods' => ['GET', 'POST'],
                 ],
                 'login' => [
                     'path'            => '/auth/login[/]',
@@ -59,9 +71,6 @@ return [
                     AuthAdapterInterface::class,
                     AuthCredentialInterface::class,
                     EnvironmentManager::class,
-                    UserStorage::class,
-                    UserGroupStorage::class,
-                    UserToGroupCoupler::class,
                 ],
             ],
             Action\Auth\LogoutAction::class => [
@@ -73,10 +82,8 @@ return [
             AclMiddleware::class => [
                 'arguments' => [
                     AuthAdapterInterface::class,
+                    AclAdapterInterface::class,
                     EnvironmentManager::class,
-                    UserToPolicyCoupler::class,
-                    UserToGroupCoupler::class,
-                    UserGroupToPolicyCoupler::class,
                     ApplicationStorage::class,
                     ResourceStorage::class,
                     UserMetaStorage::class
@@ -101,13 +108,34 @@ return [
                     AuthAdapterInterface::class,
                     EnvironmentManager::class
                 ],
+            ],
+            Action\Admin\Applications\ViewAction::class => [
+                'arguments' => [
+                    ConfigInterface::class,
+                    AuthAdapterInterface::class,
+                    EnvironmentManager::class
+                ],
+            ],
+            Action\Admin\Applications\EditAction::class => [
+                'arguments' => [
+                    ConfigInterface::class,
+                    AuthAdapterInterface::class,
+                    EnvironmentManager::class
+                ],
+            ],
+            Action\Admin\Applications\AddAction::class => [
+                'arguments' => [
+                    ConfigInterface::class,
+                    AuthAdapterInterface::class,
+                    EnvironmentManager::class
+                ],
             ]
         ]
     ],
     'middleware_pipeline' => [
         'Admin' => [
-            ['service' => AccessLogMiddleware::class, 'priority' => 9],
             ['service' => AclMiddleware::class, 'priority' => 10],
+            ['service' => AccessLogMiddleware::class, 'priority' => 11],
         ],
     ],
 ];
