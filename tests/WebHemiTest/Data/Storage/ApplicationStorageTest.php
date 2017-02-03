@@ -82,6 +82,7 @@ class ApplicationStorageTest extends TestCase
                 'title' => 'Test Application',
                 'description' => 'A test application record',
                 'is_read_only' => 1,
+                'is_enabled' => 1,
                 'date_created' =>  '2016-03-24 16:25:12',
                 'date_modified' =>  '2016-03-24 16:25:12',
             ]
@@ -132,6 +133,7 @@ class ApplicationStorageTest extends TestCase
                 'title' => 'Test Application',
                 'description' => 'A test application record',
                 'is_read_only' => 1,
+                'is_enabled' => 1,
                 'date_created' =>  '2016-03-24 16:25:12',
                 'date_modified' =>  '2016-03-24 16:25:12',
             ]
