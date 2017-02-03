@@ -10,6 +10,8 @@
  * @link      http://www.gixx-web.com
  */
 
+use WebHemi\Acl\Acl as AclAdapter;
+use WebHemi\Adapter\Acl\AclAdapterInterface;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Auth\AuthCredentialInterface;
 use WebHemi\Adapter\Auth\AuthResultInterface;
@@ -78,6 +80,15 @@ return [
                 'class'     => AuthStorage::class,
                 'arguments' => [
                     SessionManager::class
+                ],
+                'shared'    => true,
+            ],
+            AclAdapterInterface::class => [
+                'class'     => AclAdapter::class,
+                'arguments' => [
+                    UserToPolicyCoupler::class,
+                    UserToGroupCoupler::class,
+                    UserGroupToPolicyCoupler::class,
                 ],
                 'shared'    => true,
             ],

@@ -18,11 +18,7 @@ use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Auth\AuthCredentialInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Auth\Result;
-use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Storage\User\UserGroupStorage;
-use WebHemi\Data\Storage\User\UserStorage;
-use WebHemi\DateTime;
 use WebHemi\Form\Html\HtmlForm;
 use WebHemi\Form\Html\HtmlFormElement;
 use WebHemi\Middleware\AbstractMiddlewareAction;
@@ -38,12 +34,6 @@ class LoginAction extends AbstractMiddlewareAction
     private $authCredential;
     /** @var EnvironmentManager */
     private $environmentManager;
-    /** @var UserStorage */
-    private $userStorage;
-    /** @var UserGroupStorage */
-    private $userGroupStorage;
-    /** @var UserToGroupCoupler */
-    private $userToGroupCoupler;
 
     /**
      * MetaDataAction constructor.
@@ -51,24 +41,15 @@ class LoginAction extends AbstractMiddlewareAction
      * @param AuthAdapterInterface    $authAdapter
      * @param AuthCredentialInterface $authCredential
      * @param EnvironmentManager      $environmentManager
-     * @param UserStorage             $userStorage
-     * @param UserGroupStorage        $userGroupStorage
-     * @param UserToGroupCoupler      $userToGroupCoupler
      */
     public function __construct(
         AuthAdapterInterface $authAdapter,
         AuthCredentialInterface $authCredential,
-        EnvironmentManager $environmentManager,
-        UserStorage $userStorage,
-        UserGroupStorage $userGroupStorage,
-        UserToGroupCoupler $userToGroupCoupler
+        EnvironmentManager $environmentManager
     ) {
         $this->authAdapter = $authAdapter;
         $this->authCredential = $authCredential;
         $this->environmentManager = $environmentManager;
-        $this->userStorage = $userStorage;
-        $this->userGroupStorage = $userGroupStorage;
-        $this->userToGroupCoupler = $userToGroupCoupler;
     }
 
     /**
@@ -110,11 +91,6 @@ class LoginAction extends AbstractMiddlewareAction
                 /** @var null|UserEntity $userEntity */
                 $userEntity = $this->authAdapter->getIdentity();
 
-                // save new user if we have the username credentials and add him/her to the Guest group
-                if (!$userEntity instanceof UserEntity && !empty($userEntity)) {
-                    $userEntity = $this->registerGuestUser((string)$userEntity);
-                }
-
                 if ($userEntity instanceof UserEntity) {
                     $this->authAdapter->setIdentity($userEntity);
                 }
@@ -135,33 +111,6 @@ class LoginAction extends AbstractMiddlewareAction
         return [
             'loginForm' => $form,
         ];
-    }
-
-    /**
-     * Registers a new user as guest.
-     *
-     * @param string $identity
-     * @return UserEntity
-     */
-    private function registerGuestUser(string $identity) : UserEntity
-    {
-        $userName = $identity;
-        /** @var UserEntity $userEntity */
-        $userEntity = $this->userStorage->createEntity();
-        $userEntity->setUserName($userName)
-            ->setPassword('guest-user')
-            ->setActive(true)
-            ->setEnabled(true)
-            ->setDateCreated(new DateTime('now'));
-
-        $userId = $this->userStorage->saveEntity($userEntity);
-        $userGroupEntity = $this->userGroupStorage->getUserGroupByName('guest');
-        // add user to the Guests group.
-        if ($userId && $userGroupEntity) {
-            $this->userToGroupCoupler->setDependency($userEntity, $userGroupEntity);
-        }
-
-        return $userEntity;
     }
 
     /**
