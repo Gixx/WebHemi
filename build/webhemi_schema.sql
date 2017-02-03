@@ -28,6 +28,7 @@ CREATE TABLE `webhemi_application` (
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL DEFAULT '',
   `is_read_only` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_enabled` TINYINT(1) NOT NULL DEFAULT 0,
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modified` DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_application`),
@@ -43,8 +44,8 @@ CREATE TABLE `webhemi_application` (
 LOCK TABLES `webhemi_application` WRITE;
 /*!40000 ALTER TABLE `webhemi_application` DISABLE KEYS */;
 INSERT INTO `webhemi_application` VALUES
-  (1, 'admin',   'Admin',   'Administrative area.',                             1, NOW(), NULL),
-  (2, 'website', 'Website', 'The default application for the `www` subdomain.', 1, NOW(), NULL);
+  (1, 'admin',   'Admin',   'Administrative area.',                             1, 1, NOW(), NULL),
+  (2, 'website', 'Website', 'The default application for the `www` subdomain.', 1, 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_application` ENABLE KEYS */;
 UNLOCK TABLES;
 

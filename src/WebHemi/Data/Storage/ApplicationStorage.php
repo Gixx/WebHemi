@@ -35,6 +35,8 @@ class ApplicationStorage extends AbstractDataStorage
     /** @var string */
     private $isReadOnly = 'is_read_only';
     /** @var string */
+    private $isEnabled = 'is_enabled';
+    /** @var string */
     private $dateCreated = 'date_created';
     /** @var string */
     private $dateModified = 'date_modified';
@@ -54,6 +56,7 @@ class ApplicationStorage extends AbstractDataStorage
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
             ->setReadOnly((bool) $data[$this->isReadOnly])
+            ->setEnabled((bool) $data[$this->isEnabled])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
             ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
     }
@@ -76,6 +79,7 @@ class ApplicationStorage extends AbstractDataStorage
             $this->title => $entity->getTitle(),
             $this->description => $entity->getDescription(),
             $this->isReadOnly => (int) $entity->getReadOnly(),
+            $this->isEnabled => (int) $entity->getEnabled(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];
