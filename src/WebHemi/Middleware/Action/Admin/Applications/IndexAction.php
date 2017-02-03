@@ -16,6 +16,7 @@ namespace WebHemi\Middleware\Action\Admin\Applications;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Config\ConfigInterface;
+use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Middleware\AbstractMiddlewareAction;
 
 /**
@@ -29,6 +30,8 @@ class IndexAction extends AbstractMiddlewareAction
     private $authAdapter;
     /** @var EnvironmentManager */
     private $environmentManager;
+    /** @var ApplicationStorage */
+    private $applicationStorage;
 
     /**
      * DashboardAction constructor.
@@ -36,15 +39,18 @@ class IndexAction extends AbstractMiddlewareAction
      * @param ConfigInterface $configuration
      * @param AuthAdapterInterface $authAdapter
      * @param EnvironmentManager $environmentManager
+     * @param ApplicationStorage $applicationStorage
      */
     public function __construct(
         ConfigInterface $configuration,
         AuthAdapterInterface $authAdapter,
-        EnvironmentManager $environmentManager
+        EnvironmentManager $environmentManager,
+        ApplicationStorage $applicationStorage
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
+        $this->applicationStorage = $applicationStorage;
     }
 
     /**
@@ -64,7 +70,7 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        $applications = $this->configuration->getData('applications');
+        $applications = $this->applicationStorage->getDataAdapter()->getDataSet([]);
 
         return [
             'applications' => $applications,

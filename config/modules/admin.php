@@ -106,7 +106,8 @@ return [
                 'arguments' => [
                     ConfigInterface::class,
                     AuthAdapterInterface::class,
-                    EnvironmentManager::class
+                    EnvironmentManager::class,
+                    ApplicationStorage::class
                 ],
             ],
             Action\Admin\Applications\ViewAction::class => [
