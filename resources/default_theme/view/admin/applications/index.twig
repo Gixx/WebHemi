@@ -3,8 +3,8 @@
 {% block content %}
     <a href="auth/logout">Logout</a>
     <h1>Applications!</h1>
-{% for application,data in applications %}
-    <a href="applications/view/{{ application }}">{{ application }}</a>
+{% for application in applications %}
+    <a href="applications/view/{{ application.name }}">{{ application.title }}</a>
 {% endfor %}
 <pre>
     {{ dump(applications) }}
