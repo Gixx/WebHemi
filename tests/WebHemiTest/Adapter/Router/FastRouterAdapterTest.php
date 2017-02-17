@@ -17,7 +17,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use WebHemi\Config\Config;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Adapter\Router\FastRoute\FastRouteAdapter;
-use WebHemi\Routing\Result;
+use WebHemi\Router\Result;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\Fixtures\EmptyEnvironmentManager;
 use WebHemiTest\InvokePrivateMethodTrait;

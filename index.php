@@ -19,6 +19,7 @@ use WebHemi\Config;
 require_once __DIR__.'/vendor/autoload.php';
 
 $configuration = new Config\Config(require __DIR__.'/config/config.php');
+
 // Set core objects
 $environmentManager = new EnvironmentManager($configuration, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
 

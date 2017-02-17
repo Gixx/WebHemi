@@ -17,7 +17,7 @@ use Exception;
 use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
-use WebHemi\Routing\Result;
+use WebHemi\Router\Result;
 
 /**
  * Class RoutingMiddleware.

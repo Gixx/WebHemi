@@ -23,47 +23,6 @@ use WebHemi\Middleware\Security\AclMiddleware;
 use WebHemi\Middleware\Security\AccessLogMiddleware;
 
 return [
-    'modules' => [
-        'Admin' => [
-            'routing' => [
-                'index' => [
-                    'path'            => '/',
-                    'middleware'      => Action\Admin\DashboardAction::class,
-                    'allowed_methods' => ['GET'],
-                ],
-                'applications-index' => [
-                    'path'            => '/applications[/]',
-                    'middleware'      => Action\Admin\Applications\IndexAction::class,
-                    'allowed_methods' => ['GET'],
-                ],
-                'applications-view' => [
-                    'path'            => '/applications/view/{name:[a-z0-9\-\_]+}[/]',
-                    'middleware'      => Action\Admin\Applications\ViewAction::class,
-                    'allowed_methods' => ['GET'],
-                ],
-                'applications-edit' => [
-                    'path'            => '/applications/edit/{name:[a-z0-9\-\_]+}[/]',
-                    'middleware'      => Action\Admin\Applications\EditAction::class,
-                    'allowed_methods' => ['GET', 'POST'],
-                ],
-                'applications-add' => [
-                    'path'            => '/applications/add',
-                    'middleware'      => Action\Admin\Applications\AddAction::class,
-                    'allowed_methods' => ['GET', 'POST'],
-                ],
-                'login' => [
-                    'path'            => '/auth/login[/]',
-                    'middleware'      => Action\Auth\LoginAction::class,
-                    'allowed_methods' => ['GET', 'POST'],
-                ],
-                'logout' => [
-                    'path'            => '/auth/logout[/]',
-                    'middleware'      => Action\Auth\LogoutAction::class,
-                    'allowed_methods' => ['GET'],
-                ],
-            ],
-        ],
-    ],
     'dependencies' => [
         'Admin' => [
             Action\Auth\LoginAction::class => [
@@ -90,11 +49,11 @@ return [
                 ]
             ],
             AccessLogMiddleware::class => [
-              'arguments' => [
-                  'AccessLog',
-                  AuthAdapterInterface::class,
-                  EnvironmentManager::class
-              ]
+                'arguments' => [
+                    'AccessLog',
+                    AuthAdapterInterface::class,
+                    EnvironmentManager::class
+                ]
             ],
             Action\Admin\DashboardAction::class => [
                 'arguments' => [
@@ -132,11 +91,5 @@ return [
                 ],
             ]
         ]
-    ],
-    'middleware_pipeline' => [
-        'Admin' => [
-            ['service' => AclMiddleware::class, 'priority' => 10],
-            ['service' => AccessLogMiddleware::class, 'priority' => 11],
-        ],
     ],
 ];

@@ -51,7 +51,7 @@ use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\RoutingMiddleware;
-use WebHemi\Routing\Result as RouteResult;
+use WebHemi\Router\Result as RouteResult;
 
 return [
     'dependencies' => [

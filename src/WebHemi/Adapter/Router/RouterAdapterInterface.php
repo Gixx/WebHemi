@@ -16,7 +16,7 @@ namespace WebHemi\Adapter\Router;
 use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
-use WebHemi\Routing\Result;
+use WebHemi\Router\Result;
 
 /**
  * Interface RouterAdapterInterface.
