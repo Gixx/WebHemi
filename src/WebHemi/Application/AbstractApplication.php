@@ -46,7 +46,7 @@ abstract class AbstractApplication implements ApplicationInterface
     /**
      * Runs the application. This is where the magic happens.
      * For example for a web application this initializes the Request and Response objects, builds the middleware
-     * pipeline, applies the Routing and the Dispatch.
+     * pipeline, applies the Router and the Dispatch.
      *
      * @return void
      */

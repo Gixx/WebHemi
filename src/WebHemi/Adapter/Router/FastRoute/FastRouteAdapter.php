@@ -18,7 +18,7 @@ use WebHemi\Adapter\Http\ServerRequestInterface;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
-use WebHemi\Routing\Result;
+use WebHemi\Router\Result;
 
 /**
  * Class FastRouteAdapter.
@@ -45,7 +45,7 @@ class FastRouteAdapter implements RouterAdapterInterface
         Result $routeResult
     ) {
         $module = $environmentManager->getSelectedModule();
-        $routes = $configuration->getData('modules/'.$module.'/routing');
+        $routes = $configuration->getData('routing/'.$module);
 
         $this->result = $routeResult;
         $this->applicationPath = $environmentManager->getSelectedApplicationUri();

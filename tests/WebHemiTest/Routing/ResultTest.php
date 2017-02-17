@@ -12,7 +12,7 @@
 namespace WebHemiTest\Routing;
 
 use InvalidArgumentException;
-use WebHemi\Routing\Result;
+use WebHemi\Router\Result;
 use WebHemiTest\AssertTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 

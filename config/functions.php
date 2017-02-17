@@ -122,7 +122,7 @@ function merge_array_overwrite()
  */
 function get_application_config()
 {
-    $defaultApplicationConfig = require __DIR__.'/global.application.php';
+    $defaultApplicationConfig = require __DIR__.'/settings/global/application.php';
     $localApplicationConfig = [];
     $readOnlyApplications = [
         'admin',
@@ -140,8 +140,8 @@ function get_application_config()
         ],
     ];
 
-    if (file_exists(__DIR__.'/local.application.php')) {
-        $localApplicationConfig = require __DIR__.'/local.application.php';
+    if (file_exists(__DIR__ . '/settings/local/application.php')) {
+        $localApplicationConfig = require __DIR__ . '/settings/local/application.php';
     }
 
     $applicationConfig = merge_array_overwrite(
@@ -197,13 +197,15 @@ function get_theme_config()
 /**
  * Reads the module config directory and returns the config.
  *
+ * @param string $path
  * @return array
  */
-function get_full_module_config()
+function get_full_module_config($path = 'modules')
 {
     $moduleConfig = [];
+    $path = trim($path, '/');
 
-    $moduleConfigPath = realpath(__DIR__.'/modules');
+    $moduleConfigPath = realpath(__DIR__.'/'.$path);
     $handle = opendir($moduleConfigPath);
 
     if (!$handle) {
@@ -211,10 +213,15 @@ function get_full_module_config()
     }
 
     while (false !== ($entry = readdir($handle))) {
+        if (in_array($entry, ['.', '..'])) {
+            continue;
+        }
+
         if (is_file($moduleConfigPath.'/'.$entry)) {
             $config = require $moduleConfigPath.'/'.$entry;
-
             $moduleConfig = merge_array_overwrite($moduleConfig, $config);
+        } elseif (is_dir($moduleConfigPath.'/'.$entry)) {
+            $moduleConfig = merge_array_overwrite($moduleConfig, get_full_module_config($path.'/'.$entry));
         }
     }
     closedir($handle);
@@ -222,15 +229,15 @@ function get_full_module_config()
 }
 
 /**
- * Returns the module config.
+ * Returns the routing config.
  *
  * @return array
  */
-function get_module_config()
+function get_routing_config()
 {
     $moduleConfig = get_full_module_config();
 
-    return $moduleConfig['modules'];
+    return $moduleConfig['routing'];
 }
 
 /**
@@ -241,16 +248,15 @@ function get_module_config()
 function get_dependencies_config()
 {
     $moduleConfig = get_full_module_config();
-    $globalConfig = require __DIR__.'/global.dependencies.php';
-    $localDbConfig = [];
 
-    if (file_exists(__DIR__.'/local.db.php')) {
-        $localDbConfig = require __DIR__.'/local.db.php';
+    if (empty($moduleConfig['dependencies']['Global'][\WebHemi\Adapter\Data\DataDriverInterface::class])
+        && file_exists(__DIR__.'/settings/local/db.php')
+    ) {
+        $dataDriverConfig = require __DIR__.'/settings/local/db.php';
+        $moduleConfig = merge_array_overwrite($moduleConfig, $dataDriverConfig);
     }
 
-    $dependenciesConfig = merge_array_overwrite($moduleConfig, $globalConfig, $localDbConfig);
-
-    return $dependenciesConfig['dependencies'];
+    return $moduleConfig['dependencies'];
 }
 
 /**
@@ -261,11 +267,8 @@ function get_dependencies_config()
 function get_pipeline_config()
 {
     $moduleConfig = get_full_module_config();
-    $globalConfig = require __DIR__.'/global.pipeline.php';
 
-    $pipelineConfig = merge_array_overwrite($globalConfig, $moduleConfig);
-
-    return $pipelineConfig['middleware_pipeline'];
+    return $moduleConfig['middleware_pipeline'];
 }
 
 /**
@@ -275,8 +278,10 @@ function get_pipeline_config()
  */
 function get_auth_config()
 {
-    $globalAuthConfig = require __DIR__.'/global.auth.php';
-    $localAuthConfig = (file_exists(__DIR__.'/local.auth.php')) ? require __DIR__.'/local.auth.php' : [];
+    $globalAuthConfig = require __DIR__.'/settings/global/auth.php';
+    $localAuthConfig = (file_exists(__DIR__.'/settings/local/auth.php'))
+        ? require __DIR__.'/settings/local/auth.php'
+        : [];
 
     $authConfig = merge_array_overwrite($globalAuthConfig, $localAuthConfig);
 
@@ -290,8 +295,10 @@ function get_auth_config()
  */
 function get_session_config()
 {
-    $globalSessionConfig = require __DIR__.'/global.session.php';
-    $localSessionConfig = (file_exists(__DIR__.'/local.session.php')) ? require __DIR__.'/local.session.php' : [];
+    $globalSessionConfig = require __DIR__.'/settings/global/session.php';
+    $localSessionConfig = (file_exists(__DIR__.'/settings/local/session.php'))
+        ? require __DIR__.'/settings/local/session.php'
+        : [];
 
     $sessionConfig = merge_array_overwrite($globalSessionConfig, $localSessionConfig);
 
@@ -305,8 +312,10 @@ function get_session_config()
  */
 function get_logging_cofig()
 {
-    $globalLoggingConfig = require __DIR__.'/global.logging.php';
-    $localLoggingConfig = (file_exists(__DIR__.'/local.logging.php')) ? require __DIR__.'/local.logging.php' : [];
+    $globalLoggingConfig = require __DIR__.'/settings/global/logging.php';
+    $localLoggingConfig = (file_exists(__DIR__.'/settings/local/logging.php'))
+        ? require __DIR__.'/settings/local/logging.php'
+        : [];
 
     $loggingConfig = merge_array_overwrite($globalLoggingConfig, $localLoggingConfig);
 

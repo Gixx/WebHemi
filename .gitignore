@@ -3,8 +3,8 @@
 composer.phar
 composer.lock
 composer-setup.php
-config/local.*
-!config/*.template
+config/settings/local/*
+!config/settings/local/*.template
 vendor/*
 !vendor/.gitkeep
 build/logs/*

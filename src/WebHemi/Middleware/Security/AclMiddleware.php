@@ -91,15 +91,12 @@ class AclMiddleware implements MiddlewareInterface
     public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
     {
         $actionMiddleware = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS);
-        $identity = false;
 
         if (in_array($actionMiddleware, $this->middlewareWhiteList)) {
             return;
         }
 
-        if ($this->authAdapter->hasIdentity()) {
-            $identity = $this->authAdapter->getIdentity();
-        }
+        $identity = $this->authAdapter->getIdentity();
 
         if ($identity instanceof UserEntity) {
             $selectedApplication = $this->environmentManager->getSelectedApplication();
@@ -117,6 +114,7 @@ class AclMiddleware implements MiddlewareInterface
                 throw new Exception('Forbidden', 403);
             }
         } else {
+            // Instead of throw a useless 401 error here, redirect the user to the login page
             $appUri = rtrim($this->environmentManager->getSelectedApplicationUri(), '/');
             $response = $response->withStatus(ResponseInterface::STATUS_REDIRECT, 'Found')
                 ->withHeader('Location', $appUri.'/auth/login');

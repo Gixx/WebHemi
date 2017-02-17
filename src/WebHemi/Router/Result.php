@@ -11,7 +11,7 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Routing;
+namespace WebHemi\Router;
 
 use InvalidArgumentException;
 
@@ -47,7 +47,7 @@ class Result
     public function setStatus(int $status) : Result
     {
         if (!isset($this->statusReason[$status])) {
-            throw new InvalidArgumentException(sprintf('The parameter "%s" is not a valid routing status.', $status));
+            throw new InvalidArgumentException(sprintf('The parameter "%s" is not a valid router status.', $status));
         }
 
         $this->status = $status;

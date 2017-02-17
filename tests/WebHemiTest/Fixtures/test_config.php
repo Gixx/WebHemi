@@ -21,7 +21,7 @@ use WebHemi\Config\ConfigInterface;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\RoutingMiddleware;
-use WebHemi\Routing\Result;
+use WebHemi\Router\Result;
 use WebHemiTest\Fixtures\TestMiddleware;
 use WebHemiTest\Fixtures\TestActionMiddleware;
 
@@ -139,38 +139,34 @@ return [
             ['service' => 'someModuleAlias', 'priority' => 55],
         ],
     ],
-    'modules' => [
+    'routing' => [
         'Website' => [
-            'routing' => [
-                'index' => [
-                    'path'            => '/',
-                    'middleware'      => 'ActionOK',
-                    'allowed_methods' => ['GET','POST'],
-                ],
-                'login' => [
-                    'path'            => '/login',
-                    'middleware'      => 'SomeLoginMiddleware',
-                    'allowed_methods' => ['GET'],
-                ],
-                'error' => [
-                    'path' => '/error/',
-                    'middleware' => 'actionBad',
-                    'allowed_methods' => ['GET'],
-                ],
+            'index' => [
+                'path'            => '/',
+                'middleware'      => 'ActionOK',
+                'allowed_methods' => ['GET','POST'],
+            ],
+            'login' => [
+                'path'            => '/login',
+                'middleware'      => 'SomeLoginMiddleware',
+                'allowed_methods' => ['GET'],
+            ],
+            'error' => [
+                'path' => '/error/',
+                'middleware' => 'actionBad',
+                'allowed_methods' => ['GET'],
             ],
         ],
         'SomeApp' => [
-            'routing' => [
-                'index' => [
-                    'path'            => '/',
-                    'middleware'      => 'SomeIndexMiddleware',
-                    'allowed_methods' => ['GET','POST'],
-                ],
-                'somepath' => [
-                    'path'            => '/some/path',
-                    'middleware'      => 'SomeOtherMiddleware',
-                    'allowed_methods' => ['GET'],
-                ],
+            'index' => [
+                'path'            => '/',
+                'middleware'      => 'SomeIndexMiddleware',
+                'allowed_methods' => ['GET','POST'],
+            ],
+            'somepath' => [
+                'path'            => '/some/path',
+                'middleware'      => 'SomeOtherMiddleware',
+                'allowed_methods' => ['GET'],
             ],
         ],
     ],

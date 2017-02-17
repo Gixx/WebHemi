@@ -20,6 +20,6 @@ return [
         'use_cookies' => true,
         'use_trans_sid' => false,
         'cookie_http_only' => true,
-        'save_path' => __DIR__.'/../data/session/',
+        'save_path' => __DIR__.'/../../../data/session/',
     ],
 ];
