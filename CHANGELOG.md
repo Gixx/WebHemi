@@ -1,6 +1,17 @@
 Change log
 ==========
 
+Version 4.0.0-3.2
+-----------------
+* Restructure Config.
+* Add WebHemi\Acl to be able to resue validation.
+* Add RendererFilterInterface and RendererHelperInterface.
+* Make the renderer helpers and filters configurable.
+* Refactor the TwigRendererAdapter and TwigExtension to use the renderer configuration.
+* Add basic renderer helpers (getStat(), defined(file), isAllowed(url))
+* Minor fixes in Auth-related codes.
+* Add/fix unit tests. TODO: reach 100% coverage again.
+
 Version 4.0.0-3.1
 -----------------
 * Refactor the WebHemi\Data to PHP 7.1 and fix the Unit Tests.

@@ -229,6 +229,18 @@ function get_full_module_config($path = 'modules')
 }
 
 /**
+ * Returns the renderer config.
+ *
+ * @return array
+ */
+function get_renderer_config()
+{
+    $moduleConfig = get_full_module_config();
+
+    return $moduleConfig['renderer'];
+}
+
+/**
  * Returns the routing config.
  *
  * @return array
@@ -237,7 +249,7 @@ function get_routing_config()
 {
     $moduleConfig = get_full_module_config();
 
-    return $moduleConfig['routing'];
+    return $moduleConfig['router'];
 }
 
 /**

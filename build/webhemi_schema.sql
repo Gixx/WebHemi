@@ -79,7 +79,7 @@ CREATE TABLE `webhemi_am_resource` (
   `id_am_resource` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
-  `description` TEXT NOT NULL DEFAULT '',
+  `description` TEXT NOT NULL,
   `is_read_only` TINYINT(1) NOT NULL DEFAULT 0,
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modified` DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -96,11 +96,11 @@ CREATE TABLE `webhemi_am_resource` (
 LOCK TABLES `webhemi_am_resource` WRITE;
 /*!40000 ALTER TABLE `webhemi_am_resource` DISABLE KEYS */;
 INSERT INTO `webhemi_am_resource` VALUES
-  (1,  '\WebHemi\Middleware\Action\Admin\DashboardAction', 'The Dashboard page', '', 1, NOW(), NULL),
-  (2,  '\WebHemi\Middleware\Action\Admin\Applications\IndexAction', 'The Applications page', '', 1, NOW(), NULL),
-  (3,  '\WebHemi\Middleware\Action\Admin\Applications\ViewAction', 'View application details', '', 1, NOW(), NULL),
-  (4,  '\WebHemi\Middleware\Action\Admin\Applications\EditAction', 'Edit a specific application', '', 1, NOW(), NULL),
-  (5,  '\WebHemi\Middleware\Action\Admin\Applications\AddAction', 'Add new application', '', 1, NOW(), NULL);
+  (1,  'WebHemi\\Middleware\\Action\\Admin\\DashboardAction', 'The Dashboard page', '', 1, NOW(), NULL),
+  (2,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\IndexAction', 'The Applications page', '', 1, NOW(), NULL),
+  (3,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\ViewAction', 'View application details', '', 1, NOW(), NULL),
+  (4,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\EditAction', 'Edit a specific application', '', 1, NOW(), NULL),
+  (5,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\AddAction', 'Add new application', '', 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_am_resource` ENABLE KEYS */;
 UNLOCK TABLES;
 

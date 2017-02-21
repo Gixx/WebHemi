@@ -100,7 +100,7 @@ class PolicyStorage extends AbstractDataStorage
      * @param int $identifier
      * @return null|PolicyEntity
      */
-    public function getPolicyById($identifier)
+    public function getPolicyById($identifier) : ? PolicyEntity
     {
         /** @var null|PolicyEntity $entity */
         $entity = $this->getDataEntity([$this->idKey => $identifier]);
@@ -114,7 +114,7 @@ class PolicyStorage extends AbstractDataStorage
      * @param string $name
      * @return null|PolicyEntity
      */
-    public function getPolicyByName($name)
+    public function getPolicyByName($name) : ? PolicyEntity
     {
         /** @var null|PolicyEntity $entity */
         $entity = $this->getDataEntity([$this->name => $name]);

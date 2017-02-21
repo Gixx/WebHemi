@@ -24,6 +24,7 @@ use WebHemi\Middleware\RoutingMiddleware;
 use WebHemi\Router\Result;
 use WebHemiTest\Fixtures\TestMiddleware;
 use WebHemiTest\Fixtures\TestActionMiddleware;
+use WebHemiTest\Fixtures\EmptyRendererHelper;
 
 return [
     'applications' => [
@@ -139,7 +140,17 @@ return [
             ['service' => 'someModuleAlias', 'priority' => 55],
         ],
     ],
-    'routing' => [
+    'renderer' => [
+        'Global' => [
+            'filter' => [
+
+            ],
+            'helper' => [
+                EmptyRendererHelper::class
+            ],
+        ]
+    ],
+    'router' => [
         'Website' => [
             'index' => [
                 'path'            => '/',

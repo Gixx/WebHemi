@@ -26,7 +26,7 @@ use WebHemiTest\InvokePrivateMethodTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
- * Class AuthAuthAdapterTest
+ * Class ResultTest
  */
 class ResultTest extends TestCase
 {

@@ -20,8 +20,10 @@ interface AuthResultInterface
 {
     public const FAILURE = 0;
     public const FAILURE_IDENTITY_NOT_FOUND = -1;
-    public const FAILURE_CREDENTIAL_INVALID = -2;
-    public const FAILURE_OTHER = -3;
+    public const FAILURE_IDENTITY_DISABLED = -2;
+    public const FAILURE_IDENTITY_INACTIVE = -3;
+    public const FAILURE_CREDENTIAL_INVALID = -4;
+    public const FAILURE_OTHER = -1000;
     public const SUCCESS = 1;
 
     /**
