@@ -4,7 +4,7 @@ Change log
 Version 4.0.0-3.2
 -----------------
 * Restructure Config.
-* Add WebHemi\Acl to be able to resue validation.
+* Add WebHemi\Acl to be able to reuse validation.
 * Add RendererFilterInterface and RendererHelperInterface.
 * Make the renderer helpers and filters configurable.
 * Refactor the TwigRendererAdapter and TwigExtension to use the renderer configuration.

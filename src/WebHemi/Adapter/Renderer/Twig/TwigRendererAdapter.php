@@ -30,10 +30,6 @@ class TwigRendererAdapter implements RendererAdapterInterface
 {
     /** @var Twig_Environment */
     private $adapter;
-    /** @var ConfigInterface */
-    private $configuration;
-    /** @var EnvironmentManager */
-    private $environmentManager;
     /** @var string */
     private $defaultViewPath;
     /** @var string */
@@ -45,6 +41,11 @@ class TwigRendererAdapter implements RendererAdapterInterface
 
     use ThemeCheckTrait;
 
+    /** @var ConfigInterface */
+    protected $configuration;
+    /** @var EnvironmentManager */
+    protected $environmentManager;
+
     /**
      * RendererAdapterInterface constructor.
      *
@@ -54,20 +55,13 @@ class TwigRendererAdapter implements RendererAdapterInterface
     public function __construct(ConfigInterface $configuration, EnvironmentManager $environmentManager)
     {
         $this->environmentManager = $environmentManager;
+        $this->configuration = $configuration;
+
         $documentRoot = $environmentManager->getDocumentRoot();
         $selectedTheme = $environmentManager->getSelectedTheme();
-        $selectedThemeResourcePath = $environmentManager->getResourcePath();
+        $selectedThemeResourcePath = $this->getSelectedThemeResourcePath($selectedTheme);
 
-        if (!$configuration->has('themes/'.$selectedTheme)
-            || !$this->checkSelectedThemeFeatures(
-                $configuration->getConfig('themes/'.$selectedTheme),
-                $environmentManager
-            )
-        ) {
-            $selectedTheme = EnvironmentManager::DEFAULT_THEME;
-            $selectedThemeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
-        }
-
+        // Overwrite for later usage.
         $this->configuration = $configuration->getConfig('themes/'.$selectedTheme);
 
         $this->defaultViewPath = $documentRoot.EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH.'/view';
