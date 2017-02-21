@@ -25,6 +25,8 @@ trait ThemeCheckTrait
     protected $configuration;
     /** @var EnvironmentManager */
     protected $environmentManager;
+    /** @var ConfigInterface */
+    private $themeConfig;
 
     /**
      * Checks if the selected theme supports the current state and returns the correct resource path.
@@ -37,12 +39,10 @@ trait ThemeCheckTrait
         $selectedTheme = $this->environmentManager->getSelectedTheme();
         $selectedThemeResourcePath = $this->environmentManager->getResourcePath();
 
-        if (!$this->configuration->has('themes/'.$selectedTheme)
-            || !$this->checkSelectedThemeFeatures(
-                $this->configuration->getConfig('themes/'.$selectedTheme),
-                $this->environmentManager
-            )
-        ) {
+        // Temporary, only can access by this trait.
+        $this->themeConfig = $this->configuration->getConfig('themes/'.$selectedTheme);
+
+        if (!$this->configuration->has('themes/'.$selectedTheme) || !$this->checkSelectedThemeFeatures()) {
             $selectedTheme = EnvironmentManager::DEFAULT_THEME;
             $selectedThemeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
         }
@@ -53,28 +53,19 @@ trait ThemeCheckTrait
     /**
      * Checks if the selected theme can be used with the current application.
      *
-     * @param ConfigInterface    $themeConfig
-     * @param EnvironmentManager $environmentManager
      * @return bool
      */
-    protected function checkSelectedThemeFeatures(
-        ConfigInterface $themeConfig,
-        EnvironmentManager $environmentManager
-    ) : bool {
+    private function checkSelectedThemeFeatures() : bool
+    {
         $canUseThisTheme = true;
 
         // check the theme settings
         // If no theme support for the application, then use the default theme
-        if (($this->isAdminApplication($environmentManager, false) && !$this->isFeatureSupported($themeConfig, 'admin'))
-            || (// check if admin login page but no admin login support
-                $this->isAdminApplication($environmentManager, true)
-                && !$this->isFeatureSupported($themeConfig, 'admin_login')
+        if (($this->isAdminApplication() && !$this->isFeatureSupported($this->themeConfig, 'admin')
+            ) || (// check if admin login page but no admin login support
+                $this->isAdminLoginPage() && !$this->isFeatureSupported($this->themeConfig, 'admin_login')
             ) || (// check if not admin page but no website support
-                !$this->isAdminApplication($environmentManager, false)
-                && !$this->isFeatureSupported($themeConfig, 'website')
-            ) || (// check if not admin login page but no website login support
-                !$this->isAdminApplication($environmentManager, true)
-                && !$this->isFeatureSupported($themeConfig, 'website')
+                $this->isWebsiteApplication() && !$this->isFeatureSupported($this->themeConfig, 'website')
             )
         ) {
             $canUseThisTheme = false;
@@ -84,18 +75,33 @@ trait ThemeCheckTrait
     }
 
     /**
-     * Checks whether the current application is the Admin(login) or not.
+     * Checks whether the current application belongs to the Admin module and the request calls the login page.
      *
-     * @param EnvironmentManager $environmentManager
-     * @param bool               $checkIfLogin
      * @return bool
      */
-    protected function isAdminApplication(EnvironmentManager $environmentManager, bool $checkIfLogin = false) : bool
+    private function isAdminLoginPage() : bool
     {
-        $isAdmin = 'admin' == $environmentManager->getSelectedApplication();
-        $isLogin = strpos($environmentManager->getRequestUri(), '/auth/login') !== false;
+        return strpos($this->environmentManager->getRequestUri(), '/auth/login') !== false;
+    }
 
-        return $checkIfLogin ? $isAdmin && $isLogin : $isAdmin && !$isLogin;
+    /**
+     * Checks whether the current application belongs to the Admin module or not.
+     *
+     * @return bool
+     */
+    private function isAdminApplication() : bool
+    {
+        return !$this->isAdminLoginPage() && 'Admin' == $this->environmentManager->getSelectedModule();
+    }
+
+    /**
+     * Checks whether the current application belongs to any Website module application.
+     *
+     * @return bool
+     */
+    private function isWebsiteApplication()
+    {
+        return 'Website' == $this->environmentManager->getSelectedModule();
     }
 
     /**
@@ -105,7 +111,7 @@ trait ThemeCheckTrait
      * @param string          $feature
      * @return bool
      */
-    protected function isFeatureSupported(ConfigInterface $themeConfig, string $feature) : bool
+    private function isFeatureSupported(ConfigInterface $themeConfig, string $feature) : bool
     {
         return $themeConfig->has('features/'.$feature.'_support')
             && (bool) $themeConfig->getData('features/'.$feature.'_support')[0];
