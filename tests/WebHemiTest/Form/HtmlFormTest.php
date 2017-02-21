@@ -101,6 +101,17 @@ class HtmlFormTest extends TestCase
             ->addElement($element2Instance);
 
         $data1 = [];
+        $expectedJsonArrray = [
+            'name' => 'someForm',
+            'action' => 'some/action',
+            'method' => 'POST',
+            'data' => [
+                'id_some_form_some_data' => [],
+                'id_some_form_some_other_data' => []
+            ],
+            'errors' => []
+
+        ];
         $data2 = [
             'someForm' => [
                 'some_data' => 1,
@@ -115,6 +126,8 @@ class HtmlFormTest extends TestCase
         $elements = $form->getElements();
         $this->assertEmpty($elements['someForm[some_data]']->getValues());
         $this->assertEmpty($elements['someForm[some_other_data]']->getValues());
+        $this->assertSame(json_encode($expectedJsonArrray), json_encode($form));
+        $this->assertSame($expectedJsonArrray, $form->jsonSerialize());
 
         $form->loadData($data2);
         $elements = $form->getElements();

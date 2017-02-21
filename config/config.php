@@ -20,7 +20,8 @@ return [
     'dependencies' => get_dependencies_config(),
     'logging' => get_logging_cofig(),
     'middleware_pipeline' => get_pipeline_config(),
-    'routing' => get_routing_config(),
+    'renderer' => get_renderer_config(),
+    'router' => get_routing_config(),
     'session' => get_session_config(),
     'themes' => get_theme_config(),
 ];

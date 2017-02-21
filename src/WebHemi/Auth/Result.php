@@ -26,6 +26,8 @@ final class Result implements AuthResultInterface
     private $messages = [
         self::FAILURE => 'Authentication failed.',
         self::FAILURE_IDENTITY_NOT_FOUND => 'User is not found.',
+        self::FAILURE_IDENTITY_DISABLED => 'The given user is disabled.',
+        self::FAILURE_IDENTITY_INACTIVE => 'The given user is in inactive state.',
         self::FAILURE_CREDENTIAL_INVALID => 'The provided credentials are not valid.',
         self::FAILURE_OTHER => 'Authentication failed because of unknown reason.',
         self::SUCCESS => 'Authenticated.',
@@ -50,7 +52,7 @@ final class Result implements AuthResultInterface
     public function setCode(int $code) : AuthResultInterface
     {
         if (!isset($this->messages[$code])) {
-            $code = -3;
+            $code = self::FAILURE_OTHER;
         }
 
         $this->code = $code;

@@ -42,6 +42,10 @@ final class Auth extends AbstractAuthAdapter
 
         if (!$user instanceof UserEntity) {
             $result->setCode(AuthResultInterface::FAILURE_IDENTITY_NOT_FOUND);
+        } elseif (!$user->getEnabled()) {
+            $result->setCode(AuthResultInterface::FAILURE_IDENTITY_DISABLED);
+        } elseif (!$user->getActive()) {
+            $result->setCode(AuthResultInterface::FAILURE_IDENTITY_INACTIVE);
         } elseif (!password_verify($credentials['password'], $user->getPassword())) {
             $result->setCode(AuthResultInterface::FAILURE_CREDENTIAL_INVALID);
         } else {

@@ -43,11 +43,14 @@ class SymfonyAdapterTest extends TestCase
     {
         $config = new Config([
             'applications' => [],
-            'themes' => [],
-            'modules' => [],
             'auth' => [],
-            'middleware_pipeline' => [],
             'dependencies' => [],
+            'logging' => [],
+            'middleware_pipeline' => [],
+            'renderer' => [],
+            'router' => [],
+            'session' => [],
+            'themes' => [],
         ]);
         $adapter = new SymfonyAdapter($config);
         $adapter->registerService(ConfigInterface::class, $config)
@@ -331,7 +334,11 @@ class SymfonyAdapterTest extends TestCase
             'shared' => false,
         ];
 
-        $actualResult = $this->invokePrivateMethod($adapter, 'getServiceSetupData', ['someService', 'someServiceClassName']);
+        $actualResult = $this->invokePrivateMethod(
+            $adapter,
+            'getServiceSetupData',
+            ['someService', 'someServiceClassName']
+        );
         $this->assertArraysAreSimilar($expectedResult, $actualResult);
     }
 }

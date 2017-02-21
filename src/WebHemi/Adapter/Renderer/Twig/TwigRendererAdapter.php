@@ -21,6 +21,7 @@ use Twig_Loader_Filesystem;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
+use WebHemi\Renderer\ThemeCheckTrait;
 
 /**
  * Class TwigRendererAdapter.
@@ -42,6 +43,8 @@ class TwigRendererAdapter implements RendererAdapterInterface
     /** @var string */
     private $applicationBaseUri;
 
+    use ThemeCheckTrait;
+
     /**
      * RendererAdapterInterface constructor.
      *
@@ -56,7 +59,10 @@ class TwigRendererAdapter implements RendererAdapterInterface
         $selectedThemeResourcePath = $environmentManager->getResourcePath();
 
         if (!$configuration->has('themes/'.$selectedTheme)
-            || !$this->checkSelectedThemeFeatures($configuration->getConfig('themes/'.$selectedTheme))
+            || !$this->checkSelectedThemeFeatures(
+                $configuration->getConfig('themes/'.$selectedTheme),
+                $environmentManager
+            )
         ) {
             $selectedTheme = EnvironmentManager::DEFAULT_THEME;
             $selectedThemeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
@@ -75,7 +81,12 @@ class TwigRendererAdapter implements RendererAdapterInterface
 
         $this->adapter = new Twig_Environment($loader, array('debug' => true, 'cache' => false));
         $this->adapter->addExtension(new Twig_Extension_Debug());
-        $this->adapter->addExtension(new WebHemiTwigExtension($this->templateViewPath));
+
+        // @codeCoverageIgnoreStart
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            $this->adapter->addExtension(new TwigExtension());
+        }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -111,55 +122,5 @@ class TwigRendererAdapter implements RendererAdapterInterface
 
         // The ugliest shit ever. But that is how they made it... :/
         return \GuzzleHttp\Psr7\stream_for($output);
-    }
-
-    /**
-     * Checks if the selected theme can be used with the current application.
-     *
-     * @param ConfigInterface $themeConfig
-     * @return bool
-     */
-    private function checkSelectedThemeFeatures(ConfigInterface $themeConfig) : bool
-    {
-        $canUseThisTheme = true;
-
-        // check the theme settings
-        // If no theme support for the application, then use the default theme
-        if (($this->isAdminApplication(false) && !$this->isFeatureSupported($themeConfig, 'admin'))
-            || ($this->isAdminApplication(true) && !$this->isFeatureSupported($themeConfig, 'admin_login'))
-            || (!$this->isAdminApplication(false) && !$this->isFeatureSupported($themeConfig, 'website'))
-            || (!$this->isAdminApplication(true) && !$this->isFeatureSupported($themeConfig, 'website'))
-        ) {
-            $canUseThisTheme = false;
-        }
-
-        return $canUseThisTheme;
-    }
-
-    /**
-     * Checks whether the current application is the Admin(login) or not.
-     *
-     * @param bool $checkIfLogin
-     * @return bool
-     */
-    private function isAdminApplication(bool $checkIfLogin = false) : bool
-    {
-        $isAdmin = 'admin' == $this->environmentManager->getSelectedApplication();
-        $isLogin = strpos($this->environmentManager->getRequestUri(), '/auth/login') !== false;
-
-        return $checkIfLogin ? $isAdmin && $isLogin : $isAdmin && !$isLogin;
-    }
-
-    /**
-     * Checks the config for feature settings.
-     *
-     * @param ConfigInterface $themeConfig
-     * @param string          $feature
-     * @return bool
-     */
-    private function isFeatureSupported(ConfigInterface $themeConfig, string $feature) : bool
-    {
-        return $themeConfig->has('features/'.$feature.'_support')
-            && (bool) $themeConfig->getData('features/'.$feature.'_support')[0];
     }
 }

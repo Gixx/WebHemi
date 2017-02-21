@@ -45,7 +45,7 @@ class FastRouteAdapter implements RouterAdapterInterface
         Result $routeResult
     ) {
         $module = $environmentManager->getSelectedModule();
-        $routes = $configuration->getData('routing/'.$module);
+        $routes = $configuration->getData('router/'.$module);
 
         $this->result = $routeResult;
         $this->applicationPath = $environmentManager->getSelectedApplicationUri();

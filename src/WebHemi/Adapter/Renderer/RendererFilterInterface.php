@@ -14,9 +14,9 @@ declare(strict_types = 1);
 namespace WebHemi\Adapter\Renderer;
 
 /**
- * Interface RendererHelperInterface
+ * Interface RendererFilterInterface
  */
-interface RendererHelperInterface
+interface RendererFilterInterface
 {
     /**
      * Should return the name of the helper.
@@ -40,7 +40,7 @@ interface RendererHelperInterface
     public static function getDescription() : string;
 
     /**
-     * A renderer helper should be called with its name.
+     * A renderer filter should be called with its name.
      *
      * @return mixed
      */

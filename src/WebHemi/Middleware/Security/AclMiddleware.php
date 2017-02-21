@@ -104,7 +104,6 @@ class AclMiddleware implements MiddlewareInterface
             $applicationEntity = $this->applicationStorage->getApplicationByName($selectedApplication);
             /** @var ResourceEntity $resourceEntity */
             $resourceEntity = $this->resourceStorage->getResourceByName($actionMiddleware);
-
             // Check the user against the application and resource
             $hasAccess = $this->aclAdapter->isAllowed($identity, $resourceEntity, $applicationEntity);
 

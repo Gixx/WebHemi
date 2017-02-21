@@ -13,7 +13,7 @@
 use WebHemi\Middleware\Action;
 
 return [
-    'routing' => [
+    'router' => [
         'Admin' => [
             'index' => [
                 'path'            => '/',

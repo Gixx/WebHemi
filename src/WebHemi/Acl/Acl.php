@@ -65,13 +65,12 @@ final class Acl implements AclAdapterInterface
         ?ApplicationEntity $applicationEntity = null
     ) : bool {
         // We assume the best case: the user has access
-        $allowed = true;
+        $allowed = false;
 
         /** @var array<PolicyEntity> $policies */
         $policies = array_merge($this->getUserPolicies($userEntity), $this->getUserGroupPolicies($userEntity));
-
         foreach ($policies as $policyEntity) {
-            $allowed = $allowed && $this->checkPolicy($policyEntity, $applicationEntity, $resourceEntity);
+            $allowed = $allowed || $this->checkPolicy($policyEntity, $applicationEntity, $resourceEntity);
         }
 
         return $allowed;
@@ -132,14 +131,12 @@ final class Acl implements AclAdapterInterface
         // The user has access when:
         // - user/user's group has a policy that connected to the current application OR any application AND
         // - user/user's group has a policy that connected to the current resource OR any resource
-        if (($policyApplicationId == null || $policyApplicationId == $applicationId)
-            && ($policyResourceId == null || $policyResourceId == $resourceId)
+        if ((is_null($policyApplicationId) || $policyApplicationId === $applicationId)
+            && (is_null($policyResourceId) || $policyResourceId === $resourceId)
         ) {
             return $policyEntity->getAllowed();
         }
 
-        // At this point we know that the current policy doesn't belong to this application or resource, so no need
-        // to block the user.
-        return true;
+        return false;
     }
 }

@@ -33,24 +33,16 @@ use WebHemi\Auth\Result as AuthResult;
 use WebHemi\Auth\Credential\NameAndPasswordCredential as AuthCredential;
 use WebHemi\Auth\Storage\Session as AuthStorage;
 use WebHemi\Config\ConfigInterface;
-use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
-use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
-use WebHemi\Data\Entity\User\UserGroupEntity;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Entity\User\UserMetaEntity;
+use WebHemi\Data\Entity;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
-use WebHemi\Data\Storage\ApplicationStorage;
-use WebHemi\Data\Storage\AccessManagement\PolicyStorage;
-use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
-use WebHemi\Data\Storage\User\UserGroupStorage;
-use WebHemi\Data\Storage\User\UserMetaStorage;
-use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Data\Storage;
 use WebHemi\Middleware\FinalMiddleware;
 use WebHemi\Middleware\DispatcherMiddleware;
 use WebHemi\Middleware\RoutingMiddleware;
+use WebHemi\Renderer\Filter;
+use WebHemi\Renderer\Helper;
 use WebHemi\Router\Result as RouteResult;
 
 return [
@@ -64,7 +56,7 @@ return [
                     ConfigInterface::class,
                     AuthResultInterface::class,
                     AuthStorageInterface::class,
-                    UserStorage::class,
+                    Storage\User\UserStorage::class,
                 ],
                 'shared'    => true,
             ],
@@ -157,45 +149,45 @@ return [
                 ]
             ],
             // DataStorage
-            ApplicationStorage::class => [
+            Storage\ApplicationStorage::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
-                    ApplicationEntity::class
+                    Entity\ApplicationEntity::class
                 ],
                 'shared'    => true,
             ],
-            UserStorage::class => [
+            Storage\User\UserStorage::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
-                    UserEntity::class
+                    Entity\User\UserEntity::class
                 ],
                 'shared'    => true,
             ],
-            UserMetaStorage::class => [
+            Storage\User\UserMetaStorage::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
-                    UserMetaEntity::class
+                    Entity\User\UserMetaEntity::class
                 ],
                 'shared'    => true,
             ],
-            UserGroupStorage::class => [
+            Storage\User\UserGroupStorage::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
-                    UserGroupEntity::class
+                    Entity\User\UserGroupEntity::class
                 ],
                 'shared'    => true,
             ],
-            PolicyStorage::class => [
+            Storage\AccessManagement\PolicyStorage::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
-                    PolicyEntity::class
+                    Entity\AccessManagement\PolicyEntity::class
                 ],
                 'shared'    => true,
             ],
-            ResourceStorage::class => [
+            Storage\AccessManagement\ResourceStorage::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
-                    ResourceEntity::class
+                    Entity\AccessManagement\ResourceEntity::class
                 ],
                 'shared'    => true,
             ],
@@ -203,30 +195,50 @@ return [
             UserToPolicyCoupler::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
-                    UserEntity::class,
-                    PolicyEntity::class
+                    Entity\User\UserEntity::class,
+                    Entity\AccessManagement\PolicyEntity::class
                 ],
                 'shared'    => true,
             ],
             UserToGroupCoupler::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
-                    UserEntity::class,
-                    UserGroupEntity::class
+                    Entity\User\UserEntity::class,
+                    Entity\User\UserGroupEntity::class
                 ],
                 'shared'    => true,
             ],
             UserGroupToPolicyCoupler::class => [
                 'arguments' => [
                     DataAdapterInterface::class,
-                    PolicyEntity::class,
-                    UserGroupEntity::class
+                    Entity\AccessManagement\PolicyEntity::class,
+                    Entity\User\UserGroupEntity::class
                 ],
                 'shared'    => true,
             ],
-            // Classes without any aliases, arguments or sharing options are optional to present here.
-            UserEntity::class     => [],
-            UserMetaEntity::class => [],
+            // Renderer Helper
+            Helper\DefinedHelper::class => [
+                'arguments' => [
+                    ConfigInterface::class,
+                    EnvironmentManager::class
+                ],
+                'shared'    => true,
+            ],
+            Helper\GetStatHelper::class => [
+                'shared'    => true,
+            ],
+            Helper\IsAllowedHelper::class => [
+                'arguments' => [
+                    ConfigInterface::class,
+                    EnvironmentManager::class,
+                    AclAdapterInterface::class,
+                    AuthAdapterInterface::class,
+                    Storage\User\UserStorage::class,
+                    Storage\AccessManagement\ResourceStorage::class,
+                    Storage\ApplicationStorage::class
+                ],
+                'shared'    => true,
+            ]
         ],
     ],
 ];
