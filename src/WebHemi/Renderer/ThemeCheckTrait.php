@@ -21,6 +21,35 @@ use WebHemi\Config\ConfigInterface;
  */
 trait ThemeCheckTrait
 {
+    /** @var ConfigInterface */
+    protected $configuration;
+    /** @var EnvironmentManager */
+    protected $environmentManager;
+
+    /**
+     * Checks if the selected theme supports the current state and returns the correct resource path.
+     *
+     * @param string $selectedTheme
+     * @return string
+     */
+    protected function getSelectedThemeResourcePath(string &$selectedTheme) : string
+    {
+        $selectedTheme = $this->environmentManager->getSelectedTheme();
+        $selectedThemeResourcePath = $this->environmentManager->getResourcePath();
+
+        if (!$this->configuration->has('themes/'.$selectedTheme)
+            || !$this->checkSelectedThemeFeatures(
+                $this->configuration->getConfig('themes/'.$selectedTheme),
+                $this->environmentManager
+            )
+        ) {
+            $selectedTheme = EnvironmentManager::DEFAULT_THEME;
+            $selectedThemeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
+        }
+
+        return $selectedThemeResourcePath;
+    }
+
     /**
      * Checks if the selected theme can be used with the current application.
      *

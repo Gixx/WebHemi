@@ -30,6 +30,11 @@ class DefinedHelper implements RendererHelperInterface
 
     use ThemeCheckTrait;
 
+    /** @var ConfigInterface */
+    protected $configuration;
+    /** @var EnvironmentManager */
+    protected $environmentManager;
+
     /**
      * Should return the name of the helper.
      *
@@ -72,18 +77,12 @@ class DefinedHelper implements RendererHelperInterface
      */
     public function __construct(ConfigInterface $configuration, EnvironmentManager $environmentManager)
     {
+        $this->configuration = $configuration;
+        $this->environmentManager = $environmentManager;
+
         $documentRoot = $environmentManager->getDocumentRoot();
         $selectedTheme = $environmentManager->getSelectedTheme();
-        $selectedThemeResourcePath = $environmentManager->getResourcePath();
-
-        if (!$configuration->has('themes/'.$selectedTheme)
-            || !$this->checkSelectedThemeFeatures(
-                $configuration->getConfig('themes/'.$selectedTheme),
-                $environmentManager
-            )
-        ) {
-            $selectedThemeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
-        }
+        $selectedThemeResourcePath = $this->getSelectedThemeResourcePath($selectedTheme);
 
         $this->defaultTemplateViewPath = $documentRoot.EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH.'/view';
         $this->templateViewPath = $documentRoot.$selectedThemeResourcePath.'/view';
