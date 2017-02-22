@@ -39,10 +39,16 @@ trait ThemeCheckTrait
         $selectedTheme = $this->environmentManager->getSelectedTheme();
         $selectedThemeResourcePath = $this->environmentManager->getResourcePath();
 
+        // Reset selected theme, if it's not found.
+        if (!$this->configuration->has('themes/'.$selectedTheme)) {
+            $selectedTheme = EnvironmentManager::DEFAULT_THEME;
+        }
+
         // Temporary, only can access by this trait.
         $this->themeConfig = $this->configuration->getConfig('themes/'.$selectedTheme);
 
-        if (!$this->configuration->has('themes/'.$selectedTheme) || !$this->checkSelectedThemeFeatures()) {
+        // Reset selected theme, if it doesn't support the currenct application/page.
+        if (!$this->checkSelectedThemeFeatures()) {
             $selectedTheme = EnvironmentManager::DEFAULT_THEME;
             $selectedThemeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
         }
@@ -61,11 +67,11 @@ trait ThemeCheckTrait
 
         // check the theme settings
         // If no theme support for the application, then use the default theme
-        if (($this->isAdminApplication() && !$this->isFeatureSupported($this->themeConfig, 'admin')
+        if (($this->isAdminApplication() && !$this->isFeatureSupported('admin')
             ) || (// check if admin login page but no admin login support
-                $this->isAdminLoginPage() && !$this->isFeatureSupported($this->themeConfig, 'admin_login')
+                $this->isAdminLoginPage() && !$this->isFeatureSupported('admin_login')
             ) || (// check if not admin page but no website support
-                $this->isWebsiteApplication() && !$this->isFeatureSupported($this->themeConfig, 'website')
+                $this->isWebsiteApplication() && !$this->isFeatureSupported('website')
             )
         ) {
             $canUseThisTheme = false;
@@ -107,13 +113,12 @@ trait ThemeCheckTrait
     /**
      * Checks the config for feature settings.
      *
-     * @param ConfigInterface $themeConfig
      * @param string          $feature
      * @return bool
      */
-    private function isFeatureSupported(ConfigInterface $themeConfig, string $feature) : bool
+    private function isFeatureSupported(string $feature) : bool
     {
-        return $themeConfig->has('features/'.$feature.'_support')
-            && (bool) $themeConfig->getData('features/'.$feature.'_support')[0];
+        return $this->themeConfig->has('features/'.$feature.'_support')
+            && (bool) $this->themeConfig->getData('features/'.$feature.'_support')[0];
     }
 }
