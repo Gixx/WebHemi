@@ -69,8 +69,9 @@ class Acl implements AclAdapterInterface
 
         /** @var array<PolicyEntity> $policies */
         $policies = array_merge($this->getUserPolicies($userEntity), $this->getUserGroupPolicies($userEntity));
+
         foreach ($policies as $policyEntity) {
-            $allowed = $allowed || $this->checkPolicy($policyEntity, $applicationEntity, $resourceEntity);
+            $allowed = $allowed || $this->checkPolicy($policyEntity, $resourceEntity, $applicationEntity);
         }
 
         return $allowed;
@@ -113,27 +114,30 @@ class Acl implements AclAdapterInterface
     /**
      * Check a concrete policy.
      *
+     * The user has access when:
+     *  - user/user's group has a policy that connected to the current application OR any application AND
+     *  - user/user's group has a policy that connected to the current resource OR any resource
+     *
      * @param PolicyEntity           $policyEntity
-     * @param ApplicationEntity|null $applicationEntity
      * @param ResourceEntity|null    $resourceEntity
+     * @param ApplicationEntity|null $applicationEntity
      * @return bool
      */
     private function checkPolicy(
         PolicyEntity $policyEntity,
-        ?ApplicationEntity $applicationEntity = null,
-        ?ResourceEntity $resourceEntity = null
+        ?ResourceEntity $resourceEntity = null,
+        ?ApplicationEntity $applicationEntity = null
     ) : bool {
-        $policyApplicationId = $policyEntity->getApplicationId();
         $policyResourceId = $policyEntity->getResourceId();
-        $applicationId = $applicationEntity ? $applicationEntity->getApplicationId() : null;
-        $resourceId = $resourceEntity ? $resourceEntity->getResourceId() : null;
+        $policyApplicationId = $policyEntity->getApplicationId();
 
-        // The user has access when:
-        // - user/user's group has a policy that connected to the current application OR any application AND
-        // - user/user's group has a policy that connected to the current resource OR any resource
-        if ((is_null($policyApplicationId) || $policyApplicationId === $applicationId)
-            && (is_null($policyResourceId) || $policyResourceId === $resourceId)
-        ) {
+        $resourceId = $resourceEntity ? $resourceEntity->getResourceId() : null;
+        $applicationId = $applicationEntity ? $applicationEntity->getApplicationId() : null;
+
+        $allowResurce = is_null($policyResourceId) || $policyResourceId === $resourceId;
+        $allowApplication = is_null($policyApplicationId) || $policyApplicationId === $applicationId;
+
+        if ($allowResurce && $allowApplication) {
             return $policyEntity->getAllowed();
         }
 
