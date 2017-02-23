@@ -22,7 +22,7 @@ use WebHemi\Data\Storage\User\UserStorage;
 /**
  * Class Auth
  */
-final class Auth extends AbstractAuthAdapter
+class Auth extends AbstractAuthAdapter
 {
     /**
      * Authenticates the user.

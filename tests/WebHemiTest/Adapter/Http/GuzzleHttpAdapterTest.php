@@ -19,7 +19,7 @@ use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\Config;
 use WebHemiTest\InvokePrivateMethodTrait;
 use WebHemiTest\Fixtures\EmptyEnvironmentManager;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class GuzzleHttpAdapterTest.

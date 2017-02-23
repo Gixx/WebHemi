@@ -17,6 +17,8 @@ use WebHemi\Adapter\Renderer\RendererHelperInterface;
 
 /**
  * Class GetStatHelper
+ *
+ * @codeCoverageIgnore - config and PHP core functions. No business logic.
  */
 class GetStatHelper implements RendererHelperInterface
 {
@@ -24,7 +26,6 @@ class GetStatHelper implements RendererHelperInterface
      * Should return the name of the helper.
      *
      * @return string
-     * @codeCoverageIgnore - plain text
      */
     public static function getName() : string
     {
@@ -35,7 +36,6 @@ class GetStatHelper implements RendererHelperInterface
      * Should return the name of the helper.
      *
      * @return string
-     * @codeCoverageIgnore - plain text
      */
     public static function getDefinition() : string
     {
@@ -46,7 +46,6 @@ class GetStatHelper implements RendererHelperInterface
      * Should return a description text.
      *
      * @return string
-     * @codeCoverageIgnore - plain text
      */
     public static function getDescription() : string
     {

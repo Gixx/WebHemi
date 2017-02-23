@@ -86,6 +86,17 @@ class EmptyEnvironmentManager extends EnvironmentManager
     }
 
     /**
+     * @param string $documentRoot
+     * @return EmptyEnvironmentManager
+     */
+    public function setDocumentRoot(string $documentRoot) : EmptyEnvironmentManager
+    {
+        $this->documentRoot = $documentRoot;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDocumentRoot() : string
@@ -110,10 +121,10 @@ class EmptyEnvironmentManager extends EnvironmentManager
     }
 
     /**
-     * @param $application
+     * @param string $application
      * @return EmptyEnvironmentManager
      */
-    public function setSelectedApplication($application) : EmptyEnvironmentManager
+    public function setSelectedApplication(string $application) : EmptyEnvironmentManager
     {
         $this->selectedApplication = $application;
 
@@ -211,6 +222,12 @@ class EmptyEnvironmentManager extends EnvironmentManager
      */
     public function getResourcePath() : string
     {
+        if ($this->selectedTheme !== self::DEFAULT_THEME) {
+            $this->selectedThemeResourcePath = '/resources/vendor_themes/'.$this->selectedTheme;
+        } else {
+            $this->selectedThemeResourcePath = '/resources/default_theme';
+        }
+
         return $this->selectedThemeResourcePath;
     }
 

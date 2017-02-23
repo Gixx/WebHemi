@@ -16,7 +16,7 @@ use InvalidArgumentException;
 use WebHemi\Adapter\Auth\AuthCredentialInterface;
 use WebHemi\Auth\Credential\NameAndPasswordCredential;
 use WebHemiTest\AssertTrait;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class NameAndPasswordCredentialTest

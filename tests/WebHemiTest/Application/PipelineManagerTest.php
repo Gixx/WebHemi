@@ -13,7 +13,7 @@ namespace WebHemiTest\Application;
 
 use ArrayObject;
 use WebHemi\DateTime;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use WebHemi\Config\Config;
 use WebHemi\Middleware\DispatcherMiddleware;

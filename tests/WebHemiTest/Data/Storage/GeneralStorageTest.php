@@ -18,7 +18,7 @@ use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\User\UserStorage;
 use WebHemiTest\Fixtures\EmptyStorage;
 use WebHemiTest\Fixtures\EmptyEntity;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class GeneralStorageTest. It tests the AbstractDataStorage's methods mostly.

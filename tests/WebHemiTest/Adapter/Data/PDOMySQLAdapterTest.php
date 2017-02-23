@@ -20,8 +20,8 @@ use WebHemi\Adapter\Data\DataAdapterInterface;
 use WebHemi\Adapter\Data\DataDriverInterface;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
-use PHPUnit_Framework_TestCase as TestCase;
-use PHPUnit_Framework_SkippedTestError;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\SkippedTestError;
 
 /**
  * Class MySQLAdapterTest.
@@ -40,7 +40,7 @@ class PDOMySQLAdapterTest extends TestCase
     protected function checkRequirements()
     {
         if (!extension_loaded('pdo_sqlite')) {
-            throw new PHPUnit_Framework_SkippedTestError('No SQLite Available');
+            throw new SkippedTestError('No SQLite Available');
         }
 
         parent::checkRequirements();
@@ -71,6 +71,7 @@ class PDOMySQLAdapterTest extends TestCase
         $this->assertAttributeEmpty('dataGroup', $adapter);
         $this->assertAttributeEmpty('idKey', $adapter);
 
+        /** @var DataDriverInterface $fakeDriver */
         $fakeDriver = $this->prophesize(DataDriverInterface::class);
 
         $this->expectException(InvalidArgumentException::class);

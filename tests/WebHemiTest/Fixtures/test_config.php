@@ -58,6 +58,10 @@ return [
                 'class' => TestActionMiddleware::class,
                 'arguments' => [true],
             ],
+            'actionForbidden' => [
+                'class' => TestActionMiddleware::class,
+                'arguments' => [true, 403],
+            ],
             'pipe1' => [
                 'class' => TestMiddleware::class,
                 'arguments' => ['!:pipe1']
@@ -167,6 +171,11 @@ return [
                 'middleware' => 'actionBad',
                 'allowed_methods' => ['GET'],
             ],
+            'forbidden' => [
+                'path' => '/restricted/',
+                'middleware' => 'actionForbidden',
+                'allowed_methods' => ['GET'],
+            ]
         ],
         'SomeApp' => [
             'index' => [
@@ -194,12 +203,8 @@ return [
                 'website_support' => true
             ],
             'map' => [
-                'features' => [
-                    'admin_support' => false,
-                    'admin_login_support' => true,
-                    'website_support' => true
-                ],
-                'test-page' => 'unit/test.twig'
+                'test-page' => 'unit/test.twig',
+
             ],
         ],
         'test_theme' => [
@@ -215,6 +220,16 @@ return [
         'test_theme_no_admin' => [
             'features' => [
                 'admin_support' => false,
+                'admin_login_support' => true,
+                'website_support' => true
+            ],
+            'map' => [
+                'test-page' => 'unit/test.twig'
+            ],
+        ],
+        'test_theme_no_admin_login' => [
+            'features' => [
+                'admin_support' => true,
                 'admin_login_support' => false,
                 'website_support' => true
             ],
@@ -232,5 +247,5 @@ return [
                 'test-page' => 'unit/test.twig'
             ],
         ],
-    ]
+    ],
 ];

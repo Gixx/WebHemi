@@ -17,7 +17,7 @@ use WebHemi\DateTime;
 use WebHemi\Application\SessionManager;
 use WebHemi\Config\Config;
 use WebHemiTest\AssertTrait;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SessionManagerTest

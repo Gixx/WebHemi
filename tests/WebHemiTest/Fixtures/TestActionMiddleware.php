@@ -23,15 +23,19 @@ class TestActionMiddleware extends AbstractMiddlewareAction
 {
     /** @var boolean */
     private $shouldSimulateError;
+    /** @var int */
+    private $errorCode;
 
     /**
      * TestActionMiddleware constructor.
      *
      * @param bool $shouldSimulateError
+     * @param int  $errorCode
      */
-    public function __construct($shouldSimulateError = false)
+    public function __construct($shouldSimulateError = false, $errorCode = 1)
     {
         $this->shouldSimulateError = $shouldSimulateError;
+        $this->errorCode = $errorCode;
     }
 
     /**
@@ -54,7 +58,7 @@ class TestActionMiddleware extends AbstractMiddlewareAction
     public function getTemplateData() : array
     {
         if ($this->shouldSimulateError) {
-            throw new Exception('Simulated error');
+            throw new Exception('Simulated error', $this->errorCode);
         }
 
         return [];

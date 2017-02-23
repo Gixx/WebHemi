@@ -27,7 +27,7 @@ use WebHemiTest\Fixtures\EmptyEntity;
 use WebHemiTest\Fixtures\EmptyStorage;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class AuthAdapterTest

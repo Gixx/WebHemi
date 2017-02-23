@@ -23,9 +23,9 @@ use WebHemiTest\Fixtures\EmptyEntity;
 use WebHemiTest\Fixtures\EmptyEntity2;
 use WebHemiTest\InvokePrivateMethodTrait;
 use WebHemiTest\AssertTrait;
-use PHPUnit_Framework_TestCase as TestCase;
-use PHPUnit_Framework_IncompleteTestError;
-use PHPUnit_Framework_SkippedTestError;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\SkippedTestError;
 
 /**
  * Class GeneralCouplerTest. Tests the AbstractDataCoupler's methods mostly.
@@ -46,7 +46,7 @@ class GeneralCouplerTest extends TestCase
     protected function checkRequirements()
     {
         if (!extension_loaded('pdo_sqlite')) {
-            throw new PHPUnit_Framework_SkippedTestError('No SQLite Available');
+            throw new SkippedTestError('No SQLite Available');
         }
 
         parent::checkRequirements();
@@ -206,7 +206,7 @@ class GeneralCouplerTest extends TestCase
                 $result = self::$dataDriver->query($sql);
 
                 if (!$result) {
-                    throw new PHPUnit_Framework_IncompleteTestError(
+                    throw new IncompleteTestError(
                         'Cannot run query: '.$sql.'; Error: '.json_encode(self::$dataDriver->errorInfo())
                     );
                 }

@@ -17,14 +17,12 @@ use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
 
 /**
- * Class ThemeCheckTrait
+ * Class GetSelectedThemeResourcePathTrait
  */
-trait ThemeCheckTrait
+trait GetSelectedThemeResourcePathTrait
 {
-    /** @var ConfigInterface */
-    protected $configuration;
     /** @var EnvironmentManager */
-    protected $environmentManager;
+    private $environment;
     /** @var ConfigInterface */
     private $themeConfig;
 
@@ -32,20 +30,28 @@ trait ThemeCheckTrait
      * Checks if the selected theme supports the current state and returns the correct resource path.
      *
      * @param string $selectedTheme
+     * @param ConfigInterface $configuration
+     * @param EnvironmentManager $environmentManager
      * @return string
      */
-    protected function getSelectedThemeResourcePath(string &$selectedTheme) : string
-    {
-        $selectedTheme = $this->environmentManager->getSelectedTheme();
-        $selectedThemeResourcePath = $this->environmentManager->getResourcePath();
+    protected function getSelectedThemeResourcePath(
+        string &$selectedTheme,
+        ConfigInterface $configuration,
+        EnvironmentManager $environmentManager
+    ) : string {
+        $this->environment = $environmentManager;
+
+        //$selectedTheme = $this->environment->getSelectedTheme();
+        $selectedThemeResourcePath = $this->environment->getResourcePath();
 
         // Reset selected theme, if it's not found.
-        if (!$this->configuration->has('themes/'.$selectedTheme)) {
+        if (!$configuration->has('themes/'.$selectedTheme)) {
             $selectedTheme = EnvironmentManager::DEFAULT_THEME;
+            $selectedThemeResourcePath = EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH;
         }
 
         // Temporary, only can access by this trait.
-        $this->themeConfig = $this->configuration->getConfig('themes/'.$selectedTheme);
+        $this->themeConfig = $configuration->getConfig('themes/'.$selectedTheme);
 
         // Reset selected theme, if it doesn't support the currenct application/page.
         if (!$this->checkSelectedThemeFeatures()) {
@@ -87,7 +93,7 @@ trait ThemeCheckTrait
      */
     private function isAdminLoginPage() : bool
     {
-        return strpos($this->environmentManager->getRequestUri(), '/auth/login') !== false;
+        return strpos($this->environment->getRequestUri(), '/auth/login') !== false;
     }
 
     /**
@@ -97,7 +103,7 @@ trait ThemeCheckTrait
      */
     private function isAdminApplication() : bool
     {
-        return !$this->isAdminLoginPage() && 'Admin' == $this->environmentManager->getSelectedModule();
+        return !$this->isAdminLoginPage() && 'Admin' == $this->environment->getSelectedModule();
     }
 
     /**
@@ -107,7 +113,7 @@ trait ThemeCheckTrait
      */
     private function isWebsiteApplication()
     {
-        return 'Website' == $this->environmentManager->getSelectedModule();
+        return 'Website' == $this->environment->getSelectedModule();
     }
 
     /**

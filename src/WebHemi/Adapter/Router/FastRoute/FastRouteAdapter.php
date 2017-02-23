@@ -89,22 +89,23 @@ class FastRouteAdapter implements RouterAdapterInterface
         $httpMethod = $request->getMethod();
         $uri        = $this->getApplicationRouteUri($request);
         $routeInfo  = $this->adapter->dispatch($httpMethod, $uri);
+        $result     = clone $this->result;
 
         switch ($routeInfo[0]) {
             case Dispatcher::FOUND:
-                $this->result->setStatus(Result::CODE_FOUND);
-                $this->result->setMatchedMiddleware($routeInfo[1]);
-                $this->result->setParameters($routeInfo[2]);
+                $result->setStatus(Result::CODE_FOUND);
+                $result->setMatchedMiddleware($routeInfo[1]);
+                $result->setParameters($routeInfo[2]);
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
-                $this->result->setStatus(Result::CODE_BAD_METHOD);
+                $result->setStatus(Result::CODE_BAD_METHOD);
                 break;
             case Dispatcher::NOT_FOUND:
             default:
-                $this->result->setStatus(Result::CODE_NOT_FOUND);
+                $result->setStatus(Result::CODE_NOT_FOUND);
                 break;
         }
 
-        return $this->result;
+        return $result;
     }
 }

@@ -11,7 +11,7 @@
  */
 namespace WebHemiTest\Form;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use WebHemi\Form\FormElementInterface;
 use WebHemi\Form\FormInterface;

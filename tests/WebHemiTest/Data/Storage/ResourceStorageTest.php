@@ -18,7 +18,7 @@ use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ResourceStorageTest.

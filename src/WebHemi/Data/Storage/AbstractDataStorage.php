@@ -41,7 +41,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      * @param DataAdapterInterface $defaultAdapter
      * @param DataEntityInterface  $entityPrototype
      */
-    final public function __construct(DataAdapterInterface $defaultAdapter, DataEntityInterface $entityPrototype)
+    public function __construct(DataAdapterInterface $defaultAdapter, DataEntityInterface $entityPrototype)
     {
         // Every Storage object MUST have unique adapter instance to avoid override private properties like "dataGroup"
         $this->defaultAdapter = clone $defaultAdapter;
@@ -72,7 +72,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      *
      * @return bool
      */
-    final public function initialized() : bool
+    public function initialized() : bool
     {
         return $this->initialized;
     }
@@ -82,7 +82,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      *
      * @return DataAdapterInterface
      */
-    final public function getDataAdapter() : DataAdapterInterface
+    public function getDataAdapter() : DataAdapterInterface
     {
         return $this->defaultAdapter;
     }
@@ -92,7 +92,7 @@ abstract class AbstractDataStorage implements DataStorageInterface
      *
      * @return DataEntityInterface
      */
-    final public function createEntity() : DataEntityInterface
+    public function createEntity() : DataEntityInterface
     {
         return clone $this->entityPrototype;
     }

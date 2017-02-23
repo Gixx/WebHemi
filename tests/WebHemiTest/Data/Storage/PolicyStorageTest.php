@@ -18,7 +18,7 @@ use WebHemi\Data\Storage\AccessManagement\PolicyStorage;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class PolicyStorageTest.

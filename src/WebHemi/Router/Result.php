@@ -38,6 +38,16 @@ class Result
     private $parameters;
 
     /**
+     * Define clone actions.
+     */
+    public function __clone()
+    {
+        unset($this->status);
+        unset($this->matchedMiddleware);
+        unset($this->parameters);
+    }
+
+    /**
      * Sets status code.
      *
      * @param int $status

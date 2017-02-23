@@ -18,7 +18,7 @@ use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\Config;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\Fixtures\EmptyEnvironmentManager;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TwigRendererAdapterTest.
@@ -166,11 +166,11 @@ class TwigRendererAdapterTest extends TestCase
         $resultDataOther = json_decode($result, true);
         $this->assertArraysAreSimilar($resultData, $resultDataOther);
 
-        // Admin login is NOT supported by the test_theme_no_admin
+        // Admin login is NOT supported by the test_theme_no_admin_login
         $this->environmentManager->setSelectedApplication('admin')
             ->setSelectedApplicationUri('/')
             ->setSelectedModule('Admin')
-            ->setSelectedTheme('test_theme_no_admin')
+            ->setSelectedTheme('test_theme_no_admin_login')
             ->setRequestUri('/auth/login');
 
         $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
