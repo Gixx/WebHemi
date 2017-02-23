@@ -21,7 +21,7 @@ use Twig_Loader_Filesystem;
 use WebHemi\Adapter\Renderer\RendererAdapterInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
-use WebHemi\Renderer\ThemeCheckTrait;
+use WebHemi\Renderer\GetSelectedThemeResourcePathTrait;
 
 /**
  * Class TwigRendererAdapter.
@@ -39,7 +39,7 @@ class TwigRendererAdapter implements RendererAdapterInterface
     /** @var string */
     private $applicationBaseUri;
 
-    use ThemeCheckTrait;
+    use GetSelectedThemeResourcePathTrait;
 
     /** @var ConfigInterface */
     protected $configuration;
@@ -54,12 +54,16 @@ class TwigRendererAdapter implements RendererAdapterInterface
      */
     public function __construct(ConfigInterface $configuration, EnvironmentManager $environmentManager)
     {
-        $this->environmentManager = $environmentManager;
         $this->configuration = $configuration;
+        $this->environmentManager = $environmentManager;
 
         $documentRoot = $environmentManager->getDocumentRoot();
         $selectedTheme = $environmentManager->getSelectedTheme();
-        $selectedThemeResourcePath = $this->getSelectedThemeResourcePath($selectedTheme);
+        $selectedThemeResourcePath = $this->getSelectedThemeResourcePath(
+            $selectedTheme,
+            $configuration,
+            $environmentManager
+        );
 
         // Overwrite for later usage.
         $this->configuration = $configuration->getConfig('themes/'.$selectedTheme);

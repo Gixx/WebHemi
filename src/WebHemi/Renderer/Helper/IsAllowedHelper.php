@@ -23,7 +23,6 @@ use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\ApplicationStorage;
-use WebHemi\Data\Storage\User\UserStorage;
 
 /**
  * Class IsAllowedHelper
@@ -38,8 +37,6 @@ class IsAllowedHelper implements RendererHelperInterface
     private $aclAdapter;
     /** @var AuthAdapterInterface */
     private $authAdapter;
-    /** @var UserStorage */
-    private $userStorage;
     /** @var ResourceStorage */
     private $resourceStorage;
     /** @var ApplicationStorage */
@@ -85,7 +82,6 @@ class IsAllowedHelper implements RendererHelperInterface
      * @param EnvironmentManager $environmentManager
      * @param AclAdapterInterface $aclAdapter
      * @param AuthAdapterInterface $authAdapter
-     * @param UserStorage $userStorage
      * @param ResourceStorage $resourceStorage
      * @param ApplicationStorage $applicationStorage
      */
@@ -94,7 +90,6 @@ class IsAllowedHelper implements RendererHelperInterface
         EnvironmentManager $environmentManager,
         AclAdapterInterface $aclAdapter,
         AuthAdapterInterface $authAdapter,
-        UserStorage $userStorage,
         ResourceStorage $resourceStorage,
         ApplicationStorage $applicationStorage
     ) {
@@ -102,7 +97,6 @@ class IsAllowedHelper implements RendererHelperInterface
         $this->environmentManager = $environmentManager;
         $this->aclAdapter = $aclAdapter;
         $this->authAdapter = $authAdapter;
-        $this->userStorage = $userStorage;
         $this->resourceStorage = $resourceStorage;
         $this->applicationStorage = $applicationStorage;
     }
@@ -122,27 +116,35 @@ class IsAllowedHelper implements RendererHelperInterface
         }
 
         $arguments = func_get_args();
-        $resourceName = $arguments[0] ?? '';
-        $this->checkResourceNameAgainstRouting($resourceName);
-        /** @var null|ResourceEntity $resourceEntity */
-        $resourceEntity = $this->resourceStorage->getResourceByName($resourceName);
+
         $applicationName = $arguments[1] ?? $this->environmentManager->getSelectedApplication();
         /** @var null|ApplicationEntity $applicationEntity */
         $applicationEntity = $this->applicationStorage->getApplicationByName($applicationName);
+
+        // For invalid applications the path will be checked against the current (valid) application
+        if (!$applicationEntity instanceof ApplicationEntity) {
+            $applicationName = $this->environmentManager->getSelectedApplication();
+        }
+
+        $resourceName = $arguments[0] ?? '';
+        $this->checkResourceNameAgainstRouting($resourceName, $applicationName);
+        /** @var null|ResourceEntity $resourceEntity */
+        $resourceEntity = $this->resourceStorage->getResourceByName($resourceName);
 
         return $this->aclAdapter->isAllowed($userEntity, $resourceEntity, $applicationEntity);
     }
 
     /**
      * Matches the given resource name against router URLs and if found, changes it to the assigned middleware name.
-     * @TODO: make sure it is not possible to give a custom resource with a name that can match against a router path.
+     * @TODO: make sure it is NOT possible to give a custom resource with a name that can match against a router path.
      *
-     * @param $resourceName
+     * @param string $resourceName
+     * @param string $applicationName
      */
-    private function checkResourceNameAgainstRouting(&$resourceName) : void
+    private function checkResourceNameAgainstRouting(string &$resourceName, string $applicationName) : void
     {
         $applicationConfig = $this->configuration
-            ->getData('applications/'.$this->environmentManager->getSelectedApplication());
+            ->getData('applications/'.$applicationName);
 
         $applicationRouteConfig = $this->configuration
             ->getData('router/'.$applicationConfig['module']);
@@ -151,7 +153,7 @@ class IsAllowedHelper implements RendererHelperInterface
         $tempName = '/'.trim($tempName, '/');
 
         foreach ($applicationRouteConfig as $route) {
-            if (preg_match('@^'.$route['path'].'?$@', $tempName)) {
+            if ($route['path'] == $tempName) {
                 $resourceName = $route['middleware'];
                 break;
             }

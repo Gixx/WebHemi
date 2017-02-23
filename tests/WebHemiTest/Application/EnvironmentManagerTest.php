@@ -15,7 +15,7 @@ use InvalidArgumentException;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\Config;
 use WebHemiTest\AssertTrait;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class EnvironmentManagerTest.

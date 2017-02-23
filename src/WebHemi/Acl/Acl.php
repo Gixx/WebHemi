@@ -25,7 +25,7 @@ use WebHemi\Data\Entity\User\UserEntity;
 /**
  * Class Acl
  */
-final class Acl implements AclAdapterInterface
+class Acl implements AclAdapterInterface
 {
     /** @var UserToPolicyCoupler */
     private $userToPolicyCoupler;

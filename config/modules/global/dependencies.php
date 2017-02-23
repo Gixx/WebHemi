@@ -233,7 +233,6 @@ return [
                     EnvironmentManager::class,
                     AclAdapterInterface::class,
                     AuthAdapterInterface::class,
-                    Storage\User\UserStorage::class,
                     Storage\AccessManagement\ResourceStorage::class,
                     Storage\ApplicationStorage::class
                 ],

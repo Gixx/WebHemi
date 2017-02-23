@@ -15,7 +15,7 @@ namespace WebHemiTest\Adapter\Log;
 use WebHemi\Adapter\Log\LogAdapterInterface;
 use WebHemi\Adapter\Log\Klogger\KloggerAdapter;
 use WebHemi\Config\Config;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TwigRendererAdapterTest.

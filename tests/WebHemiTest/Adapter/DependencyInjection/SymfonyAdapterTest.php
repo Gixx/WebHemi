@@ -26,7 +26,7 @@ use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
 use WebHemiTest\Fixtures\EmptyEntity;
 use WebHemiTest\Fixtures\EmptyService;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SymfonyAdapterTest.

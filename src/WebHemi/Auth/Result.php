@@ -18,7 +18,7 @@ use WebHemi\Adapter\Auth\AuthResultInterface;
 /**
  * Class Result.
  */
-final class Result implements AuthResultInterface
+class Result implements AuthResultInterface
 {
     /** @var int */
     private $code;

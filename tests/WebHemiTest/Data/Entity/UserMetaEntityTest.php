@@ -13,7 +13,7 @@ namespace WebHemiTest\Data\Entity;
 
 use WebHemi\Data\Entity\DataEntityInterface;
 use WebHemi\Data\Entity\User\UserMetaEntity;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class UserMetaEntityTest.

@@ -11,7 +11,7 @@
  */
 namespace WebHemiTest\Middleware;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\StreamInterface;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;

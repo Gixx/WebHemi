@@ -18,7 +18,7 @@ use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemiTest\AssertTrait;
 use WebHemiTest\InvokePrivateMethodTrait;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class UserStorageTest.

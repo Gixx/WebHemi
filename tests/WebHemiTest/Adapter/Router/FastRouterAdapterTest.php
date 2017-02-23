@@ -13,7 +13,7 @@ namespace WebHemiTest\Adapter\Router;
 
 use FastRoute\Dispatcher;
 use WebHemi\Adapter\Http\GuzzleHttp\ServerRequest;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use WebHemi\Config\Config;
 use WebHemi\Adapter\Router\RouterAdapterInterface;
 use WebHemi\Adapter\Router\FastRoute\FastRouteAdapter;

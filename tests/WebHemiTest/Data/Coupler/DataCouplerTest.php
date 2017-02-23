@@ -19,9 +19,9 @@ use WebHemi\Adapter\Data\DataDriverInterface;
 use WebHemi\Data\Coupler;
 use WebHemi\Data\Entity;
 use WebHemi\Data\Storage;
-use PHPUnit_Framework_TestCase as TestCase;
-use PHPUnit_Framework_IncompleteTestError;
-use PHPUnit_Framework_SkippedTestError;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\SkippedTestError;
 
 /**
  * Class DataCouplerTest
@@ -39,7 +39,7 @@ class DataCouplerTest extends TestCase
     protected function checkRequirements()
     {
         if (!extension_loaded('pdo_sqlite')) {
-            throw new PHPUnit_Framework_SkippedTestError('No SQLite Available');
+            throw new SkippedTestError('No SQLite Available');
         }
 
         parent::checkRequirements();
@@ -65,7 +65,7 @@ class DataCouplerTest extends TestCase
                 $result = self::$dataDriver->query($sql);
 
                 if (!$result) {
-                    throw new PHPUnit_Framework_IncompleteTestError(
+                    throw new IncompleteTestError(
                         'Cannot set up test database: '.json_encode(self::$dataDriver->errorInfo()).'; query: '.$sql
                     );
                 }

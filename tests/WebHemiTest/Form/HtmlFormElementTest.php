@@ -11,7 +11,7 @@
  */
 namespace WebHemiTest\Form;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
 use WebHemi\Form\Html\HtmlFormElement;
 use WebHemi\Form\Html\HtmlMultipleFormElement;

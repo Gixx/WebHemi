@@ -16,7 +16,7 @@ use WebHemi\Application\SessionManager;
 use WebHemi\Auth\Storage\Session as SessionStorage;
 use WebHemi\Config\Config;
 use WebHemi\Data\Entity\User\UserEntity;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SessionStorageTest

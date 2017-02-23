@@ -38,7 +38,7 @@ abstract class AbstractApplication implements ApplicationInterface
      *
      * @return DependencyInjectionAdapterInterface
      */
-    final public function getContainer() : DependencyInjectionAdapterInterface
+    public function getContainer() : DependencyInjectionAdapterInterface
     {
         return $this->container;
     }

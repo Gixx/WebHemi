@@ -11,12 +11,11 @@
  */
 namespace WebHemiTest\Application;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use WebHemi\Adapter\DependencyInjection\Symfony\SymfonyAdapter as DependencyInjectionAdapter;
 use WebHemi\Application\ApplicationInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Application\PipelineManager;
-use WebHemi\Application\SessionManager;
 use WebHemi\Application\Web\WebApplication as Application;
 use WebHemi\Config\Config;
 use WebHemi\Config\ConfigInterface;
@@ -128,6 +127,7 @@ class WebApplicationTest extends TestCase
             $this->cookie,
             $this->files
         );
+        $environmentManager->setSelectedTheme('test_theme');
         $pipelineManager = new PipelineManager($config);
 
         $diAdapter = new DependencyInjectionAdapter($config);
@@ -201,6 +201,51 @@ class WebApplicationTest extends TestCase
         $this->assertSame(count($expectedPipelineTrace), TestMiddleware::$counter);
         $this->assertArraysAreSimilar($expectedPipelineTrace, TestMiddleware::$trace);
         $this->assertSame(500, TestMiddleware::$responseStatus);
+        $this->assertEmpty(TestMiddleware::$responseBody);
+    }
+
+    /**
+     * Test run with 403 forbidden error.
+     */
+    public function testRunForbiddenError()
+    {
+        $this->server = [
+            'HTTP_HOST'    => 'unittest.dev',
+            'SERVER_NAME'  => 'unittest.dev',
+            'REQUEST_URI'  => '/restricted/',
+            'QUERY_STRING' => '',
+        ];
+
+        $config = new Config($this->config);
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+        $pipelineManager = new PipelineManager($config);
+
+        $diAdapter = new DependencyInjectionAdapter($config);
+        $diAdapter->registerService(ConfigInterface::class, $config)
+            ->registerService(EnvironmentManager::class, $environmentManager)
+            ->registerService(PipelineManager::class, $pipelineManager)
+            ->registerModuleServices('Global');
+
+        $app = new Application($diAdapter);
+        $app->run();
+
+        $expectedPipelineTrace = [
+            'pipe2',
+            'pipe3',
+            'pipe1',
+            'final'
+        ];
+
+        $this->assertSame(count($expectedPipelineTrace), TestMiddleware::$counter);
+        $this->assertArraysAreSimilar($expectedPipelineTrace, TestMiddleware::$trace);
+        $this->assertSame(403, TestMiddleware::$responseStatus);
         $this->assertEmpty(TestMiddleware::$responseBody);
     }
 

@@ -1,6 +1,15 @@
 Change log
 ==========
 
+Version 4.0.0-3.3
+-----------------
+* Refactor UnitTests to PHPUnit 6.0.
+* Add/fix unit tests, increase coverage.
+* Refactor trait used by the renderer and helper:
+  * rename ThemeCheckTrait to GetSelectedThemeResourcePathTrait since that is what it does, 
+  * hide properties and methods used by this trait from the descendant classes,
+  * make it to be independent of descendant classes (inject dependencies).
+
 Version 4.0.0-3.2
 -----------------
 * Restructure Config.

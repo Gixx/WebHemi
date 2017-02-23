@@ -16,7 +16,7 @@ namespace WebHemi\Renderer\Helper;
 use WebHemi\Adapter\Renderer\RendererHelperInterface;
 use WebHemi\Application\EnvironmentManager;
 use WebHemi\Config\ConfigInterface;
-use WebHemi\Renderer\ThemeCheckTrait;
+use WebHemi\Renderer\GetSelectedThemeResourcePathTrait;
 
 /**
  * Class DefinedHelper
@@ -28,12 +28,7 @@ class DefinedHelper implements RendererHelperInterface
     /** @var string */
     private $defaultTemplateViewPath;
 
-    use ThemeCheckTrait;
-
-    /** @var ConfigInterface */
-    protected $configuration;
-    /** @var EnvironmentManager */
-    protected $environmentManager;
+    use GetSelectedThemeResourcePathTrait;
 
     /**
      * Should return the name of the helper.
@@ -77,12 +72,13 @@ class DefinedHelper implements RendererHelperInterface
      */
     public function __construct(ConfigInterface $configuration, EnvironmentManager $environmentManager)
     {
-        $this->configuration = $configuration;
-        $this->environmentManager = $environmentManager;
-
         $documentRoot = $environmentManager->getDocumentRoot();
         $selectedTheme = $environmentManager->getSelectedTheme();
-        $selectedThemeResourcePath = $this->getSelectedThemeResourcePath($selectedTheme);
+        $selectedThemeResourcePath = $this->getSelectedThemeResourcePath(
+            $selectedTheme,
+            $configuration,
+            $environmentManager
+        );
 
         $this->defaultTemplateViewPath = $documentRoot.EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH.'/view';
         $this->templateViewPath = $documentRoot.$selectedThemeResourcePath.'/view';

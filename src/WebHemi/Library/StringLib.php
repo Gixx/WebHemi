@@ -16,7 +16,7 @@ namespace WebHemi\Library;
 /**
  * Class String
  */
-final class StringLib
+class StringLib
 {
     /**
      * Converts CamelCase text to under_score equivalent.
