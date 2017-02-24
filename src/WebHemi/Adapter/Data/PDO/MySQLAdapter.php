@@ -105,11 +105,11 @@ class MySQLAdapter implements DataAdapterInterface
      */
     public function getData(int $identifier) : array
     {
-        $queryBind = [];
+        $queryBinds = [];
 
-        $query = $this->getSelectQueryForExpression([$this->idKey => $identifier], $queryBind, 1, 0);
+        $query = $this->getSelectQueryForExpression([$this->idKey => $identifier], $queryBinds, 1, 0);
         $statement = $this->dataDriver->prepare($query);
-        $this->bindValuesToStatement($statement, $queryBind);
+        $this->bindValuesToStatement($statement, $queryBinds);
         $statement->execute();
 
         $data = $statement->fetch(PDO::FETCH_ASSOC);
@@ -129,11 +129,11 @@ class MySQLAdapter implements DataAdapterInterface
      */
     public function getDataSet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array
     {
-        $queryBind = [];
+        $queryBinds = [];
 
-        $query = $this->getSelectQueryForExpression($expression, $queryBind, $limit, $offset);
+        $query = $this->getSelectQueryForExpression($expression, $queryBinds, $limit, $offset);
         $statement = $this->dataDriver->prepare($query);
-        $this->bindValuesToStatement($statement, $queryBind);
+        $this->bindValuesToStatement($statement, $queryBinds);
         $statement->execute();
 
         $data = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -151,11 +151,11 @@ class MySQLAdapter implements DataAdapterInterface
      */
     public function getDataCardinality(array $expression) : int
     {
-        $queryBind = [];
+        $queryBinds = [];
 
-        $query = $this->getSelectQueryForExpression($expression, $queryBind);
+        $query = $this->getSelectQueryForExpression($expression, $queryBinds);
         $statement = $this->dataDriver->prepare($query);
-        $this->bindValuesToStatement($statement, $queryBind);
+        $this->bindValuesToStatement($statement, $queryBinds);
         $statement->execute();
 
         return $statement->rowCount();
@@ -165,14 +165,14 @@ class MySQLAdapter implements DataAdapterInterface
      * Builds SQL query from the expression.
      *
      * @param array $expression
-     * @param array $queryBind
+     * @param array $queryBinds
      * @param int   $limit
      * @param int   $offset
      * @return string
      */
     protected function getSelectQueryForExpression(
         array $expression,
-        array&$queryBind,
+        array&$queryBinds,
         int $limit = PHP_INT_MAX,
         int $offset = 0
     ) : string {
@@ -180,7 +180,7 @@ class MySQLAdapter implements DataAdapterInterface
 
         // Prepare WHERE expression.
         if (!empty($expression)) {
-            $query .= $this->getWhereExpression($expression, $queryBind);
+            $query .= $this->getWhereExpression($expression, $queryBinds);
         }
 
         $query .= " LIMIT {$limit}";
@@ -193,25 +193,16 @@ class MySQLAdapter implements DataAdapterInterface
      * Creates a WHERE expression for the SQL query.
      *
      * @param array $expression
-     * @param array $queryBind
+     * @param array $queryBinds
      * @return string
      */
-    protected function getWhereExpression(array $expression, array&$queryBind) : string
+    protected function getWhereExpression(array $expression, array&$queryBinds) : string
     {
         $whereExpression = '';
         $queryParams = [];
 
         foreach ($expression as $column => $value) {
-            if (is_array($value)) {
-                $queryParams[] = $this->getInColumnCondition($column, count($value));
-                $queryBind = array_merge($queryBind, $value);
-            } elseif (strpos($column, ' LIKE') !== false || (is_string($value) && strpos($value, '%') !== false)) {
-                $queryParams[] = $this->getLikeColumnCondition($column);
-                $queryBind[] = $value;
-            } else {
-                $queryParams[] = $this->getSimpleColumnCondition($column);
-                $queryBind[] = $value;
-            }
+            $this->setParamsAndBinds($column, $value, $queryParams, $queryBinds);
         }
 
         if (!empty($queryParams)) {
@@ -219,6 +210,28 @@ class MySQLAdapter implements DataAdapterInterface
         }
 
         return $whereExpression;
+    }
+
+    /**
+     * Set the query params and quaery bindings according to the `column` and `value`.
+     *
+     * @param string $column
+     * @param mixed  $value
+     * @param array  $queryParams
+     * @param array  $queryBinds
+     */
+    protected function setParamsAndBinds(string $column, $value, array&$queryParams, array&$queryBinds) : void
+    {
+        if (is_array($value)) {
+            $queryParams[] = $this->getInColumnCondition($column, count($value));
+            $queryBinds = array_merge($queryBinds, $value);
+        } elseif (strpos($column, ' LIKE') !== false || (is_string($value) && strpos($value, '%') !== false)) {
+            $queryParams[] = $this->getLikeColumnCondition($column);
+            $queryBinds[] = $value;
+        } else {
+            $queryParams[] = $this->getSimpleColumnCondition($column);
+            $queryBinds[] = $value;
+        }
     }
 
     /**
