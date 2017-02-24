@@ -11,6 +11,7 @@
  */
 namespace WebHemiTest\Middleware;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\StreamInterface;

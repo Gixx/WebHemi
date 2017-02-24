@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware;
 
 use RuntimeException;
+use Throwable;
 use WebHemi\Adapter\Auth\AuthAdapterInterface;
 use WebHemi\Adapter\Http\ResponseInterface;
 use WebHemi\Adapter\Http\ServerRequestInterface;
@@ -73,39 +74,10 @@ class FinalMiddleware implements MiddlewareInterface
 
         // Handle errors here.
         if (!in_array($response->getStatusCode(), [ResponseInterface::STATUS_OK, ResponseInterface::STATUS_REDIRECT])) {
-            $errorTemplate = 'error-'.$response->getStatusCode();
-            $exception = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
-            /** @var array $data */
-            $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
-            $templateData['exception'] = $exception;
-
-            if ($request->isXmlHttpRequest()) {
-                $request = $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
-            } else {
-                $body = $this->templateRenderer->render($errorTemplate, $templateData);
-                $response = $response->withBody($body);
-            }
-
-            if ('admin' == $this->environmentManager->getSelectedModule()) {
-                $identity = 'Unauthenticated user';
-
-                if ($this->authAdapter->hasIdentity()) {
-                    /** @var UserEntity $userEntity */
-                    $userEntity = $this->authAdapter->getIdentity();
-                    $identity = $userEntity->getEmail();
-                }
-
-                $logData = [
-                    'User' => $identity,
-                    'IP' => $this->environmentManager->getClientIp(),
-                    'RequestUri' => $request->getUri()->getPath().'?'.$request->getUri()->getQuery(),
-                    'RequestMethod' => $request->getMethod(),
-                    'Error' => $response->getStatusCode().' '.$response->getReasonPhrase(),
-                    'Exception' => $exception,
-                    'Parameters' => $request->getParsedBody()
-                ];
-                $this->logAdapter->log('error', json_encode($logData));
-            }
+            $exception = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION)
+                ?? new RuntimeException($response->getReasonPhrase(), $response->getStatusCode());
+            $this->prepareErrorResponse($exception, $request, $response);
+            $this->logErrorResponse($exception, $request, $response);
         }
 
         // Skip sending output when PHP Unit is running.
@@ -114,6 +86,64 @@ class FinalMiddleware implements MiddlewareInterface
             $this->sendOutput($request, $response);
         }
         // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * Prepares error response: Body and Data
+     *
+     * @param Throwable $exception
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     */
+    private function prepareErrorResponse(
+        Throwable $exception,
+        ServerRequestInterface&$request,
+        ResponseInterface&$response
+    ) : void {
+        $errorTemplate = 'error-'.$response->getStatusCode();
+
+        /** @var array $data */
+        $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
+        $templateData['exception'] = $exception;
+
+        if ($request->isXmlHttpRequest()) {
+            $request = $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
+        } else {
+            $body = $this->templateRenderer->render($errorTemplate, $templateData);
+            $response = $response->withBody($body);
+        }
+    }
+
+    /**
+     * Logs the error.
+     *
+     * @param Throwable $exception
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     */
+    private function logErrorResponse(
+        Throwable $exception,
+        ServerRequestInterface&$request,
+        ResponseInterface&$response
+    ) : void {
+        $identity = 'Unauthenticated user';
+
+        if ($this->authAdapter->hasIdentity()) {
+            /** @var UserEntity $userEntity */
+            $userEntity = $this->authAdapter->getIdentity();
+            $identity = $userEntity->getEmail();
+        }
+
+        $logData = [
+            'User' => $identity,
+            'IP' => $this->environmentManager->getClientIp(),
+            'RequestUri' => $request->getUri()->getPath().'?'.$request->getUri()->getQuery(),
+            'RequestMethod' => $request->getMethod(),
+            'Error' => $response->getStatusCode().' '.$response->getReasonPhrase(),
+            'Exception' => $exception,
+            'Parameters' => $request->getParsedBody()
+        ];
+        $this->logAdapter->log('error', json_encode($logData));
     }
 
     /**

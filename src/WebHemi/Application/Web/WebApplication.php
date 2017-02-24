@@ -101,10 +101,42 @@ class WebApplication extends AbstractApplication
         // Start session.
         $this->initSession();
 
-        /** @var HttpAdapterInterface $httpAdapter */
-        $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
         /** @var PipelineManager $pipelineManager */
         $pipelineManager = $this->getContainer()->get(PipelineManager::class);
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        /** @var string $middlewareClass */
+        $middlewareClass = $pipelineManager->start();
+
+        while ($middlewareClass !== null
+            && $response->getStatusCode() == ResponseInterface::STATUS_PROCESSING
+        ) {
+            $this->invokeMiddleware($middlewareClass, $request, $response);
+            $middlewareClass = $pipelineManager->next();
+        };
+
+        // If there was no error, we mark as ready for output.
+        if ($response->getStatusCode() == ResponseInterface::STATUS_PROCESSING) {
+            $response = $response->withStatus(ResponseInterface::STATUS_OK);
+        }
+
+        /** @var FinalMiddleware $finalMiddleware */
+        $finalMiddleware = $this->getContainer()->get(FinalMiddleware::class);
+
+        // Send out headers and content.
+        $finalMiddleware($request, $response);
+    }
+
+    /**
+     * Gets the Request object.
+     *
+     * @return ServerRequestInterface
+     */
+    private function getRequest()
+    {
+        /** @var HttpAdapterInterface $httpAdapter */
+        $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
         /** @var EnvironmentManager $environmentManager */
         $environmentManager = $this->getContainer()->get(EnvironmentManager::class);
 
@@ -120,61 +152,66 @@ class WebApplication extends AbstractApplication
                 ]
             );
 
+        return $request;
+    }
+
+    /**
+     * Gets the Response object.
+     *
+     * @return ResponseInterface
+     */
+    private function getResponse()
+    {
+        /** @var HttpAdapterInterface $httpAdapter */
+        $httpAdapter = $this->getContainer()->get(HttpAdapterInterface::class);
+
         /** @var ResponseInterface $response */
-        $response = $httpAdapter->getResponse();
-        /** @var string $middlewareClass */
-        $middlewareClass = $pipelineManager->start();
+        return $httpAdapter->getResponse();
+    }
 
-        while ($middlewareClass !== null
-            && $response->getStatusCode() == ResponseInterface::STATUS_PROCESSING
-        ) {
-            try {
-                /** @var MiddlewareInterface $middleware */
-                $middleware = $this->getContainer()->get($middlewareClass);
-                $requestAttributes = $request->getAttributes();
+    /**
+     * Instantiates and invokes a middleware
+     *
+     * @param string $middlewareClass
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     */
+    private function invokeMiddleware(
+        string $middlewareClass,
+        ServerRequestInterface&$request,
+        ResponseInterface&$response
+    ) : void {
+        try {
+            /** @var MiddlewareInterface $middleware */
+            $middleware = $this->getContainer()->get($middlewareClass);
+            $requestAttributes = $request->getAttributes();
 
-                // As an extra step if the action middleware is resolved, it is invoked right before the dispatcher.
-                // Only the container knows how to instantiate it in the right way, and the container must not be
-                // injected into other classes. It seems like a hack but it is by purpose.
-                if ($middleware instanceof DispatcherMiddleware
-                    && isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
-                ) {
-                    /** @var MiddlewareInterface $actionMiddleware */
-                    $actionMiddleware = $this->getContainer()
-                        ->get($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS]);
-                    $request = $request->withAttribute(
-                        ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE,
-                        $actionMiddleware
-                    );
-                }
-
-                $middleware($request, $response);
-            } catch (Throwable $exception) {
-                $code = ResponseInterface::STATUS_INTERNAL_SERVER_ERROR;
-
-                if (in_array($exception->getCode(), [403, 404])) {
-                    $code = $exception->getCode();
-                }
-
-                $response = $response->withStatus($code);
+            // As an extra step if an action middleware is resolved, it should be invoked by the dispatcher.
+            if ($middleware instanceof DispatcherMiddleware
+                && isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
+            ) {
+                /** @var MiddlewareInterface $actionMiddleware */
+                $actionMiddleware = $this->getContainer()
+                    ->get($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS]);
                 $request = $request->withAttribute(
-                    ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION,
-                    $exception
+                    ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE,
+                    $actionMiddleware
                 );
             }
 
-            $middlewareClass = $pipelineManager->next();
-        };
+            $middleware($request, $response);
+        } catch (Throwable $exception) {
+            $code = ResponseInterface::STATUS_INTERNAL_SERVER_ERROR;
 
-        // If there was no error, we mark as ready for output.
-        if ($response->getStatusCode() == ResponseInterface::STATUS_PROCESSING) {
-            $response = $response->withStatus(ResponseInterface::STATUS_OK);
+            if (in_array($exception->getCode(), [403, 404])) {
+                $code = $exception->getCode();
+            }
+
+            $response = $response->withStatus($code);
+            $request = $request->withAttribute(
+                ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION,
+                $exception
+            );
         }
-
-        /** @var FinalMiddleware $finalMiddleware */
-        $finalMiddleware = $this->getContainer()->get(FinalMiddleware::class);
-
-        // Send out headers and content.
-        $finalMiddleware($request, $response);
     }
 }
