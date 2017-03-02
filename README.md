@@ -32,11 +32,11 @@ The WebHemi is a simple blog engine that tries to completely apply the S.O.L.I.D
 
 Figure 1: The basic execution flow of the application.
 
-![webhemi](https://cloud.githubusercontent.com/assets/87073/19352304/aa1cb604-915f-11e6-89e3-7939b733b78b.png)
+![webhemi](https://cloud.githubusercontent.com/assets/87073/23497779/0ed25224-ff25-11e6-8d51-2d9c768d33fa.png)
 
 Figure 2: The queue of the Middleware Pipeline
 
-![pipelinemanager](https://cloud.githubusercontent.com/assets/87073/20424303/6a5a8118-ad75-11e6-8012-15cf2d166bdb.png)
+![pipelinemanager](https://cloud.githubusercontent.com/assets/87073/23497791/141f0fec-ff25-11e6-896f-3caa4b957f9f.png)
 
 FAQ
 ---
