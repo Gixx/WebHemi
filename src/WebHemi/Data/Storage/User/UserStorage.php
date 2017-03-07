@@ -14,14 +14,14 @@ declare(strict_types = 1);
 namespace WebHemi\Data\Storage\User;
 
 use WebHemi\DateTime;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Storage\AbstractDataStorage;
+use WebHemi\Data\Storage\AbstractStorage;
 
 /**
  * Class UserStorage.
  */
-class UserStorage extends AbstractDataStorage
+class UserStorage extends AbstractStorage
 {
     /** @var string */
     protected $dataGroup = 'webhemi_user';
@@ -47,14 +47,14 @@ class UserStorage extends AbstractDataStorage
     /**
      * Populates an entity with storage data.
      *
-     * @param DataEntityInterface $entity
-     * @param array               $data
+     * @param EntityInterface $dataEntity
+     * @param array           $data
      * @return void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
+    protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var UserEntity $entity */
-        $entity->setUserId((int) $data[$this->idKey])
+        /* @var UserEntity $dataEntity */
+        $dataEntity->setUserId((int) $data[$this->idKey])
             ->setUserName($data[$this->userName])
             ->setEmail($data[$this->email])
             ->setPassword($data[$this->password])
@@ -68,23 +68,23 @@ class UserStorage extends AbstractDataStorage
     /**
      * Get data from an entity.
      *
-     * @param DataEntityInterface $entity
+     * @param EntityInterface $dataEntity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity) : array
+    protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var UserEntity $entity */
-        $dateCreated = $entity->getDateCreated();
-        $dateModified = $entity->getDateModified();
+        /** @var UserEntity $dataEntity */
+        $dateCreated = $dataEntity->getDateCreated();
+        $dateModified = $dataEntity->getDateModified();
 
         return [
-            $this->idKey => $entity->getKeyData(),
-            $this->userName => $entity->getUserName(),
-            $this->email => $entity->getEmail(),
-            $this->password => $entity->getPassword(),
-            $this->hash => $entity->getHash(),
-            $this->isActive => (int) $entity->getActive(),
-            $this->isEnabled => (int) $entity->getEnabled(),
+            $this->idKey => $dataEntity->getKeyData(),
+            $this->userName => $dataEntity->getUserName(),
+            $this->email => $dataEntity->getEmail(),
+            $this->password => $dataEntity->getPassword(),
+            $this->hash => $dataEntity->getHash(),
+            $this->isActive => (int) $dataEntity->getActive(),
+            $this->isEnabled => (int) $dataEntity->getEnabled(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];
@@ -98,10 +98,10 @@ class UserStorage extends AbstractDataStorage
      */
     public function getUserById(int $identifier) : ? UserEntity
     {
-        /** @var null|UserEntity $entity */
-        $entity = $this->getDataEntity([$this->idKey => $identifier]);
+        /** @var null|UserEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
-        return $entity;
+        return $dataEntity;
     }
 
     /**
@@ -112,10 +112,10 @@ class UserStorage extends AbstractDataStorage
      */
     public function getUserByUserName(string $name) : ? UserEntity
     {
-        /** @var null|UserEntity $entity */
-        $entity = $this->getDataEntity([$this->userName => $name]);
+        /** @var null|UserEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->userName => $name]);
 
-        return $entity;
+        return $dataEntity;
     }
 
     /**
@@ -126,10 +126,10 @@ class UserStorage extends AbstractDataStorage
      */
     public function getUserByEmail($email) : ? UserEntity
     {
-        /** @var null|UserEntity $entity */
-        $entity = $this->getDataEntity([$this->email => $email]);
+        /** @var null|UserEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->email => $email]);
 
-        return $entity;
+        return $dataEntity;
     }
 
     /**
@@ -141,9 +141,9 @@ class UserStorage extends AbstractDataStorage
      */
     public function getUserByCredentials(string $username, string $password) : ? UserEntity
     {
-        /** @var null|UserEntity $entity */
-        $entity = $this->getDataEntity([$this->userName => $username, $this->password => $password]);
+        /** @var null|UserEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->userName => $username, $this->password => $password]);
 
-        return $entity;
+        return $dataEntity;
     }
 }

@@ -9,33 +9,44 @@
  *
  * @link      http://www.gixx-web.com
  */
-use WebHemi\Adapter\DependencyInjection\Symfony\SymfonyAdapter as DependencyInjectionAdapter;
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Application\PipelineManager;
-use WebHemi\Application\SessionManager;
-use WebHemi\Application\Web\WebApplication as Application;
-use WebHemi\Config;
+use WebHemi\Application\ServiceInterface as ApplicationInterface;
+use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionInterface;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\MiddlewarePipeline\ServiceInterface as MiddlewarePipelineInterface;
+use WebHemi\Session\ServiceInterface as SessionInterface;
 
 require_once __DIR__.'/vendor/autoload.php';
 
-$configuration = new Config\Config(require __DIR__.'/config/config.php');
+// Set up core objects
+$configurationData = require_once __DIR__.'/config/config.php';
+// Get the service class names from the configuration, so no need to hardcode them.
+$applicationClass = $configurationData['dependencies']['Global'][ApplicationInterface::class]['class'];
+$configurationClass = $configurationData['dependencies']['Global'][ConfigurationInterface::class]['class'];
+$dependencyInjectionClass = $configurationData['dependencies']['Global'][DependencyInjectionInterface::class]['class'];
+$environmentClass = $configurationData['dependencies']['Global'][EnvironmentInterface::class]['class'];
+$middlewarePipelineClass = $configurationData['dependencies']['Global'][MiddlewarePipelineInterface::class]['class'];
+$sessionClass = $configurationData['dependencies']['Global'][SessionInterface::class]['class'];
 
-// Set core objects
-$environmentManager = new EnvironmentManager($configuration, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
-
-$pipelineManager = new PipelineManager($configuration);
-$pipelineManager->addModulePipeLine($environmentManager->getSelectedModule());
-
-$sessionManager = new SessionManager($configuration);
-
-$diAdapter = new DependencyInjectionAdapter($configuration);
+/** @var ConfigurationInterface $configuration */
+$configuration = new $configurationClass($configurationData);
+/** @var EnvironmentInterface $environment */
+$environment = new $environmentClass($configuration, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
+/** @var MiddlewarePipelineInterface $middlewarePipeline */
+$middlewarePipeline = new $middlewarePipelineClass($configuration);
+$middlewarePipeline->addModulePipeLine($environment->getSelectedModule());
+/** @var SessionInterface $session */
+$session = new $sessionClass($configuration);
+/** @var DependencyInjectionInterface $dependencyInjection */
+$dependencyInjection = new $dependencyInjectionClass($configuration);
 // Add core and module services to the DI adapter
-$diAdapter->registerService(Config\ConfigInterface::class, $configuration)
-    ->registerService(EnvironmentManager::class, $environmentManager)
-    ->registerService(PipelineManager::class, $pipelineManager)
-    ->registerService(SessionManager::class, $sessionManager)
+$dependencyInjection->registerService(ConfigurationInterface::class, $configuration)
+    ->registerService(EnvironmentInterface::class, $environment)
+    ->registerService(MiddlewarePipelineInterface::class, $middlewarePipeline)
+    ->registerService(SessionInterface::class, $session)
     ->registerModuleServices('Global')
-    ->registerModuleServices($environmentManager->getSelectedModule());
+    ->registerModuleServices($environment->getSelectedModule());
 
-$app = new Application($diAdapter);
-$app->run();
+/** @var ApplicationInterface $application */
+$application = new $applicationClass($dependencyInjection);
+$application->run();

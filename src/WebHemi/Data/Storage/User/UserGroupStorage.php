@@ -14,14 +14,14 @@ declare(strict_types = 1);
 namespace WebHemi\Data\Storage\User;
 
 use WebHemi\DateTime;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\User\UserGroupEntity;
-use WebHemi\Data\Storage\AbstractDataStorage;
+use WebHemi\Data\Storage\AbstractStorage;
 
 /**
  * Class UserGroupStorage.
  */
-class UserGroupStorage extends AbstractDataStorage
+class UserGroupStorage extends AbstractStorage
 {
     /** @var string */
     protected $dataGroup = 'webhemi_user_group';
@@ -43,14 +43,14 @@ class UserGroupStorage extends AbstractDataStorage
     /**
      * Populates an entity with storage data.
      *
-     * @param DataEntityInterface $entity
-     * @param array               $data
+     * @param EntityInterface $dataEntity
+     * @param array           $data
      * @return void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
+    protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var UserGroupEntity $entity */
-        $entity->setUserGroupId((int) $data[$this->idKey])
+        /* @var UserGroupEntity $dataEntity */
+        $dataEntity->setUserGroupId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
@@ -62,21 +62,21 @@ class UserGroupStorage extends AbstractDataStorage
     /**
      * Get data from an entity.
      *
-     * @param DataEntityInterface $entity
+     * @param EntityInterface $dataEntity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity) : array
+    protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var UserGroupEntity $entity */
-        $dateCreated = $entity->getDateCreated();
-        $dateModified = $entity->getDateModified();
+        /** @var UserGroupEntity $dataEntity */
+        $dateCreated = $dataEntity->getDateCreated();
+        $dateModified = $dataEntity->getDateModified();
 
         return [
-            $this->idKey => $entity->getKeyData(),
-            $this->name => $entity->getName(),
-            $this->title => $entity->getTitle(),
-            $this->description => $entity->getDescription(),
-            $this->isReadOnly => (int) $entity->getReadOnly(),
+            $this->idKey => $dataEntity->getKeyData(),
+            $this->name => $dataEntity->getName(),
+            $this->title => $dataEntity->getTitle(),
+            $this->description => $dataEntity->getDescription(),
+            $this->isReadOnly => (int) $dataEntity->getReadOnly(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];
@@ -90,10 +90,10 @@ class UserGroupStorage extends AbstractDataStorage
      */
     public function getUserGroupById($identifier) : ? UserGroupEntity
     {
-        /** @var null|UserGroupEntity $entity */
-        $entity = $this->getDataEntity([$this->idKey => $identifier]);
+        /** @var null|UserGroupEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
-        return $entity;
+        return $dataEntity;
     }
 
     /**
@@ -104,9 +104,9 @@ class UserGroupStorage extends AbstractDataStorage
      */
     public function getUserGroupByName($name) : ? UserGroupEntity
     {
-        /** @var null|UserGroupEntity $entity */
-        $entity = $this->getDataEntity([$this->name => $name]);
+        /** @var null|UserGroupEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->name => $name]);
 
-        return $entity;
+        return $dataEntity;
     }
 }

@@ -15,7 +15,7 @@ namespace WebHemi\Data\Coupler\Traits;
 
 use WebHemi\DateTime;
 use RuntimeException;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 
 /**
@@ -28,9 +28,9 @@ trait UserEntityTrait
      *
      * @param string $entityClassName
      * @throws RuntimeException
-     * @return DataEntityInterface
+     * @return EntityInterface
      */
-    abstract protected function getNewEntityInstance(string $entityClassName) : DataEntityInterface;
+    abstract protected function getNewEntityInstance(string $entityClassName) : EntityInterface;
 
     /**
      * Creates a new User Entity instance form the data.

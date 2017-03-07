@@ -10,7 +10,6 @@
  * @link      http://www.gixx-web.com
  */
 
-use WebHemi\Middleware\Action;
 use WebHemi\Middleware\Security\AclMiddleware;
 use WebHemi\Middleware\Security\AccessLogMiddleware;
 

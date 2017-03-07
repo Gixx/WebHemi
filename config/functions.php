@@ -322,14 +322,14 @@ function get_session_config()
  *
  * @return mixed
  */
-function get_logging_cofig()
+function get_logger_cofig()
 {
-    $globalLoggingConfig = require __DIR__.'/settings/global/logging.php';
-    $localLoggingConfig = (file_exists(__DIR__.'/settings/local/logging.php'))
-        ? require __DIR__.'/settings/local/logging.php'
+    $globalLoggerConfig = require __DIR__.'/settings/global/logger.php';
+    $localLoggerConfig = (file_exists(__DIR__.'/settings/local/logger.php'))
+        ? require __DIR__.'/settings/local/logger.php'
         : [];
 
-    $loggingConfig = merge_array_overwrite($globalLoggingConfig, $localLoggingConfig);
+    $loggerConfig = merge_array_overwrite($globalLoggerConfig, $localLoggerConfig);
 
-    return $loggingConfig['logging'];
+    return $loggerConfig['logger'];
 }

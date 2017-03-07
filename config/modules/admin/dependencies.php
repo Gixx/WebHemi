@@ -10,84 +10,79 @@
  * @link      http://www.gixx-web.com
  */
 
-use WebHemi\Adapter\Acl\AclAdapterInterface;
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Adapter\Auth\AuthCredentialInterface;
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Config\ConfigInterface;
-use WebHemi\Data\Storage\ApplicationStorage;
-use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
-use WebHemi\Data\Storage\User\UserMetaStorage;
-use WebHemi\Middleware\Action;
-use WebHemi\Middleware\Security\AclMiddleware;
-use WebHemi\Middleware\Security\AccessLogMiddleware;
+use WebHemi\Acl;
+use WebHemi\Auth;
+use WebHemi\Configuration;
+use WebHemi\Data;
+use WebHemi\Environment;
+use WebHemi\Middleware;
 
 return [
     'dependencies' => [
         'Admin' => [
-            Action\Auth\LoginAction::class => [
+            Middleware\Action\Auth\LoginAction::class => [
                 'arguments' => [
-                    AuthAdapterInterface::class,
-                    AuthCredentialInterface::class,
-                    EnvironmentManager::class,
+                    Auth\ServiceInterface::class,
+                    Auth\CredentialInterface::class,
+                    Environment\ServiceInterface::class,
                 ],
             ],
-            Action\Auth\LogoutAction::class => [
+            Middleware\Action\Auth\LogoutAction::class => [
                 'arguments' => [
-                    AuthAdapterInterface::class,
-                    EnvironmentManager::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
                 ]
             ],
-            AclMiddleware::class => [
+            Middleware\Security\AclMiddleware::class => [
                 'arguments' => [
-                    AuthAdapterInterface::class,
-                    AclAdapterInterface::class,
-                    EnvironmentManager::class,
-                    ApplicationStorage::class,
-                    ResourceStorage::class,
-                    UserMetaStorage::class
+                    Auth\ServiceInterface::class,
+                    Acl\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    Data\Storage\ApplicationStorage::class,
+                    Data\Storage\AccessManagement\ResourceStorage::class,
+                    Data\Storage\User\UserMetaStorage::class
                 ]
             ],
-            AccessLogMiddleware::class => [
+            Middleware\Security\AccessLogMiddleware::class => [
                 'arguments' => [
                     'AccessLog',
-                    AuthAdapterInterface::class,
-                    EnvironmentManager::class
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class
                 ]
             ],
-            Action\Admin\DashboardAction::class => [
+            Middleware\Action\Admin\DashboardAction::class => [
                 'arguments' => [
-                    AuthAdapterInterface::class,
-                    EnvironmentManager::class
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class
                 ],
             ],
-            Action\Admin\Applications\IndexAction::class => [
+            Middleware\Action\Admin\Applications\IndexAction::class => [
                 'arguments' => [
-                    ConfigInterface::class,
-                    AuthAdapterInterface::class,
-                    EnvironmentManager::class,
-                    ApplicationStorage::class
+                    Configuration\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    Data\Storage\ApplicationStorage::class
                 ],
             ],
-            Action\Admin\Applications\ViewAction::class => [
+            Middleware\Action\Admin\Applications\ViewAction::class => [
                 'arguments' => [
-                    ConfigInterface::class,
-                    AuthAdapterInterface::class,
-                    EnvironmentManager::class
+                    Configuration\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class
                 ],
             ],
-            Action\Admin\Applications\EditAction::class => [
+            Middleware\Action\Admin\Applications\EditAction::class => [
                 'arguments' => [
-                    ConfigInterface::class,
-                    AuthAdapterInterface::class,
-                    EnvironmentManager::class
+                    Configuration\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class
                 ],
             ],
-            Action\Admin\Applications\AddAction::class => [
+            Middleware\Action\Admin\Applications\AddAction::class => [
                 'arguments' => [
-                    ConfigInterface::class,
-                    AuthAdapterInterface::class,
-                    EnvironmentManager::class
+                    Configuration\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class
                 ],
             ]
         ]

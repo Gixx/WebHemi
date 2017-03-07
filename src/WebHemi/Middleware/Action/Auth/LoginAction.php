@@ -14,38 +14,38 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Action\Auth;
 
 use Exception;
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Adapter\Auth\AuthCredentialInterface;
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Auth\Result;
+use WebHemi\Auth\CredentialInterface;
+use WebHemi\Auth\Result\Result;
+use WebHemi\Auth\ServiceInterface as AuthInterface;
 use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Form\Html\HtmlForm;
-use WebHemi\Form\Html\HtmlFormElement;
-use WebHemi\Middleware\AbstractMiddlewareAction;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Form\Element\Html\HtmlElement;
+use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
+use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class LoginAction
+ * Class LoginAction.
  */
 class LoginAction extends AbstractMiddlewareAction
 {
-    /** @var AuthAdapterInterface */
+    /** @var AuthInterface */
     private $authAdapter;
-    /** @var AuthCredentialInterface */
+    /** @var CredentialInterface */
     private $authCredential;
-    /** @var EnvironmentManager */
+    /** @var EnvironmentInterface */
     private $environmentManager;
 
     /**
-     * MetaDataAction constructor.
+     * LoginAction constructor.
      *
-     * @param AuthAdapterInterface    $authAdapter
-     * @param AuthCredentialInterface $authCredential
-     * @param EnvironmentManager      $environmentManager
+     * @param AuthInterface        $authAdapter
+     * @param CredentialInterface  $authCredential
+     * @param EnvironmentInterface $environmentManager
      */
     public function __construct(
-        AuthAdapterInterface $authAdapter,
-        AuthCredentialInterface $authCredential,
-        EnvironmentManager $environmentManager
+        AuthInterface $authAdapter,
+        CredentialInterface $authCredential,
+        EnvironmentInterface $environmentManager
     ) {
         $this->authAdapter = $authAdapter;
         $this->authCredential = $authCredential;
@@ -75,8 +75,8 @@ class LoginAction extends AbstractMiddlewareAction
 
         if ($this->request->getMethod() == 'POST') {
             $postData = $this->request->getParsedBody() ;
-            $this->authCredential->addCredential('username', $postData['login']['identification'] ?? '')
-                ->addCredential('password', $postData['login']['password'] ?? '');
+            $this->authCredential->setCredential('username', $postData['login']['identification'] ?? '')
+                ->setCredential('password', $postData['login']['password'] ?? '');
 
             /** @var Result $result */
             $result = $this->authAdapter->authenticate($this->authCredential);
@@ -123,12 +123,12 @@ class LoginAction extends AbstractMiddlewareAction
     {
         $form = new HtmlForm('login', '', 'POST');
 
-        $userName = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_TEXT, 'identification', 'Identification');
-        $password = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_PASSWORD, 'password', 'Password');
+        $userName = new HtmlElement(HtmlElement::HTML_ELEMENT_INPUT_TEXT, 'identification', 'Identification');
+        $password = new HtmlElement(HtmlElement::HTML_ELEMENT_INPUT_PASSWORD, 'password', 'Password');
         if (!empty($customError)) {
-            $password->setError(AuthAdapterInterface::class, $customError);
+            $password->setError(AuthInterface::class, $customError);
         }
-        $submit = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Login');
+        $submit = new HtmlElement(HtmlElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Login');
 
         $form->addElement($userName)
             ->addElement($password)

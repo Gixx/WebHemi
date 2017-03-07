@@ -13,14 +13,14 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website;
 
-use WebHemi\Form\Html\HtmlMultipleFormElement;
-use WebHemi\Middleware\AbstractMiddlewareAction;
-use WebHemi\Form\Html\HtmlForm;
-use WebHemi\Form\Html\HtmlFormElement;
-use WebHemi\Form\Html\Html5FormElement;
+use WebHemi\Form\Element\Html\HtmlElement;
+use WebHemi\Form\Element\Html\Html5Element;
+use WebHemi\Form\Element\Html\HtmlMultipleElement;
+use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
+use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class IndexAction
+ * Class IndexAction.
  */
 class IndexAction extends AbstractMiddlewareAction
 {
@@ -62,15 +62,15 @@ class IndexAction extends AbstractMiddlewareAction
     private function getTestForm()
     {
         // Test refactore Form elements
-        $singleCheckbox = new HtmlFormElement(
-            HtmlFormElement::HTML_ELEMENT_INPUT_CHECKBOX,
+        $singleCheckbox = new HtmlElement(
+            HtmlElement::HTML_ELEMENT_INPUT_CHECKBOX,
             'accept',
             'Accept terms of usage.',
             [true]
         );
 
-        $multiCheckbox = new HtmlFormElement(
-            HtmlFormElement::HTML_ELEMENT_INPUT_CHECKBOX,
+        $multiCheckbox = new HtmlElement(
+            HtmlElement::HTML_ELEMENT_INPUT_CHECKBOX,
             'my_locations',
             'I have already been...',
             ['uk', 'eu'],
@@ -81,8 +81,8 @@ class IndexAction extends AbstractMiddlewareAction
             ]
         );
 
-        $radioGroup = new HtmlFormElement(
-            HtmlFormElement::HTML_ELEMENT_INPUT_RADIO,
+        $radioGroup = new HtmlElement(
+            HtmlElement::HTML_ELEMENT_INPUT_RADIO,
             'curent_lang',
             'Current language',
             ['hu-HU'],
@@ -93,8 +93,8 @@ class IndexAction extends AbstractMiddlewareAction
             ]
         );
 
-        $select = new HtmlMultipleFormElement(
-            HtmlMultipleFormElement::HTML_MULTIPLE_ELEMENT_SELECT,
+        $select = new HtmlMultipleElement(
+            HtmlMultipleElement::HTML_MULTIPLE_ELEMENT_SELECT,
             'something',
             null,
             ['australia', 'india'],
@@ -115,24 +115,24 @@ class IndexAction extends AbstractMiddlewareAction
         $form = new HtmlForm('test', '', 'POST');
         $form
             ->addElement(
-                new HtmlFormElement(
-                    HtmlFormElement::HTML_ELEMENT_INPUT_HIDDEN,
+                new HtmlElement(
+                    HtmlElement::HTML_ELEMENT_INPUT_HIDDEN,
                     'csrf',
                     null,
                     [md5('something')]
                 )
             )
             ->addElement(
-                new HtmlFormElement(
-                    HtmlFormElement::HTML_ELEMENT_INPUT_TEXT,
+                new HtmlElement(
+                    HtmlElement::HTML_ELEMENT_INPUT_TEXT,
                     'name',
                     'Login name',
                     ['Joker']
                 )
             )
             ->addElement(
-                new HtmlFormElement(
-                    HtmlFormElement::HTML_ELEMENT_INPUT_PASSWORD,
+                new HtmlElement(
+                    HtmlElement::HTML_ELEMENT_INPUT_PASSWORD,
                     'password',
                     'Password'
                 )
@@ -142,13 +142,13 @@ class IndexAction extends AbstractMiddlewareAction
             ->addElement($radioGroup)
             ->addElement($select)
             ->addElement(
-                new Html5FormElement(Html5FormElement::HTML5_ELEMENT_INPUT_NUMBER, 'num', 'Num', [4], [1, 16])
+                new Html5Element(Html5Element::HTML5_ELEMENT_INPUT_NUMBER, 'num', 'Num', [4], [1, 16])
             )
             ->addElement(
-                new Html5FormElement(Html5FormElement::HTML5_ELEMENT_INPUT_RANGE, 'range', 'Range', [4], [1, 6, 0.2])
+                new Html5Element(Html5Element::HTML5_ELEMENT_INPUT_RANGE, 'range', 'Range', [4], [1, 6, 0.2])
             )
             ->addElement(
-                new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Submit')
+                new HtmlElement(HtmlElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Submit')
             );
 
         return $form;

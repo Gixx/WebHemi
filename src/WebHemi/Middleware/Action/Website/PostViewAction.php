@@ -13,8 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website;
 
-use WebHemi\Adapter\Http\ServerRequestInterface;
-use WebHemi\Middleware\AbstractMiddlewareAction;
+use WebHemi\Http\ServerRequestInterface;
+use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
  * Class PostViewAction
