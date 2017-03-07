@@ -14,14 +14,14 @@ declare(strict_types = 1);
 namespace WebHemi\Data\Storage\User;
 
 use WebHemi\DateTime;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\User\UserMetaEntity;
-use WebHemi\Data\Storage\AbstractDataStorage;
+use WebHemi\Data\Storage\AbstractStorage;
 
 /**
  * Class UserMetaStorage.
  */
-class UserMetaStorage extends AbstractDataStorage
+class UserMetaStorage extends AbstractStorage
 {
     /** @var string */
     protected $dataGroup = 'webhemi_user_meta';
@@ -41,14 +41,14 @@ class UserMetaStorage extends AbstractDataStorage
     /**
      * Populates an entity with storage data.
      *
-     * @param DataEntityInterface $entity
-     * @param array               $data
+     * @param EntityInterface $dataEntity
+     * @param array           $data
      * @return void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
+    protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var UserMetaEntity $entity */
-        $entity->setUserMetaId((int) $data[$this->idKey])
+        /* @var UserMetaEntity $dataEntity */
+        $dataEntity->setUserMetaId((int) $data[$this->idKey])
             ->setUserId((int) $data[$this->userId])
             ->setMetaKey($data[$this->metaKey])
             ->setMetaData($data[$this->metaData])
@@ -59,20 +59,20 @@ class UserMetaStorage extends AbstractDataStorage
     /**
      * Get data from an entity.
      *
-     * @param DataEntityInterface $entity
+     * @param EntityInterface $dataEntity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity) : array
+    protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var UserMetaEntity $entity */
-        $dateCreated = $entity->getDateCreated();
-        $dateModified = $entity->getDateModified();
+        /** @var UserMetaEntity $dataEntity */
+        $dateCreated = $dataEntity->getDateCreated();
+        $dateModified = $dataEntity->getDateModified();
 
         return [
-            $this->idKey => $entity->getKeyData(),
-            $this->userId => $entity->getUserId(),
-            $this->metaKey => $entity->getMetaKey(),
-            $this->metaData => $entity->getMetaData(),
+            $this->idKey => $dataEntity->getKeyData(),
+            $this->userId => $dataEntity->getUserId(),
+            $this->metaKey => $dataEntity->getMetaKey(),
+            $this->metaData => $dataEntity->getMetaData(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];
@@ -86,10 +86,10 @@ class UserMetaStorage extends AbstractDataStorage
      */
     public function getUserMetaById($identifier) : ? UserMetaEntity
     {
-        /** @var null|UserMetaEntity $entity */
-        $entity = $this->getDataEntity([$this->idKey => $identifier]);
+        /** @var null|UserMetaEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
-        return $entity;
+        return $dataEntity;
     }
 
     /**

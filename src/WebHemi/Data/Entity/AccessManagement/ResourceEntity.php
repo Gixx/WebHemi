@@ -13,13 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Entity\AccessManagement;
 
+use WebHemi\Data\EntityInterface;
 use WebHemi\DateTime;
-use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class ResourceEntity.
  */
-class ResourceEntity implements DataEntityInterface
+class ResourceEntity implements EntityInterface
 {
     /** @var int */
     private $resourceId;

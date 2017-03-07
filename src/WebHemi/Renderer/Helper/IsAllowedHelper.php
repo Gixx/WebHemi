@@ -13,29 +13,29 @@ declare(strict_types = 1);
 
 namespace WebHemi\Renderer\Helper;
 
-use WebHemi\Adapter\Acl\AclAdapterInterface;
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Adapter\Renderer\RendererHelperInterface;
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Config\ConfigInterface;
+use WebHemi\Acl\ServiceInterface as AclInterface;
+use WebHemi\Auth\ServiceInterface as AuthInterface;
+use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
 use WebHemi\Data\Storage\ApplicationStorage;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Renderer\HelperInterface;
 
 /**
  * Class IsAllowedHelper
  */
-class IsAllowedHelper implements RendererHelperInterface
+class IsAllowedHelper implements HelperInterface
 {
-    /** @var ConfigInterface */
+    /** @var ConfigurationInterface */
     private $configuration;
-    /** @var EnvironmentManager */
+    /** @var EnvironmentInterface */
     private $environmentManager;
-    /** @var AclAdapterInterface */
+    /** @var AclInterface */
     private $aclAdapter;
-    /** @var AuthAdapterInterface */
+    /** @var AuthInterface */
     private $authAdapter;
     /** @var ResourceStorage */
     private $resourceStorage;
@@ -78,18 +78,18 @@ class IsAllowedHelper implements RendererHelperInterface
     /**
      * IsAllowedHelper constructor.
      *
-     * @param ConfigInterface $configuration
-     * @param EnvironmentManager $environmentManager
-     * @param AclAdapterInterface $aclAdapter
-     * @param AuthAdapterInterface $authAdapter
-     * @param ResourceStorage $resourceStorage
-     * @param ApplicationStorage $applicationStorage
+     * @param ConfigurationInterface $configuration
+     * @param EnvironmentInterface   $environmentManager
+     * @param AclInterface           $aclAdapter
+     * @param AuthInterface          $authAdapter
+     * @param ResourceStorage        $resourceStorage
+     * @param ApplicationStorage     $applicationStorage
      */
     public function __construct(
-        ConfigInterface $configuration,
-        EnvironmentManager $environmentManager,
-        AclAdapterInterface $aclAdapter,
-        AuthAdapterInterface $authAdapter,
+        ConfigurationInterface $configuration,
+        EnvironmentInterface $environmentManager,
+        AclInterface $aclAdapter,
+        AuthInterface $authAdapter,
         ResourceStorage $resourceStorage,
         ApplicationStorage $applicationStorage
     ) {

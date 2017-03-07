@@ -18,7 +18,7 @@ return [
     'applications' => get_application_config(),
     'auth' => get_auth_config(),
     'dependencies' => get_dependencies_config(),
-    'logging' => get_logging_cofig(),
+    'logger' => get_logger_cofig(),
     'middleware_pipeline' => get_pipeline_config(),
     'renderer' => get_renderer_config(),
     'router' => get_routing_config(),

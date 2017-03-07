@@ -14,14 +14,14 @@ declare(strict_types = 1);
 namespace WebHemi\Data\Storage\AccessManagement;
 
 use WebHemi\DateTime;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
-use WebHemi\Data\Storage\AbstractDataStorage;
+use WebHemi\Data\Storage\AbstractStorage;
 
 /**
  * Class PolicyStorage.
  */
-class PolicyStorage extends AbstractDataStorage
+class PolicyStorage extends AbstractStorage
 {
     /** @var string */
     protected $dataGroup = 'webhemi_am_policy';
@@ -49,14 +49,14 @@ class PolicyStorage extends AbstractDataStorage
     /**
      * Populates an entity with storage data.
      *
-     * @param DataEntityInterface $entity
-     * @param array               $data
+     * @param EntityInterface $dataEntity
+     * @param array           $data
      * @param void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
+    protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var PolicyEntity $entity */
-        $entity->setPolicyId((int) $data[$this->idKey])
+        /* @var PolicyEntity $dataEntity */
+        $dataEntity->setPolicyId((int) $data[$this->idKey])
             ->setResourceId(!empty($data[$this->resourceId]) ? (int) $data[$this->resourceId] : null)
             ->setApplicationId(!empty($data[$this->applicationId]) ? (int) $data[$this->applicationId] : null)
             ->setName($data[$this->name])
@@ -71,24 +71,24 @@ class PolicyStorage extends AbstractDataStorage
     /**
      * Get data from an entity.
      *
-     * @param DataEntityInterface $entity
+     * @param EntityInterface $dataEntity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity) : array
+    protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var PolicyEntity $entity */
-        $dateCreated = $entity->getDateCreated();
-        $dateModified = $entity->getDateModified();
+        /** @var PolicyEntity $dataEntity */
+        $dateCreated = $dataEntity->getDateCreated();
+        $dateModified = $dataEntity->getDateModified();
 
         return [
-            $this->idKey => $entity->getKeyData(),
-            $this->resourceId => $entity->getResourceId(),
-            $this->applicationId => $entity->getApplicationId(),
-            $this->name => $entity->getName(),
-            $this->title => $entity->getTitle(),
-            $this->description => $entity->getDescription(),
-            $this->isReadOnly => (int) $entity->getReadOnly(),
-            $this->isAllowed => (int) $entity->getAllowed(),
+            $this->idKey => $dataEntity->getKeyData(),
+            $this->resourceId => $dataEntity->getResourceId(),
+            $this->applicationId => $dataEntity->getApplicationId(),
+            $this->name => $dataEntity->getName(),
+            $this->title => $dataEntity->getTitle(),
+            $this->description => $dataEntity->getDescription(),
+            $this->isReadOnly => (int) $dataEntity->getReadOnly(),
+            $this->isAllowed => (int) $dataEntity->getAllowed(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];
@@ -102,10 +102,10 @@ class PolicyStorage extends AbstractDataStorage
      */
     public function getPolicyById($identifier) : ? PolicyEntity
     {
-        /** @var null|PolicyEntity $entity */
-        $entity = $this->getDataEntity([$this->idKey => $identifier]);
+        /** @var null|PolicyEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
-        return $entity;
+        return $dataEntity;
     }
 
     /**
@@ -116,10 +116,10 @@ class PolicyStorage extends AbstractDataStorage
      */
     public function getPolicyByName($name) : ? PolicyEntity
     {
-        /** @var null|PolicyEntity $entity */
-        $entity = $this->getDataEntity([$this->name => $name]);
+        /** @var null|PolicyEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->name => $name]);
 
-        return $entity;
+        return $dataEntity;
     }
 
     /**

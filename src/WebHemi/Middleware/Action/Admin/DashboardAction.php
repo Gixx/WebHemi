@@ -13,29 +13,29 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin;
 
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Middleware\AbstractMiddlewareAction;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Auth\ServiceInterface as AuthInterface;
+use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class DashboardAction
+ * Class DashboardAction.
  */
 class DashboardAction extends AbstractMiddlewareAction
 {
-    /** @var AuthAdapterInterface */
+    /** @var AuthInterface */
     private $authAdapter;
-    /** @var EnvironmentManager */
+    /** @var EnvironmentInterface */
     private $environmentManager;
 
     /**
      * DashboardAction constructor.
      *
-     * @param AuthAdapterInterface $authAdapter
-     * @param EnvironmentManager $environmentManager
+     * @param AuthInterface        $authAdapter
+     * @param EnvironmentInterface $environmentManager
      */
     public function __construct(
-        AuthAdapterInterface $authAdapter,
-        EnvironmentManager $environmentManager
+        AuthInterface $authAdapter,
+        EnvironmentInterface $environmentManager
     ) {
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;

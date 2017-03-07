@@ -14,18 +14,13 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Security;
 
 use Exception;
-use WebHemi\Adapter\Acl\AclAdapterInterface;
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Adapter\Http\ResponseInterface;
-use WebHemi\Adapter\Http\ServerRequestInterface;
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
-use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Entity\User\UserMetaEntity;
-use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
-use WebHemi\Data\Storage\ApplicationStorage;
-use WebHemi\Data\Storage\User\UserMetaStorage;
+use WebHemi\Acl\ServiceInterface as AclInterface;
+use WebHemi\Auth\ServiceInterface as AuthInterface;
+use WebHemi\Http\ResponseInterface;
+use WebHemi\Http\ServerRequestInterface;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Data\Entity;
+use WebHemi\Data\Storage;
 use WebHemi\Middleware\Action;
 use WebHemi\Middleware\MiddlewareInterface;
 
@@ -34,17 +29,17 @@ use WebHemi\Middleware\MiddlewareInterface;
  */
 class AclMiddleware implements MiddlewareInterface
 {
-    /** @var AuthAdapterInterface */
+    /** @var AuthInterface */
     private $authAdapter;
-    /** @var AclAdapterInterface */
+    /** @var AclInterface */
     private $aclAdapter;
-    /** @var EnvironmentManager */
+    /** @var EnvironmentInterface */
     private $environmentManager;
-    /** @var ApplicationStorage */
+    /** @var Storage\ApplicationStorage */
     private $applicationStorage;
-    /** @var ResourceStorage */
+    /** @var Storage\AccessManagement\ResourceStorage */
     private $resourceStorage;
-    /** @var UserMetaStorage */
+    /** @var Storage\User\UserMetaStorage */
     private $userMetaStorage;
     /** @var array */
     private $middlewareWhiteList = [
@@ -55,20 +50,20 @@ class AclMiddleware implements MiddlewareInterface
     /**
      * AclMiddleware constructor.
      *
-     * @param AuthAdapterInterface     $authAdapter
-     * @param AclAdapterInterface      $aclAdapter
-     * @param EnvironmentManager       $environmentManager
-     * @param ApplicationStorage       $applicationStorage
-     * @param ResourceStorage          $resourceStorage
-     * @param UserMetaStorage          $userMetaStorage
+     * @param AuthInterface                            $authAdapter
+     * @param AclInterface                             $aclAdapter
+     * @param EnvironmentInterface                     $environmentManager
+     * @param Storage\ApplicationStorage               $applicationStorage
+     * @param Storage\AccessManagement\ResourceStorage $resourceStorage
+     * @param Storage\User\UserMetaStorage             $userMetaStorage
      */
     public function __construct(
-        AuthAdapterInterface $authAdapter,
-        AclAdapterInterface $aclAdapter,
-        EnvironmentManager $environmentManager,
-        ApplicationStorage $applicationStorage,
-        ResourceStorage $resourceStorage,
-        UserMetaStorage $userMetaStorage
+        AuthInterface $authAdapter,
+        AclInterface $aclAdapter,
+        EnvironmentInterface $environmentManager,
+        Storage\ApplicationStorage $applicationStorage,
+        Storage\AccessManagement\ResourceStorage $resourceStorage,
+        Storage\User\UserMetaStorage $userMetaStorage
     ) {
         $this->authAdapter = $authAdapter;
         $this->aclAdapter = $aclAdapter;
@@ -96,13 +91,14 @@ class AclMiddleware implements MiddlewareInterface
             return;
         }
 
+        /** @var Entity\User\UserEntity|null $identity */
         $identity = $this->authAdapter->getIdentity();
 
-        if ($identity instanceof UserEntity) {
+        if ($identity instanceof Entity\User\UserEntity) {
             $selectedApplication = $this->environmentManager->getSelectedApplication();
-            /** @var ApplicationEntity $applicationEntity */
+            /** @var Entity\ApplicationEntity $applicationEntity */
             $applicationEntity = $this->applicationStorage->getApplicationByName($selectedApplication);
-            /** @var ResourceEntity $resourceEntity */
+            /** @var Entity\AccessManagement\ResourceEntity $resourceEntity */
             $resourceEntity = $this->resourceStorage->getResourceByName($actionMiddleware);
             // Check the user against the application and resource
             $hasAccess = $this->aclAdapter->isAllowed($identity, $resourceEntity, $applicationEntity);
@@ -124,19 +120,19 @@ class AclMiddleware implements MiddlewareInterface
      * Set identified user data for the templates
      *
      * @param ServerRequestInterface $request
-     * @param UserEntity             $identity
+     * @param Entity\User\UserEntity $identity
      * @return ServerRequestInterface
      */
     private function setIdentityForTemplate(
         ServerRequestInterface $request,
-        UserEntity $identity
+        Entity\User\UserEntity $identity
     ) : ServerRequestInterface {
         // Set authenticated user for the templates
         $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, []);
         $templateData['authenticated_user'] = $identity;
         $templateData['authenticated_user_meta'] = [];
         $userMeta = $this->userMetaStorage->getUserMetaForUserId($identity->getUserId());
-        /** @var UserMetaEntity $metaEntity */
+        /** @var Entity\User\UserMetaEntity $metaEntity */
         foreach ($userMeta as $metaEntity) {
             $templateData['authenticated_user_meta'][$metaEntity->getMetaKey()] = $metaEntity->getMetaData();
         }

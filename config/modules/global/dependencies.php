@@ -10,231 +10,240 @@
  * @link      http://www.gixx-web.com
  */
 
-use WebHemi\Acl\Acl as AclAdapter;
-use WebHemi\Adapter\Acl\AclAdapterInterface;
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Adapter\Auth\AuthCredentialInterface;
-use WebHemi\Adapter\Auth\AuthResultInterface;
-use WebHemi\Adapter\Auth\AuthStorageInterface;
-use WebHemi\Adapter\Data\DataAdapterInterface;
-use WebHemi\Adapter\Data\DataDriverInterface;
-use WebHemi\Adapter\Data\PDO\MySQLAdapter;
-use WebHemi\Adapter\Log\Klogger\KloggerAdapter;
-use WebHemi\Adapter\Renderer\RendererAdapterInterface;
-use WebHemi\Adapter\Renderer\Twig\TwigRendererAdapter;
-use WebHemi\Adapter\Router\RouterAdapterInterface;
-use WebHemi\Adapter\Router\FastRoute\FastRouteAdapter;
-use WebHemi\Adapter\Http\HttpAdapterInterface;
-use WebHemi\Adapter\Http\GuzzleHttp\GuzzleHttpAdapter;
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Application\SessionManager;
-use WebHemi\Auth\Auth as AuthAdapter;
-use WebHemi\Auth\Result as AuthResult;
-use WebHemi\Auth\Credential\NameAndPasswordCredential as AuthCredential;
-use WebHemi\Auth\Storage\Session as AuthStorage;
-use WebHemi\Config\ConfigInterface;
-use WebHemi\Data\Entity;
-use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
-use WebHemi\Data\Coupler\UserToGroupCoupler;
-use WebHemi\Data\Coupler\UserToPolicyCoupler;
-use WebHemi\Data\Storage;
-use WebHemi\Middleware\FinalMiddleware;
-use WebHemi\Middleware\DispatcherMiddleware;
-use WebHemi\Middleware\RoutingMiddleware;
-use WebHemi\Renderer\Filter;
-use WebHemi\Renderer\Helper;
-use WebHemi\Router\Result as RouteResult;
+use WebHemi\Acl;
+use WebHemi\Application;
+use WebHemi\Auth;
+use WebHemi\Configuration;
+use WebHemi\Data;
+use WebHemi\DependencyInjection;
+use WebHemi\Environment;
+use WebHemi\Form;
+use WebHemi\Http;
+use WebHemi\Logger;
+use WebHemi\Middleware;
+use WebHemi\MiddlewarePipeline;
+use WebHemi\Renderer;
+use WebHemi\Router;
+use WebHemi\Session;
+use WebHemi\Validator;
 
 return [
     'dependencies' => [
         'Global' => [
-            DataDriverInterface::class => [],
-            // Adapter
-            AuthAdapterInterface::class => [
-                'class'     => AuthAdapter::class,
+            // Core objects
+            Application\ServiceInterface::class => [
+                'class' => Application\ServiceAdapter\Base\ServiceAdapter::class,
+            ],
+            Configuration\ServiceInterface::class => [
+                'class' => Configuration\ServiceAdapter\Base\ServiceAdapter::class,
+            ],
+            DependencyInjection\ServiceInterface::class => [
+                'class' => DependencyInjection\ServiceAdapter\Symfony\ServiceAdapter::class,
+            ],
+            Environment\ServiceInterface::class => [
+                'class' => Environment\ServiceAdapter\Base\ServiceAdapter::class,
+            ],
+            MiddlewarePipeline\ServiceInterface::class => [
+                'class' => MiddlewarePipeline\ServiceAdapter\Base\ServiceAdapter::class,
+            ],
+            Session\ServiceInterface::class => [
+                'class' => Session\ServiceAdapter\Base\ServiceAdapter::class,
+            ],
+            // Services
+            Acl\ServiceInterface::class => [
+                'class'     => Acl\ServiceAdapter\Base\ServiceAdapter::class,
                 'arguments' => [
-                    ConfigInterface::class,
-                    AuthResultInterface::class,
-                    AuthStorageInterface::class,
-                    Storage\User\UserStorage::class,
+                    Data\Coupler\UserToPolicyCoupler::class,
+                    Data\Coupler\UserToGroupCoupler::class,
+                    Data\Coupler\UserGroupToPolicyCoupler::class,
                 ],
                 'shared'    => true,
             ],
-            AuthCredentialInterface::class => [
-                'class'     => AuthCredential::class,
-                'shared'    => true,
+            Auth\CredentialInterface::class => [
+                'class'     => Auth\Credential\NameAndPasswordCredential::class,
+                'shared'    => false,
             ],
-            AuthResultInterface::class => [
-                'class'     => AuthResult::class,
-                'shared'    => true,
+            Auth\ResultInterface::class => [
+                'class'     => Auth\Result\Result::class,
+                'shared'    => false,
             ],
-            AuthStorageInterface::class => [
-                'class'     => AuthStorage::class,
+            Auth\ServiceInterface::class => [
+                'class'     => Auth\ServiceAdapter\Base\ServiceAdapter::class,
                 'arguments' => [
-                    SessionManager::class
+                    Configuration\ServiceInterface::class,
+                    Auth\ResultInterface::class,
+                    Auth\StorageInterface::class,
+                    Data\Storage\User\UserStorage::class,
                 ],
                 'shared'    => true,
             ],
-            AclAdapterInterface::class => [
-                'class'     => AclAdapter::class,
+            Auth\StorageInterface::class => [
+                'class'     => Auth\Storage\Session::class,
                 'arguments' => [
-                    UserToPolicyCoupler::class,
-                    UserToGroupCoupler::class,
-                    UserGroupToPolicyCoupler::class,
+                    Session\ServiceInterface::class
                 ],
                 'shared'    => true,
             ],
-            HttpAdapterInterface::class => [
-                'class'     => GuzzleHttpAdapter::class,
+            // Data Connector and Data Driver settings can be overwritten by the `config/settings/local/db.php` file.
+            Data\ConnectorInterface::class => [
+                'class'     => Data\Connector\PDO\SQLite\ConnectorAdapter::class,
                 'arguments' => [
-                    EnvironmentManager::class,
+                    Data\DriverInterface::class
                 ],
                 'shared'    => true,
             ],
-            RouterAdapterInterface::class => [
-                'class'     => FastRouteAdapter::class,
+            Data\DriverInterface::class => [
+                'class' => Data\Connector\PDO\SQLite\DriverAdapter::class,
                 'arguments' => [
-                    ConfigInterface::class,
-                    EnvironmentManager::class,
-                    RouteResult::class,
+                    'dsn'      => 'sqlite:'.realpath(__DIR__ . '/../../../build/webhemi_schema.sqlite3'),
                 ],
                 'shared'    => true,
             ],
-            RendererAdapterInterface::class => [
-                'class'     => TwigRendererAdapter::class,
+            Http\ServiceInterface::class => [
+                'class'     => Http\ServiceAdapter\GuzzleHttp\ServiceAdapter::class,
                 'arguments' => [
-                    ConfigInterface::class,
-                    EnvironmentManager::class
+                    Environment\ServiceInterface::class,
                 ],
                 'shared'    => true,
             ],
-            DataAdapterInterface::class => [
-                'class'     => MySQLAdapter::class,
+            Renderer\ServiceInterface::class => [
+                'class'     => Renderer\ServiceAdapter\Twig\ServiceAdapter::class,
                 'arguments' => [
-                    DataDriverInterface::class
+                    Configuration\ServiceInterface::class,
+                    Environment\ServiceInterface::class
                 ],
                 'shared'    => true,
             ],
+            Router\ServiceInterface::class => [
+                'class'     => Router\ServiceAdapter\FastRoute\ServiceAdapter::class,
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    Router\Result\Result::class,
+                ],
+                'shared'    => true,
+            ],
+            // Logger
             'AccessLog' => [
-                'class'     => KloggerAdapter::class,
+                'class'     => Logger\ServiceAdapter\Klogger\ServiceAdapter::class,
                 'arguments' => [
-                    ConfigInterface::class,
+                    Configuration\ServiceInterface::class,
                     '!:access'
                 ]
             ],
             'EventLog' => [
-                'class'     => KloggerAdapter::class,
+                'class'     => Logger\ServiceAdapter\Klogger\ServiceAdapter::class,
                 'arguments' => [
-                    ConfigInterface::class,
+                    Configuration\ServiceInterface::class,
                     '!:event'
                 ]
             ],
             // Middleware
-            RoutingMiddleware::class => [
+            Middleware\Common\RoutingMiddleware::class => [
                 'arguments' => [
-                    RouterAdapterInterface::class,
+                    Router\ServiceInterface::class,
                 ]
             ],
-            DispatcherMiddleware::class => [
+            Middleware\Common\DispatcherMiddleware::class => [
                 'arguments' => [
-                    RendererAdapterInterface::class,
+                    Renderer\ServiceInterface::class,
                 ]
             ],
-            FinalMiddleware::class => [
+            Middleware\Common\FinalMiddleware::class => [
                 'arguments' => [
-                    RendererAdapterInterface::class,
-                    AuthAdapterInterface::class,
-                    EnvironmentManager::class,
+                    Renderer\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
                     'AccessLog'
                 ]
             ],
             // DataStorage
-            Storage\ApplicationStorage::class => [
+            Data\Storage\ApplicationStorage::class => [
                 'arguments' => [
-                    DataAdapterInterface::class,
-                    Entity\ApplicationEntity::class
+                    Data\ConnectorInterface::class,
+                    Data\Entity\ApplicationEntity::class
                 ],
                 'shared'    => true,
             ],
-            Storage\User\UserStorage::class => [
+            Data\Storage\User\UserStorage::class => [
                 'arguments' => [
-                    DataAdapterInterface::class,
-                    Entity\User\UserEntity::class
+                    Data\ConnectorInterface::class,
+                    Data\Entity\User\UserEntity::class
                 ],
                 'shared'    => true,
             ],
-            Storage\User\UserMetaStorage::class => [
+            Data\Storage\User\UserMetaStorage::class => [
                 'arguments' => [
-                    DataAdapterInterface::class,
-                    Entity\User\UserMetaEntity::class
+                    Data\ConnectorInterface::class,
+                    Data\Entity\User\UserMetaEntity::class
                 ],
                 'shared'    => true,
             ],
-            Storage\User\UserGroupStorage::class => [
+            Data\Storage\User\UserGroupStorage::class => [
                 'arguments' => [
-                    DataAdapterInterface::class,
-                    Entity\User\UserGroupEntity::class
+                    Data\ConnectorInterface::class,
+                    Data\Entity\User\UserGroupEntity::class
                 ],
                 'shared'    => true,
             ],
-            Storage\AccessManagement\PolicyStorage::class => [
+            Data\Storage\AccessManagement\PolicyStorage::class => [
                 'arguments' => [
-                    DataAdapterInterface::class,
-                    Entity\AccessManagement\PolicyEntity::class
+                    Data\ConnectorInterface::class,
+                    Data\Entity\AccessManagement\PolicyEntity::class
                 ],
                 'shared'    => true,
             ],
-            Storage\AccessManagement\ResourceStorage::class => [
+            Data\Storage\AccessManagement\ResourceStorage::class => [
                 'arguments' => [
-                    DataAdapterInterface::class,
-                    Entity\AccessManagement\ResourceEntity::class
+                    Data\ConnectorInterface::class,
+                    Data\Entity\AccessManagement\ResourceEntity::class
                 ],
                 'shared'    => true,
             ],
             // Data Couplers
-            UserToPolicyCoupler::class => [
+            Data\Coupler\UserToPolicyCoupler::class => [
                 'arguments' => [
-                    DataAdapterInterface::class,
-                    Entity\User\UserEntity::class,
-                    Entity\AccessManagement\PolicyEntity::class
+                    Data\ConnectorInterface::class,
+                    Data\Entity\User\UserEntity::class,
+                    Data\Entity\AccessManagement\PolicyEntity::class
                 ],
                 'shared'    => true,
             ],
-            UserToGroupCoupler::class => [
+            Data\Coupler\UserToGroupCoupler::class => [
                 'arguments' => [
-                    DataAdapterInterface::class,
-                    Entity\User\UserEntity::class,
-                    Entity\User\UserGroupEntity::class
+                    Data\ConnectorInterface::class,
+                    Data\Entity\User\UserEntity::class,
+                    Data\Entity\User\UserGroupEntity::class
                 ],
                 'shared'    => true,
             ],
-            UserGroupToPolicyCoupler::class => [
+            Data\Coupler\UserGroupToPolicyCoupler::class => [
                 'arguments' => [
-                    DataAdapterInterface::class,
-                    Entity\AccessManagement\PolicyEntity::class,
-                    Entity\User\UserGroupEntity::class
+                    Data\ConnectorInterface::class,
+                    Data\Entity\AccessManagement\PolicyEntity::class,
+                    Data\Entity\User\UserGroupEntity::class
                 ],
                 'shared'    => true,
             ],
             // Renderer Helper
-            Helper\DefinedHelper::class => [
+            Renderer\Helper\DefinedHelper::class => [
                 'arguments' => [
-                    ConfigInterface::class,
-                    EnvironmentManager::class
+                    Configuration\ServiceInterface::class,
+                    Environment\ServiceInterface::class
                 ],
                 'shared'    => true,
             ],
-            Helper\GetStatHelper::class => [
+            Renderer\Helper\GetStatHelper::class => [
                 'shared'    => true,
             ],
-            Helper\IsAllowedHelper::class => [
+            Renderer\Helper\IsAllowedHelper::class => [
                 'arguments' => [
-                    ConfigInterface::class,
-                    EnvironmentManager::class,
-                    AclAdapterInterface::class,
-                    AuthAdapterInterface::class,
-                    Storage\AccessManagement\ResourceStorage::class,
-                    Storage\ApplicationStorage::class
+                    Configuration\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    Acl\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Data\Storage\AccessManagement\ResourceStorage::class,
+                    Data\Storage\ApplicationStorage::class
                 ],
                 'shared'    => true,
             ]
