@@ -1,6 +1,18 @@
 Change log
 ==========
 
+Version 4.0.0-4.0
+-----------------
+* I had an idea, so I refactored the whole WebHemi namespace:
+  * moved the adapters to their module's namespace,
+  * add `ServiceInterface` to almost every module,
+  * rename the adapters to `ServiceAdapter` and use namespace aliases,
+  * own solution for a module is moved under `<Module>\ServiceAdapter\Base` namespace.
+* Made the `index.php` to be independent from the implementation: use `ServiceInterface` declarations for the core objects.
+* Refactor the unit tests as well, but in the easiest possible way: change the `use` statements and used aliases.
+* Update the README diagrams for a better and more precize overview.
+* Minor fixes regarding to the refactor process.
+
 Version 4.0.0-3.3
 -----------------
 * Refactor UnitTests to PHPUnit 6.0.
