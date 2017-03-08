@@ -14,15 +14,15 @@ namespace WebHemiTest\Data\Coupler;
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
-use WebHemi\Adapter\Data\PDO\SQLiteAdapter;
-use WebHemi\Adapter\Data\PDO\SQLiteDriver;
-use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Data\Connector\PDO\SQLite\ConnectorAdapter as SQLiteAdapter;
+use WebHemi\Data\Connector\PDO\SQLite\DriverAdapter as SQLiteDriver;
+use WebHemi\Data\ConnectorInterface as DataAdapterInterface;
 use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemiTest\Fixtures\EmptyCoupler;
-use WebHemiTest\Fixtures\EmptyEntity;
-use WebHemiTest\Fixtures\EmptyEntity2;
-use WebHemiTest\InvokePrivateMethodTrait;
-use WebHemiTest\AssertTrait;
+use WebHemiTest\TestService\EmptyCoupler;
+use WebHemiTest\TestService\EmptyEntity;
+use WebHemiTest\TestService\EmptyEntity2;
+use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
@@ -69,7 +69,7 @@ class GeneralCouplerTest extends TestCase
     /**
      * Test constructor.
      *
-     * @covers \WebHemi\Data\Coupler\AbstractDataCoupler
+     * @covers \WebHemi\Data\Coupler\AbstractCoupler
      */
     public function testConstructor()
     {
@@ -93,7 +93,7 @@ class GeneralCouplerTest extends TestCase
     /**
      * Test coupler methods.
      *
-     * @covers \WebHemi\Data\Coupler\AbstractDataCoupler
+     * @covers \WebHemi\Data\Coupler\AbstractCoupler
      */
     public function testCouplerFunctions()
     {
@@ -102,7 +102,7 @@ class GeneralCouplerTest extends TestCase
 
         $coupler = new EmptyCoupler(self::$adapter, $entityA, $entityB);
         $this->assertInstanceOf(EmptyCoupler::class, $coupler);
-        $this->assertInstanceOf(DataAdapterInterface::class, $coupler->getDataAdapter());
+        $this->assertInstanceOf(DataAdapterInterface::class, $coupler->getConnector());
 
         $newEntity = $this->invokePrivateMethod($coupler, 'getNewEntityInstance', [EmptyEntity::class]);
         $this->assertInstanceOf(EmptyEntity::class, $newEntity);
@@ -116,7 +116,7 @@ class GeneralCouplerTest extends TestCase
     /**
      * Tests getEntityDependencies() method
      *
-     * @covers \WebHemi\Data\Coupler\AbstractDataCoupler
+     * @covers \WebHemi\Data\Coupler\AbstractCoupler
      */
     public function testDependencyResolver()
     {
@@ -145,7 +145,7 @@ class GeneralCouplerTest extends TestCase
      */
     public function testDependencySetter()
     {
-        $this->runFixtureQueries(realpath(__DIR__.'/../../Fixtures/sql/general_coupler_test.sql'));
+        $this->runFixtureQueries(realpath(__DIR__.'/../../TestData/sql/general_coupler_test.sql'));
 
         $entityA = new EmptyEntity('empty_id_1');
         $entityA->setKeyData(1);
@@ -189,7 +189,7 @@ class GeneralCouplerTest extends TestCase
             $this->assertSame(1004, $e->getCode());
         }
 
-        $this->runFixtureQueries(realpath(__DIR__.'/../../Fixtures/sql/general_coupler_test.rollback.sql'));
+        $this->runFixtureQueries(realpath(__DIR__.'/../../TestData/sql/general_coupler_test.rollback.sql'));
     }
 
     /**

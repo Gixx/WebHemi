@@ -9,17 +9,17 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTest\Renderer;
+namespace WebHemiTestX\Renderer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use WebHemi\Acl\Acl;
-use WebHemi\Adapter\Acl\AclAdapterInterface;
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Auth\Auth;
-use WebHemi\Config\Config;
-use WebHemi\Config\ConfigInterface;
+use WebHemi\Acl\ServiceAdapter\Base\ServiceAdapter as Acl;
+use WebHemi\Acl\ServiceInterface as AclAdapterInterface;
+use WebHemi\Auth\ServiceAdapter\Base\ServiceAdapter as Auth;
+use WebHemi\Auth\ServiceInterface as AuthAdapterInterface;
+use WebHemi\Environment\ServiceAdapter\Base\ServiceAdapter as EnvironmentManager;
+use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
+use WebHemi\Configuration\ServiceInterface as ConfigInterface;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\User\UserEntity;
@@ -28,7 +28,7 @@ use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Renderer\Helper\IsAllowedHelper;
 
 /**
- * Class IsAllowedHelperTest
+ * Class IsAllowedHelperTest.
  */
 class IsAllowedHelperTest extends TestCase
 {
@@ -47,7 +47,6 @@ class IsAllowedHelperTest extends TestCase
     private $config;
     /** @var UserEntity */
     private $userEntity;
-
 
     /**
      * Sets up the fixture, for example, open a network connection.
