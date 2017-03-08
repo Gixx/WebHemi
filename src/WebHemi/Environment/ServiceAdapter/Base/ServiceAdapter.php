@@ -14,8 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Environment\ServiceAdapter\Base;
 
 use InvalidArgumentException;
-use WebHemi\Environment\ServiceInterface;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\Environment\ServiceInterface;
 
 /**
  * Class ServiceAdapter.
@@ -68,7 +68,7 @@ class ServiceAdapter implements ServiceInterface
         array $filesData
     ) {
         $this->configuration = $configuration->getConfig('applications');
-        $this->documentRoot = realpath(__DIR__ . '/../../../../../');
+        $this->documentRoot = realpath(__DIR__.'/../../../../../');
 
         if (isset($serverData['HTTP_REFERER'])) {
             $serverData['HTTP_REFERER'] = urldecode($serverData['HTTP_REFERER']);

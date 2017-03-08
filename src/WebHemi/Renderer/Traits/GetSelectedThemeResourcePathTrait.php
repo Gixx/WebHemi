@@ -35,7 +35,7 @@ trait GetSelectedThemeResourcePathTrait
      * @return string
      */
     protected function getSelectedThemeResourcePath(
-        string &$selectedTheme,
+        string&$selectedTheme,
         ConfigurationInterface $configuration,
         EnvironmentInterface $environmentManager
     ) : string {

@@ -40,7 +40,7 @@ interface StorageInterface
      *
      * @return UserEntity|null
      */
-    public function getIdentity() : ?UserEntity;
+    public function getIdentity() : ? UserEntity;
 
     /**
      * Clears the storage.

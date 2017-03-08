@@ -32,7 +32,7 @@ interface ServiceInterface
      */
     public function isAllowed(
         UserEntity $userEntity,
-        ?ResourceEntity $resourceEntity = null,
-        ?ApplicationEntity $applicationEntity = null
+        ? ResourceEntity $resourceEntity = null,
+        ? ApplicationEntity $applicationEntity = null
     ) : bool;
 }

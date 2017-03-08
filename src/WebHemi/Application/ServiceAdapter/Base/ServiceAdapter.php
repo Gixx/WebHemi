@@ -20,9 +20,9 @@ use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Http\ResponseInterface;
 use WebHemi\Http\ServerRequestInterface;
 use WebHemi\Http\ServiceInterface as HttpInterface;
+use WebHemi\MiddlewarePipeline\ServiceInterface as PipelineInterface;
 use WebHemi\Middleware\Common as CommonMiddleware;
 use WebHemi\Middleware\MiddlewareInterface;
-use WebHemi\MiddlewarePipeline\ServiceInterface as PipelineInterface;
 use WebHemi\Session\ServiceInterface as SessionInterface;
 
 /**

@@ -57,26 +57,7 @@ class TwigExtension extends Twig_Extension
      */
     public function getFilters()
     {
-        $filters = [];
-        $filterConfig = $this->getConfig('filter');
-
-        foreach ($filterConfig as $className) {
-            /** @var FilterInterface $callable */
-            $callable = $this->dependencyInjectionAdapter->get($className);
-            if ($callable instanceof FilterInterface) {
-                $filters[] = new Twig_SimpleFilter($callable::getName(), $callable);
-            } else {
-                throw new RuntimeException(
-                    sprintf(
-                        'The class %s cannot be registered as Renderer/Filter!',
-                        get_class($callable)
-                    ),
-                    1000
-                );
-            }
-        }
-
-        return $filters;
+        return $this->getExtensions('filter');
     }
 
     /**
@@ -86,26 +67,57 @@ class TwigExtension extends Twig_Extension
      */
     public function getFunctions() : array
     {
-        $functions = [];
-        $helperConfig = $this->getConfig('helper');
+        return $this->getExtensions('helper');
+    }
 
-        foreach ($helperConfig as $className) {
-            /** @var HelperInterface $callable */
+    /**
+     * Gets the specific type of extension
+     *
+     * @param string $type Must be `filter` or `helper`
+     * @return array
+     */
+    private function getExtensions(string $type) : array
+    {
+        $extensions = [];
+        $extensionConfig = $this->getConfig($type);
+
+        foreach ($extensionConfig as $className) {
             $callable = $this->dependencyInjectionAdapter->get($className);
-            if ($callable instanceof HelperInterface) {
-                $functions[] = new Twig_SimpleFunction($callable::getName(), $callable);
-            } else {
-                throw new RuntimeException(
-                    sprintf(
-                        'The class %s cannot be registered as Renderer/Helper!',
-                        get_class($callable)
-                    ),
-                    1001
-                );
+            $this->checkExtensionType($type, $callable);
+
+            if ($type == 'helper') {
+                $extensions[] = new Twig_SimpleFunction($callable::getName(), $callable);
+                continue;
             }
+
+            $extensions[] = new Twig_SimpleFilter($callable::getName(), $callable);
         }
 
-        return $functions;
+        return $extensions;
+    }
+
+    /**
+     * Checks whether the extension has the valid type.
+     *
+     * @param string $type
+     * @param object $callable
+     * @throws RuntimeException
+     */
+    private function checkExtensionType($type, $callable) : void
+    {
+        if (($type == 'helper' && $callable instanceof HelperInterface)
+            || ($type == 'filter' && $callable instanceof FilterInterface)
+        ) {
+            return;
+        }
+
+        throw new RuntimeException(
+            sprintf(
+                'The class %s cannot be registered as Renderer/'.ucfirst($type).'!',
+                get_class($callable)
+            ),
+            1000
+        );
     }
 
     /**
@@ -120,7 +132,7 @@ class TwigExtension extends Twig_Extension
         $config = [];
 
         if ($this->configuration->has('renderer/Global/'.$type)) {
-            $config = $this->configuration->getData('renderer/Global/' . $type);
+            $config = $this->configuration->getData('renderer/Global/'.$type);
         }
 
         if ($this->configuration->has('renderer/'.$module.'/'.$type)) {

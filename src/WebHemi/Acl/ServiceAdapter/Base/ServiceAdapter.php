@@ -61,8 +61,8 @@ class ServiceAdapter implements ServiceInterface
      */
     public function isAllowed(
         UserEntity $userEntity,
-        ?ResourceEntity $resourceEntity = null,
-        ?ApplicationEntity $applicationEntity = null
+        ? ResourceEntity $resourceEntity = null,
+        ? ApplicationEntity $applicationEntity = null
     ) : bool {
         // We assume the best case: the user has access
         $allowed = false;
@@ -125,8 +125,8 @@ class ServiceAdapter implements ServiceInterface
      */
     private function checkPolicy(
         PolicyEntity $policyEntity,
-        ?ResourceEntity $resourceEntity = null,
-        ?ApplicationEntity $applicationEntity = null
+        ? ResourceEntity $resourceEntity = null,
+        ? ApplicationEntity $applicationEntity = null
     ) : bool {
         $policyResourceId = $policyEntity->getResourceId();
         $policyApplicationId = $policyEntity->getApplicationId();
