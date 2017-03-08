@@ -11,7 +11,7 @@
  */
 namespace WebHemiTest\Data\Entity;
 
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\EntityInterface as DataEntityInterface;
 use WebHemi\Data\Entity\User\UserMetaEntity;
 use PHPUnit\Framework\TestCase;
 

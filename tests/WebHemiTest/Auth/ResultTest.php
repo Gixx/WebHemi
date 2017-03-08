@@ -13,16 +13,16 @@
 namespace WebHemiTest\Auth;
 
 use Prophecy\Argument;
-use WebHemi\Adapter\Data\DataAdapterInterface;
-use WebHemi\Auth\Result;
-use WebHemi\Config\Config;
+use WebHemi\Data\ConnectorInterface as DataAdapterInterface;
+use WebHemi\Auth\Result\Result;
+use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Data\Entity\User\UserEntity;
-use WebHemiTest\Fixtures\EmptyAuthAdapter;
-use WebHemiTest\Fixtures\EmptyAuthStorage;
-use WebHemiTest\Fixtures\EmptyCredential;
-use WebHemiTest\Fixtures\EmptyStorage;
-use WebHemiTest\AssertTrait;
-use WebHemiTest\InvokePrivateMethodTrait;
+use WebHemiTest\TestService\EmptyAuthAdapter;
+use WebHemiTest\TestService\EmptyAuthStorage;
+use WebHemiTest\TestService\EmptyCredential;
+use WebHemiTest\TestService\EmptyUserStorage;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
+use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -44,13 +44,13 @@ class ResultTest extends TestCase
     {
         parent::setUp();
 
-        $this->config = require __DIR__ . '/../Fixtures/test_config.php';
+        $this->config = require __DIR__ . '/../test_config.php';
     }
 
     /**
      * Tests auth adapter Result
      *
-     * @covers \WebHemi\Auth\Result
+     * @covers \WebHemi\Auth\Result\Result
      */
     public function testResult()
     {
@@ -64,7 +64,7 @@ class ResultTest extends TestCase
         $result = new Result();
         $authStorage = new EmptyAuthStorage();
         $dataEntity = new UserEntity();
-        $dataStorage = new EmptyStorage($defaultAdapterInstance, $dataEntity);
+        $dataStorage = new EmptyUserStorage($defaultAdapterInstance, $dataEntity);
 
         $adapter = new EmptyAuthAdapter(
             $config,
@@ -76,18 +76,18 @@ class ResultTest extends TestCase
         $emptyCredential = new EmptyCredential();
 
 
-        $emptyCredential->addCredential('authResultShouldBe', Result::SUCCESS);
+        $emptyCredential->setCredential('authResultShouldBe', Result::SUCCESS);
         $result = $adapter->authenticate($emptyCredential);
         $this->assertTrue($result->isValid());
         $this->assertSame(Result::SUCCESS, $result->getCode());
 
-        $emptyCredential->addCredential('authResultShouldBe', Result::FAILURE);
+        $emptyCredential->setCredential('authResultShouldBe', Result::FAILURE);
         $result = $adapter->authenticate($emptyCredential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE, $result->getCode());
 
         // set it to a non-valid result code
-        $emptyCredential->addCredential('authResultShouldBe', -100);
+        $emptyCredential->setCredential('authResultShouldBe', -100);
         $result = $adapter->authenticate($emptyCredential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE_OTHER, $result->getCode());

@@ -13,11 +13,11 @@ namespace WebHemiTest\Data\Storage;
 
 use WebHemi\DateTime;
 use Prophecy\Argument;
-use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Data\ConnectorInterface as DataAdapterInterface;
 use WebHemi\Data\Storage\User\UserStorage;
 use WebHemi\Data\Entity\User\UserEntity;
-use WebHemiTest\AssertTrait;
-use WebHemiTest\InvokePrivateMethodTrait;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
+use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -46,7 +46,7 @@ class UserStorageTest extends TestCase
     /**
      * Test constructor.
      *
-     * @covers \WebHemi\Data\Storage\AbstractDataStorage
+     * @covers \WebHemi\Data\Storage\AbstractStorage
      */
     public function testStorageInit()
     {
@@ -62,8 +62,8 @@ class UserStorageTest extends TestCase
         $this->assertAttributeEquals('id_user', 'idKey', $storage);
 
         // objects are not the same --> cloned.
-        $this->assertInstanceOf(DataAdapterInterface::class, $storage->getDataAdapter());
-        $this->assertFalse($defaultAdapterInstance === $storage->getDataAdapter());
+        $this->assertInstanceOf(DataAdapterInterface::class, $storage->getConnector());
+        $this->assertFalse($defaultAdapterInstance === $storage->getConnector());
 
         // objects are not the same --> cloned.
         $this->assertInstanceOf(UserEntity::class, $storage->createEntity());
@@ -206,6 +206,59 @@ class UserStorageTest extends TestCase
 
         /** @var UserEntity $actualResult */
         $actualResult = $storage->getUserByUserName('testUser');
+        $this->assertInstanceOf(UserEntity::class, $actualResult);
+        $this->assertFalse($dataEntity === $actualResult);
+        $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());
+        $this->assertEquals($data['password'], $actualResult->getPassword());
+        $this->assertSame(true, $actualResult->getEnabled());
+
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
+        $this->assertArraysAreSimilar($data, $actualData);
+    }
+
+    /**
+     * Test the getUserByCredentials() method.
+     */
+    public function testGetUserByCredentials()
+    {
+        $data = [
+            'id_user' => 1,
+            'username' => 'testUser',
+            'email' => 'test.address@foo.org',
+            'password' => md5('testPassword'),
+            'hash' => '',
+            'is_active' => 1,
+            'is_enabled' => 1,
+            'date_created' =>  '2016-03-24 16:25:12',
+            'date_modified' =>  '2016-03-24 16:25:12',
+        ];
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->will(
+                function ($args) use ($data) {
+                    if ($args[0]['username'] == 'testUser'
+                        && $args[0]['password'] == md5('testPassword')
+                    ) {
+                        return [$data];
+                    }
+                    return [];
+                }
+            );
+
+        $dataEntity = new UserEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new UserStorage($defaultAdapterInstance, $dataEntity);
+
+        $actualResult = $storage->getUserByCredentials('Donald Trump', 'testPassword');
+        $this->assertEmpty($actualResult);
+
+        $actualResult = $storage->getUserByCredentials('testUser', 'testPassword');
+        $this->assertEmpty($actualResult);
+
+        /** @var UserEntity $actualResult */
+        $actualResult = $storage->getUserByCredentials('testUser', md5('testPassword'));
         $this->assertInstanceOf(UserEntity::class, $actualResult);
         $this->assertFalse($dataEntity === $actualResult);
         $this->assertInstanceOf(DateTime::class, $actualResult->getDateCreated());

@@ -13,9 +13,9 @@
 namespace WebHemiTest\Auth;
 
 use InvalidArgumentException;
-use WebHemi\Adapter\Auth\AuthCredentialInterface;
+use WebHemi\Auth\CredentialInterface as AuthCredentialInterface;
 use WebHemi\Auth\Credential\NameAndPasswordCredential;
-use WebHemiTest\AssertTrait;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -45,19 +45,19 @@ class NameAndPasswordCredentialTest extends TestCase
         $expectedResult = ['username' => '', 'password' => ''];
         $this->assertArraysAreSimilar($expectedResult, $credential->getCredentials());
 
-        $credential->addCredential('username', 'test');
+        $credential->setCredential('username', 'test');
         $expectedResult = ['username' => 'test', 'password' => ''];
         $this->assertArraysAreSimilar($expectedResult, $credential->getCredentials());
 
-        $credential->addCredential('password', 'test');
+        $credential->setCredential('password', 'test');
         $expectedResult = ['username' => 'test', 'password' => 'test'];
         $this->assertArraysAreSimilar($expectedResult, $credential->getCredentials());
 
-        $credential->addCredential('username', '');
+        $credential->setCredential('username', '');
         $expectedResult = ['username' => '', 'password' => 'test'];
         $this->assertArraysAreSimilar($expectedResult, $credential->getCredentials());
 
         $this->expectException(InvalidArgumentException::class);
-        $credential->addCredential('something', 'test');
+        $credential->setCredential('something', 'test');
     }
 }

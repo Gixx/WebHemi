@@ -13,9 +13,9 @@ namespace WebHemiTest\Data\Coupler;
 
 use InvalidArgumentException;
 use PDO;
-use WebHemi\Adapter\Data\PDO\SQLiteAdapter;
-use WebHemi\Adapter\Data\PDO\SQLiteDriver;
-use WebHemi\Adapter\Data\DataDriverInterface;
+use WebHemi\Data\Connector\PDO\SQLite\ConnectorAdapter as SQLiteAdapter;
+use WebHemi\Data\Connector\PDO\SQLite\DriverAdapter as SQLiteDriver;
+use WebHemi\Data\ConnectorInterface as DataDriverInterface;
 use WebHemi\Data\Coupler;
 use WebHemi\Data\Entity;
 use WebHemi\Data\Storage;
@@ -57,7 +57,7 @@ class DataCouplerTest extends TestCase
 
         self::$dataDriver = new SQLiteDriver('sqlite:' . $databaseFile);
 
-        $fixture = realpath(__DIR__.'/../../Fixtures/sql/data_coupler_test.sql');
+        $fixture = realpath(__DIR__.'/../../TestData/sql/data_coupler_test.sql');
         $setUpSql = file($fixture);
 
         if ($setUpSql) {
@@ -88,7 +88,7 @@ class DataCouplerTest extends TestCase
      *   policy 90002 to user 90001
      *   policy 90003 to user 90001
      *
-     * @covers \WebHemi\Data\Coupler\AbstractDataCoupler
+     * @covers \WebHemi\Data\Coupler\AbstractCoupler
      * @covers \WebHemi\Data\Coupler\UserToPolicyCoupler
      * @covers \WebHemi\Data\Coupler\Traits\UserEntityTrait
      * @covers \WebHemi\Data\Coupler\Traits\PolicyEntityTrait
@@ -148,7 +148,7 @@ class DataCouplerTest extends TestCase
      *   user_group 90000 to user 90000
      *   user_group 90001 to user 90000 and 90001
      *
-     * @covers \WebHemi\Data\Coupler\AbstractDataCoupler
+     * @covers \WebHemi\Data\Coupler\AbstractCoupler
      * @covers \WebHemi\Data\Coupler\UserToGroupCoupler
      * @covers \WebHemi\Data\Coupler\Traits\UserEntityTrait
      * @covers \WebHemi\Data\Coupler\Traits\UserGroupEntityTrait
@@ -207,7 +207,7 @@ class DataCouplerTest extends TestCase
      *   policy 90002 to user_group 90001
      *   policy 90003 to user_group 90001
      *
-     * @covers \WebHemi\Data\Coupler\AbstractDataCoupler
+     * @covers \WebHemi\Data\Coupler\AbstractCoupler
      * @covers \WebHemi\Data\Coupler\UserGroupToPolicyCoupler
      * @covers \WebHemi\Data\Coupler\Traits\UserGroupEntityTrait
      * @covers \WebHemi\Data\Coupler\Traits\PolicyEntityTrait
@@ -268,7 +268,7 @@ class DataCouplerTest extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        $fixture = realpath(__DIR__.'/../../Fixtures/sql/data_coupler_test.rollback.sql');
+        $fixture = realpath(__DIR__.'/../../TestData/sql/data_coupler_test.rollback.sql');
         $tearDownSql = file($fixture);
 
         if ($tearDownSql) {
