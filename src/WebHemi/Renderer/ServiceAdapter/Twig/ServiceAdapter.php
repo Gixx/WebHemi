@@ -38,10 +38,6 @@ class ServiceAdapter implements ServiceInterface
     private $templateResourcePath;
     /** @var string */
     private $applicationBaseUri;
-    /** @var array<HelperIterface> */
-    private $helpers;
-    /** @var array<FilterInterface> */
-    private $filters;
 
     use GetSelectedThemeResourcePathTrait;
 
@@ -98,7 +94,7 @@ class ServiceAdapter implements ServiceInterface
         // @codeCoverageIgnoreStart
         //
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
-            $this->adapter->addExtension(new TwigExtension($this->helpers, $this->filters));
+            $this->adapter->addExtension(new TwigExtension());
         }
         // @codeCoverageIgnoreEnd
 

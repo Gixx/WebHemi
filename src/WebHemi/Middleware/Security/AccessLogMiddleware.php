@@ -59,7 +59,7 @@ class AccessLogMiddleware implements MiddlewareInterface
      * @param ResponseInterface      $response
      * @return void
      */
-    public function __invoke(ServerRequestInterface &$request, ResponseInterface&$response) : void
+    public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
     {
         $identity = 'Unauthenticated user';
         $requestAttributes = $request->getAttributes();

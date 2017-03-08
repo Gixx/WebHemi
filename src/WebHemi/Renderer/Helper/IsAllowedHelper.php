@@ -141,7 +141,7 @@ class IsAllowedHelper implements HelperInterface
      * @param string $resourceName
      * @param string $applicationName
      */
-    private function checkResourceNameAgainstRouting(string &$resourceName, string $applicationName) : void
+    private function checkResourceNameAgainstRouting(string&$resourceName, string $applicationName) : void
     {
         $applicationConfig = $this->configuration
             ->getData('applications/'.$applicationName);
