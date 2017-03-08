@@ -13,11 +13,11 @@ namespace WebHemiTest\Form;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use WebHemi\Form\FormElementInterface;
-use WebHemi\Form\FormInterface;
-use WebHemi\Form\Html\HtmlForm;
-use WebHemi\Form\Html\HtmlFormElement;
-use WebHemiTest\AssertTrait;
+use WebHemi\Form\ElementInterface as FormElementInterface;
+use WebHemi\Form\ServiceInterface as FormInterface;
+use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
+use WebHemi\Form\Element\Html\HtmlElement as HtmlFormElement;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 
 /**
  * Class FormTest

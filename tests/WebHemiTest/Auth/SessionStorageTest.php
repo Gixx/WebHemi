@@ -12,9 +12,9 @@
 
 namespace WebHemiTest\Auth;
 
-use WebHemi\Application\SessionManager;
+use WebHemi\Session\ServiceAdapter\Base\ServiceAdapter as SessionManager;
 use WebHemi\Auth\Storage\Session as SessionStorage;
-use WebHemi\Config\Config;
+use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Data\Entity\User\UserEntity;
 use PHPUnit\Framework\TestCase;
 
@@ -34,7 +34,7 @@ class SessionStorageTest extends TestCase
     {
         parent::setUp();
 
-        $this->config = require __DIR__ . '/../Fixtures/test_config.php';
+        $this->config = require __DIR__ . '/../test_config.php';
     }
 
     /**

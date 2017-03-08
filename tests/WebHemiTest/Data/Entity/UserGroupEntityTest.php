@@ -12,7 +12,7 @@
 namespace WebHemiTest\Data\Entity;
 
 use WebHemi\DateTime;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\EntityInterface as DataEntityInterface;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 use PHPUnit\Framework\TestCase;
 

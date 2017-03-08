@@ -13,18 +13,18 @@
 namespace WebHemiTest\Auth;
 
 use PDO;
-use WebHemi\Auth\Auth;
-use WebHemi\Auth\Result;
+use WebHemi\Auth\ServiceAdapter\Base\ServiceAdapter as Auth;
+use WebHemi\Auth\Result\Result;
 use WebHemi\Auth\Credential\NameAndPasswordCredential;
-use WebHemi\Config\Config;
+use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Adapter\Data\PDO\SQLiteAdapter;
-use WebHemi\Adapter\Data\PDO\SQLiteDriver;
-use WebHemi\Adapter\Data\DataDriverInterface;
+use WebHemi\Data\Connector\PDO\SQLite\ConnectorAdapter as SQLiteAdapter;
+use WebHemi\Data\Connector\PDO\SQLite\DriverAdapter as SQLiteDriver;
+use WebHemi\Data\DriverInterface as DataDriverInterface;
 use WebHemi\Data\Storage\User\UserStorage;
-use WebHemiTest\Fixtures\EmptyAuthStorage;
-use WebHemiTest\AssertTrait;
-use WebHemiTest\InvokePrivateMethodTrait;
+use WebHemiTest\TestService\EmptyAuthStorage;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
+use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
@@ -71,7 +71,7 @@ class AuthTest extends TestCase
 
         self::$dataDriver = new SQLiteDriver('sqlite:' . $databaseFile);
 
-        $fixture = realpath(__DIR__.'/../Fixtures/sql/authentication_test.sql');
+        $fixture = realpath(__DIR__ . '/../TestData/sql/authentication_test.sql');
         $setUpSql = file($fixture);
 
         if ($setUpSql) {
@@ -110,13 +110,13 @@ class AuthTest extends TestCase
     {
         parent::setUp();
 
-        $this->config = require __DIR__ . '/../Fixtures/test_config.php';
+        $this->config = require __DIR__ . '/../test_config.php';
     }
 
     /**
      * Tests authentication
      *
-     * @covers \WebHemi\Auth\Auth
+     * @covers \WebHemi\Auth\ServiceAdapter\Base\ServiceAdapter
      */
     public function testAuthenticate()
     {
@@ -134,33 +134,33 @@ class AuthTest extends TestCase
         );
 
         $credential = new NameAndPasswordCredential();
-        $credential->addCredential('username', 'test');
-        $credential->addCredential('password', 'test');
+        $credential->setCredential('username', 'test');
+        $credential->setCredential('password', 'test');
 
         $result = $adapter->authenticate($credential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE_IDENTITY_NOT_FOUND, $result->getCode());
         $this->assertFalse($adapter->hasIdentity());
 
-        $credential->addCredential('username', 'test_user_1');
+        $credential->setCredential('username', 'test_user_1');
         $result = $adapter->authenticate($credential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE_IDENTITY_DISABLED, $result->getCode());
         $this->assertFalse($adapter->hasIdentity());
 
-        $credential->addCredential('username', 'test_user_2');
+        $credential->setCredential('username', 'test_user_2');
         $result = $adapter->authenticate($credential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE_IDENTITY_INACTIVE, $result->getCode());
         $this->assertFalse($adapter->hasIdentity());
 
-        $credential->addCredential('username', 'test_user_3');
+        $credential->setCredential('username', 'test_user_3');
         $result = $adapter->authenticate($credential);
         $this->assertFalse($result->isValid());
         $this->assertSame(Result::FAILURE_CREDENTIAL_INVALID, $result->getCode());
         $this->assertFalse($adapter->hasIdentity());
 
-        $credential->addCredential('password', self::TEST_PASSWORD);
+        $credential->setCredential('password', self::TEST_PASSWORD);
         $result = $adapter->authenticate($credential);
         $this->assertTrue($result->isValid());
         $this->assertSame(Result::SUCCESS, $result->getCode());
@@ -173,7 +173,7 @@ class AuthTest extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        $fixture = realpath(__DIR__.'/../Fixtures/sql/authentication_test.rollback.sql');
+        $fixture = realpath(__DIR__ . '/../TestData/sql/authentication_test.rollback.sql');
         $tearDownSql = file($fixture);
 
         if ($tearDownSql) {

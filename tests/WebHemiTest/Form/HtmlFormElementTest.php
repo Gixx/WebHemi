@@ -13,11 +13,11 @@ namespace WebHemiTest\Form;
 
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
-use WebHemi\Form\Html\HtmlFormElement;
-use WebHemi\Form\Html\HtmlMultipleFormElement;
-use WebHemiTest\AssertTrait;
-use WebHemiTest\Fixtures\TestFalseValidator;
-use WebHemiTest\Fixtures\TestTrueValidator;
+use WebHemi\Form\Element\Html\HtmlElement as HtmlFormElement;
+use WebHemi\Form\Element\Html\HtmlMultipleElement as HtmlMultipleFormElement;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
+use WebHemiTest\TestService\TestFalseValidator;
+use WebHemiTest\TestService\TestTrueValidator;
 
 /**
  * Class HtmlFormElementTest
