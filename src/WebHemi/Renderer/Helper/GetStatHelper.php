@@ -13,14 +13,14 @@ declare(strict_types = 1);
 
 namespace WebHemi\Renderer\Helper;
 
-use WebHemi\Adapter\Renderer\RendererHelperInterface;
+use WebHemi\Renderer\HelperInterface;
 
 /**
  * Class GetStatHelper
  *
  * @codeCoverageIgnore - config and PHP core functions. No business logic.
  */
-class GetStatHelper implements RendererHelperInterface
+class GetStatHelper implements HelperInterface
 {
     /**
      * Should return the name of the helper.
@@ -49,7 +49,7 @@ class GetStatHelper implements RendererHelperInterface
      */
     public static function getDescription() : string
     {
-        return 'Triggers the WebHemi\'s built-in timer and returns the data in array:'.PHP_EOL
+        return 'Triggers the WebHemiX\'s built-in timer and returns the data in array:'.PHP_EOL
             . '\'start_time\': the time when the timer had been called (called automatically).'.PHP_EOL
             . '\'end_time\': the time when the timer had been stopped (called in a template)'.PHP_EOL
             . '\'duration\': the difference in seconds '.PHP_EOL

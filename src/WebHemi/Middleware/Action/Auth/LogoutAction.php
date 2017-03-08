@@ -13,28 +13,28 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Auth;
 
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Adapter\Http\ResponseInterface;
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Middleware\AbstractMiddlewareAction;
+use WebHemi\Auth\ServiceInterface as AuthInterface;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Http\ResponseInterface;
+use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class LogoutAction
+ * Class LogoutAction.
  */
 class LogoutAction extends AbstractMiddlewareAction
 {
-    /** @var AuthAdapterInterface */
+    /** @var AuthInterface */
     private $authAdapter;
-    /** @var EnvironmentManager */
+    /** @var EnvironmentInterface */
     private $environmentManager;
 
     /**
-     * MetaDataAction constructor.
+     * LogoutAction constructor.
      *
-     * @param AuthAdapterInterface $authAdapter
-     * @param EnvironmentManager   $environmentManager
+     * @param AuthInterface        $authAdapter
+     * @param EnvironmentInterface $environmentManager
      */
-    public function __construct(AuthAdapterInterface $authAdapter, EnvironmentManager $environmentManager)
+    public function __construct(AuthInterface $authAdapter, EnvironmentInterface $environmentManager)
     {
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;

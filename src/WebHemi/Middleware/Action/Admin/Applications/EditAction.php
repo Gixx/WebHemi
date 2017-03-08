@@ -13,34 +13,34 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin\Applications;
 
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Config\ConfigInterface;
-use WebHemi\Middleware\AbstractMiddlewareAction;
+use WebHemi\Auth\ServiceInterface as AuthInterface;
+use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class EditAction
+ * Class EditAction.
  */
 class EditAction extends AbstractMiddlewareAction
 {
-    /** @var ConfigInterface */
+    /** @var ConfigurationInterface */
     private $configuration;
-    /** @var AuthAdapterInterface */
+    /** @var AuthInterface */
     private $authAdapter;
-    /** @var EnvironmentManager */
+    /** @var EnvironmentInterface */
     private $environmentManager;
 
     /**
-     * DashboardAction constructor.
+     * EditAction constructor.
      *
-     * @param ConfigInterface $configuration
-     * @param AuthAdapterInterface $authAdapter
-     * @param EnvironmentManager $environmentManager
+     * @param ConfigurationInterface $configuration
+     * @param AuthInterface          $authAdapter
+     * @param EnvironmentInterface   $environmentManager
      */
     public function __construct(
-        ConfigInterface $configuration,
-        AuthAdapterInterface $authAdapter,
-        EnvironmentManager $environmentManager
+        ConfigurationInterface $configuration,
+        AuthInterface $authAdapter,
+        EnvironmentInterface $environmentManager
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;

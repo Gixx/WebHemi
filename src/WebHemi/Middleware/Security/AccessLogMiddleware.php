@@ -13,37 +13,37 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Security;
 
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Adapter\Http\ResponseInterface;
-use WebHemi\Adapter\Http\ServerRequestInterface;
-use WebHemi\Adapter\Log\LogAdapterInterface;
-use WebHemi\Application\EnvironmentManager;
+use WebHemi\Auth\ServiceInterface as AuthServiceInterface;
 use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Http\ResponseInterface;
+use WebHemi\Http\ServerRequestInterface;
+use WebHemi\Logger\ServiceInterface as LoggerInterface;
 use WebHemi\Middleware\MiddlewareInterface;
 
 /**
- * Class AccessLogMiddleware
+ * Class AccessLogMiddleware.
  */
 class AccessLogMiddleware implements MiddlewareInterface
 {
-    /** @var LogAdapterInterface */
+    /** @var LoggerInterface */
     private $logger;
-    /** @var AuthAdapterInterface */
+    /** @var AuthServiceInterface */
     private $authAdapter;
-    /** @var EnvironmentManager */
+    /** @var EnvironmentInterface */
     private $environmentManager;
 
     /**
-     * EventLogMiddleware constructor.
+     * AccessLogMiddleware constructor.
      *
-     * @param LogAdapterInterface  $logger
-     * @param AuthAdapterInterface $authAdapter
-     * @param EnvironmentManager   $environmentManager
+     * @param LoggerInterface      $logger
+     * @param AuthServiceInterface $authAdapter
+     * @param EnvironmentInterface $environmentManager
      */
     public function __construct(
-        LogAdapterInterface $logger,
-        AuthAdapterInterface $authAdapter,
-        EnvironmentManager $environmentManager
+        LoggerInterface $logger,
+        AuthServiceInterface $authAdapter,
+        EnvironmentInterface $environmentManager
     ) {
         $this->logger = $logger;
         $this->authAdapter = $authAdapter;

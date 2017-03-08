@@ -1,23 +1,32 @@
 <?php
 
-use WebHemi\Adapter\Data\DataDriverInterface;
-use WebHemi\Adapter\Data\PDO\%pdo.sqldriver%;
+use WebHemi\Data\DriverInterface;
+use WebHemi\Data\ConnectorInterface;
+use WebHemi\Data\Connector;
 
 return [
     'dependencies' => [
         'Global' => [
-            DataDriverInterface::class => [
-                'class' => %pdo.sqldriver%::class,
+            ConnectorInterface::class => [
+                'class'     => Connector\%data.connector.class%::class,
                 'arguments' => [
-                    'dsn'      => '%pdo.sql.type%:dbname=%pdo.dbname%;charset=utf8;host=%pdo.hostname%',
-                    'user'     => '%pdo.username%',
-                    'password' => '%pdo.password%',
+                    DriverInterface::class
+                ],
+                'shared'    => true,
+            ],
+            DriverInterface::class => [
+                'class' => Connector\%data.driver.class%::class,
+                'arguments' => [
+                    'dsn'      => '%data.connector.type%:dbname=%data.connector.database%;charset=utf8;host=%data.connector.host%',
+                    'user'     => '%data.connector.username%',
+                    'password' => '%data.connector.password%',
                     'options'  => [
-                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+
                     ],
                 ],
-                'calls'     => ['setAttribute' => [PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION]],
+                'calls'     => [
+
+                ],
                 'shared'    => true,
             ],
         ],

@@ -14,13 +14,13 @@ declare(strict_types = 1);
 namespace WebHemi\Data\Storage;
 
 use WebHemi\DateTime;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\ApplicationEntity;
 
 /**
  * Class ApplicationStorage.
  */
-class ApplicationStorage extends AbstractDataStorage
+class ApplicationStorage extends AbstractStorage
 {
     /** @var string */
     protected $dataGroup = 'webhemi_application';
@@ -44,14 +44,14 @@ class ApplicationStorage extends AbstractDataStorage
     /**
      * Populates an entity with storage data.
      *
-     * @param DataEntityInterface $entity
-     * @param array               $data
+     * @param EntityInterface $dataEntity
+     * @param array           $data
      * @return void
      */
-    protected function populateEntity(DataEntityInterface&$entity, array $data) : void
+    protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var ApplicationEntity $entity */
-        $entity->setApplicationId((int) $data[$this->idKey])
+        /* @var ApplicationEntity $dataEntity */
+        $dataEntity->setApplicationId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
@@ -64,22 +64,22 @@ class ApplicationStorage extends AbstractDataStorage
     /**
      * Get data from an entity.
      *
-     * @param DataEntityInterface $entity
+     * @param EntityInterface $dataEntity
      * @return array
      */
-    protected function getEntityData(DataEntityInterface $entity) : array
+    protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var ApplicationEntity $entity */
-        $dateCreated = $entity->getDateCreated();
-        $dateModified = $entity->getDateModified();
+        /** @var ApplicationEntity $dataEntity */
+        $dateCreated = $dataEntity->getDateCreated();
+        $dateModified = $dataEntity->getDateModified();
 
         return [
-            $this->idKey => $entity->getKeyData(),
-            $this->name => $entity->getName(),
-            $this->title => $entity->getTitle(),
-            $this->description => $entity->getDescription(),
-            $this->isReadOnly => (int) $entity->getReadOnly(),
-            $this->isEnabled => (int) $entity->getEnabled(),
+            $this->idKey => $dataEntity->getKeyData(),
+            $this->name => $dataEntity->getName(),
+            $this->title => $dataEntity->getTitle(),
+            $this->description => $dataEntity->getDescription(),
+            $this->isReadOnly => (int) $dataEntity->getReadOnly(),
+            $this->isEnabled => (int) $dataEntity->getEnabled(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];
@@ -93,10 +93,10 @@ class ApplicationStorage extends AbstractDataStorage
      */
     public function getApplicationById($identifier) : ? ApplicationEntity
     {
-        /** @var null|ApplicationEntity $entity */
-        $entity = $this->getDataEntity([$this->idKey => $identifier]);
+        /** @var null|ApplicationEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
-        return $entity;
+        return $dataEntity;
     }
 
     /**
@@ -107,9 +107,9 @@ class ApplicationStorage extends AbstractDataStorage
      */
     public function getApplicationByName($name) : ? ApplicationEntity
     {
-        /** @var null|ApplicationEntity $entity */
-        $entity = $this->getDataEntity([$this->name => $name]);
+        /** @var null|ApplicationEntity $dataEntity */
+        $dataEntity = $this->getDataEntity([$this->name => $name]);
 
-        return $entity;
+        return $dataEntity;
     }
 }

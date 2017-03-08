@@ -9,7 +9,6 @@
  *
  * @link      http://www.gixx-web.com
  */
-use WebHemi\Middleware\Action;
 
 return [
     'dependencies' => [

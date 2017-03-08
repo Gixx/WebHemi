@@ -15,8 +15,8 @@ namespace WebHemi\Data\Coupler\Traits;
 
 use WebHemi\DateTime;
 use RuntimeException;
+use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
-use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class PolicyEntityTrait.
@@ -28,9 +28,9 @@ trait PolicyEntityTrait
      *
      * @param string $entityClassName
      * @throws RuntimeException
-     * @return DataEntityInterface
+     * @return EntityInterface
      */
-    abstract protected function getNewEntityInstance(string $entityClassName) : DataEntityInterface;
+    abstract protected function getNewEntityInstance(string $entityClassName) : EntityInterface;
 
     /**
      * Creates a new Policy Entity instance form the data.
