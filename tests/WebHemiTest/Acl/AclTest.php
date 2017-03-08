@@ -13,12 +13,12 @@
 namespace WebHemiTest\Acl;
 
 use PDO;
-use WebHemi\Acl\Acl;
-use WebHemi\Adapter\Acl\AclAdapterInterface;
-use WebHemi\Auth\Auth;
-use WebHemi\Auth\Result;
+use WebHemi\Acl\ServiceAdapter\Base\ServiceAdapter as Acl;
+use WebHemi\Acl\ServiceInterface as AclAdapterInterface;
+use WebHemi\Auth\ServiceAdapter\Base\ServiceAdapter as Auth;
+use WebHemi\Auth\Result\Result;
 use WebHemi\Auth\Credential\NameAndPasswordCredential;
-use WebHemi\Config\Config;
+use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
 use WebHemi\Data\Coupler\UserToGroupCoupler;
 use WebHemi\Data\Coupler\UserToPolicyCoupler;
@@ -26,14 +26,14 @@ use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Adapter\Data\PDO\SQLiteAdapter;
-use WebHemi\Adapter\Data\PDO\SQLiteDriver;
-use WebHemi\Adapter\Data\DataDriverInterface;
+use WebHemi\Data\Connector\PDO\SQLite\ConnectorAdapter as SQLiteAdapter;
+use WebHemi\Data\Connector\PDO\SQLite\DriverAdapter as SQLiteDriver;
+use WebHemi\Data\DriverInterface as DataDriverInterface;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 use WebHemi\Data\Storage\User\UserStorage;
-use WebHemiTest\Fixtures\EmptyAuthStorage;
-use WebHemiTest\AssertTrait;
-use WebHemiTest\InvokePrivateMethodTrait;
+use WebHemiTest\TestService\EmptyAuthStorage;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
+use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
@@ -78,7 +78,7 @@ class AclTest extends TestCase
 
         self::$dataDriver = new SQLiteDriver('sqlite:' . $databaseFile);
 
-        $fixture = realpath(__DIR__ . '/../Fixtures/sql/acl_test.sql');
+        $fixture = realpath(__DIR__ . '/../TestData/sql/acl_test.sql');
         $setUpSql = file($fixture);
 
         if ($setUpSql) {
@@ -105,7 +105,7 @@ class AclTest extends TestCase
     {
         parent::setUp();
 
-        $this->config = require __DIR__ . '/../Fixtures/test_config.php';
+        $this->config = require __DIR__ . '/../test_config.php';
     }
 
     /**
@@ -202,7 +202,7 @@ class AclTest extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        $fixture = realpath(__DIR__.'/../Fixtures/sql/acl_test.rollback.sql');
+        $fixture = realpath(__DIR__.'/../TestData/sql/acl_test.rollback.sql');
         $tearDownSql = file($fixture);
 
         if ($tearDownSql) {

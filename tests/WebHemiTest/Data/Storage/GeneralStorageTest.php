@@ -13,11 +13,11 @@ namespace WebHemiTest\Data\Storage;
 
 use InvalidArgumentException;
 use Prophecy\Argument;
-use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Data\ConnectorInterface as DataAdapterInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\User\UserStorage;
-use WebHemiTest\Fixtures\EmptyStorage;
-use WebHemiTest\Fixtures\EmptyEntity;
+use WebHemiTest\TestService\EmptyStorage;
+use WebHemiTest\TestService\EmptyEntity;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,7 +28,7 @@ class GeneralStorageTest extends TestCase
     /**
      * Test constructor.
      *
-     * @covers \WebHemi\Data\Storage\AbstractDataStorage
+     * @covers \WebHemi\Data\Storage\AbstractStorage
      */
     public function testAbstractClassMethods()
     {
@@ -59,8 +59,8 @@ class GeneralStorageTest extends TestCase
         $this->assertAttributeEquals('someId', 'idKey', $storage);
 
         // objects are not the same --> cloned.
-        $this->assertInstanceOf(DataAdapterInterface::class, $storage->getDataAdapter());
-        $this->assertFalse($defaultAdapterInstance === $storage->getDataAdapter());
+        $this->assertInstanceOf(DataAdapterInterface::class, $storage->getConnector());
+        $this->assertFalse($defaultAdapterInstance === $storage->getConnector());
 
         // objects are not the same --> cloned.
         $this->assertInstanceOf(EmptyEntity::class, $storage->createEntity());

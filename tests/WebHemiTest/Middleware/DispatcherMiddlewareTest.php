@@ -15,12 +15,12 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
-use WebHemi\Adapter\Http\GuzzleHttp\ServerRequest;
-use WebHemi\Adapter\Http\GuzzleHttp\Response;
-use WebHemi\Adapter\Renderer\RendererAdapterInterface;
-use WebHemi\Middleware\DispatcherMiddleware;
-use WebHemiTest\Fixtures\TestMiddleware;
-use WebHemiTest\Fixtures\TestActionMiddleware;
+use WebHemi\Http\ServiceAdapter\GuzzleHttp\ServerRequest;
+use WebHemi\Http\ServiceAdapter\GuzzleHttp\Response;
+use WebHemi\Renderer\ServiceInterface as RendererAdapterInterface;
+use WebHemi\Middleware\Common\DispatcherMiddleware;
+use WebHemiTest\TestService\TestMiddleware;
+use WebHemiTest\TestService\TestActionMiddleware;
 
 /**
  * Class DispatcherMiddlewareTest.

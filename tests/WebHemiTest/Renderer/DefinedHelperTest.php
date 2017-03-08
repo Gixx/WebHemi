@@ -12,11 +12,11 @@
 namespace WebHemiTest\Renderer;
 
 use PHPUnit\Framework\TestCase;
-use WebHemi\Adapter\Renderer\RendererHelperInterface;
-use WebHemi\Config\Config;
-use WebHemi\Config\ConfigInterface;
+use WebHemi\Renderer\HelperInterface as RendererHelperInterface;
+use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
+use WebHemi\Configuration\ServiceInterface as ConfigInterface;
 use WebHemi\Renderer\Helper\DefinedHelper;
-use WebHemiTest\Fixtures\EmptyEnvironmentManager;
+use WebHemiTest\TestService\EmptyEnvironmentManager;
 
 /**
  * Class DefinedHelperTest.
@@ -46,9 +46,9 @@ class DefinedHelperTest extends TestCase
     {
         parent::setUp();
 
-        $config = require __DIR__ . '/../Fixtures/test_config.php';
+        $config = require __DIR__ . '/../test_config.php';
         $this->config = new Config($config);
-        $this->documentRoot = realpath(__DIR__.'/../Fixtures/');
+        $this->documentRoot = realpath(__DIR__.'/../TestDocumentRoot/');
     }
 
     /**

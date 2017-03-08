@@ -13,11 +13,11 @@ namespace WebHemiTest\Data\Storage;
 
 use WebHemi\DateTime;
 use Prophecy\Argument;
-use WebHemi\Adapter\Data\DataAdapterInterface;
+use WebHemi\Data\ConnectorInterface as DataAdapterInterface;
 use WebHemi\Data\Storage\AccessManagement\PolicyStorage;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
-use WebHemiTest\AssertTrait;
-use WebHemiTest\InvokePrivateMethodTrait;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
+use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -87,7 +87,7 @@ class PolicyStorageTest extends TestCase
     /**
      * Test constructor.
      *
-     * @covers \WebHemi\Data\Storage\AbstractDataStorage
+     * @covers \WebHemi\Data\Storage\AbstractStorage
      */
     public function testStorageInit()
     {
@@ -103,8 +103,8 @@ class PolicyStorageTest extends TestCase
         $this->assertAttributeEquals('id_am_policy', 'idKey', $storage);
 
         // objects are not the same --> cloned.
-        $this->assertInstanceOf(DataAdapterInterface::class, $storage->getDataAdapter());
-        $this->assertFalse($defaultAdapterInstance === $storage->getDataAdapter());
+        $this->assertInstanceOf(DataAdapterInterface::class, $storage->getConnector());
+        $this->assertFalse($defaultAdapterInstance === $storage->getConnector());
 
         // objects are not the same --> cloned.
         $this->assertInstanceOf(PolicyEntity::class, $storage->createEntity());
