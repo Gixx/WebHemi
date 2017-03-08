@@ -14,12 +14,12 @@ declare(strict_types = 1);
 namespace WebHemi\Auth\Credential;
 
 use InvalidArgumentException;
-use WebHemi\Adapter\Auth\AuthCredentialInterface;
+use WebHemi\Auth\CredentialInterface;
 
 /**
- * Interface NameAndPasswordCredential
+ * Class NameAndPasswordCredential.
  */
-class NameAndPasswordCredential implements AuthCredentialInterface
+class NameAndPasswordCredential implements CredentialInterface
 {
     /** @var string */
     private $username = '';
@@ -32,9 +32,9 @@ class NameAndPasswordCredential implements AuthCredentialInterface
      * @param string $key
      * @param string $value
      * @throws InvalidArgumentException
-     * @return AuthCredentialInterface
+     * @return CredentialInterface
      */
-    public function addCredential(string $key, string $value) : AuthCredentialInterface
+    public function setCredential(string $key, string $value) : CredentialInterface
     {
         switch ($key) {
             case 'username':
@@ -48,7 +48,7 @@ class NameAndPasswordCredential implements AuthCredentialInterface
             default:
                 throw new InvalidArgumentException(
                     sprintf(
-                        'Parameter #1 must be either "usenrame" or "password", %s given.',
+                        'Parameter #1 must be either "username" or "password", %s given.',
                         $key
                     ),
                     1000

@@ -13,38 +13,38 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin\Applications;
 
-use WebHemi\Application\EnvironmentManager;
-use WebHemi\Adapter\Auth\AuthAdapterInterface;
-use WebHemi\Config\ConfigInterface;
+use WebHemi\Auth\ServiceInterface as AuthInterface;
+use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Data\Storage\ApplicationStorage;
-use WebHemi\Middleware\AbstractMiddlewareAction;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class IndexAction
+ * Class IndexAction.
  */
 class IndexAction extends AbstractMiddlewareAction
 {
-    /** @var ConfigInterface */
+    /** @var ConfigurationInterface */
     private $configuration;
-    /** @var AuthAdapterInterface */
+    /** @var AuthInterface */
     private $authAdapter;
-    /** @var EnvironmentManager */
+    /** @var EnvironmentInterface */
     private $environmentManager;
     /** @var ApplicationStorage */
     private $applicationStorage;
 
     /**
-     * DashboardAction constructor.
+     * IndexAction constructor.
      *
-     * @param ConfigInterface $configuration
-     * @param AuthAdapterInterface $authAdapter
-     * @param EnvironmentManager $environmentManager
-     * @param ApplicationStorage $applicationStorage
+     * @param ConfigurationInterface $configuration
+     * @param AuthInterface          $authAdapter
+     * @param EnvironmentInterface   $environmentManager
+     * @param ApplicationStorage     $applicationStorage
      */
     public function __construct(
-        ConfigInterface $configuration,
-        AuthAdapterInterface $authAdapter,
-        EnvironmentManager $environmentManager,
+        ConfigurationInterface $configuration,
+        AuthInterface $authAdapter,
+        EnvironmentInterface $environmentManager,
         ApplicationStorage $applicationStorage
     ) {
         $this->configuration = $configuration;
@@ -70,7 +70,7 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        $applications = $this->applicationStorage->getDataAdapter()->getDataSet([]);
+        $applications = $this->applicationStorage->getConnector()->getDataSet([]);
 
         return [
             'applications' => $applications,

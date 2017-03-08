@@ -13,26 +13,26 @@ declare(strict_types = 1);
 
 namespace WebHemi\Auth\Storage;
 
-use WebHemi\Adapter\Auth\AuthStorageInterface;
-use WebHemi\Application\SessionManager;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Auth\StorageInterface;
+use WebHemi\Session\ServiceInterface as SessionInterface;
+use WebHemi\Data\Entity\User\UserEntity;
 
 /**
  * Class Session
  */
-class Session implements AuthStorageInterface
+class Session implements StorageInterface
 {
     /** @var string */
     private $sessionKey = '_auth_identity';
-    /** @var SessionManager */
+    /** @var SessionInterface */
     private $sessionManager;
 
     /**
      * Session constructor.
      *
-     * @param SessionManager $sessionManager
+     * @param SessionInterface $sessionManager
      */
-    public function __construct(SessionManager $sessionManager)
+    public function __construct(SessionInterface $sessionManager)
     {
         $this->sessionManager = $sessionManager;
     }
@@ -40,10 +40,10 @@ class Session implements AuthStorageInterface
     /**
      * Sets the authenticated user.
      *
-     * @param DataEntityInterface $dataEntity
-     * @return AuthStorageInterface
+     * @param UserEntity $dataEntity
+     * @return StorageInterface
      */
-    public function setIdentity(DataEntityInterface $dataEntity) : AuthStorageInterface
+    public function setIdentity(UserEntity $dataEntity) : StorageInterface
     {
         // for safety purposes
         $this->sessionManager->regenerateId();
@@ -66,9 +66,9 @@ class Session implements AuthStorageInterface
     /**
      * Gets the authenticated user.
      *
-     * @return null|DataEntityInterface
+     * @return null|UserEntity
      */
-    public function getIdentity() : ?DataEntityInterface
+    public function getIdentity() : ?UserEntity
     {
         return $this->sessionManager->get($this->sessionKey);
     }
@@ -76,9 +76,9 @@ class Session implements AuthStorageInterface
     /**
      * Clears the session.
      *
-     * @return AuthStorageInterface
+     * @return StorageInterface
      */
-    public function clearIdentity() : AuthStorageInterface
+    public function clearIdentity() : StorageInterface
     {
         // force delete read-only data.
         $this->sessionManager->delete($this->sessionKey, true);

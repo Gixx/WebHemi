@@ -13,13 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Entity\User;
 
+use WebHemi\Data\EntityInterface;
 use WebHemi\DateTime;
-use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class UserMetaEntity.
  */
-class UserMetaEntity implements DataEntityInterface
+class UserMetaEntity implements EntityInterface
 {
     /** @var int */
     private $userMetaId;

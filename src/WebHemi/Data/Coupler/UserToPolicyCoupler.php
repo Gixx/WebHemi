@@ -15,14 +15,14 @@ namespace WebHemi\Data\Coupler;
 
 use WebHemi\Data\Coupler\Traits\PolicyEntityTrait;
 use WebHemi\Data\Coupler\Traits\UserEntityTrait;
-use WebHemi\Data\Entity\DataEntityInterface;
+use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 
 /**
  * Class UserToPolicyCoupler.
  */
-class UserToPolicyCoupler extends AbstractDataCoupler
+class UserToPolicyCoupler extends AbstractCoupler
 {
     /** @var string */
     protected $connectorIdKey = 'id_user_to_am_policy';
@@ -48,13 +48,13 @@ class UserToPolicyCoupler extends AbstractDataCoupler
     use PolicyEntityTrait;
 
     /**
-     * Gets a DataEntityInterface instance from the provided data according to the reference entity.
+     * Gets an EntityInterface instance from the provided data according to the reference entity.
      *
-     * @param DataEntityInterface $referenceEntity
-     * @param array               $entityData
-     * @return DataEntityInterface
+     * @param EntityInterface $referenceEntity
+     * @param array           $entityData
+     * @return EntityInterface
      */
-    protected function getDependingEntity(DataEntityInterface $referenceEntity, array $entityData) : DataEntityInterface
+    protected function getDependingEntity(EntityInterface $referenceEntity, array $entityData) : EntityInterface
     {
         return $referenceEntity instanceof UserEntity
             ? $this->createPolicyEntity($entityData)

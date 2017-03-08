@@ -13,10 +13,10 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website;
 
-use WebHemi\Middleware\AbstractMiddlewareAction;
+use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class PostListAction
+ * Class PostListAction.
  */
 class PostListAction extends AbstractMiddlewareAction
 {

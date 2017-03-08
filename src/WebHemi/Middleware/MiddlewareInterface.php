@@ -13,8 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware;
 
-use WebHemi\Adapter\Http\ResponseInterface;
-use WebHemi\Adapter\Http\ServerRequestInterface;
+use WebHemi\Http\ResponseInterface;
+use WebHemi\Http\ServerRequestInterface;
 
 /**
  * Interface MiddlewareInterface.

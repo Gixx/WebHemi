@@ -13,13 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Entity\User;
 
+use WebHemi\Data\EntityInterface;
 use WebHemi\DateTime;
-use WebHemi\Data\Entity\DataEntityInterface;
 
 /**
  * Class UserEntity.
  */
-class UserEntity implements DataEntityInterface
+class UserEntity implements EntityInterface
 {
     /** @var int */
     private $userId;
