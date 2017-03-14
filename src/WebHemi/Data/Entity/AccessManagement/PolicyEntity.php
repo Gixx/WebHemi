@@ -33,6 +33,8 @@ class PolicyEntity implements EntityInterface
     private $title;
     /** @var string */
     private $description;
+    /** @var string */
+    private $method;
     /** @var bool */
     private $isReadOnly;
     /** @var bool */
@@ -177,6 +179,25 @@ class PolicyEntity implements EntityInterface
     public function getDescription() : ? string
     {
         return $this->description;
+    }
+
+    /**
+     * @param null|string $method
+     * @return PolicyEntity
+     */
+    public function setMethod(? string $method) : PolicyEntity
+    {
+        $this->method = $method;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getMethod() : ? string
+    {
+        return $this->method;
     }
 
     /**

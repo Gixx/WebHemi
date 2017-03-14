@@ -38,6 +38,8 @@ class PolicyStorage extends AbstractStorage
     /** @var string */
     private $description = 'description';
     /** @var string */
+    private $method = 'method';
+    /** @var string */
     private $isReadOnly = 'is_read_only';
     /** @var string */
     private $isAllowed = 'is_allowed';
@@ -62,6 +64,7 @@ class PolicyStorage extends AbstractStorage
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
+            ->setMethod($data[$this->method])
             ->setReadOnly((bool) $data[$this->isReadOnly])
             ->setAllowed((bool) $data[$this->isAllowed])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
@@ -87,6 +90,7 @@ class PolicyStorage extends AbstractStorage
             $this->name => $dataEntity->getName(),
             $this->title => $dataEntity->getTitle(),
             $this->description => $dataEntity->getDescription(),
+            $this->method => $dataEntity->getMethod(),
             $this->isReadOnly => (int) $dataEntity->getReadOnly(),
             $this->isAllowed => (int) $dataEntity->getAllowed(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,

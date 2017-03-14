@@ -189,6 +189,16 @@ class ServiceAdapter implements ServiceInterface
     }
 
     /**
+     * Gets the request method.
+     *
+     * @return string
+     */
+    public function getRequestMethod(): string
+    {
+        return $this->environmentData['SERVER']['REQUEST_METHOD'] ?? 'GET';
+    }
+
+    /**
      * Gets environment data.
      *
      * @param string $key

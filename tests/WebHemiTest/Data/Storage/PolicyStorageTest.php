@@ -50,6 +50,7 @@ class PolicyStorageTest extends TestCase
                 'name' => 'test1',
                 'title' => 'Test Policy 1',
                 'description' => 'A test policy record',
+                'method' => null,
                 'is_read_only' => 1,
                 'is_allowed' => 1,
                 'date_created' =>  '2016-03-24 16:25:12',
@@ -62,6 +63,7 @@ class PolicyStorageTest extends TestCase
                 'name' => 'test2',
                 'title' => 'Test Policy 2',
                 'description' => 'A test policy record',
+                'method' => 'GET',
                 'is_read_only' => 0,
                 'is_allowed' => 0,
                 'date_created' =>  '2016-03-24 16:25:12',
@@ -74,6 +76,7 @@ class PolicyStorageTest extends TestCase
                 'name' => 'test3',
                 'title' => 'Test Policy 3',
                 'description' => 'A test policy record',
+                'method' => 'POST',
                 'is_read_only' => 0,
                 'is_allowed' => 1,
                 'date_created' =>  '2016-03-24 16:25:12',
@@ -231,7 +234,7 @@ class PolicyStorageTest extends TestCase
         $defaultAdapterInstance = $this->defaultAdapter->reveal();
         $storage = new PolicyStorage($defaultAdapterInstance, $dataEntity);
 
-        /** @var array<PolicyEntity> $actualResult */
+        /** @var PolicyEntity[] $actualResult */
         $actualResult = $storage->getPoliciesByResourceId(1);
         $this->assertSame(2, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
@@ -245,6 +248,7 @@ class PolicyStorageTest extends TestCase
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
         $this->assertArraysAreSimilar($data[1], $actualData);
 
+        /** @var PolicyEntity[] $actualResult */
         $actualResult = $storage->getPoliciesByResourceId(null);
         $this->assertSame(1, count($actualResult));
         $this->assertFalse($actualResult[0]->getReadOnly());
@@ -344,19 +348,21 @@ class PolicyStorageTest extends TestCase
         $defaultAdapterInstance = $this->defaultAdapter->reveal();
         $storage = new PolicyStorage($defaultAdapterInstance, $dataEntity);
 
-        /** @var array<PolicyEntity> $actualResult */
+        /** @var PolicyEntity[] $actualResult */
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(1, 1);
         $this->assertSame(1, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
         $this->assertTrue($actualResult[0]->getAllowed());
         $this->assertSame('Test Policy 1', $actualResult[0]->getTitle());
 
+        /** @var PolicyEntity[] $actualResult */
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(1, 2);
         $this->assertSame(1, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
         $this->assertFalse($actualResult[0]->getAllowed());
         $this->assertSame('Test Policy 2', $actualResult[0]->getTitle());
 
+        /** @var PolicyEntity[] $actualResult */
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(null, null);
         $this->assertSame(1, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);

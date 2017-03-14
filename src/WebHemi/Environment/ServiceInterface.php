@@ -115,6 +115,13 @@ interface ServiceInterface
     public function getResourcePath(): string;
 
     /**
+     * Gets the request method.
+     *
+     * @return string
+     */
+    public function getRequestMethod(): string;
+
+    /**
      * Gets environment data.
      *
      * @param string $key
