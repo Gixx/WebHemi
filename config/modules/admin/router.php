@@ -15,37 +15,37 @@ use WebHemi\Middleware\Action;
 return [
     'router' => [
         'Admin' => [
-            'index' => [
+            'admin-dashboard' => [
                 'path'            => '/',
                 'middleware'      => Action\Admin\DashboardAction::class,
                 'allowed_methods' => ['GET'],
             ],
-            'applications-index' => [
+            'admin-applications-index' => [
                 'path'            => '/applications[/]',
                 'middleware'      => Action\Admin\Applications\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
-            'applications-view' => [
+            'admin-applications-view' => [
                 'path'            => '/applications/view/{name:[a-z0-9\-\_]+}[/]',
                 'middleware'      => Action\Admin\Applications\ViewAction::class,
                 'allowed_methods' => ['GET'],
             ],
-            'applications-edit' => [
+            'admin-applications-edit' => [
                 'path'            => '/applications/edit/{name:[a-z0-9\-\_]+}[/]',
                 'middleware'      => Action\Admin\Applications\EditAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
-            'applications-add' => [
+            'admin-applications-add' => [
                 'path'            => '/applications/add',
                 'middleware'      => Action\Admin\Applications\AddAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
-            'login' => [
+            'admin-login' => [
                 'path'            => '/auth/login[/]',
                 'middleware'      => Action\Auth\LoginAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
-            'logout' => [
+            'admin-logout' => [
                 'path'            => '/auth/logout[/]',
                 'middleware'      => Action\Auth\LogoutAction::class,
                 'allowed_methods' => ['GET'],

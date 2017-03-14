@@ -49,6 +49,7 @@ trait PolicyEntityTrait
             ->setName($data['name'])
             ->setTitle($data['title'])
             ->setDescription($data['description'])
+            ->setMethod($data['method'])
             ->setReadOnly((bool) $data['is_read_only'])
             ->setAllowed((bool) $data['is_allowed'])
             ->setDateCreated(new DateTime($data['date_created'] ?? 'now'))

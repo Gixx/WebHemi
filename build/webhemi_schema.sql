@@ -99,8 +99,8 @@ INSERT INTO `webhemi_am_resource` VALUES
   (1,  'WebHemi\\Middleware\\Action\\Admin\\DashboardAction', 'The Dashboard page', '', 1, NOW(), NULL),
   (2,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\IndexAction', 'The Applications page', '', 1, NOW(), NULL),
   (3,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\ViewAction', 'View application details', '', 1, NOW(), NULL),
-  (4,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\EditAction', 'Edit a specific application', '', 1, NOW(), NULL),
-  (5,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\AddAction', 'Add new application', '', 1, NOW(), NULL);
+  (4,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\AddAction', 'Add new application', '', 1, NOW(), NULL),
+  (5,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\EditAction', 'Edit a specific application', '', 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_am_resource` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,12 +120,13 @@ CREATE TABLE `webhemi_am_policy` (
   `name` VARCHAR(255) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL DEFAULT '',
+  `method` ENUM('GET', 'POST') DEFAULT NULL,
   `is_read_only` TINYINT(1) NOT NULL DEFAULT 0,
   `is_allowed` TINYINT(1) NOT NULL DEFAULT 1,
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modified` DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_am_policy`),
-  UNIQUE KEY `unq_am_policy` (`fk_am_resource`, `fk_application`),
+  UNIQUE KEY `unq_am_policy` (`fk_am_resource`, `fk_application`, `method`),
   UNIQUE KEY `unq_am_policy_title` (`title`),
   KEY `idx_am_policy_fk_am_resource` (`fk_am_resource`),
   KEY `idx_am_policy_fk_application` (`fk_application`),
@@ -141,12 +142,15 @@ CREATE TABLE `webhemi_am_policy` (
 LOCK TABLES `webhemi_am_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_am_policy` DISABLE KEYS */;
 INSERT INTO `webhemi_am_policy` VALUES
-  (1, NULL, NULL, 'supervisor', 'Supervisor access', 'Access to all resources in every application.', 1, 1, NOW(), NULL),
-  (2, 1, 1, 'dashboard', 'Dashboard visitor', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL),
-  (3, 2, 1, 'dashboard', 'Application lister', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL),
-  (4, 3, 1, 'dashboard', 'Application viewer', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL),
-  (5, 4, 1, 'dashboard', 'Application editor', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL),
-  (6, 5, 1, 'dashboard', 'Application publisher', 'Access to the Admin/Dashboard page.', 1, 1, NOW(), NULL);
+  (1, NULL, NULL, 'supervisor', 'Supervisor access', 'Access to all resources in every application.', NULL, 1, 1, NOW(), NULL),
+  (2, 1, 1, 'dashboard', 'Dashboard visitor', 'Access to the Admin/Dashboard page.', NULL, 1, 1, NOW(), NULL),
+  (3, 2, 1, 'application-list', 'Application lister', 'Access to the Admin/Application/List page.', NULL, 1, 1, NOW(), NULL),
+  (4, 3, 1, 'application-view', 'Application viewer', 'Access to the Admin/Application/View page.', NULL, 1, 1, NOW(), NULL),
+  (5, 4, 1, 'application-add', 'Application creator (view)', 'Access to the Admin/Application/Add page to edit new content.', 'GET', 1, 1, NOW(), NULL),
+  (6, 4, 1, 'application-add', 'Application creator (save)', 'Access to the Admin/Application/Add page to save new content.', 'POST', 1, 1, NOW(), NULL),
+  (7, 5, 1, 'application-edit', 'Application editor (view)', 'Access to the Admin/Application/Edit page to edit content.', 'GET', 1, 1, NOW(), NULL),
+  (8, 5, 1, 'application-edit-save', 'Application editor (save)', 'Access to the Admin/Application/Edit page to save edited content.', 'POST', 1, 1, NOW(), NULL);
+
 /*!40000 ALTER TABLE `webhemi_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -188,7 +192,8 @@ CREATE TABLE `webhemi_user` (
 LOCK TABLES `webhemi_user` WRITE;
 /*!40000 ALTER TABLE `webhemi_user` DISABLE KEYS */;
 INSERT INTO `webhemi_user` VALUES
-  (1, 'admin', 'admin@foo.org', '$2y$09$dmrDfcYZt9jORA4vx9MKpeyRt0ilCH/gxSbSHcfBtGaghMJ30tKzS', '', 1, 1, NOW(), NULL);
+  (1, 'admin', 'admin@foo.org', '$2y$09$dmrDfcYZt9jORA4vx9MKpeyRt0ilCH/gxSbSHcfBtGaghMJ30tKzS', 'hash-admin', 1, 1, NOW(), NULL),
+  (2, 'demo', 'demo@foo.org', '$2y$09$dmrDfcYZt9jORA4vx9MKpeyRt0ilCH/gxSbSHcfBtGaghMJ30tKzS', 'hash-demo', 1, 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,8 +265,6 @@ CREATE TABLE `webhemi_user_to_am_policy` (
 
 LOCK TABLES `webhemi_user_to_am_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_to_am_policy` DISABLE KEYS */;
-INSERT INTO `webhemi_user_to_am_policy` VALUES
-  (NULL, 1, 1);
 /*!40000 ALTER TABLE `webhemi_user_to_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -292,8 +295,9 @@ CREATE TABLE `webhemi_user_group` (
 LOCK TABLES `webhemi_user_group` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_group` DISABLE KEYS */;
 INSERT INTO `webhemi_user_group` VALUES
-  (1, 'admin', 'Administrators', 'Group for global administrators', 1, NOW(), NULL),
-  (2, 'guest', 'Guests', 'Group for guests.', 1, NOW(), NULL);
+  (1, 'guest', 'Guests', 'Group for guests.', 1, NOW(), NULL),
+  (2, 'admin', 'Administrators', 'Group for global administrators', 1, NOW(), NULL),
+  (3, 'demo', 'Demo group', 'For test purposes', 0, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -324,7 +328,8 @@ CREATE TABLE `webhemi_user_to_user_group` (
 LOCK TABLES `webhemi_user_to_user_group` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_to_user_group` DISABLE KEYS */;
 INSERT INTO `webhemi_user_to_user_group` VALUES
-  (NULL, 1, 1);
+  (NULL, 1, 2),
+  (NULL, 2, 3);
 /*!40000 ALTER TABLE `webhemi_user_to_user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -355,7 +360,14 @@ CREATE TABLE `webhemi_user_group_to_am_policy` (
 LOCK TABLES `webhemi_user_group_to_am_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_group_to_am_policy` DISABLE KEYS */;
 INSERT INTO `webhemi_user_group_to_am_policy` VALUES
-  (NULL, 1, 1);
+  (NULL, 2, 1),
+  (NULL, 3, 2),
+  (NULL, 3, 3),
+  (NULL, 3, 4),
+  (NULL, 3, 5),
+  (NULL, 3, 6),
+  (NULL, 3, 7),
+  (NULL, 3, 8);
 /*!40000 ALTER TABLE `webhemi_user_group_to_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
 

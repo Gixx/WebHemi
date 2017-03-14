@@ -31,12 +31,14 @@ use WebHemi\Data\Connector\PDO\SQLite\DriverAdapter as SQLiteDriver;
 use WebHemi\Data\DriverInterface as DataDriverInterface;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 use WebHemi\Data\Storage\User\UserStorage;
+use WebHemiTest\Configuration\ConfigTest;
 use WebHemiTest\TestService\EmptyAuthStorage;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
+use WebHemiTest\TestService\EmptyEnvironmentManager;
 
 /**
  * Class AclTest
@@ -44,7 +46,17 @@ use PHPUnit\Framework\SkippedTestError;
 class AclTest extends TestCase
 {
     /** @var array */
-    private $config;
+    protected $config;
+    /** @var array */
+    protected $get = [];
+    /** @var array */
+    protected $post = [];
+    /** @var array */
+    protected $server;
+    /** @var array */
+    protected $cookie = [];
+    /** @var array */
+    protected $files = [];
 
     use AssertTrait;
     use InvokePrivateMethodTrait;
@@ -113,6 +125,23 @@ class AclTest extends TestCase
      */
     public function testConstructor()
     {
+        $this->server = [
+            'HTTP_HOST'    => 'unittest.dev',
+            'SERVER_NAME'  => 'unittest.dev',
+            'REQUEST_URI'  => '/',
+            'QUERY_STRING' => '',
+        ];
+
+        $config = new Config($this->config);
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+
         $userToPolicyProphecy = $this->prophesize(UserToPolicyCoupler::class);
         $userToPolicyCoupler = $userToPolicyProphecy->reveal();
 
@@ -127,7 +156,12 @@ class AclTest extends TestCase
          * @var UserToGroupCoupler $userToGroupCoupler
          * @var UserGroupToPolicyCoupler $userGroupToPolicyCoupler
          */
-        $aclAdapter = new Acl($userToPolicyCoupler, $userToGroupCoupler, $userGroupToPolicyCoupler);
+        $aclAdapter = new Acl(
+            $environmentManager,
+            $userToPolicyCoupler,
+            $userToGroupCoupler,
+            $userGroupToPolicyCoupler
+        );
 
         $this->assertInstanceOf(AclAdapterInterface::class, $aclAdapter);
     }
@@ -137,6 +171,24 @@ class AclTest extends TestCase
      */
     public function testIsAllowed()
     {
+        $this->server = [
+            'HTTP_HOST'      => 'unittest.dev',
+            'SERVER_NAME'    => 'unittest.dev',
+            'REQUEST_URI'    => '/',
+            'QUERY_STRING'   => '',
+            'REQUEST_METHOD' => 'POST'
+        ];
+
+        $config = new Config($this->config);
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+
         $userEntity = new UserEntity();
         $userGroupEntity = new UserGroupEntity();
         $policyEntity = new PolicyEntity();
@@ -172,17 +224,22 @@ class AclTest extends TestCase
          * User Group id 90000 is assigned                                   to Policy id 90000,               90003
          * User Group id 90001 is assigned                                   to Policy id        90001,        90003
          *
-         * | Resource | Application |    | Policy || Allow User A? | Allow User B? |
-         * +----------+-------------+----+--------++---------------+---------------+
-         * |     null |        null | => |  90000 ||           Yes |            No |
-         * |    90000 |        null | => |  90001 ||           Yes |           Yes |
-         * |     null |       90000 | => |  90002 ||           Yes |            No |
-         * |    90000 |       90000 | => |  90003 ||           Yes |           Yes |
+         * | Resource | Application | Method |    | Policy || Allow User A? | Allow User B? |
+         * +----------+-------------+--------+----+--------++---------------+---------------+
+         * |     null |        null |   null | => |  90000 ||           Yes |            No |
+         * |    90000 |        null |    GET | => |  90001 ||           Yes |            No | * because the POST
+         * |     null |       90000 |   POST | => |  90002 ||           Yes |            No |
+         * |    90000 |       90000 |   null | => |  90003 ||           Yes |           Yes |
          *
          * User A has the Jolly Joker policy (all resource in all applicatio), so it can access to anything.
          */
 
-        $aclAdapter = new Acl($userToPolicyCoupler, $userToGroupCoupler, $userGroupToPolicyCoupler);
+        $aclAdapter = new Acl(
+            $environmentManager,
+            $userToPolicyCoupler,
+            $userToGroupCoupler,
+            $userGroupToPolicyCoupler
+        );
 
         $this->assertTrue($aclAdapter->isAllowed($userA, null, null));
         $this->assertFalse($aclAdapter->isAllowed($userB, null, null));

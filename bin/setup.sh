@@ -7,7 +7,7 @@ cd $dir
 
 if [ -n "$(type -t mysql)" ] ; then
     echo "Initialize database"
-    mysql --host=$publicIp -u root -pwebhemi < ../build/webhemi_schema.sql
+    mysql --host=$publicIp -u root -prootpass webhemi < ../build/webhemi_schema.sql
 
     if [ -n "$(type -t mysqldump)" ] && [ -n "$(type -t sqlite3)" ]; then
         echo "Create SQLite copy for the unit test"
@@ -17,7 +17,7 @@ if [ -n "$(type -t mysql)" ] ; then
             rm $file
         fi
 
-        ./mysql2sqlite.sh --host=$publicIp -u root -px webhemi | sqlite3 $file
+        ./mysql2sqlite.sh --host=$publicIp -u root -prootpass webhemi | sqlite3 $file
     fi
 fi
 
@@ -28,7 +28,7 @@ if [ -n "$(type -t php)" ] ; then
     echo "Install composer"
     curl -L -o /usr/bin/composer https://getcomposer.org/composer.phar
     chmod +x /usr/bin/composer
-    
+
     echo "Install composer packages"
     if [ -f "composer.lock" ] ; then
         rm composer.lock

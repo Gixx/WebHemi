@@ -17,7 +17,6 @@ use WebHemi\Configuration;
 use WebHemi\Data;
 use WebHemi\DependencyInjection;
 use WebHemi\Environment;
-use WebHemi\Form;
 use WebHemi\Http;
 use WebHemi\Logger;
 use WebHemi\Middleware;
@@ -25,7 +24,6 @@ use WebHemi\MiddlewarePipeline;
 use WebHemi\Renderer;
 use WebHemi\Router;
 use WebHemi\Session;
-use WebHemi\Validator;
 
 return [
     'dependencies' => [
@@ -53,6 +51,7 @@ return [
             Acl\ServiceInterface::class => [
                 'class'     => Acl\ServiceAdapter\Base\ServiceAdapter::class,
                 'arguments' => [
+                    Environment\ServiceInterface::class,
                     Data\Coupler\UserToPolicyCoupler::class,
                     Data\Coupler\UserToGroupCoupler::class,
                     Data\Coupler\UserGroupToPolicyCoupler::class,

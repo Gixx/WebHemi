@@ -184,9 +184,9 @@ class IsAllowedHelperTest extends TestCase
     }
 
     /**
-     * Tests the helper invoke
+     * Tests the helper invoke with url aliases
      */
-    public function testHelperWithUrls()
+    public function testHelperWithUrlAliases()
     {
         $environmentProphecy = $this->prophesize(EnvironmentManager::class);
         $environmentProphecy->getSelectedApplication()->willReturn('website');
@@ -257,17 +257,17 @@ class IsAllowedHelperTest extends TestCase
 
         // result = (resourceId == applicationId)
         // 1, 1 => true
-        $this->assertTrue($helper('/some/url[/]'));
+        $this->assertTrue($helper('some_page'));
         // 2, 1 => false
-        $this->assertFalse($helper('/some/url/{id:\d+}'));
+        $this->assertFalse($helper('some_other_page'));
         // 1, 2 => false
-        $this->assertFalse($helper('/some/admin/page[/]', 'admin'));
+        $this->assertFalse($helper('some_admin_page', 'admin'));
         // 2, 2 => true
-        $this->assertTrue($helper('/some/other/admin/page[/]', 'admin'));
+        $this->assertTrue($helper('some_other_admin_page', 'admin'));
         // null, 1 => false
-        $this->assertFalse($helper('/non/existing/page'));
+        $this->assertFalse($helper('non-existing_page'));
         // null, null => false
-        $this->assertFalse($helper('/non/existing/page', 'fake_app'));
+        $this->assertFalse($helper('non-existing_page', 'fake_app'));
     }
 
     /**

@@ -14,17 +14,17 @@ use WebHemi\Middleware\Action;
 return [
     'router' => [
         'Website' => [
-            'index' => [
+            'website-index' => [
                 'path'            => '/',
                 'middleware'      => Action\Website\IndexAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
-            'list' => [
+            'website-post-list' => [
                 'path'            => '/posts',
                 'middleware'      => Action\Website\PostListAction::class,
                 'allowed_methods' => ['GET'],
             ],
-            'view' => [
+            'website-post-view' => [
                 'path'            => '/posts/view/{id:.*}',
                 'middleware'      => Action\Website\PostViewAction::class,
                 'allowed_methods' => ['GET'],

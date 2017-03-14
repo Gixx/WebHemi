@@ -61,7 +61,7 @@ class IsAllowedHelper implements HelperInterface
      */
     public static function getDefinition() : string
     {
-        return 'isAllowed(string resourceName = null, string applicationName = null) : bool';
+        return 'isAllowed(string resourceName/routeAlias = null, string applicationName = null) : bool';
     }
 
     /**
@@ -149,12 +149,11 @@ class IsAllowedHelper implements HelperInterface
         $applicationRouteConfig = $this->configuration
             ->getData('router/'.$applicationConfig['module']);
 
-        $tempName = $resourceName;
-        $tempName = '/'.trim($tempName, '/');
+        $tempName = trim($resourceName, '/');
 
-        foreach ($applicationRouteConfig as $route) {
-            if ($route['path'] == $tempName) {
-                $resourceName = $route['middleware'];
+        foreach ($applicationRouteConfig as $routeAlias => $routeData) {
+            if ($routeAlias == $tempName) {
+                $resourceName = $routeData['middleware'];
                 break;
             }
         }
