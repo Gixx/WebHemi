@@ -18,6 +18,7 @@ use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\User\UserGroupEntity;
 
 /**
  * Class ServiceAdapter.
@@ -75,7 +76,7 @@ class ServiceAdapter extends AbstractServiceAdapter
     {
         /** @var PolicyEntity[] $userGroupPolicies */
         $userGroupPolicies = [];
-        /** @var array<UserGroupEntity> $userGroups */
+        /** @var UserGroupEntity[] $userGroups */
         $userGroups = $this->userToGroupCoupler->getEntityDependencies($userEntity);
 
         foreach ($userGroups as $userGroupEntity) {

@@ -53,7 +53,7 @@ class TwigExtension extends Twig_Extension
     /**
      * Returns extension filters.
      *
-     * @return array<Twig_SimpleFilter>
+     * @return Twig_SimpleFilter[]
      */
     public function getFilters()
     {
@@ -63,7 +63,7 @@ class TwigExtension extends Twig_Extension
     /**
      * Returns extension functions.
      *
-     * @return array<Twig_SimpleFunction>
+     * @return Twig_SimpleFunction[]
      */
     public function getFunctions() : array
     {

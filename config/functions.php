@@ -245,7 +245,7 @@ function get_renderer_config()
  *
  * @return array
  */
-function get_routing_config()
+function get_router_config()
 {
     $moduleConfig = get_full_module_config();
 
@@ -261,7 +261,7 @@ function get_dependencies_config()
 {
     $moduleConfig = get_full_module_config();
 
-    if (empty($moduleConfig['dependencies']['Global'][\WebHemi\Adapter\Data\DataDriverInterface::class])
+    if (empty($moduleConfig['dependencies']['Global'][\WebHemi\Data\DriverInterface::class])
         && file_exists(__DIR__.'/settings/local/db.php')
     ) {
         $dataDriverConfig = require __DIR__.'/settings/local/db.php';
@@ -322,7 +322,7 @@ function get_session_config()
  *
  * @return mixed
  */
-function get_logger_cofig()
+function get_logger_config()
 {
     $globalLoggerConfig = require __DIR__.'/settings/global/logger.php';
     $localLoggerConfig = (file_exists(__DIR__.'/settings/local/logger.php'))

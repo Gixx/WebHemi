@@ -35,7 +35,7 @@ abstract class AbstractElement implements ElementInterface
     private $values = [];
     /** @var array */
     private $valueRange = [];
-    /** @var array<ValidatorInterface> */
+    /** @var ValidatorInterface[] */
     private $validators = [];
     /** @var array */
     private $errors = [];
@@ -52,26 +52,20 @@ abstract class AbstractElement implements ElementInterface
      * @param array  $valueRange Optional. The range of interpretation.
      */
     public function __construct(
-        string $type,
-        string $name,
+        string $type = null,
+        string $name = null,
         string $label = null,
         array $values = [],
         array $valueRange = []
     ) {
-        if (!in_array($type, $this->validTypes)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'The given type "%s" is not a valid %s type.',
-                    $type,
-                    __CLASS__
-                ),
-                1001
-            );
+        if (!empty($type)) {
+            $this->setType($type);
         }
 
-        $this->setName($name);
+        if (!empty($name)) {
+            $this->setName($name);
+        }
 
-        $this->type = $type;
         $this->label = $label;
         $this->values = $values;
         $this->valueRange = $valueRange;
@@ -90,7 +84,7 @@ abstract class AbstractElement implements ElementInterface
         $name = StringLib::convertNonAlphanumericToUnderscore($name, '[]');
 
         if (empty($name)) {
-            throw new InvalidArgumentException('During conversion the argument value become an empty string!', 1002);
+            throw new InvalidArgumentException('During conversion the argument value become an empty string!', 1000);
         }
 
         $this->name = $name;
@@ -117,6 +111,26 @@ abstract class AbstractElement implements ElementInterface
     public function getId() : string
     {
         return $this->identifier;
+    }
+
+    /**
+     * Sets the element's type.
+     *
+     * @param string $type
+     * @return ElementInterface
+     */
+    public function setType(string $type) : ElementInterface
+    {
+        if (!in_array($type, $this->validTypes)) {
+            throw new InvalidArgumentException(
+                sprintf('%s is not a valid %s type', $type, get_called_class()),
+                1001
+            );
+        }
+
+        $this->type = $type;
+
+        return $this;
     }
 
     /**

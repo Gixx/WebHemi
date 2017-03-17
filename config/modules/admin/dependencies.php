@@ -15,6 +15,7 @@ use WebHemi\Auth;
 use WebHemi\Configuration;
 use WebHemi\Data;
 use WebHemi\Environment;
+use WebHemi\Form;
 use WebHemi\Middleware;
 
 return [
@@ -25,6 +26,7 @@ return [
                     Auth\ServiceInterface::class,
                     Auth\CredentialInterface::class,
                     Environment\ServiceInterface::class,
+                    Form\Preset\AdminLoginForm::class,
                 ],
             ],
             Middleware\Action\Auth\LogoutAction::class => [
@@ -84,6 +86,12 @@ return [
                     Auth\ServiceInterface::class,
                     Environment\ServiceInterface::class
                 ],
+            ],
+            Form\Preset\AdminLoginForm::class => [
+                'arguments' => [
+                    Form\ServiceAdapter\Base\ServiceAdapter::class,
+                    Form\Element\Html\HtmlElement::class
+                ]
             ]
         ]
     ],

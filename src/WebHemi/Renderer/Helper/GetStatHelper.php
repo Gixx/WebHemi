@@ -49,7 +49,7 @@ class GetStatHelper implements HelperInterface
      */
     public static function getDescription() : string
     {
-        return 'Triggers the WebHemiX\'s built-in timer and returns the data in array:'.PHP_EOL
+        return 'Triggers the WebHemi\'s built-in timer and returns the data in array:'.PHP_EOL
             . '\'start_time\': the time when the timer had been called (called automatically).'.PHP_EOL
             . '\'end_time\': the time when the timer had been stopped (called in a template)'.PHP_EOL
             . '\'duration\': the difference in seconds '.PHP_EOL
