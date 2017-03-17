@@ -68,7 +68,7 @@ class Session implements StorageInterface
      *
      * @return null|UserEntity
      */
-    public function getIdentity() : ?UserEntity
+    public function getIdentity() : ? UserEntity
     {
         return $this->sessionManager->get($this->sessionKey);
     }

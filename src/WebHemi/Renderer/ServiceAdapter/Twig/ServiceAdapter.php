@@ -79,6 +79,12 @@ class ServiceAdapter implements ServiceInterface
 
         $this->adapter = new Twig_Environment($loader, array('debug' => true, 'cache' => false));
         $this->adapter->addExtension(new Twig_Extension_Debug());
+        // @codeCoverageIgnoreStart
+        //
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            $this->adapter->addExtension(new TwigExtension());
+        }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -91,13 +97,6 @@ class ServiceAdapter implements ServiceInterface
      */
     public function render(string $template, array $parameters = []) : StreamInterface
     {
-        // @codeCoverageIgnoreStart
-        //
-        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
-            $this->adapter->addExtension(new TwigExtension());
-        }
-        // @codeCoverageIgnoreEnd
-
         if ($this->configuration->has('map/'.$template)) {
             $template = $this->configuration->getData('map/'.$template)[0];
         }
