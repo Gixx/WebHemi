@@ -20,6 +20,8 @@ use WebHemi\Auth\ServiceInterface as AuthInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Form\Element\Html\HtmlElement;
+use WebHemi\Form\ElementInterface;
+use WebHemi\Form\PresetInterface;
 use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
@@ -34,6 +36,8 @@ class LoginAction extends AbstractMiddlewareAction
     private $authCredential;
     /** @var EnvironmentInterface */
     private $environmentManager;
+    /** @var PresetInterface */
+    private $loginFormPreset;
 
     /**
      * LoginAction constructor.
@@ -41,15 +45,18 @@ class LoginAction extends AbstractMiddlewareAction
      * @param AuthInterface        $authAdapter
      * @param CredentialInterface  $authCredential
      * @param EnvironmentInterface $environmentManager
+     * @param PresetInterface      $loginFormPreset
      */
     public function __construct(
         AuthInterface $authAdapter,
         CredentialInterface $authCredential,
-        EnvironmentInterface $environmentManager
+        EnvironmentInterface $environmentManager,
+        PresetInterface $loginFormPreset
     ) {
         $this->authAdapter = $authAdapter;
         $this->authCredential = $authCredential;
         $this->environmentManager = $environmentManager;
+        $this->loginFormPreset = $loginFormPreset;
     }
 
     /**
@@ -121,18 +128,23 @@ class LoginAction extends AbstractMiddlewareAction
      */
     private function getLoginForm(string $customError = '') : HtmlForm
     {
-        $form = new HtmlForm('login', '', 'POST');
+        /** @var HtmlForm $form */
+        $form = $this->loginFormPreset->getPreset();
 
-        $userName = new HtmlElement(HtmlElement::HTML_ELEMENT_INPUT_TEXT, 'identification', 'Identification');
-        $password = new HtmlElement(HtmlElement::HTML_ELEMENT_INPUT_PASSWORD, 'password', 'Password');
         if (!empty($customError)) {
-            $password->setError(AuthInterface::class, $customError);
-        }
-        $submit = new HtmlElement(HtmlElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Login');
+            /** @var ElementInterface[] $elements */
+            $elements = $form->getElements();
 
-        $form->addElement($userName)
-            ->addElement($password)
-            ->addElement($submit);
+            /** @var ElementInterface $element */
+            foreach ($elements as $element) {
+                if ($element->getType() == HtmlElement::HTML_ELEMENT_INPUT_PASSWORD) {
+                    $element->setError(AuthInterface::class, $customError);
+                    // Since the name attribute didn't change, adding to the form will overwrite the old one.
+                    $form->addElement($element);
+                    break;
+                }
+            }
+        }
 
         return $form;
     }

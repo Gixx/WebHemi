@@ -96,7 +96,7 @@ class UserMetaStorage extends AbstractStorage
      * Returns a User Meta entity list identified by user ID.
      *
      * @param mixed $userId
-     * @return array<UserMetaEntity>
+     * @return UserMetaEntity[]
      */
     public function getUserMetaForUserId($userId) : array
     {

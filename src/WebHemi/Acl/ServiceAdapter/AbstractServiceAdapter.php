@@ -20,10 +20,11 @@ use WebHemi\Data\Coupler\UserToPolicyCoupler;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
+use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 
 /**
- * Class AbstractServiceAdapter
+ * Class AbstractServiceAdapter.
  */
 abstract class AbstractServiceAdapter implements Acl\ServiceInterface
 {
@@ -55,6 +56,20 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
         $this->userToGroupCoupler = $userToGroupCoupler;
         $this->userGroupToPolicyCoupler = $userGroupToPolicyCoupler;
     }
+
+    /**
+     * Checks if a User can access to a Resource in an Application
+     *
+     * @param UserEntity             $userEntity
+     * @param ResourceEntity|null    $resourceEntity
+     * @param ApplicationEntity|null $applicationEntity
+     * @return bool
+     */
+    abstract public function isAllowed(
+        UserEntity $userEntity,
+        ? ResourceEntity $resourceEntity = null,
+        ? ApplicationEntity $applicationEntity = null
+    ) : bool;
 
     /**
      * Checks a given policy against a resource, application and method.

@@ -26,7 +26,7 @@ abstract class AbstractCoupler implements CouplerInterface
 {
     /** @var ConnectorInterface */
     private $connector;
-    /** @var array<EntityInterface> */
+    /** @var EntityInterface[] */
     protected $dataEntityPrototypes = [];
     /** @var string */
     protected $connectorIdKey;
@@ -85,7 +85,7 @@ abstract class AbstractCoupler implements CouplerInterface
      *
      * @param EntityInterface $dataEntity
      * @throws RuntimeException
-     * @return array<EntityInterface>
+     * @return EntityInterface[]
      */
     public function getEntityDependencies(EntityInterface $dataEntity) : array
     {

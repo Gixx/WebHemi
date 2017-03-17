@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace WebHemi\Form\ServiceAdapter\Base;
 
 use JsonSerializable;
+use RuntimeException;
 use WebHemi\Form\ElementInterface;
 use WebHemi\Form\ServiceInterface;
 
@@ -34,15 +35,37 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     /**
      * ServiceAdapter constructor.
      *
-     * @param string $name
-     * @param string $action
-     * @param string $method
+     * @param string|null $name
+     * @param string|null $action
+     * @param string      $method
      */
-    public function __construct(string $name, string $action, string $method = 'POST')
+    public function __construct(string $name = null, string $action = null, string $method = 'POST')
     {
         $this->name = $name;
         $this->action = $action;
         $this->method = $method;
+    }
+
+    /**
+     * Initializes the form if it didn't happen in the constructor. (Used mostly in presets).
+     *
+     * @param string $name
+     * @param string $action
+     * @param string $method
+     * @throws RuntimeException
+     * @return ServiceInterface
+     */
+    public function initialize(string $name, string $action, string $method = 'POST') : ServiceInterface
+    {
+        if (isset($this->name) || isset($this->action)) {
+            throw new RuntimeException('The form had been already initialized!', 1000);
+        }
+
+        $this->name = $name;
+        $this->action = $action;
+        $this->method = $method;
+
+        return $this;
     }
 
     /**
@@ -84,8 +107,11 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     public function addElement(ElementInterface $formElement) : ServiceInterface
     {
         $elementName = $formElement->getName();
-        $elementName = $this->name.'['.$elementName.']';
-        $formElement->setName($elementName);
+
+        if (!isset($this->formElements[$elementName])) {
+            $elementName = $this->name.'['.$elementName.']';
+            $formElement->setName($elementName);
+        }
 
         $this->formElements[$elementName] = $formElement;
 
@@ -95,7 +121,7 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     /**
      * Returns all the elements assigned.
      *
-     * @return array<ElementInterface>
+     * @return ElementInterface[]
      */
     public function getElements() : array
     {

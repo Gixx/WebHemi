@@ -155,7 +155,7 @@ abstract class AbstractStorage implements StorageInterface
      * @param array $expression
      * @param int   $limit
      * @param int   $offset
-     * @return array<DataEntityInterface>
+     * @return DataEntityInterface[]
      */
     protected function getDataEntitySet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array
     {

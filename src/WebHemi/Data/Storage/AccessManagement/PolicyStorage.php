@@ -130,7 +130,7 @@ class PolicyStorage extends AbstractStorage
      * Returns a set of Policy entities identified by Resource ID.
      *
      * @param int $resourceId
-     * @return array<PolicyEntity>
+     * @return PolicyEntity[]
      */
     public function getPoliciesByResourceId($resourceId) : array
     {
@@ -141,7 +141,7 @@ class PolicyStorage extends AbstractStorage
      * Returns a set of Policy entities identified by Application ID.
      *
      * @param int $applicationId
-     * @return array<PolicyEntity>
+     * @return PolicyEntity[]
      */
     public function getPoliciesByApplicationId($applicationId) : array
     {
@@ -153,7 +153,7 @@ class PolicyStorage extends AbstractStorage
      *
      * @param int $resourceId
      * @param int $applicationId
-     * @return array<PolicyEntity>
+     * @return PolicyEntity[]
      */
     public function getPoliciesByResourceAndApplicationIds($resourceId, $applicationId) : array
     {

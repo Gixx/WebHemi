@@ -30,8 +30,8 @@ interface ElementInterface
      * @param array  $valueRange Optional. The range of interpretation.
      */
     public function __construct(
-        string $type,
-        string $name,
+        string $type = null,
+        string $name = null,
         string $label = null,
         array $values = [],
         array $valueRange = []
@@ -58,6 +58,14 @@ interface ElementInterface
      * @return string
      */
     public function getId() : string;
+
+    /**
+     * Sets the element's type.
+     *
+     * @param string $type
+     * @return ElementInterface
+     */
+    public function setType(string $type) : ElementInterface;
 
     /**
      * Gets the element's type.
