@@ -13,6 +13,7 @@ namespace WebHemiTest\Form;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use RuntimeException;
 use WebHemi\Form\ElementInterface as FormElementInterface;
 use WebHemi\Form\ServiceInterface as FormInterface;
 use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
@@ -42,6 +43,30 @@ class HtmlFormTest extends TestCase
 
         $form = new HtmlForm($name, $action, 'GET');
         $this->assertAttributeEquals('GET', 'method', $form);
+    }
+
+    /**
+     * Tests the initialize method.
+     */
+    public function testInit()
+    {
+        $name = 'someForm';
+        $action = 'some/action';
+        $method = 'GET';
+
+        $form = new HtmlForm();
+        $this->assertInstanceOf(FormInterface::class, $form);
+        $this->assertAttributeEmpty('name', $form);
+        $this->assertAttributeEmpty('action', $form);
+        $this->assertAttributeEquals('POST', 'method', $form);
+
+        $form->initialize($name, $action, $method);
+        $this->assertAttributeEquals($name, 'name', $form);
+        $this->assertAttributeEquals($action, 'action', $form);
+        $this->assertAttributeEquals($method, 'method', $form);
+
+        $this->expectException(RuntimeException::class);
+        $form->initialize($name, $action, $method);
     }
 
     /**

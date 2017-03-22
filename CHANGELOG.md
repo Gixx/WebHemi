@@ -1,5 +1,11 @@
 # Change log #
 
+## Version 4.0.0-4.1 ##
+
+* Add support for form presets.
+* Add Markdown parser and renderer filter.
+* Minor fixes
+
 ## Version 4.0.0-4.0 ##
 
 * I had an idea, so I refactored the whole WebHemi namespace:
