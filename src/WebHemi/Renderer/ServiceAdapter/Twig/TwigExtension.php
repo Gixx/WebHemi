@@ -86,11 +86,12 @@ class TwigExtension extends Twig_Extension
             $this->checkExtensionType($type, $callable);
 
             if ($type == 'helper') {
-                $extensions[] = new Twig_SimpleFunction($callable::getName(), $callable);
+                $extensions[] = new Twig_SimpleFunction($callable::getName(), $callable, $callable::getOptions());
                 continue;
             }
 
-            $extensions[] = new Twig_SimpleFilter($callable::getName(), $callable);
+            /** FilterInterface $callable */
+            $extensions[] = new Twig_SimpleFilter($callable::getName(), $callable, $callable::getOptions());
         }
 
         return $extensions;

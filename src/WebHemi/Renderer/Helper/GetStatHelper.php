@@ -39,7 +39,18 @@ class GetStatHelper implements HelperInterface
      */
     public static function getDefinition() : string
     {
-        return 'getStat(void) : array';
+        return '{{ getStat() }}';
+    }
+
+    /**
+     * Gets helper options for the render.
+     *
+     * @return array
+     * @codeCoverageIgnore - empty array
+     */
+    public static function getOptions() : array
+    {
+        return [];
     }
 
     /**

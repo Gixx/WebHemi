@@ -61,7 +61,7 @@ class IsAllowedHelper implements HelperInterface
      */
     public static function getDefinition() : string
     {
-        return 'isAllowed(string resourceName/routeAlias = null, string applicationName = null) : bool';
+        return '{% if isAllowed("routeAlias") %}';
     }
 
     /**
@@ -73,6 +73,17 @@ class IsAllowedHelper implements HelperInterface
     public static function getDescription() : string
     {
         return 'Checks if the given user has access to the given resource in the given application.';
+    }
+
+    /**
+     * Gets helper options for the render.
+     *
+     * @return array
+     * @codeCoverageIgnore - empty array
+     */
+    public static function getOptions() : array
+    {
+        return [];
     }
 
     /**

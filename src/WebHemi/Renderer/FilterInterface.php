@@ -40,6 +40,13 @@ interface FilterInterface
     public static function getDescription() : string;
 
     /**
+     * Gets filter options for the render.
+     *
+     * @return array
+     */
+    public static function getOptions() : array;
+
+    /**
      * A renderer filter should be called with its name.
      *
      * @return mixed

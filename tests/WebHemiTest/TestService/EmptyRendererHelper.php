@@ -51,6 +51,16 @@ class EmptyRendererHelper implements HelperInterface
     }
 
     /**
+     * Should return an array.
+     *
+     * @return array
+     */
+    public static function getOptions() : array
+    {
+        return [];
+    }
+
+    /**
      * A renderer helper should be called with its name.
      *
      * @param array ...$arguments

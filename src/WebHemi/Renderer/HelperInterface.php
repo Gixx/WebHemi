@@ -40,6 +40,13 @@ interface HelperInterface
     public static function getDescription() : string;
 
     /**
+     * Gets helper options for the render.
+     *
+     * @return array
+     */
+    public static function getOptions() : array;
+
+    /**
      * A renderer helper should be called with its name.
      *
      * @return mixed

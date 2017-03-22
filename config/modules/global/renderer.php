@@ -15,7 +15,7 @@ return [
     'renderer' => [
         'Global' => [
             'filter' => [
-
+                Renderer\Filter\MarkDownFilter::class
             ],
             'helper' => [
                 Renderer\Helper\DefinedHelper::class,
