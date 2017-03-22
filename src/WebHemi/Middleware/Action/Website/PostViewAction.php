@@ -40,6 +40,13 @@ class PostViewAction extends AbstractMiddlewareAction
     {
         $routingParams = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_ROUTING_PARAMETERS);
 
+        $content = 'Lorem ipsum dolor sit amet...';
+        $testFile = __DIR__.'/../../../../../data/temp/markdownTest.md';
+
+        if (file_exists($testFile)) {
+            $content = file_get_contents(__DIR__.'/../../../../../data/temp/markdownTest.md');
+        }
+
         return [
             'blogPost' => [
                 'title'       => 'Fake test',
@@ -47,7 +54,7 @@ class PostViewAction extends AbstractMiddlewareAction
                 'author'      => [
                     'name' => 'Some User'
                 ],
-                'content'     => 'Lorem ipsum dolor sit amet...',
+                'content'     => $content,
                 'parameter'   => $routingParams
             ]
         ];

@@ -21,6 +21,7 @@ use WebHemi\Http;
 use WebHemi\Logger;
 use WebHemi\Middleware;
 use WebHemi\MiddlewarePipeline;
+use WebHemi\Parser;
 use WebHemi\Renderer;
 use WebHemi\Router;
 use WebHemi\Session;
@@ -88,6 +89,10 @@ return [
                 'arguments' => [
                     Environment\ServiceInterface::class,
                 ],
+                'shared'    => true,
+            ],
+            Parser\ServiceInterface::class => [
+                'class'     => Parser\ServiceAdapter\Parsedown\ServiceAdapter::class,
                 'shared'    => true,
             ],
             Renderer\ServiceInterface::class => [
@@ -206,6 +211,13 @@ return [
                     Data\ConnectorInterface::class,
                     Data\Entity\AccessManagement\PolicyEntity::class,
                     Data\Entity\User\UserGroupEntity::class
+                ],
+                'shared'    => true,
+            ],
+            // Renderer Filter
+            Renderer\Filter\MarkDownFilter::class => [
+                'arguments' => [
+                    Parser\ServiceInterface::class
                 ],
                 'shared'    => true,
             ],

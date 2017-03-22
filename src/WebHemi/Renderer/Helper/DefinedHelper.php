@@ -49,7 +49,7 @@ class DefinedHelper implements HelperInterface
      */
     public static function getDefinition() : string
     {
-        return 'defined(string templateFileName) : bool';
+        return '{% if defined("templateFileName") %}';
     }
 
     /**
@@ -62,6 +62,17 @@ class DefinedHelper implements HelperInterface
     {
         return 'Checks if the given filepath exists in the template\'s path. Use @WebHemi for the default theme and '
             . '@Theme for the actual (custom) theme.';
+    }
+
+    /**
+     * Gets helper options for the render.
+     *
+     * @return array
+     * @codeCoverageIgnore - empty array
+     */
+    public static function getOptions() : array
+    {
+        return [];
     }
 
     /**
