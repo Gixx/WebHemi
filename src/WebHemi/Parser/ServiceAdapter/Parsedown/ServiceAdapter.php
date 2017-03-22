@@ -18,6 +18,8 @@ use WebHemi\Parser\ServiceInterface;
 
 /**
  * Class ServiceAdapter
+ *
+ * @codeCoverageIgnore - no need to test external library
  */
 class ServiceAdapter implements ServiceInterface
 {

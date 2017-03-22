@@ -61,7 +61,7 @@ abstract class AbstractPreset implements PresetInterface
      * @param string $label
      * @return ElementInterface
      */
-    protected function createElement(string $class, string $type, string $name, string $label)
+    protected function createElement(string $class, string $type, string $name, string $label) : ElementInterface
     {
         if (!isset($this->elementPrototypes[$class])) {
             throw new InvalidArgumentException(

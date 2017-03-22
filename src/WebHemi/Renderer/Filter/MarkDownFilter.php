@@ -18,6 +18,8 @@ use WebHemi\Renderer\FilterInterface;
 
 /**
  * Class MarkDownFilter
+ *
+ * @codeCoverageIgnore - See tests for the WebHemi\Parser\ServiceAdapter\Parsedown\ServiceAdapter::class
  */
 class MarkDownFilter implements FilterInterface
 {
@@ -37,7 +39,6 @@ class MarkDownFilter implements FilterInterface
      * Should return the name of the helper.
      *
      * @return string
-     * @codeCoverageIgnore - plain text
      */
     public static function getName() : string
     {
@@ -48,7 +49,6 @@ class MarkDownFilter implements FilterInterface
      * Should return the definition of the helper.
      *
      * @return string
-     * @codeCoverageIgnore - plain text
      */
     public static function getDefinition() : string
     {
@@ -59,7 +59,6 @@ class MarkDownFilter implements FilterInterface
      * Should return a description text.
      *
      * @return string
-     * @codeCoverageIgnore - plain text
      */
     public static function getDescription() : string
     {
