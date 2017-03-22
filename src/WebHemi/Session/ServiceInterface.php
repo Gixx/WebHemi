@@ -72,7 +72,7 @@ interface ServiceInterface
     public function set(string $name, $value, bool $readOnly = false) : ServiceInterface;
 
     /**
-     * Gets session data.
+     * Checks whether a session data exists or not.
      *
      * @param string $name
      * @throws RuntimeException

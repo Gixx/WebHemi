@@ -11,6 +11,22 @@
  */
 
 /**
+ * Sets PHP settings according to the environment
+ *
+ * @return void
+ */
+function set_env_sttings()
+{
+    $env = $_ENV['APPLICATION_ENV'] ?? 'live';
+
+    if ('dev' == $env) {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 'on');
+        ini_set('xdebug.var_display_max_depth', 10);
+    }
+}
+
+/**
  * Damn var dumping in a user-friendly way.
  *
  * @param array $variables
@@ -261,9 +277,12 @@ function get_dependencies_config()
 {
     $moduleConfig = get_full_module_config();
 
-    if (empty($moduleConfig['dependencies']['Global'][\WebHemi\Data\DriverInterface::class])
-        && file_exists(__DIR__.'/settings/local/db.php')
-    ) {
+    // Add global Database dependencies
+    $dataDriverConfig = require __DIR__.'/settings/global/db.php';
+    $moduleConfig = merge_array_overwrite($moduleConfig, $dataDriverConfig);
+
+    // Add local Database dependencies if exist.
+    if (file_exists(__DIR__.'/settings/local/db.php')) {
         $dataDriverConfig = require __DIR__.'/settings/local/db.php';
         $moduleConfig = merge_array_overwrite($moduleConfig, $dataDriverConfig);
     }

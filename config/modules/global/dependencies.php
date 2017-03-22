@@ -83,21 +83,6 @@ return [
                 ],
                 'shared'    => true,
             ],
-            // Data Connector and Data Driver settings can be overwritten by the `config/settings/local/db.php` file.
-            Data\ConnectorInterface::class => [
-                'class'     => Data\Connector\PDO\SQLite\ConnectorAdapter::class,
-                'arguments' => [
-                    Data\DriverInterface::class
-                ],
-                'shared'    => true,
-            ],
-            Data\DriverInterface::class => [
-                'class' => Data\Connector\PDO\SQLite\DriverAdapter::class,
-                'arguments' => [
-                    'dsn'      => 'sqlite:'.realpath(__DIR__ . '/../../../build/webhemi_schema.sqlite3'),
-                ],
-                'shared'    => true,
-            ],
             Http\ServiceInterface::class => [
                 'class'     => Http\ServiceAdapter\GuzzleHttp\ServiceAdapter::class,
                 'arguments' => [

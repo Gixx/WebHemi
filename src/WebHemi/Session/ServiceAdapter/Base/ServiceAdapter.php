@@ -211,7 +211,7 @@ class ServiceAdapter implements ServiceInterface
     }
 
     /**
-     * Gets session data.
+     * Checks whether a session data exists or not.
      *
      * @param string $name
      * @throws RuntimeException

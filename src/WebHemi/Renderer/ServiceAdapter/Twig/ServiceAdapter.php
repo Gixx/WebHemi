@@ -80,7 +80,6 @@ class ServiceAdapter implements ServiceInterface
         $this->adapter = new Twig_Environment($loader, array('debug' => true, 'cache' => false));
         $this->adapter->addExtension(new Twig_Extension_Debug());
         // @codeCoverageIgnoreStart
-        //
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
             $this->adapter->addExtension(new TwigExtension());
         }
