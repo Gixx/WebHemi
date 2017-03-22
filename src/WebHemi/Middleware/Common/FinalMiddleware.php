@@ -105,7 +105,7 @@ class FinalMiddleware implements MiddlewareInterface
 
         /** @var array $data */
         $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
-        $templateData['exception'] = $exception;
+        $templateData['exception'] = $this->getExceptionAsString($exception);
 
         if ($request->isXmlHttpRequest()) {
             $request = $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
@@ -141,7 +141,7 @@ class FinalMiddleware implements MiddlewareInterface
             'RequestUri' => $request->getUri()->getPath().'?'.$request->getUri()->getQuery(),
             'RequestMethod' => $request->getMethod(),
             'Error' => $response->getStatusCode().' '.$response->getReasonPhrase(),
-            'Exception' => $exception,
+            'Exception' => $this->getExceptionAsString($exception),
             'Parameters' => $request->getParsedBody()
         ];
         $this->logAdapter->log('error', json_encode($logData));
@@ -240,5 +240,19 @@ class FinalMiddleware implements MiddlewareInterface
         $this->sendOutputHeaders($response->getHeaders());
 
         echo $output;
+    }
+
+    /**
+     * Convert the exception into plain text instead of the fancy HTML output of the xdebug...
+     *
+     * @param Throwable $exception
+     * @return string
+     */
+    private function getExceptionAsString(Throwable $exception)
+    {
+        return 'Exception ('.$exception->getCode().'): "'.$exception->getMessage().'" '
+            .'in '.$exception->getFile().' on line '.$exception->getLine().PHP_EOL
+            .'Call stack'.PHP_EOL
+            .$exception->getTraceAsString();
     }
 }

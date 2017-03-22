@@ -133,6 +133,7 @@ class ConnectorAdapter implements ConnectorInterface
 
         $query = $this->getSelectQueryForExpression($expression, $queryBinds, $limit, $offset);
         $statement = $this->dataDriver->prepare($query);
+
         $this->bindValuesToStatement($statement, $queryBinds);
         $statement->execute();
 
