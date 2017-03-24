@@ -43,6 +43,7 @@ class RoutingMiddleware implements MiddlewareInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
+     * @throws Exception
      * @return void
      */
     public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
@@ -50,11 +51,7 @@ class RoutingMiddleware implements MiddlewareInterface
         $routeResult = $this->routerAdapter->match($request);
 
         if ($routeResult->getStatus() !== Result\Result::CODE_FOUND) {
-            $response = $response->withStatus($routeResult->getStatus());
-            $request  = $request->withAttribute(
-                ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION,
-                new Exception($routeResult->getStatusReason())
-            );
+            throw new Exception($routeResult->getStatusReason(), $routeResult->getStatus());
         } else {
             $request = $request
                 ->withAttribute(

@@ -159,14 +159,26 @@ abstract class AbstractStorage implements StorageInterface
      */
     protected function getDataEntitySet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array
     {
-        $entityList = [];
         $dataList = $this->getConnector()->getDataSet($expression, $limit, $offset);
 
-        foreach ($dataList as $data) {
+        return $this->getEntityListFromDataSet($dataList);
+    }
+
+    /**
+     * Gets entity list from data storage set.
+     *
+     * @param array $dataList
+     * @return DataEntityInterface[]
+     */
+    protected function getEntityListFromDataSet(array $dataList) : array
+    {
+        $entityList = [];
+
+        foreach ($dataList as $entityData) {
             /** @var DataEntityInterface $entity */
-            $dataEntity = $this->createEntity();
-            $this->populateEntity($dataEntity, $data);
-            $entityList[] = $dataEntity;
+            $entity = $this->createEntity();
+            $this->populateEntity($entity, $entityData);
+            $entityList[] = $entity;
         }
 
         return $entityList;

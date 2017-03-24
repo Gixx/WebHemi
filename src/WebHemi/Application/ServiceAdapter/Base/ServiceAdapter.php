@@ -216,7 +216,14 @@ class ServiceAdapter implements ServiceInterface
         } catch (Throwable $exception) {
             $code = ResponseInterface::STATUS_INTERNAL_SERVER_ERROR;
 
-            if (in_array($exception->getCode(), [403, 404])) {
+            if (in_array(
+                $exception->getCode(),
+                [
+                    ResponseInterface::STATUS_FORBIDDEN,
+                    ResponseInterface::STATUS_NOT_FOUND,
+                    ResponseInterface::STATUS_BAD_METHOD
+                ]
+            )) {
                 $code = $exception->getCode();
             }
 
