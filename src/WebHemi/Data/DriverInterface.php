@@ -17,7 +17,7 @@ namespace WebHemi\Data;
  * Interface DriverInterface.
  *
  * The purpose of this interface is to be able to reference to a general interface in the config::dependencies part.
- * In the local.db.php this interface as an alias should define the proper database driver instance.
+ * In the settings/local/db.php this interface as an alias should define the proper database driver instance.
  */
 interface DriverInterface
 {

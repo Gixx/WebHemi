@@ -140,10 +140,10 @@ abstract class AbstractStorage implements StorageInterface
     protected function getDataEntity(array $expression) : ? DataEntityInterface
     {
         $entity = null;
-        $dataList = $this->getDataEntitySet($expression, 1);
+        $entityList = $this->getDataEntitySet($expression, [ConnectorInterface::OPTION_LIMIT => 1]);
 
-        if (!empty($dataList)) {
-            $entity = $dataList[0];
+        if (!empty($entityList)) {
+            $entity = $entityList[0];
         }
 
         return $entity;
@@ -153,15 +153,14 @@ abstract class AbstractStorage implements StorageInterface
      * Gets a set of Entities from the data adapter by expression.
      *
      * @param array $expression
-     * @param int   $limit
-     * @param int   $offset
+     * @param array $options
      * @return DataEntityInterface[]
      */
-    protected function getDataEntitySet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array
+    protected function getDataEntitySet(array $expression, array $options = []) : array
     {
-        $dataList = $this->getConnector()->getDataSet($expression, $limit, $offset);
+        $dataList = $this->getConnector()->getDataSet($expression, $options);
 
-        return $this->getEntityListFromDataSet($dataList);
+        return $this->getEntitySetFromDataSet($dataList);
     }
 
     /**
@@ -170,7 +169,7 @@ abstract class AbstractStorage implements StorageInterface
      * @param array $dataList
      * @return DataEntityInterface[]
      */
-    protected function getEntityListFromDataSet(array $dataList) : array
+    protected function getEntitySetFromDataSet(array $dataList) : array
     {
         $entityList = [];
 

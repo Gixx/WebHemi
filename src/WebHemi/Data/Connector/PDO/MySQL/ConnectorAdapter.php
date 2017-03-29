@@ -107,7 +107,11 @@ class ConnectorAdapter implements ConnectorInterface
     {
         $queryBinds = [];
 
-        $query = $this->getSelectQueryForExpression([$this->idKey => $identifier], $queryBinds, 1, 0);
+        $query = $this->getSelectQueryForExpression(
+            [$this->idKey => $identifier],
+            $queryBinds,
+            [self::OPTION_LIMIT => 1, self::OPTION_OFFSET => 0]
+        );
         $statement = $this->dataDriver->prepare($query);
         $this->bindValuesToStatement($statement, $queryBinds);
         $statement->execute();
@@ -121,17 +125,16 @@ class ConnectorAdapter implements ConnectorInterface
      * Get a set of data according to the expression and the chunk.
      *
      * @param array $expression
-     * @param int   $limit
-     * @param int   $offset
+     * @param array $options
      * @return array
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function getDataSet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array
+    public function getDataSet(array $expression, array $options = []) : array
     {
         $queryBinds = [];
 
-        $query = $this->getSelectQueryForExpression($expression, $queryBinds, $limit, $offset);
+        $query = $this->getSelectQueryForExpression($expression, $queryBinds, $options);
         $statement = $this->dataDriver->prepare($query);
 
         $this->bindValuesToStatement($statement, $queryBinds);
@@ -154,7 +157,7 @@ class ConnectorAdapter implements ConnectorInterface
     {
         $queryBinds = [];
 
-        $query = $this->getSelectQueryForExpression($expression, $queryBinds);
+        $query = $this->getSelectQueryForExpression($expression, $queryBinds, []);
         $statement = $this->dataDriver->prepare($query);
         $this->bindValuesToStatement($statement, $queryBinds);
         $statement->execute();
@@ -167,15 +170,13 @@ class ConnectorAdapter implements ConnectorInterface
      *
      * @param array $expression
      * @param array $queryBinds
-     * @param int   $limit
-     * @param int   $offset
+     * @param array $options
      * @return string
      */
     protected function getSelectQueryForExpression(
         array $expression,
         array&$queryBinds,
-        int $limit = PHP_INT_MAX,
-        int $offset = 0
+        array $options = []
     ) : string {
         $query = "SELECT * FROM {$this->dataGroup}";
 
@@ -184,10 +185,82 @@ class ConnectorAdapter implements ConnectorInterface
             $query .= $this->getWhereExpression($expression, $queryBinds);
         }
 
-        $query .= " LIMIT {$limit}";
-        $query .= " OFFSET {$offset}";
+        $group = $this->getQueryGroup($options);
+        $having = $this->getQueryHaving($options);
+
+        if (!empty($group)) {
+            $query .= " GROUP BY {$group}";
+
+            if (!empty($having)) {
+                $query .= " HAVING {$having}";
+            }
+        }
+
+        $query .= " ORDER BY {$this->getQueryOrder($options)}";
+
+        $limit = $this->getQueryLimit($options);
+
+        if ($limit > 0) {
+            $query .= " LIMIT {$limit}";
+            $query .= " OFFSET {$this->getQueryOffset($options)}";
+        }
 
         return $query;
+    }
+
+    /**
+     * Gets the GROUP BY expression.
+     *
+     * @param array $options
+     * @return string
+     */
+    protected function getQueryGroup(array $options) : string
+    {
+        return $options[self::OPTION_GROUP] ?? '';
+    }
+
+    /**
+     * Gets the HAVING expression only when the GROUP BY option exists.
+     *
+     * @param array $options
+     * @return string
+     */
+    protected function getQueryHaving(array $options) : string
+    {
+        return isset($options[self::OPTION_GROUP]) ? $options[self::OPTION_HAVING] : '';
+    }
+
+    /**
+     * Gets the ORDER BY expression. The default value is the primary key.
+     *
+     * @param array $options
+     * @return string
+     */
+    protected function getQueryOrder(array $options) : string
+    {
+        return $options[self::OPTION_ORDER] ?? $this->idKey;
+    }
+
+    /**
+     * Gets the LIMIT expression.
+     *
+     * @param array $options
+     * @return int
+     */
+    protected function getQueryLimit(array $options) : int
+    {
+        return $options[self::OPTION_LIMIT] ?? 0;
+    }
+
+    /**
+     * Gets the OFFSET expression.
+     *
+     * @param array $options
+     * @return int
+     */
+    protected function getQueryOffset(array $options) : int
+    {
+        return $options[self::OPTION_OFFSET] ?? 0;
     }
 
     /**

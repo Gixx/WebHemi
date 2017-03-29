@@ -84,11 +84,11 @@ class ResourceStorageTest extends TestCase
                 'is_read_only' => 0,
                 'date_created' =>  '2016-03-24 16:25:12',
                 'date_modified' =>  '2016-03-24 16:25:12',
-            ]
+            ],
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['id_am_resource'] == 1) {
@@ -137,7 +137,7 @@ class ResourceStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if (isset($args[0]['name'])) {
@@ -170,5 +170,79 @@ class ResourceStorageTest extends TestCase
         $this->assertFalse($actualResult->getReadOnly());
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult]);
         $this->assertArraysAreSimilar($data[0], $actualData);
+    }
+
+    /**
+     * Test the getResources method.
+     */
+    public function testGetResources()
+    {
+        $data = [
+            0 => [
+                'id_am_resource' => 1,
+                'name' => 'test.resource1',
+                'title' => 'Test Resource 1',
+                'description' => 'A test resource record',
+                'is_read_only' => 1,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ],
+            1 => [
+                'id_am_resource' => 2,
+                'name' => 'test.resource2',
+                'title' => 'Test Resource 2',
+                'description' => 'A test resource record',
+                'is_read_only' => 0,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ],
+            2 => [
+                'id_am_resource' => 3,
+                'name' => 'test.resource3',
+                'title' => 'Test Resource 3',
+                'description' => 'A test resource record',
+                'is_read_only' => 1,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ]
+        ];
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
+            ->will(
+                function ($args) use ($data) {
+                    if (empty($args[0])) {
+                        return $data;
+                    }
+                    return [];
+                }
+            );
+
+        $dataEntity = new ResourceEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new ResourceStorage($defaultAdapterInstance, $dataEntity);
+
+        /** @var ResourceEntity[] $actualResult */
+        $actualResult = $storage->getResources();
+        $this->assertSame(3, count($actualResult));
+
+        $this->assertInstanceOf(ResourceEntity::class, $actualResult[0]);
+        $this->assertSame('Test Resource 1', $actualResult[0]->getTitle());
+        $this->assertTrue($actualResult[0]->getReadOnly());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
+        $this->assertArraysAreSimilar($data[0], $actualData);
+
+        $this->assertInstanceOf(ResourceEntity::class, $actualResult[1]);
+        $this->assertFalse($actualResult[1]->getReadOnly());
+        $this->assertSame('Test Resource 2', $actualResult[1]->getTitle());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
+        $this->assertArraysAreSimilar($data[1], $actualData);
+
+        $this->assertInstanceOf(ResourceEntity::class, $actualResult[1]);
+        $this->assertTrue($actualResult[2]->getReadOnly());
+        $this->assertSame('Test Resource 3', $actualResult[2]->getTitle());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[2]]);
+        $this->assertArraysAreSimilar($data[2], $actualData);
     }
 }

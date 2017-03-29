@@ -71,6 +71,87 @@ class UserStorageTest extends TestCase
     }
 
     /**
+     * Test the getUsers method.
+     */
+    public function testGetUsers()
+    {
+        $data = [
+            0 => [
+                'id_user' => 1,
+                'username' => 'testUser1',
+                'email' => 'test1.address@foo.org',
+                'password' => md5('testPassword'),
+                'hash' => 'a',
+                'is_active' => 1,
+                'is_enabled' => 1,
+                'date_created' =>  '2016-03-10 16:25:12',
+                'date_modified' => '2017-04-20 16:25:12',
+            ],
+            1 => [
+                'id_user' => 2,
+                'username' => 'testUser2',
+                'email' => 'test2.address@foo.org',
+                'password' => md5('testPassword'),
+                'hash' => 'b',
+                'is_active' => 0,
+                'is_enabled' => 0,
+                'date_created' =>  '2016-03-10 16:25:12',
+                'date_modified' => '2017-04-20 16:25:12',
+            ],
+            2 => [
+                'id_user' => 3,
+                'username' => 'testUser3',
+                'email' => 'test3.address@foo.org',
+                'password' => md5('testPassword'),
+                'hash' => 'c',
+                'is_active' => 1,
+                'is_enabled' => 1,
+                'date_created' =>  '2016-03-10 16:25:12',
+                'date_modified' => '2017-04-20 16:25:12',
+            ],
+        ];
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
+            ->will(
+                function ($args) use ($data) {
+                    if (empty($args[0])) {
+                        return $data;
+                    }
+                    return [];
+                }
+            );
+
+        $dataEntity = new UserEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new userStorage($defaultAdapterInstance, $dataEntity);
+
+        /** @var UserEntity[] $actualResult */
+        $actualResult = $storage->getUserList();
+        $this->assertSame(3, count($actualResult));
+
+        $this->assertInstanceOf(UserEntity::class, $actualResult[0]);
+        $this->assertSame('test1.address@foo.org', $actualResult[0]->getEmail());
+        $this->assertTrue($actualResult[0]->getActive());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
+
+        $this->assertArraysAreSimilar($data[0], $actualData);
+
+        $this->assertInstanceOf(UserEntity::class, $actualResult[1]);
+        $this->assertFalse($actualResult[1]->getActive());
+        $this->assertSame('test2.address@foo.org', $actualResult[1]->getEmail());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
+        $this->assertArraysAreSimilar($data[1], $actualData);
+
+        $this->assertInstanceOf(UserEntity::class, $actualResult[1]);
+        $this->assertTrue($actualResult[2]->getActive());
+        $this->assertSame('test3.address@foo.org', $actualResult[2]->getEmail());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[2]]);
+        $this->assertArraysAreSimilar($data[2], $actualData);
+    }
+
+    /**
      * Test the getUserById() method.
      */
     public function testGetUserById()
@@ -90,7 +171,7 @@ class UserStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['id_user'] == 1) {
@@ -138,7 +219,7 @@ class UserStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['email'] == 'test.address@foo.org') {
@@ -186,7 +267,7 @@ class UserStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['username'] == 'testUser') {
@@ -234,7 +315,7 @@ class UserStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['username'] == 'testUser'

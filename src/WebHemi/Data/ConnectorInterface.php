@@ -18,6 +18,12 @@ namespace WebHemi\Data;
  */
 interface ConnectorInterface
 {
+    public const OPTION_LIMIT = 'limit';
+    public const OPTION_OFFSET = 'offset';
+    public const OPTION_ORDER = 'order';
+    public const OPTION_GROUP = 'group';
+    public const OPTION_HAVING = 'having';
+
     /**
      * ConnectorInterface constructor.
      *
@@ -60,11 +66,10 @@ interface ConnectorInterface
      * Get a set of data according to the expression and the chunk.
      *
      * @param array $expression
-     * @param int   $limit
-     * @param int   $offset
+     * @param array $options
      * @return array
      */
-    public function getDataSet(array $expression, int $limit = PHP_INT_MAX, int $offset = 0) : array;
+    public function getDataSet(array $expression, array $options = []) : array;
 
     /**
      * Get the number of matched data in the set according to the expression.
