@@ -122,7 +122,7 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     $index = $args[0]['id_am_policy'] - 1;
@@ -166,7 +166,7 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if (isset($args[0]['name'])) {
@@ -206,6 +206,52 @@ class PolicyStorageTest extends TestCase
     }
 
     /**
+     * Test the getPolicies method.
+     */
+    public function testGetPolicies()
+    {
+        $data = $this->data;
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
+            ->will(
+                function ($args) use ($data) {
+                    if (empty($args[0])) {
+                        return $data;
+                    }
+                    return [];
+                }
+            );
+
+        $dataEntity = new PolicyEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new PolicyStorage($defaultAdapterInstance, $dataEntity);
+
+        /** @var PolicyEntity[] $actualResult */
+        $actualResult = $storage->getPolicies();
+        $this->assertSame(3, count($actualResult));
+
+        $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
+        $this->assertSame('Test Policy 1', $actualResult[0]->getTitle());
+        $this->assertTrue($actualResult[0]->getAllowed());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
+        $this->assertArraysAreSimilar($data[0], $actualData);
+
+        $this->assertInstanceOf(PolicyEntity::class, $actualResult[1]);
+        $this->assertFalse($actualResult[1]->getAllowed());
+        $this->assertSame('Test Policy 2', $actualResult[1]->getTitle());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
+        $this->assertArraysAreSimilar($data[1], $actualData);
+
+        $this->assertInstanceOf(PolicyEntity::class, $actualResult[1]);
+        $this->assertTrue($actualResult[2]->getAllowed());
+        $this->assertSame('Test Policy 3', $actualResult[2]->getTitle());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[2]]);
+        $this->assertArraysAreSimilar($data[2], $actualData);
+    }
+
+    /**
      * Test the getPoliciesByResourceId method.
      */
     public function testGetPoliciesByResourceId()
@@ -213,7 +259,7 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     $resourceId = $args[0]['fk_am_resource'];
@@ -268,7 +314,7 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     $applicationId = $args[0]['fk_application'];
@@ -321,7 +367,7 @@ class PolicyStorageTest extends TestCase
         $data = $this->data;
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     $resourceId = $args[0]['fk_am_resource'];

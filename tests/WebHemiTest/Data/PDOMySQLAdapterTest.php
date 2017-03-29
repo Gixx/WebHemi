@@ -134,7 +134,10 @@ class PDOMySQLAdapterTest extends TestCase
                 'aTable',
                 1,
                 5,
-                'SELECT * FROM aTable LIMIT 1 OFFSET 5',
+                null,
+                'groupCol',
+                null,
+                'SELECT * FROM aTable GROUP BY groupCol ORDER BY id LIMIT 1 OFFSET 5',
                 []
             ],
             [
@@ -142,15 +145,21 @@ class PDOMySQLAdapterTest extends TestCase
                 'bTable',
                 11,
                 20,
-                'SELECT * FROM bTable WHERE A = ? LIMIT 11 OFFSET 20',
+                'orderCol',
+                null,
+                null,
+                'SELECT * FROM bTable WHERE A = ? ORDER BY orderCol LIMIT 11 OFFSET 20',
                 [5]
             ],
             [
                 ['A' => 10, 'B LIKE ?' => 'someData%'],
                 'cTable',
                 null,
+                1,
                 null,
-                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.PHP_INT_MAX.' OFFSET 0',
+                null,
+                'orderCol = 1',
+                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? ORDER BY id',
                 [10, 'someData%']
             ],
             [
@@ -158,7 +167,10 @@ class PDOMySQLAdapterTest extends TestCase
                 'cTable',
                 null,
                 null,
-                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.PHP_INT_MAX.' OFFSET 0',
+                'orderCol',
+                'groupCol',
+                'orderCol > 1',
+                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? GROUP BY groupCol HAVING orderCol > 1 ORDER BY orderCol',
                 [10, 'someData%']
             ],
             [
@@ -166,7 +178,10 @@ class PDOMySQLAdapterTest extends TestCase
                 'cTable',
                 null,
                 null,
-                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? LIMIT '.PHP_INT_MAX.' OFFSET 0',
+                null,
+                null,
+                'orderCol = 1',
+                'SELECT * FROM cTable WHERE A = ? AND B LIKE ? ORDER BY id',
                 [10, 'someData%']
             ],
             [
@@ -174,7 +189,10 @@ class PDOMySQLAdapterTest extends TestCase
                 'cTable',
                 3,
                 0,
-                'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) LIMIT 3 OFFSET 0',
+                'orderCol',
+                null,
+                'orderCol = 1',
+                'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) ORDER BY orderCol LIMIT 3 OFFSET 0',
                 [10, 1, 2, 3]
             ],
             [
@@ -182,7 +200,10 @@ class PDOMySQLAdapterTest extends TestCase
                 'cTable',
                 3,
                 0,
-                'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) LIMIT 3 OFFSET 0',
+                null,
+                null,
+                null,
+                'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) ORDER BY id LIMIT 3 OFFSET 0',
                 [10, 1, 2, 3]
             ],
             [
@@ -190,7 +211,10 @@ class PDOMySQLAdapterTest extends TestCase
                 'cTable',
                 3,
                 0,
-                'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) LIMIT 3 OFFSET 0',
+                null,
+                'groupCol',
+                null,
+                'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) GROUP BY groupCol ORDER BY id LIMIT 3 OFFSET 0',
                 [10, 1, 2, 3]
             ]
         ];
@@ -213,6 +237,9 @@ class PDOMySQLAdapterTest extends TestCase
         $dataGroup,
         $limit,
         $offset,
+        $order,
+        $group,
+        $having,
         $expectedQuery,
         $expectedQueryBind
     ) {
@@ -220,20 +247,33 @@ class PDOMySQLAdapterTest extends TestCase
 
         $adapter = new MySQLAdapter($this->dataDriver);
         $adapter->setDataGroup($dataGroup);
+        $adapter->setIdKey('id');
+
+        $options = [];
+
+        if (!is_null($group)) {
+            $options[DataAdapterInterface::OPTION_GROUP] = $group;
+            $options[DataAdapterInterface::OPTION_HAVING] = $having ?? '';
+        }
+
+        if (!is_null($order)) {
+            $options[DataAdapterInterface::OPTION_ORDER] = $order;
+        }
 
         if (!is_null($limit)) {
-            $resultQuery = $this->invokePrivateMethod(
-                $adapter,
-                'getSelectQueryForExpression',
-                [$expression, &$queryBind, $limit, $offset]
-            );
-        } else {
-            $resultQuery = $this->invokePrivateMethod(
-                $adapter,
-                'getSelectQueryForExpression',
-                [$expression, &$queryBind]
-            );
+            $options[DataAdapterInterface::OPTION_LIMIT] = (int)$limit;
+            $options[DataAdapterInterface::OPTION_OFFSET] = (int)$offset;
         }
+
+        $resultQuery = $this->invokePrivateMethod(
+            $adapter,
+            'getSelectQueryForExpression',
+            [
+                $expression,
+                &$queryBind,
+                $options
+            ]
+        );
 
         $this->assertEquals($expectedQuery, $resultQuery);
         $this->assertArraysAreSimilar($expectedQueryBind, $queryBind);

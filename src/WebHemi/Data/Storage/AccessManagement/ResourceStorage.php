@@ -83,6 +83,16 @@ class ResourceStorage extends AbstractStorage
     }
 
     /**
+     * Returns a full set of Resource entities.
+     *
+     * @return null|array
+     */
+    public function getResources() : ? array
+    {
+        return $this->getDataEntitySet([]);
+    }
+
+    /**
      * Returns a Resource entity identified by (unique) ID.
      *
      * @param int $identifier

@@ -89,7 +89,7 @@ class ApplicationStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['id_application'] == 1) {
@@ -141,7 +141,7 @@ class ApplicationStorageTest extends TestCase
 
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if (isset($args[0]['name'])) {

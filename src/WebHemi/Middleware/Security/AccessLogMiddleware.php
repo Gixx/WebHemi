@@ -63,9 +63,7 @@ class AccessLogMiddleware implements MiddlewareInterface
     {
         $identity = 'Unauthenticated user';
         $requestAttributes = $request->getAttributes();
-        $actionMiddleware = isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
-            ? $requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS]
-            : 'N/A';
+        $actionMiddleware = $requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS] ?? 'N/A';
 
         if ($this->authAdapter->hasIdentity()) {
             /** @var UserEntity $userEntity */

@@ -99,6 +99,16 @@ class PolicyStorage extends AbstractStorage
     }
 
     /**
+     * Returns a full set of Policy entities.
+     *
+     * @return null|array
+     */
+    public function getPolicies() : ? array
+    {
+        return $this->getDataEntitySet([]);
+    }
+
+    /**
      * Returns a Policy entity identified by (unique) ID.
      *
      * @param int $identifier

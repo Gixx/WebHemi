@@ -96,7 +96,7 @@ class UserGroupStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if (in_array($args[0]['id_user_group'], [1, 2])) {
@@ -160,7 +160,7 @@ class UserGroupStorageTest extends TestCase
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if (isset($args[0]['name'])) {

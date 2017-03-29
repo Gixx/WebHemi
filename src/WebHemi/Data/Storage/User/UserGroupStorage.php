@@ -83,6 +83,16 @@ class UserGroupStorage extends AbstractStorage
     }
 
     /**
+     * Returns a full set of User Group entities.
+     *
+     * @return null|array
+     */
+    public function getUserGroups() : ? array
+    {
+        return $this->getDataEntitySet([]);
+    }
+
+    /**
      * Returns a User Group entity identified by (unique) ID.
      *
      * @param int $identifier

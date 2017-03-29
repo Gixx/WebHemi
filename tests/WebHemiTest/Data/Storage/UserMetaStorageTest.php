@@ -80,21 +80,21 @@ class UserMetaStorageTest extends TestCase
                 'fk_user' => 1,
                 'meta_key' => 'body',
                 'meta_data' => 'sporty',
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
+                'date_created' =>  '2016-03-10 16:25:12',
+                'date_modified' =>  '2017-04-20 16:25:12',
             ],
             [
                 'id_user_meta' => 2,
                 'fk_user' => 1,
                 'meta_key' => 'phone',
                 'meta_data' => '+49 176 1234 5678',
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
+                'date_created' =>  '2016-03-10 16:25:12',
+                'date_modified' =>  '2017-04-20 16:25:12',
             ],
         ];
 
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if (in_array($args[0]['id_user_meta'], [1, 2])) {
@@ -117,6 +117,7 @@ class UserMetaStorageTest extends TestCase
         $this->assertFalse($dataEntity === $actualResult);
         $this->assertEquals($data[0]['meta_key'], $actualResult->getMetaKey());
         $this->assertEquals($data[0]['meta_data'], $actualResult->getMetaData());
+        $this->assertEquals($data[0]['date_created'], $actualResult->getDateCreated()->format('Y-m-d H:i:s'));
 
         /** @var UserMetaEntity $actualResult */
         $actualResult = $storage->getUserMetaById(2);
@@ -124,6 +125,7 @@ class UserMetaStorageTest extends TestCase
         $this->assertFalse($dataEntity === $actualResult);
         $this->assertEquals($data[1]['meta_key'], $actualResult->getMetaKey());
         $this->assertEquals($data[1]['meta_data'], $actualResult->getMetaData());
+        $this->assertEquals($data[1]['date_modified'], $actualResult->getDateModified()->format('Y-m-d H:i:s'));
 
         $actualResult = $storage->getUserMetaById(3);
         $this->assertEmpty($actualResult);
@@ -153,8 +155,13 @@ class UserMetaStorageTest extends TestCase
             ],
         ];
 
+        $expectedResult = [
+            $data[0]['meta_key'] => $data[0]['meta_data'],
+            $data[1]['meta_key'] => $data[1]['meta_data'],
+        ];
+
         $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('int'), Argument::type('int'))
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
                     if ($args[0]['fk_user'] == 1) {
@@ -170,22 +177,12 @@ class UserMetaStorageTest extends TestCase
         $defaultAdapterInstance = $this->defaultAdapter->reveal();
         $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
 
-        $actualResult = $storage->getUserMetaForUserId(2);
+        $actualResult = $storage->getUserMetaSetForUserId(2);
         $this->assertEmpty($actualResult);
 
         /** @var UserMetaEntity[] $actualResult */
-        $actualResult = $storage->getUserMetaForUserId(1);
+        $actualResult = $storage->getUserMetaSetForUserId(1);
         $this->assertInternalType('array', $actualResult);
-        $this->assertSame(2, count($actualResult));
-        $this->assertInstanceOf(UserMetaEntity::class, $actualResult[0]);
-        $this->assertInstanceOf(UserMetaEntity::class, $actualResult[1]);
-        $this->assertEquals('phone', $actualResult[1]->getMetaKey());
-        $this->assertEquals('+49 176 1234 5678', $actualResult[1]->getMetaData());
-
-        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
-        $this->assertArraysAreSimilar($data[0], $actualData);
-
-        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
-        $this->assertArraysAreSimilar($data[1], $actualData);
+        $this->assertArraysAreSimilar($expectedResult, $actualResult);
     }
 }

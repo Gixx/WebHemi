@@ -105,7 +105,7 @@ class FinalMiddleware implements MiddlewareInterface
 
         /** @var array $data */
         $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
-        $templateData['exception'] = $this->getExceptionAsString($exception);
+        $templateData['exception'] = $exception;
 
         if ($request->isXmlHttpRequest()) {
             $request = $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);

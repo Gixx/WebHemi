@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace WebHemi\Data\Storage\User;
 
 use WebHemi\DateTime;
+use WebHemi\Data\ConnectorInterface;
 use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\User\UserEntity;
 use WebHemi\Data\Storage\AbstractStorage;
@@ -58,7 +59,7 @@ class UserStorage extends AbstractStorage
             ->setUserName($data[$this->userName])
             ->setEmail($data[$this->email])
             ->setPassword($data[$this->password])
-            ->setHash($data[$this->hash])
+            ->setHash($data[$this->hash] ?? '')
             ->setActive((bool) $data[$this->isActive])
             ->setEnabled((bool) $data[$this->isEnabled])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
@@ -88,6 +89,16 @@ class UserStorage extends AbstractStorage
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];
+    }
+
+    /**
+     * Returns a full set of User entities.
+     *
+     * @return null|array
+     */
+    public function getUserList() : ? array
+    {
+        return $this->getDataEntitySet([], [ConnectorInterface::OPTION_ORDER => 'email']);
     }
 
     /**
