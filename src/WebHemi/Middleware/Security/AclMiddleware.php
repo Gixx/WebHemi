@@ -86,6 +86,7 @@ class AclMiddleware implements MiddlewareInterface
     public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
     {
         $actionMiddleware = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS);
+        $resourceName = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_ROUTING_RESOURCE);
 
         if (in_array($actionMiddleware, $this->middlewareWhiteList)) {
             return;
@@ -99,7 +100,7 @@ class AclMiddleware implements MiddlewareInterface
             /** @var Entity\ApplicationEntity $applicationEntity */
             $applicationEntity = $this->applicationStorage->getApplicationByName($selectedApplication);
             /** @var Entity\AccessManagement\ResourceEntity $resourceEntity */
-            $resourceEntity = $this->resourceStorage->getResourceByName($actionMiddleware);
+            $resourceEntity = $this->resourceStorage->getResourceByName($resourceName);
             // Check the user against the application and resource
             $hasAccess = $this->aclAdapter->isAllowed($identity, $resourceEntity, $applicationEntity);
 

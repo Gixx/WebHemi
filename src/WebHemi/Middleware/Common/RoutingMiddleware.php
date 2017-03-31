@@ -57,7 +57,13 @@ class RoutingMiddleware implements MiddlewareInterface
                 ->withAttribute(
                     ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS,
                     $routeResult->getMatchedMiddleware()
-                )
+                );
+            $request = $request
+                ->withAttribute(
+                    ServerRequestInterface::REQUEST_ATTR_ROUTING_RESOURCE,
+                    $routeResult->getResource()
+                );
+            $request = $request
                 ->withAttribute(
                     ServerRequestInterface::REQUEST_ATTR_ROUTING_PARAMETERS,
                     $routeResult->getParameters()

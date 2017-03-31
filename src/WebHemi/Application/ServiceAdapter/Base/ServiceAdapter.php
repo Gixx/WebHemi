@@ -221,7 +221,8 @@ class ServiceAdapter implements ServiceInterface
                 [
                     ResponseInterface::STATUS_FORBIDDEN,
                     ResponseInterface::STATUS_NOT_FOUND,
-                    ResponseInterface::STATUS_BAD_METHOD
+                    ResponseInterface::STATUS_BAD_METHOD,
+                    ResponseInterface::STATUS_NOT_IMPLEMENTED,
                 ]
             )) {
                 $code = $exception->getCode();
