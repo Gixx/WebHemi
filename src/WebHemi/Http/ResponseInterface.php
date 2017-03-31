@@ -28,4 +28,5 @@ interface ResponseInterface extends PsrResponseInterface
     public const STATUS_NOT_FOUND = 404;
     public const STATUS_BAD_METHOD = 405;
     public const STATUS_INTERNAL_SERVER_ERROR = 500;
+    public const STATUS_NOT_IMPLEMENTED = 501;
 }

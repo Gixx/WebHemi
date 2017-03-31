@@ -51,10 +51,11 @@ class ServiceAdapter implements ServiceInterface
         $this->applicationPath = $environmentManager->getSelectedApplicationUri();
         $this->adapter = \FastRoute\simpleDispatcher(
             function (RouteCollector $routeCollector) use ($routes) {
-                foreach ($routes as $route) {
+                foreach ($routes as $resource => $route) {
                     $method   = $route['allowed_methods'];
                     $uri      = $route['path'];
-                    $callback = $route['middleware'];
+                    $callback = $route['middleware'].'@'.$resource;
+
                     $routeCollector->addRoute($method, $uri, $callback);
                 }
             }
@@ -93,9 +94,11 @@ class ServiceAdapter implements ServiceInterface
 
         switch ($routeInfo[0]) {
             case Dispatcher::FOUND:
+                list($middleware, $resource) = explode('@', $routeInfo[1]);
                 $result->setStatus(Result::CODE_FOUND);
-                $result->setMatchedMiddleware($routeInfo[1]);
+                $result->setMatchedMiddleware($middleware);
                 $result->setParameters($routeInfo[2]);
+                $result->setResource($resource);
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
                 $result->setStatus(Result::CODE_BAD_METHOD);

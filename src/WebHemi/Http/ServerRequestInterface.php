@@ -24,6 +24,7 @@ interface ServerRequestInterface extends PsrServerRequestInterface
     public const REQUEST_ATTR_ACTION_MIDDLEWARE = 'action_middleware_instance';
     public const REQUEST_ATTR_MIDDLEWARE_EXCEPTION = 'middleware_exception';
     public const REQUEST_ATTR_ROUTING_PARAMETERS = 'routing_parameters';
+    public const REQUEST_ATTR_ROUTING_RESOURCE = 'routing_resource';
     public const REQUEST_ATTR_DISPATCH_TEMPLATE = 'dispatch_template';
     public const REQUEST_ATTR_DISPATCH_DATA = 'dispatch_data';
     public const REQUEST_ATTR_AUTHENTICATED_USER = 'authenticated_user';

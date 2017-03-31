@@ -28,6 +28,8 @@ class Result
     private $status;
     /** @var string */
     private $matchedMiddleware;
+    /** @var string */
+    private $resource;
     /** @var array */
     private $statusReason = [
         self::CODE_FOUND      => 'Resource found.',
@@ -45,6 +47,30 @@ class Result
         unset($this->status);
         unset($this->matchedMiddleware);
         unset($this->parameters);
+        unset($this->resource);
+    }
+
+    /**
+     * Sets resource.
+     *
+     * @param string $resource
+     * @return Result
+     */
+    public function setResource(string $resource) : Result
+    {
+        $this->resource = $resource;
+
+        return $this;
+    }
+
+    /**
+     * Gets resource.
+     *
+     * @return string
+     */
+    public function getResource() : string
+    {
+        return $this->resource;
     }
 
     /**

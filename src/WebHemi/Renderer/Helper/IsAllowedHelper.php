@@ -61,7 +61,7 @@ class IsAllowedHelper implements HelperInterface
      */
     public static function getDefinition() : string
     {
-        return '{% if isAllowed("routeAlias") %}';
+        return '{% if isAllowed("resource_name", "admin") %}';
     }
 
     /**
@@ -135,38 +135,14 @@ class IsAllowedHelper implements HelperInterface
         // For invalid applications the path will be checked against the current (valid) application
         if (!$applicationEntity instanceof ApplicationEntity) {
             $applicationName = $this->environmentManager->getSelectedApplication();
+            /** @var null|ApplicationEntity $applicationEntity */
+            $applicationEntity = $this->applicationStorage->getApplicationByName($applicationName);
         }
 
         $resourceName = $arguments[0] ?? '';
-        $this->checkResourceNameAgainstRouting($resourceName, $applicationName);
         /** @var null|ResourceEntity $resourceEntity */
         $resourceEntity = $this->resourceStorage->getResourceByName($resourceName);
 
         return $this->aclAdapter->isAllowed($userEntity, $resourceEntity, $applicationEntity);
-    }
-
-    /**
-     * Matches the given resource name against router URLs and if found, changes it to the assigned middleware name.
-     * @TODO: make sure it is NOT possible to give a custom resource with a name that can match against a router path.
-     *
-     * @param string $resourceName
-     * @param string $applicationName
-     */
-    private function checkResourceNameAgainstRouting(string&$resourceName, string $applicationName) : void
-    {
-        $applicationConfig = $this->configuration
-            ->getData('applications/'.$applicationName);
-
-        $applicationRouteConfig = $this->configuration
-            ->getData('router/'.$applicationConfig['module']);
-
-        $tempName = trim($resourceName, '/');
-
-        foreach ($applicationRouteConfig as $routeAlias => $routeData) {
-            if ($routeAlias == $tempName) {
-                $resourceName = $routeData['middleware'];
-                break;
-            }
-        }
     }
 }
