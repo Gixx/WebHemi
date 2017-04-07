@@ -37,8 +37,6 @@ class PolicyEntity implements EntityInterface
     private $method;
     /** @var bool */
     private $isReadOnly;
-    /** @var bool */
-    private $isAllowed;
     /** @var DateTime */
     private $dateCreated;
     /** @var DateTime */
@@ -217,25 +215,6 @@ class PolicyEntity implements EntityInterface
     public function getReadOnly() : bool
     {
         return $this->isReadOnly ?? false;
-    }
-
-    /**
-     * @param bool $state
-     * @return PolicyEntity
-     */
-    public function setAllowed(bool $state) : PolicyEntity
-    {
-        $this->isAllowed = $state;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getAllowed() : bool
-    {
-        return $this->isAllowed ?? false;
     }
 
     /**

@@ -86,6 +86,19 @@ class ApplicationStorage extends AbstractStorage
     }
 
     /**
+     * Returns every Application entity.
+     *
+     * @return array|ApplicationEntity[]
+     */
+    public function getApplications()
+    {
+        /** @var ApplicationEntity[] $entityList */
+        $entityList = $this->getDataEntitySet([]);
+
+        return $entityList;
+    }
+
+    /**
      * Returns a Application entity identified by (unique) ID.
      *
      * @param int $identifier

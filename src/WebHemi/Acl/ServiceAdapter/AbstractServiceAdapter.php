@@ -82,16 +82,18 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
      * @param PolicyEntity           $policyEntity
      * @param null|ResourceEntity    $resourceEntity
      * @param null|ApplicationEntity $applicationEntity
+     * @param null|string            $method
      * @return bool
      */
     protected function isPolicyAllowed(
         PolicyEntity $policyEntity,
         ? ResourceEntity $resourceEntity = null,
-        ? ApplicationEntity $applicationEntity = null
+        ? ApplicationEntity $applicationEntity = null,
+        ? string $method = null
     ) : bool {
         return $this->isResourceAllowed($policyEntity, $resourceEntity)
             && $this->isApplicationAllowed($policyEntity, $applicationEntity)
-            && $this->isRequestMethodAllowed($policyEntity);
+            && $this->isRequestMethodAllowed($policyEntity, $method);
     }
 
     /**
@@ -109,7 +111,7 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
         $resourceId = $resourceEntity ? $resourceEntity->getResourceId() : null;
         $allowResurce = is_null($policyResourceId) || $policyResourceId === $resourceId;
 
-        return $allowResurce ? $policyEntity->getAllowed() : false;
+        return $allowResurce;
     }
 
     /**
@@ -127,21 +129,22 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
         $applicationId = $applicationEntity ? $applicationEntity->getApplicationId() : null;
         $allowApplication = is_null($policyApplicationId) || $policyApplicationId === $applicationId;
 
-        return $allowApplication ? $policyEntity->getAllowed() : false;
+        return $allowApplication;
     }
 
     /**
      * Checks whether the request method is allowed for the given policy.
      *
      * @param PolicyEntity $policyEntity
+     * @param null|string  $method
      * @return bool
      */
-    private function isRequestMethodAllowed(PolicyEntity $policyEntity) : bool
+    private function isRequestMethodAllowed(PolicyEntity $policyEntity, ? string $method = null) : bool
     {
         $policyRequestMethod = $policyEntity->getMethod();
-        $requestMethod = $this->environment->getRequestMethod();
+        $requestMethod = $method ?? $this->environment->getRequestMethod();
         $allowRequestMethod = is_null($policyRequestMethod) || $policyRequestMethod === $requestMethod;
 
-        return $allowRequestMethod ? $policyEntity->getAllowed() : false;
+        return $allowRequestMethod;
     }
 }

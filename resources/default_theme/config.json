@@ -1,10 +1,13 @@
 {
   "legal": {
+    "name": "default_theme",
     "title": "WebHemi Default Theme",
     "description": "",
     "version": "1.0",
-    "author": "Gabor Ivan <gixx@gixx-web.com>",
+    "author": "Gabor Ivan",
     "homepage": "http://www.gixx-web.com",
+    "preview": "",
+    "logo": "",
     "license": "MIT"
   },
   "features": {

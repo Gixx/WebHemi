@@ -60,7 +60,7 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-index';
+        return 'admin-applications-list';
     }
 
     /**
@@ -70,7 +70,7 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        $applications = $this->applicationStorage->getConnector()->getDataSet([]);
+        $applications = $this->applicationStorage->getApplications();
 
         return [
             'applications' => $applications,

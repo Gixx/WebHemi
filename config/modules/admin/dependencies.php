@@ -21,20 +21,7 @@ use WebHemi\Middleware;
 return [
     'dependencies' => [
         'Admin' => [
-            Middleware\Action\Auth\LoginAction::class => [
-                'arguments' => [
-                    Auth\ServiceInterface::class,
-                    Auth\CredentialInterface::class,
-                    Environment\ServiceInterface::class,
-                    Form\Preset\AdminLoginForm::class,
-                ],
-            ],
-            Middleware\Action\Auth\LogoutAction::class => [
-                'arguments' => [
-                    Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class,
-                ]
-            ],
+            // Pipeline elements
             Middleware\Security\AclMiddleware::class => [
                 'arguments' => [
                     Auth\ServiceInterface::class,
@@ -52,6 +39,21 @@ return [
                     Environment\ServiceInterface::class
                 ]
             ],
+            // Actions
+            Middleware\Action\Auth\LoginAction::class => [
+                'arguments' => [
+                    Auth\ServiceInterface::class,
+                    Auth\CredentialInterface::class,
+                    Environment\ServiceInterface::class,
+                    Form\Preset\AdminLoginForm::class,
+                ],
+            ],
+            Middleware\Action\Auth\LogoutAction::class => [
+                'arguments' => [
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                ]
+            ],
             Middleware\Action\Admin\DashboardAction::class => [
                 'arguments' => [
                     Auth\ServiceInterface::class,
@@ -66,27 +68,45 @@ return [
                     Data\Storage\ApplicationStorage::class
                 ],
             ],
-            Middleware\Action\Admin\Applications\ViewAction::class => [
-                'arguments' => [
-                    Configuration\ServiceInterface::class,
-                    Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class
-                ],
-            ],
-            Middleware\Action\Admin\Applications\EditAction::class => [
-                'arguments' => [
-                    Configuration\ServiceInterface::class,
-                    Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class
-                ],
-            ],
             Middleware\Action\Admin\Applications\AddAction::class => [
                 'arguments' => [
                     Configuration\ServiceInterface::class,
                     Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class
+                    Environment\ServiceInterface::class,
+                    Data\Storage\ApplicationStorage::class,
                 ],
             ],
+            Middleware\Action\Admin\Applications\ViewAction::class => [
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    Data\Storage\ApplicationStorage::class,
+                ],
+            ],
+            Middleware\Action\Admin\Applications\PreferencesAction::class => [
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    Data\Storage\ApplicationStorage::class,
+                ],
+            ],
+            Middleware\Action\Admin\Applications\DeleteAction::class => [
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    Data\Storage\ApplicationStorage::class,
+                ],
+            ],
+            Middleware\Action\Admin\ControlPanel\Themes\IndexAction::class => [
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                ],
+            ],
+            // Form Presets
             Form\Preset\AdminLoginForm::class => [
                 'arguments' => [
                     Form\ServiceAdapter\Base\ServiceAdapter::class,

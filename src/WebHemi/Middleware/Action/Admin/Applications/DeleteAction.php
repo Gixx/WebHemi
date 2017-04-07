@@ -22,9 +22,9 @@ use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class ViewAction.
+ * Class DeleteAction.
  */
-class ViewAction extends AbstractMiddlewareAction
+class DeleteAction extends AbstractMiddlewareAction
 {
     /** @var ConfigurationInterface */
     private $configuration;
@@ -36,7 +36,7 @@ class ViewAction extends AbstractMiddlewareAction
     private $applicationStorage;
 
     /**
-     * ViewAction constructor.
+     * DeleteAction constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param AuthInterface          $authAdapter
@@ -62,7 +62,7 @@ class ViewAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-view';
+        return 'admin-applications-delete';
     }
 
     /**

@@ -31,21 +31,23 @@ class ServiceAdapter extends AbstractServiceAdapter
      * @param UserEntity             $userEntity
      * @param ResourceEntity|null    $resourceEntity
      * @param ApplicationEntity|null $applicationEntity
+     * @param string|null            $method
      * @return bool
      */
     public function isAllowed(
         UserEntity $userEntity,
         ? ResourceEntity $resourceEntity = null,
-        ? ApplicationEntity $applicationEntity = null
+        ? ApplicationEntity $applicationEntity = null,
+        ? string $method = null
     ) : bool {
-        // We assume the best case: the user has access
+        // By default we block everything.
         $allowed = false;
 
         /** @var PolicyEntity[] $policies */
         $policies = array_merge($this->getUserPolicies($userEntity), $this->getUserGroupPolicies($userEntity));
 
         foreach ($policies as $policyEntity) {
-            if ($this->isPolicyAllowed($policyEntity, $resourceEntity, $applicationEntity)) {
+            if ($this->isPolicyAllowed($policyEntity, $resourceEntity, $applicationEntity, $method)) {
                 $allowed = true;
                 break;
             }

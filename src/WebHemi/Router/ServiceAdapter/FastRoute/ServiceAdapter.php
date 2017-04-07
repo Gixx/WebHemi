@@ -52,9 +52,11 @@ class ServiceAdapter implements ServiceInterface
         $this->adapter = \FastRoute\simpleDispatcher(
             function (RouteCollector $routeCollector) use ($routes) {
                 foreach ($routes as $resource => $route) {
+                    $resourceName = $route['resource_name'] ?? $resource;
+
                     $method   = $route['allowed_methods'];
                     $uri      = $route['path'];
-                    $callback = $route['middleware'].'@'.$resource;
+                    $callback = $route['middleware'].'@'.$resourceName;
 
                     $routeCollector->addRoute($method, $uri, $callback);
                 }

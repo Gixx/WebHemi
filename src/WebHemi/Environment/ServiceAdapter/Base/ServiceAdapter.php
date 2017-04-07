@@ -155,7 +155,7 @@ class ServiceAdapter implements ServiceInterface
      */
     public function getRequestUri() : string
     {
-        return $this->environmentData['SERVER']['REQUEST_URI'];
+        return rtrim($this->environmentData['SERVER']['REQUEST_URI'], '/');
     }
 
     /**
