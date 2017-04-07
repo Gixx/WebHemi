@@ -96,11 +96,20 @@ CREATE TABLE `webhemi_am_resource` (
 LOCK TABLES `webhemi_am_resource` WRITE;
 /*!40000 ALTER TABLE `webhemi_am_resource` DISABLE KEYS */;
 INSERT INTO `webhemi_am_resource` VALUES
-  (1,  'WebHemi\\Middleware\\Action\\Admin\\DashboardAction', 'The Dashboard page', '', 1, NOW(), NULL),
-  (2,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\IndexAction', 'The Applications page', '', 1, NOW(), NULL),
-  (3,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\ViewAction', 'View application details', '', 1, NOW(), NULL),
-  (4,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\AddAction', 'Add new application', '', 1, NOW(), NULL),
-  (5,  'WebHemi\\Middleware\\Action\\Admin\\Applications\\EditAction', 'Edit a specific application', '', 1, NOW(), NULL);
+  ( 1, 'admin-dashboard',                   'Dashboard',                '', 1, NOW(), NULL),
+
+  ( 2, 'admin-applications-list',           'List applications',        '', 1, NOW(), NULL),
+  ( 3, 'admin-applications-add',            'Add application',          '', 1, NOW(), NULL),
+  ( 4, 'admin-applications-view',           'View application',         '', 1, NOW(), NULL),
+  ( 5, 'admin-applications-preferences',    'Edit application',         '', 1, NOW(), NULL),
+  ( 6, 'admin-applications-save',           'Save application',         '', 1, NOW(), NULL),
+  ( 7, 'admin-applications-delete',         'Delete application',       '', 1, NOW(), NULL),
+
+  ( 8, 'admin-control-panel-index',         'List Control Panel items', '', 1, NOW(), NULL),
+  ( 9, 'admin-control-panel-themes-list',   'List themes',              '', 1, NOW(), NULL),
+  (10, 'admin-control-panel-themes-add',    'Add theme',                '', 1, NOW(), NULL),
+  (11, 'admin-control-panel-themes-view',   'View theme',               '', 1, NOW(), NULL),
+  (12, 'admin-control-panel-themes-delete', 'Delete theme',             '', 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_am_resource` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +131,6 @@ CREATE TABLE `webhemi_am_policy` (
   `description` TEXT NOT NULL DEFAULT '',
   `method` ENUM('GET', 'POST') DEFAULT NULL,
   `is_read_only` TINYINT(1) NOT NULL DEFAULT 0,
-  `is_allowed` TINYINT(1) NOT NULL DEFAULT 1,
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modified` DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_am_policy`),
@@ -142,14 +150,25 @@ CREATE TABLE `webhemi_am_policy` (
 LOCK TABLES `webhemi_am_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_am_policy` DISABLE KEYS */;
 INSERT INTO `webhemi_am_policy` VALUES
-  (1, NULL, NULL, 'supervisor', 'Supervisor access', 'Access to all resources in every application.', NULL, 1, 1, NOW(), NULL),
-  (2, 1, 1, 'dashboard', 'Dashboard visitor', 'Access to the Admin/Dashboard page.', NULL, 1, 1, NOW(), NULL),
-  (3, 2, 1, 'application-list', 'Application lister', 'Access to the Admin/Application/List page.', NULL, 1, 1, NOW(), NULL),
-  (4, 3, 1, 'application-view', 'Application viewer', 'Access to the Admin/Application/View page.', NULL, 1, 1, NOW(), NULL),
-  (5, 4, 1, 'application-add', 'Application creator (view)', 'Access to the Admin/Application/Add page to edit new content.', 'GET', 1, 1, NOW(), NULL),
-  (6, 4, 1, 'application-add', 'Application creator (save)', 'Access to the Admin/Application/Add page to save new content.', 'POST', 1, 1, NOW(), NULL),
-  (7, 5, 1, 'application-edit', 'Application editor (view)', 'Access to the Admin/Application/Edit page to edit content.', 'GET', 1, 1, NOW(), NULL),
-  (8, 5, 1, 'application-edit-save', 'Application editor (save)', 'Access to the Admin/Application/Edit page to save edited content.', 'POST', 1, 1, NOW(), NULL);
+  ( 1, NULL, NULL, 'supervisor',                  'Supervisor access',             'Allow access to all resources in every application with any request method.', NULL, 1, NOW(), NULL),
+  ( 2,    1,    1, 'dashboard',                   'Dashborad access',              'Allow to view the dashboard.', NULL, 1, NOW(), NULL),
+
+  ( 3,    2,    1, 'applications-list',           'Application access',            'Allow to list the applications.', NULL, 1, NOW(), NULL),
+  ( 4,    3,    1, 'applications-add',            'Application creator',           'Allow to create new application. Doesn\'t include "save".', NULL, 1, NOW(), NULL),
+  ( 5,    4,    1, 'applications-view',           'Application viewer',            'Allow to access application detail page.', NULL, 1, NOW(), NULL),
+  ( 6,    5,    1, 'applications-edit',           'Application editor (view)',     'Allow to edit the application preferences. Doesn\'t include "save".', NULL, 1, NOW(), NULL),
+  ( 7,    6,    1, 'applications-save',           'Application editor (save)',     'Allow to save the changes on the application preferences.', NULL, 1, NOW(), NULL),
+  ( 8,    7,    1, 'applications-delete-review',  'Application remover (review)',  'Allow to review the application that is about to be deleted. Doesn\'t include "confirm".',  'GET', 1, NOW(), NULL),
+  ( 9,    7,    1, 'applications-delete-confirm', 'Application remover (confirm)', 'Allow to delete application permanently.', 'POST', 1, NOW(), NULL),
+
+  (10,    8,    1, 'control-panel-index',         'Control panel access',          'Allow to view the Control Panel page.',      NULL, 1, NOW(), NULL),
+
+  (11,    9,    1, 'themes-list',                 'Theme Manager access',          'Allow to list the installed themes.', NULL, 1, NOW(), NULL),
+  (12,   10,    1, 'themes-add',                  'Theme uploader',                'Allow to upload new theme. Doesn\'t include "save".', 'GET', 1, NOW(), NULL),
+  (13,   10,    1, 'themes-add-save',             'Theme uploader (save)',         'Allow to save the uploaded theme.', 'POST', 1, NOW(), NULL),
+  (14,   11,    1, 'themes-view',                 'Theme viewer',                  'Allow to view theme properties.', NULL, 1, NOW(), NULL),
+  (15,   12,    1, 'themes-delete-review',        'Theme remover (review)',        'Allow to review the theme that is about to be deleted. Doesn\'t include "confirm".', 'GET', 1, NOW(), NULL),
+  (16,   12,    1, 'themes-delete-confirm',       'Theme remover (confirm)',       'Allow to delete theme permanently.', 'POST', 1, NOW(), NULL);
 
 /*!40000 ALTER TABLE `webhemi_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -224,16 +243,26 @@ CREATE TABLE `webhemi_user_meta` (
 LOCK TABLES `webhemi_user_meta` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_meta` DISABLE KEYS */;
 INSERT INTO `webhemi_user_meta` VALUES
-  (NULL, 1, 'avatar',           '',          NOW(), NULL),
-  (NULL, 1, 'details',          '',          NOW(), NULL),
-  (NULL, 1, 'emailVisible',     '0',         NOW(), NULL),
-  (NULL, 1, 'displayName' ,     'Admin Joe', NOW(), NULL),
-  (NULL, 1, 'headLine',         '',          NOW(), NULL),
-  (NULL, 1, 'instantMessengers','',          NOW(), NULL),
-  (NULL, 1, 'location',         '',          NOW(), NULL),
-  (NULL, 1, 'phoneNumbers',     '',          NOW(), NULL),
-  (NULL, 1, 'socialNetworks',   '',          NOW(), NULL),
-  (NULL, 1, 'websites',         '',          NOW(), NULL);
+  (NULL, 1, 'display_name',       'Admin Joe',                 NOW(), NULL),
+  (NULL, 1, 'gender',             'male',                      NOW(), NULL),
+  (NULL, 1, 'avatar',             '/img/avatars/suit_man.svg', NOW(), NULL),
+  (NULL, 1, 'avatar_type',        'file',                      NOW(), NULL),
+  (NULL, 1, 'email_visible',      '0',                         NOW(), NULL),
+  (NULL, 1, 'location',           '',                          NOW(), NULL),
+  (NULL, 1, 'instant_messengers', '',                          NOW(), NULL),
+  (NULL, 1, 'phone_numbers',      '',                          NOW(), NULL),
+  (NULL, 1, 'social_networks',    '',                          NOW(), NULL),
+  (NULL, 1, 'websites',           '',                          NOW(), NULL),
+  (NULL, 2, 'display_name',       'Demo user',                 NOW(), NULL),
+  (NULL, 2, 'gender',             'male',                      NOW(), NULL),
+  (NULL, 2, 'avatar',             '/img/avatars/tie_man.svg',  NOW(), NULL),
+  (NULL, 2, 'avatar_type',        'file',                      NOW(), NULL),
+  (NULL, 2, 'email_visible',      '0',                         NOW(), NULL),
+  (NULL, 2, 'location',           '',                          NOW(), NULL),
+  (NULL, 2, 'instant_messengers', '',                          NOW(), NULL),
+  (NULL, 2, 'phone_numbers',      '',                          NOW(), NULL),
+  (NULL, 2, 'social_networks',    '',                          NOW(), NULL),
+  (NULL, 2, 'websites',           '',                          NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_user_meta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -295,9 +324,8 @@ CREATE TABLE `webhemi_user_group` (
 LOCK TABLES `webhemi_user_group` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_group` DISABLE KEYS */;
 INSERT INTO `webhemi_user_group` VALUES
-  (1, 'guest', 'Guests', 'Group for guests.', 1, NOW(), NULL),
-  (2, 'admin', 'Administrators', 'Group for global administrators', 1, NOW(), NULL),
-  (3, 'demo', 'Demo group', 'For test purposes', 0, NOW(), NULL);
+  (1, 'admin', 'Administrators', 'Group for global administrators', 1, NOW(), NULL),
+  (2, 'demo', 'Demo group', 'Read-only access for test/demo purposes.', 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -328,8 +356,8 @@ CREATE TABLE `webhemi_user_to_user_group` (
 LOCK TABLES `webhemi_user_to_user_group` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_to_user_group` DISABLE KEYS */;
 INSERT INTO `webhemi_user_to_user_group` VALUES
-  (NULL, 1, 2),
-  (NULL, 2, 3);
+  (NULL, 1, 1),
+  (NULL, 2, 2);
 /*!40000 ALTER TABLE `webhemi_user_to_user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -360,14 +388,7 @@ CREATE TABLE `webhemi_user_group_to_am_policy` (
 LOCK TABLES `webhemi_user_group_to_am_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_group_to_am_policy` DISABLE KEYS */;
 INSERT INTO `webhemi_user_group_to_am_policy` VALUES
-  (NULL, 2, 1),
-  (NULL, 3, 2),
-  (NULL, 3, 3),
-  (NULL, 3, 4),
-  (NULL, 3, 5),
-  (NULL, 3, 6),
-  (NULL, 3, 7),
-  (NULL, 3, 8);
+  (NULL, 1, 1);
 /*!40000 ALTER TABLE `webhemi_user_group_to_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -65,4 +65,59 @@ abstract class AbstractMiddlewareAction implements MiddlewareInterface, ActionMi
             ->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
         $response = $this->response;
     }
+
+    /**
+     * Returns the routing parameters.
+     *
+     * @return array
+     */
+    protected function getRoutingParameters() : array
+    {
+        return $this->request->getAttribute('routing_parameters');
+    }
+
+    /**
+     * Returns the query paramters. This is the processed and filtered _GET data.
+     *
+     * @return array
+     */
+    protected function getGetParameters() : array
+    {
+        return $this->request->getQueryParams();
+    }
+
+    /**
+     * Returns the post paramters. This is the processed and filtered _POST data.
+     *
+     * @return array
+     */
+    protected function getPostParameters() : array
+    {
+        return $this->request->getParsedBody();
+    }
+
+    /**
+     * Returns data from the upladed files.
+     *
+     * @return array
+     */
+    protected function getUploadedFiles() : array
+    {
+        return $this->request->getUploadedFiles();
+    }
+
+    /**
+     * Returns all kind of parameters.
+     *
+     * @return array
+     */
+    protected function getAllParameters() : array
+    {
+        return [
+            'ROUTE' => $this->getRoutingParameters(),
+            'GET'   => $this->getGetParameters(),
+            'POST'  => $this->getPostParameters(),
+            'FILES' => $this->getUploadedFiles()
+        ];
+    }
 }

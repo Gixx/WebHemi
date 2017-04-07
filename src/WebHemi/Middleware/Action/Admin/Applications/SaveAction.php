@@ -22,9 +22,9 @@ use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class ViewAction.
+ * Class SaveAction.
  */
-class ViewAction extends AbstractMiddlewareAction
+class SaveAction extends AbstractMiddlewareAction
 {
     /** @var ConfigurationInterface */
     private $configuration;
@@ -36,7 +36,7 @@ class ViewAction extends AbstractMiddlewareAction
     private $applicationStorage;
 
     /**
-     * ViewAction constructor.
+     * SaveAction constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param AuthInterface          $authAdapter
@@ -62,7 +62,7 @@ class ViewAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-view';
+        return '';
     }
 
     /**
@@ -72,8 +72,8 @@ class ViewAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        $params = $this->getRoutingParameters();
-        $applicationName = $params['name'] ?? '';
+        $params = $this->getAllParameters();
+        $applicationName = $params['ROUTE']['name'] ?? '';
         $applicationEntity = $this->applicationStorage->getApplicationByName($applicationName);
 
         if (!$applicationEntity instanceof ApplicationEntity) {

@@ -60,32 +60,32 @@ class DashboardAction extends AbstractMiddlewareAction
     {
         global $dependencyInjection;
 
-        $userEntity = $this->authAdapter->getIdentity();
-        /** @var \WebHemi\Data\Coupler\UserToGroupCoupler $userToGroupCoupler */
-        $userToGroupCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToGroupCoupler::class);
-        /** @var \WebHemi\Data\Coupler\UserToPolicyCoupler $userToPolicyCoupler */
-        $userToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToPolicyCoupler::class);
-        /** @var \WebHemi\Data\Coupler\UserGroupToPolicyCoupler $userToGroupToPolicyCoupler */
-        $userToGroupToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserGroupToPolicyCoupler::class);
-
-        $userGroups = $userToGroupCoupler->getEntityDependencies($userEntity);
-        $userPolicies = $userToPolicyCoupler->getEntityDependencies($userEntity);
-
-        $userGroupPolicies = [];
-
-        foreach ($userGroups as $userGroupEntity) {
-            $userGroupPolicies = array_merge(
-                $userGroupPolicies,
-                $userToGroupToPolicyCoupler->getEntityDependencies($userGroupEntity)
-            );
-        }
+//      $userEntity = $this->authAdapter->getIdentity();
+//      /** @var \WebHemi\Data\Coupler\UserToGroupCoupler $userToGroupCoupler */
+//      $userToGroupCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToGroupCoupler::class);
+//      /** @var \WebHemi\Data\Coupler\UserToPolicyCoupler $userToPolicyCoupler */
+//      $userToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToPolicyCoupler::class);
+//      /** @var \WebHemi\Data\Coupler\UserGroupToPolicyCoupler $userToGroupToPolicyCoupler */
+//      $userToGroupToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserGroupToPolicyCoupler::class);
+//
+//      $userGroups = $userToGroupCoupler->getEntityDependencies($userEntity);
+//      $userPolicies = $userToPolicyCoupler->getEntityDependencies($userEntity);
+//
+//      $userGroupPolicies = [];
+//
+//      foreach ($userGroups as $userGroupEntity) {
+//          $userGroupPolicies = array_merge(
+//              $userGroupPolicies,
+//              $userToGroupToPolicyCoupler->getEntityDependencies($userGroupEntity)
+//          );
+//      }
 
         // @TODO TBD
         return [
-            'user' => $userEntity,
-            'user_groups' => $userGroups,
-            'user_policies' => $userPolicies,
-            'user_group_policies' => $userGroupPolicies,
+            'user' => $userEntity ?? false,
+            'user_groups' => $userGroups ?? false,
+            'user_policies' => $userPolicies ?? false,
+            'user_group_policies' => $userGroupPolicies ?? false,
         ];
     }
 }

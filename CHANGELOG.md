@@ -1,5 +1,12 @@
 # Change log #
 
+## Version 4.0.0-4.2 ##
+
+* Add Application function skeletons
+* Add Control Panel categories
+* Add Theme manager function skeletons
+* A bit simplify the ACL: the policy has no use the isAllowed field, since if a policy is not defined for a resource, than that resource is not allowed to view...
+
 ## Version 4.0.0-4.1 ##
 
 * Add support for form presets.

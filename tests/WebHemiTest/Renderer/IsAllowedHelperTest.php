@@ -105,7 +105,7 @@ class IsAllowedHelperTest extends TestCase
         $environmentManager = $environmentProphecy->reveal();
 
         $aclProphecy = $this->prophesize(AclAdapterInterface::class);
-        $aclProphecy->isAllowed(Argument::any(), Argument::any(), Argument::any())->will(
+        $aclProphecy->isAllowed(Argument::any(), Argument::any(), Argument::any(), Argument::any())->will(
             function ($arguments) {
                 /** @var UserEntity $userEntity */
                 $userEntity = $arguments[0];
@@ -172,15 +172,15 @@ class IsAllowedHelperTest extends TestCase
         // 1, 1 => true
         $this->assertTrue($helper('SomeMiddleware'));
         // 2, 1 => false
-        $this->assertFalse($helper('SomeOtherMiddleware'));
+        $this->assertFalse($helper('SomeOtherMiddleware', 'GET'));
         // 1, 2 => false
-        $this->assertFalse($helper('SomeMiddleware', 'admin'));
+        $this->assertFalse($helper('SomeMiddleware', 'GET', 'admin'));
         // 2, 2 => true
-        $this->assertTrue($helper('SomeOtherMiddleware', 'admin'));
+        $this->assertTrue($helper('SomeOtherMiddleware', null, 'admin'));
         // null, 1 => false
-        $this->assertFalse($helper('SomeNotDefinedMiddleware'));
+        $this->assertFalse($helper('SomeNotDefinedMiddleware', 'POST'));
         // null, null => false
-        $this->assertFalse($helper('SomeNotDefinedMiddleware', 'fake_app'));
+        $this->assertFalse($helper('SomeNotDefinedMiddleware', null, 'fake_app'));
     }
 
     /**

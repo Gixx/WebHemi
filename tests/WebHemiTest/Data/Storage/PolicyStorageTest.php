@@ -52,7 +52,6 @@ class PolicyStorageTest extends TestCase
                 'description' => 'A test policy record',
                 'method' => null,
                 'is_read_only' => 1,
-                'is_allowed' => 1,
                 'date_created' =>  '2016-03-24 16:25:12',
                 'date_modified' =>  '2016-03-24 16:25:12',
             ],
@@ -65,7 +64,6 @@ class PolicyStorageTest extends TestCase
                 'description' => 'A test policy record',
                 'method' => 'GET',
                 'is_read_only' => 0,
-                'is_allowed' => 0,
                 'date_created' =>  '2016-03-24 16:25:12',
                 'date_modified' =>  '2016-03-24 16:25:12',
             ],
@@ -77,8 +75,7 @@ class PolicyStorageTest extends TestCase
                 'title' => 'Test Policy 3',
                 'description' => 'A test policy record',
                 'method' => 'POST',
-                'is_read_only' => 0,
-                'is_allowed' => 1,
+                'is_read_only' => 1,
                 'date_created' =>  '2016-03-24 16:25:12',
                 'date_modified' =>  '2016-03-24 16:25:12',
             ]
@@ -155,7 +152,7 @@ class PolicyStorageTest extends TestCase
 
         $actualResult = $storage->getPolicyById(3);
         $this->assertEmpty($actualResult->getResourceId());
-        $this->assertTrue($actualResult->getAllowed());
+        $this->assertTrue($actualResult->getReadOnly());
     }
 
     /**
@@ -202,7 +199,7 @@ class PolicyStorageTest extends TestCase
 
         $actualResult = $storage->getPolicyByName('test3');
         $this->assertEmpty($actualResult->getResourceId());
-        $this->assertTrue($actualResult->getAllowed());
+        $this->assertTrue($actualResult->getReadOnly());
     }
 
     /**
@@ -234,18 +231,18 @@ class PolicyStorageTest extends TestCase
 
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
         $this->assertSame('Test Policy 1', $actualResult[0]->getTitle());
-        $this->assertTrue($actualResult[0]->getAllowed());
+        $this->assertTrue($actualResult[0]->getReadOnly());
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
         $this->assertArraysAreSimilar($data[0], $actualData);
 
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[1]);
-        $this->assertFalse($actualResult[1]->getAllowed());
+        $this->assertFalse($actualResult[1]->getReadOnly());
         $this->assertSame('Test Policy 2', $actualResult[1]->getTitle());
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
         $this->assertArraysAreSimilar($data[1], $actualData);
 
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[1]);
-        $this->assertTrue($actualResult[2]->getAllowed());
+        $this->assertTrue($actualResult[2]->getReadOnly());
         $this->assertSame('Test Policy 3', $actualResult[2]->getTitle());
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[2]]);
         $this->assertArraysAreSimilar($data[2], $actualData);
@@ -285,11 +282,11 @@ class PolicyStorageTest extends TestCase
         $this->assertSame(2, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
         $this->assertSame('Test Policy 1', $actualResult[0]->getTitle());
-        $this->assertTrue($actualResult[0]->getAllowed());
+        $this->assertTrue($actualResult[0]->getReadOnly());
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
         $this->assertArraysAreSimilar($data[0], $actualData);
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[1]);
-        $this->assertFalse($actualResult[1]->getAllowed());
+        $this->assertFalse($actualResult[1]->getReadOnly());
         $this->assertSame('Test Policy 2', $actualResult[1]->getTitle());
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
         $this->assertArraysAreSimilar($data[1], $actualData);
@@ -297,7 +294,7 @@ class PolicyStorageTest extends TestCase
         /** @var PolicyEntity[] $actualResult */
         $actualResult = $storage->getPoliciesByResourceId(null);
         $this->assertSame(1, count($actualResult));
-        $this->assertFalse($actualResult[0]->getReadOnly());
+        $this->assertTrue($actualResult[0]->getReadOnly());
         $this->assertSame('Test Policy 3', $actualResult[0]->getTitle());
         $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
         $this->assertArraysAreSimilar($data[2], $actualData);
@@ -343,19 +340,19 @@ class PolicyStorageTest extends TestCase
         $actualResult = $storage->getPoliciesByApplicationId(1);
         $this->assertSame(1, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
-        $this->assertTrue($actualResult[0]->getAllowed());
+        $this->assertTrue($actualResult[0]->getReadOnly());
         $this->assertSame('Test Policy 1', $actualResult[0]->getTitle());
 
         $actualResult = $storage->getPoliciesByApplicationId(2);
         $this->assertSame(1, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
-        $this->assertFalse($actualResult[0]->getAllowed());
+        $this->assertFalse($actualResult[0]->getReadOnly());
         $this->assertSame('Test Policy 2', $actualResult[0]->getTitle());
 
         $actualResult = $storage->getPoliciesByApplicationId(null);
         $this->assertSame(1, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
-        $this->assertTrue($actualResult[0]->getAllowed());
+        $this->assertTrue($actualResult[0]->getReadOnly());
         $this->assertSame('Test Policy 3', $actualResult[0]->getTitle());
 
         $actualResult = $storage->getPoliciesByApplicationId(100);
@@ -398,21 +395,21 @@ class PolicyStorageTest extends TestCase
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(1, 1);
         $this->assertSame(1, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
-        $this->assertTrue($actualResult[0]->getAllowed());
+        $this->assertTrue($actualResult[0]->getReadOnly());
         $this->assertSame('Test Policy 1', $actualResult[0]->getTitle());
 
         /** @var PolicyEntity[] $actualResult */
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(1, 2);
         $this->assertSame(1, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
-        $this->assertFalse($actualResult[0]->getAllowed());
+        $this->assertFalse($actualResult[0]->getReadOnly());
         $this->assertSame('Test Policy 2', $actualResult[0]->getTitle());
 
         /** @var PolicyEntity[] $actualResult */
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(null, null);
         $this->assertSame(1, count($actualResult));
         $this->assertInstanceOf(PolicyEntity::class, $actualResult[0]);
-        $this->assertTrue($actualResult[0]->getAllowed());
+        $this->assertTrue($actualResult[0]->getReadOnly());
         $this->assertSame('Test Policy 3', $actualResult[0]->getTitle());
 
         $actualResult = $storage->getPoliciesByResourceAndApplicationIds(1, 100);

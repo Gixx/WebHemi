@@ -61,7 +61,6 @@ class PolicyEntityTest extends TestCase
             ['title','some title','some title', false],
             ['description','some description','some description', false],
             ['isReadOnly',true, true, true],
-            ['isAllowed',false, false, true],
             ['dateCreated', $dateTest, $dateTest, true],
             ['dateModified', $dateTest, $dateTest, true],
         ];

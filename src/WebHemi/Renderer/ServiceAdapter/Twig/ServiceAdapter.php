@@ -114,6 +114,7 @@ class ServiceAdapter implements ServiceInterface
         $parameters['template_resource_path'] = $this->templateResourcePath;
         $parameters['document_root'] = $this->environmentManager->getDocumentRoot();
         $parameters['application_base_uri'] = $this->applicationBaseUri;
+        $parameters['current_uri'] = $this->environmentManager->getRequestUri();
 
         $output = $this->adapter->render($template, $parameters);
 

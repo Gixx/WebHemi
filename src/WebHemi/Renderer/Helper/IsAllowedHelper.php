@@ -61,7 +61,7 @@ class IsAllowedHelper implements HelperInterface
      */
     public static function getDefinition() : string
     {
-        return '{% if isAllowed("resource_name", "admin") %}';
+        return '{% if isAllowed("resource_name", ["POST"[, "application_name"]]) %}';
     }
 
     /**
@@ -72,7 +72,7 @@ class IsAllowedHelper implements HelperInterface
      */
     public static function getDescription() : string
     {
-        return 'Checks if the given user has access to the given resource in the given application.';
+        return 'Checks if the given user has access to the given resource.';
     }
 
     /**
@@ -128,7 +128,8 @@ class IsAllowedHelper implements HelperInterface
 
         $arguments = func_get_args();
 
-        $applicationName = $arguments[1] ?? $this->environmentManager->getSelectedApplication();
+        $method = $arguments[1] ?? null;
+        $applicationName = $arguments[2] ?? $this->environmentManager->getSelectedApplication();
         /** @var null|ApplicationEntity $applicationEntity */
         $applicationEntity = $this->applicationStorage->getApplicationByName($applicationName);
 
@@ -143,6 +144,6 @@ class IsAllowedHelper implements HelperInterface
         /** @var null|ResourceEntity $resourceEntity */
         $resourceEntity = $this->resourceStorage->getResourceByName($resourceName);
 
-        return $this->aclAdapter->isAllowed($userEntity, $resourceEntity, $applicationEntity);
+        return $this->aclAdapter->isAllowed($userEntity, $resourceEntity, $applicationEntity, $method);
     }
 }

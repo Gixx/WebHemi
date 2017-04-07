@@ -13,15 +13,18 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin\Applications;
 
+use InvalidArgumentException;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\Data\Entity\ApplicationEntity;
+use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class EditAction.
+ * Class PreferencesAction
  */
-class EditAction extends AbstractMiddlewareAction
+class PreferencesAction extends AbstractMiddlewareAction
 {
     /** @var ConfigurationInterface */
     private $configuration;
@@ -29,22 +32,27 @@ class EditAction extends AbstractMiddlewareAction
     private $authAdapter;
     /** @var EnvironmentInterface */
     private $environmentManager;
+    /** @var ApplicationStorage */
+    private $applicationStorage;
 
     /**
-     * EditAction constructor.
+     * PreferencesAction constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param AuthInterface          $authAdapter
      * @param EnvironmentInterface   $environmentManager
+     * @parem ApplicationStorage     $applicationStorage
      */
     public function __construct(
         ConfigurationInterface $configuration,
         AuthInterface $authAdapter,
-        EnvironmentInterface $environmentManager
+        EnvironmentInterface $environmentManager,
+        ApplicationStorage $applicationStorage
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
+        $this->applicationStorage = $applicationStorage;
     }
 
     /**
@@ -54,7 +62,7 @@ class EditAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-edit';
+        return 'admin-applications-preferences';
     }
 
     /**
@@ -64,6 +72,19 @@ class EditAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        return [];
+        $params = $this->getRoutingParameters();
+        $applicationName = $params['name'] ?? '';
+        $applicationEntity = $this->applicationStorage->getApplicationByName($applicationName);
+
+        if (!$applicationEntity instanceof ApplicationEntity) {
+            throw new InvalidArgumentException(
+                sprintf('%s is not a valid application name', $applicationName),
+                404
+            );
+        }
+
+        return [
+            'application' => $applicationEntity
+        ];
     }
 }
