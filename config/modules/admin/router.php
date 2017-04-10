@@ -70,6 +70,12 @@ return [
                 'middleware'      => Action\Admin\ControlPanel\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
+            // Settings
+            'admin-control-panel-settings-index' => [
+                'path'            => '/control-panel/settings[/]',
+                'middleware'      => Action\Admin\ControlPanel\Settings\IndexAction::class,
+                'allowed_methods' => ['GET'],
+            ],
             // Themes
             'admin-control-panel-themes-list' => [
                 'path'            => '/control-panel/themes[/]',
@@ -91,7 +97,42 @@ return [
                 'middleware'      => Action\Admin\ControlPanel\Themes\DeleteAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
-
+            // Add-Ons
+            'admin-control-panel-add-ons-index' => [
+                'path'            => '/control-panel/add-ons[/]',
+                'middleware'      => Action\Admin\ControlPanel\AddOns\IndexAction::class,
+                'allowed_methods' => ['GET'],
+            ],
+            // Users
+            'admin-control-panel-users-list' => [
+                'path'            => '/control-panel/users[/]',
+                'middleware'      => Action\Admin\ControlPanel\Users\IndexAction::class,
+                'allowed_methods' => ['GET'],
+            ],
+            // Groups
+            'admin-control-panel-groups-list' => [
+                'path'            => '/control-panel/groups[/]',
+                'middleware'      => Action\Admin\ControlPanel\Groups\IndexAction::class,
+                'allowed_methods' => ['GET'],
+            ],
+            // Resources
+            'admin-control-panel-resources-list' => [
+                'path'            => '/control-panel/resources[/]',
+                'middleware'      => Action\Admin\ControlPanel\Resources\IndexAction::class,
+                'allowed_methods' => ['GET'],
+            ],
+            // Policies
+            'admin-control-panel-policies-list' => [
+                'path'            => '/control-panel/policies[/]',
+                'middleware'      => Action\Admin\ControlPanel\Policies\IndexAction::class,
+                'allowed_methods' => ['GET'],
+            ],
+            // Logs
+            'admin-control-panel-logs-list' => [
+                'path'            => '/control-panel/logs[/]',
+                'middleware'      => Action\Admin\ControlPanel\Logs\IndexAction::class,
+                'allowed_methods' => ['GET'],
+            ],
             // About
             'admin-about-index' => [
                 'path'            => '/about[/]',
