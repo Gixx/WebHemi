@@ -13,12 +13,12 @@ use WebHemi\Renderer;
 
 return [
     'renderer' => [
-        'Global' => [
+        'Admin' => [
             'filter' => [
 
             ],
             'helper' => [
-
+                Renderer\Helper\IsAllowedHelper::class
             ],
         ]
     ]
