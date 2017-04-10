@@ -147,7 +147,9 @@ class ServiceAdapter implements ServiceInterface
         }
 
         // Register method callings.
-        foreach ((array) $setUpData[self::SERVICE_METHOD_CALL] as $method => $parameterList) {
+        foreach ((array) $setUpData[self::SERVICE_METHOD_CALL] as $methodCallList) {
+            $method = $methodCallList[0];
+            $parameterList = $methodCallList[1] ?? [];
             $this->addMethodCall($service, $method, $parameterList);
         }
 
@@ -165,21 +167,23 @@ class ServiceAdapter implements ServiceInterface
     {
         // Init settings.
         $setUpData = $this->defaultSetUpData;
-        $setUpData[self::SERVICE_CLASS] = $serviceClass;
 
         // Override settings from the Global configuration if exists.
         if (isset($this->configuration['Global'][$identifier])) {
-            $setUpData = array_merge($setUpData, $this->configuration['Global'][$identifier]);
+            $setUpData = merge_array_overwrite($setUpData, $this->configuration['Global'][$identifier]);
         }
 
         // Override settings from the Module configuration if exists.
         if (!empty($this->moduleNamespace) && isset($this->configuration[$this->moduleNamespace][$identifier])) {
-            $setUpData = array_merge($setUpData, $this->configuration[$this->moduleNamespace][$identifier]);
+            $setUpData = merge_array_overwrite($setUpData, $this->configuration[$this->moduleNamespace][$identifier]);
         }
 
         if (isset($setUpData[self::SERVICE_INHERIT])) {
             $setUpData = $this->resolveInheritance($setUpData);
         }
+
+        $setUpData[self::SERVICE_CLASS] = $setUpData[self::SERVICE_CLASS] ?? $serviceClass;
+        $setUpData[self::SERVICE_SHARE] = $setUpData[self::SERVICE_SHARE] ?? false;
 
         return $setUpData;
     }
@@ -195,17 +199,18 @@ class ServiceAdapter implements ServiceInterface
     {
         // Clear all empty init parameters.
         foreach ($setUpData as $key => $data) {
-            if ($data === [] || $data === '') {
+            if (empty($data)) {
                 unset($setUpData[$key]);
             }
         }
+
         // Recursively get the inherited configuration.
         $inheritSetUpData = $this->getServiceSetupData(
             $setUpData[self::SERVICE_INHERIT],
             $setUpData[self::SERVICE_INHERIT]
         );
 
-        $setUpData = array_merge($inheritSetUpData, $setUpData);
+        $setUpData = merge_array_overwrite($inheritSetUpData, $setUpData);
         unset($setUpData[self::SERVICE_INHERIT]);
 
         return $setUpData;

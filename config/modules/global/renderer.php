@@ -20,7 +20,6 @@ return [
             'helper' => [
                 Renderer\Helper\DefinedHelper::class,
                 Renderer\Helper\GetStatHelper::class,
-                Renderer\Helper\IsAllowedHelper::class
             ],
         ]
     ]
