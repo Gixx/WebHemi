@@ -103,13 +103,14 @@ class SymfonyAdapterTest extends TestCase
                         // Alias with call and share, no argument.
                         'special' => [
                             'class'  => ArrayObject::class,
-                            'calls'  => ['offsetSet' => ['date', 'alias1']],
+                            'calls'  => [['offsetSet', ['date', 'alias1']]],
                             'shared' => true
                         ]
                     ]
                 ],
             ]
         );
+
         $adapter = new SymfonyAdapter($config);
         $adapter->registerService(ConfigInterface::class, $config)
             ->registerModuleServices('Global');
@@ -154,8 +155,8 @@ class SymfonyAdapterTest extends TestCase
                         'special1' => [
                             'class'  => ArrayObject::class,
                             'calls'  => [
-                                'offsetSet' => ['date', 'alias1'],
-                                'setIteratorClass' => [ArrayIterator::class]
+                                ['offsetSet', ['date', 'alias1']],
+                                ['setIteratorClass', [ArrayIterator::class]]
                             ],
                             'shared' => true
                         ],
@@ -170,7 +171,7 @@ class SymfonyAdapterTest extends TestCase
                         'special2' => [
                             'class'  => ArrayObject::class,
                             'calls'  => [
-                                'offsetSet' => ['iterator', ArrayIterator::class],
+                                ['offsetSet', ['iterator', ArrayIterator::class]],
                             ],
                             'shared' => true
                         ],
@@ -339,6 +340,51 @@ class SymfonyAdapterTest extends TestCase
             'getServiceSetupData',
             ['someService', 'someServiceClassName']
         );
+
+        $this->assertArraysAreSimilar($expectedResult, $actualResult);
+    }
+
+    /**
+     * Tests getServiceSetupData with inheritance
+     */
+    public function testGetServiceSetupDataWithInheritance()
+    {
+        $config = new Config(
+            [
+                'dependencies' => [
+                    'Global' => [
+                        'alias1' => [
+                            'class' => DateTime::class,
+                            'shared' => true
+                        ],
+                    ],
+                    'Admin' => [
+                        'alias2' => [
+                            'inherits' => 'alias1',
+                            'shared' => false
+                        ]
+                    ]
+                ],
+            ]
+        );
+
+        $adapter = new SymfonyAdapter($config);
+        $adapter->registerModuleServices('Global')
+            ->registerModuleServices('Admin');
+
+        $expectedResult = [
+            'class' => DateTime::class,
+            'arguments' => [],
+            'calls' => [],
+            'shared' => true,
+        ];
+
+        $actualResult = $this->invokePrivateMethod(
+            $adapter,
+            'getServiceSetupData',
+            ['alias2', DateTime::class]
+        );
+
         $this->assertArraysAreSimilar($expectedResult, $actualResult);
     }
 }

@@ -165,16 +165,17 @@ class ServiceAdapter implements ServiceInterface
      */
     private function getServiceSetupData(string $identifier, string $serviceClass) : array
     {
-        // Init settings.
-        $setUpData = $this->defaultSetUpData;
+        $setUpData = [];
 
         // Override settings from the Global configuration if exists.
         if (isset($this->configuration['Global'][$identifier])) {
-            $setUpData = merge_array_overwrite($setUpData, $this->configuration['Global'][$identifier]);
+            $setUpData = $this->configuration['Global'][$identifier];
         }
 
         // Override settings from the Module configuration if exists.
-        if (!empty($this->moduleNamespace) && isset($this->configuration[$this->moduleNamespace][$identifier])) {
+        if ('Global' != $this->moduleNamespace
+            && isset($this->configuration[$this->moduleNamespace][$identifier])
+        ) {
             $setUpData = merge_array_overwrite($setUpData, $this->configuration[$this->moduleNamespace][$identifier]);
         }
 
@@ -183,7 +184,7 @@ class ServiceAdapter implements ServiceInterface
         }
 
         $setUpData[self::SERVICE_CLASS] = $setUpData[self::SERVICE_CLASS] ?? $serviceClass;
-        $setUpData[self::SERVICE_SHARE] = $setUpData[self::SERVICE_SHARE] ?? false;
+        $setUpData = merge_array_overwrite($this->defaultSetUpData, $setUpData);
 
         return $setUpData;
     }

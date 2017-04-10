@@ -9,7 +9,7 @@
         beStrictAboutChangesToGlobalState="true"
         stopOnError="true"
         stopOnWarning="true"
-        bootstrap="vendor/autoload.php">
+        bootstrap="bootstrap.php">
     <testsuites>
         <testsuite name="all">
             <directory suffix=".php">tests/WebHemiTest</directory>
