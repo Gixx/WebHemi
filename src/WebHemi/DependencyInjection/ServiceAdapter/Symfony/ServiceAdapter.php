@@ -29,6 +29,7 @@ class ServiceAdapter implements ServiceInterface
     private const SERVICE_ARGUMENTS = 'arguments';
     private const SERVICE_METHOD_CALL = 'calls';
     private const SERVICE_SHARE = 'shared';
+    private const SERVICE_INHERIT = 'inherits';
 
     /** @var ContainerBuilder */
     private $container;
@@ -166,12 +167,46 @@ class ServiceAdapter implements ServiceInterface
         $setUpData = $this->defaultSetUpData;
         $setUpData[self::SERVICE_CLASS] = $serviceClass;
 
-        // Override settings from the configuration if exists.
+        // Override settings from the Global configuration if exists.
         if (isset($this->configuration['Global'][$identifier])) {
             $setUpData = array_merge($setUpData, $this->configuration['Global'][$identifier]);
-        } elseif (!empty($this->moduleNamespace) && isset($this->configuration[$this->moduleNamespace][$identifier])) {
+        }
+
+        // Override settings from the Module configuration if exists.
+        if (!empty($this->moduleNamespace) && isset($this->configuration[$this->moduleNamespace][$identifier])) {
             $setUpData = array_merge($setUpData, $this->configuration[$this->moduleNamespace][$identifier]);
         }
+
+        if (isset($setUpData[self::SERVICE_INHERIT])) {
+            $setUpData = $this->resolveInheritance($setUpData);
+        }
+
+        return $setUpData;
+    }
+
+    /**
+     * Resolves inheritance. Could solve in within the getServiceSetupData method but it would dramatically increase the
+     * code complexity index.
+     *
+     * @param array $setUpData
+     * @return array
+     */
+    private function resolveInheritance(array $setUpData) : array
+    {
+        // Clear all empty init parameters.
+        foreach ($setUpData as $key => $data) {
+            if ($data === [] || $data === '') {
+                unset($setUpData[$key]);
+            }
+        }
+        // Recursively get the inherited configuration.
+        $inheritSetUpData = $this->getServiceSetupData(
+            $setUpData[self::SERVICE_INHERIT],
+            $setUpData[self::SERVICE_INHERIT]
+        );
+
+        $setUpData = array_merge($inheritSetUpData, $setUpData);
+        unset($setUpData[self::SERVICE_INHERIT]);
 
         return $setUpData;
     }
