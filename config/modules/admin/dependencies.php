@@ -69,36 +69,16 @@ return [
                 ],
             ],
             Middleware\Action\Admin\Applications\AddAction::class => [
-                'arguments' => [
-                    Configuration\ServiceInterface::class,
-                    Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class,
-                    Data\Storage\ApplicationStorage::class,
-                ],
+                'inherits' => Middleware\Action\Admin\Applications\IndexAction::class,
             ],
             Middleware\Action\Admin\Applications\ViewAction::class => [
-                'arguments' => [
-                    Configuration\ServiceInterface::class,
-                    Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class,
-                    Data\Storage\ApplicationStorage::class,
-                ],
+                'inherits' => Middleware\Action\Admin\Applications\AddAction::class,
             ],
             Middleware\Action\Admin\Applications\PreferencesAction::class => [
-                'arguments' => [
-                    Configuration\ServiceInterface::class,
-                    Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class,
-                    Data\Storage\ApplicationStorage::class,
-                ],
+                'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
             ],
             Middleware\Action\Admin\Applications\DeleteAction::class => [
-                'arguments' => [
-                    Configuration\ServiceInterface::class,
-                    Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class,
-                    Data\Storage\ApplicationStorage::class,
-                ],
+                'inherits' => Middleware\Action\Admin\Applications\AddAction::class,
             ],
             Middleware\Action\Admin\ControlPanel\Themes\IndexAction::class => [
                 'arguments' => [
