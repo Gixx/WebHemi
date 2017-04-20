@@ -17,16 +17,23 @@ return [
             Data\ConnectorInterface::class => [
                 'class'     => Data\Connector\PDO\SQLite\ConnectorAdapter::class,
                 'arguments' => [
+                    'name' => 'Test-SQLite',
                     Data\DriverInterface::class
                 ],
-                'shared'    => true,
             ],
             Data\DriverInterface::class => [
                 'class' => Data\Connector\PDO\SQLite\DriverAdapter::class,
                 'arguments' => [
                     'dsn'      => 'sqlite:'.realpath(__DIR__ . '/../../../build/webhemi_schema.sqlite3'),
                 ],
-                'shared'    => true,
+                'shared' => true
+            ],
+            Data\MultiConnectorContainerInterface::class => [
+                'class' => Data\Connector\MultiConnectorContainer::class,
+                'arguments' => [
+                    Data\ConnectorInterface::class
+                ],
+                'shared' => true
             ],
         ],
     ],

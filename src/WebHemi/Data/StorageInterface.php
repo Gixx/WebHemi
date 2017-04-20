@@ -25,10 +25,10 @@ interface StorageInterface
      * DataStorageInterface constructor. The DataEntity SHOULD not be used directly unless it is required to represent
      * the same instance all the time.
      *
-     * @param ConnectorInterface $dataAdapter
+     * @param ConnectorInterface $connector
      * @param EntityInterface    $dataEntityPrototype
      */
-    public function __construct(ConnectorInterface $dataAdapter, EntityInterface $dataEntityPrototype);
+    public function __construct(ConnectorInterface $connector, EntityInterface $dataEntityPrototype);
 
     /**
      * Special initialization method. The constructor MUST call it.

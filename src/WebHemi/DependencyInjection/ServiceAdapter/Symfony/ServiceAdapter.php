@@ -13,42 +13,22 @@ declare(strict_types = 1);
 
 namespace WebHemi\DependencyInjection\ServiceAdapter\Symfony;
 
-use RuntimeException;
+use Exception;
+use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\DependencyInjection\ServiceInterface;
+use WebHemi\DependencyInjection\ServiceAdapter\AbstractAdapter;
 
 /**
  * Class ServiceAdapter.
  */
-class ServiceAdapter implements ServiceInterface
+class ServiceAdapter extends AbstractAdapter
 {
-    private const SERVICE_CLASS = 'class';
-    private const SERVICE_ARGUMENTS = 'arguments';
-    private const SERVICE_METHOD_CALL = 'calls';
-    private const SERVICE_SHARE = 'shared';
-    private const SERVICE_INHERIT = 'inherits';
-
     /** @var ContainerBuilder */
     private $container;
-    /** @var array */
-    private $configuration;
-    /** @var string */
-    private $moduleNamespace;
-    /** @var array */
-    private $servicesToDefine = [];
-    /** @var array */
-    private $instantiatedSharedServices = [];
-    /** @var array */
-    private $defaultSetUpData = [
-        self::SERVICE_CLASS         => '',
-        self::SERVICE_ARGUMENTS     => [],
-        self::SERVICE_METHOD_CALL   => [],
-        // By default the Symfony DI shares all services. In WebHemi by default nothing is shared.
-        self::SERVICE_SHARE         => false,
-    ];
     /** @var int */
     private static $parameterIndex = 0;
 
@@ -59,359 +39,172 @@ class ServiceAdapter implements ServiceInterface
      */
     public function __construct(ConfigurationInterface $configuration)
     {
+        parent::__construct($configuration);
+
         $this->container = new ContainerBuilder();
-        $this->configuration = $configuration->getData('dependencies');
     }
 
     /**
-     * Initializes the DI container from the config.
-     *
-     * @param array  $dependencies
-     * @return ServiceAdapter
-     */
-    private function registerServices(array $dependencies) : ServiceAdapter
-    {
-        // Collect the name information about the services to be registered
-        foreach ($dependencies as $alias => $setupData) {
-            $this->servicesToDefine[$alias] = $this->getRealServiceClass($setupData, $alias);
-        }
-
-        foreach ($this->servicesToDefine as $alias => $serviceClass) {
-            $this->registerService($alias, $serviceClass);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets real service class name.
-     *
-     * @param array  $setupData
-     * @param string $alias
-     * @return string
-     */
-    private function getRealServiceClass(array $setupData, string $alias) : string
-    {
-        if (isset($setupData[self::SERVICE_CLASS])) {
-            $serviceClass = $setupData[self::SERVICE_CLASS];
-        } else {
-            $serviceClass = $alias;
-        }
-
-        return $serviceClass;
-    }
-
-    /**
-     * Registers the service.
-     *
-     * @param string        $identifier
-     * @param string|object $serviceClass
-     * @return ServiceInterface
-     */
-    public function registerService(string $identifier, $serviceClass) : ServiceInterface
-    {
-        // Do nothing if the service has been already registered with the same alias.
-        // It is allowed to register the same service multiple times with different aliases.
-        if ($this->has($identifier)) {
-            return $this;
-        }
-
-        // Register synthetic services
-        if ('object' == gettype($serviceClass)) {
-            $this->container->register($identifier)
-                ->setShared(true)
-                ->setSynthetic(true);
-
-            $this->container->set($identifier, $serviceClass);
-            return $this;
-        }
-
-        $setUpData = $this->getServiceSetupData($identifier, $serviceClass);
-
-        // Create the definition.
-        $definition = new Definition($serviceClass);
-
-        $sharedService = (bool) $setUpData[self::SERVICE_SHARE];
-        $definition->setShared($sharedService);
-
-        // Register the service.
-        $service = $this->container->setDefinition($identifier, $definition);
-
-        if ($sharedService) {
-            $this->instantiatedSharedServices[$service->getClass()] = false;
-        }
-
-        // Add arguments.
-        foreach ((array) $setUpData[self::SERVICE_ARGUMENTS] as $parameter) {
-            $this->setServiceArgument($service, $parameter);
-        }
-
-        // Register method callings.
-        foreach ((array) $setUpData[self::SERVICE_METHOD_CALL] as $methodCallList) {
-            $method = $methodCallList[0];
-            $parameterList = $methodCallList[1] ?? [];
-            $this->addMethodCall($service, $method, $parameterList);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets the set up data for the service registration.
-     *
-     * @param string $identifier
-     * @param string $serviceClass
-     * @return array
-     */
-    private function getServiceSetupData(string $identifier, string $serviceClass) : array
-    {
-        $setUpData = [];
-
-        // Override settings from the Global configuration if exists.
-        if (isset($this->configuration['Global'][$identifier])) {
-            $setUpData = $this->configuration['Global'][$identifier];
-        }
-
-        // Override settings from the Module configuration if exists.
-        if ('Global' != $this->moduleNamespace
-            && isset($this->configuration[$this->moduleNamespace][$identifier])
-        ) {
-            $setUpData = merge_array_overwrite($setUpData, $this->configuration[$this->moduleNamespace][$identifier]);
-        }
-
-        if (isset($setUpData[self::SERVICE_INHERIT])) {
-            $setUpData = $this->resolveInheritance($setUpData);
-        }
-
-        $setUpData[self::SERVICE_CLASS] = $setUpData[self::SERVICE_CLASS] ?? $serviceClass;
-        $setUpData = merge_array_overwrite($this->defaultSetUpData, $setUpData);
-
-        return $setUpData;
-    }
-
-    /**
-     * Resolves inheritance. Could solve in within the getServiceSetupData method but it would dramatically increase the
-     * code complexity index.
-     *
-     * @param array $setUpData
-     * @return array
-     */
-    private function resolveInheritance(array $setUpData) : array
-    {
-        // Clear all empty init parameters.
-        foreach ($setUpData as $key => $data) {
-            if (empty($data)) {
-                unset($setUpData[$key]);
-            }
-        }
-
-        // Recursively get the inherited configuration.
-        $inheritSetUpData = $this->getServiceSetupData(
-            $setUpData[self::SERVICE_INHERIT],
-            $setUpData[self::SERVICE_INHERIT]
-        );
-
-        $setUpData = merge_array_overwrite($inheritSetUpData, $setUpData);
-        unset($setUpData[self::SERVICE_INHERIT]);
-
-        return $setUpData;
-    }
-
-    /**
-     * Adds a method call for the service. It will be triggered as soon as the service had been initialized.
-     *
-     * @param Definition $service
-     * @param string     $method
-     * @param array      $parameterList
-     * @return void
-     */
-    private function addMethodCall(Definition $service, string $method, array $parameterList = []) : void
-    {
-        // Check the parameter list for reference services
-        foreach ($parameterList as &$parameter) {
-            $parameter = $this->getReferenceServiceIfAvailable($parameter);
-        }
-
-        $service->addMethodCall($method, $parameterList);
-    }
-
-    /**
-     * If possible create register the parameter as a service and give it back as a reference.
-     *
-     * @param mixed $classOrServiceName
-     * @return mixed|Reference
-     */
-    private function getReferenceServiceIfAvailable($classOrServiceName)
-    {
-        $reference = $classOrServiceName;
-
-        // Check string parameter if it is a valid service or class name.
-        if (!is_string($classOrServiceName)) {
-            return $reference;
-        }
-
-        if (isset($this->servicesToDefine[$classOrServiceName])) {
-            // The parameter is defined as a service but it is not yet registered; alias is given.
-            $this->registerService($classOrServiceName, $this->servicesToDefine[$classOrServiceName]);
-        } elseif (in_array($classOrServiceName, $this->servicesToDefine)) {
-            // The parameter is defined as a service but it is not yet registered; real class is given.
-            $referenceAlias = array_search($classOrServiceName, $this->servicesToDefine);
-            $this->registerService($referenceAlias, $this->servicesToDefine[$referenceAlias]);
-            $classOrServiceName = $referenceAlias;
-        } elseif (class_exists($classOrServiceName)) {
-            // The parameter is not a service, but it is a class that can be instantiated. e.g.: DateTime::class
-            $this->container->register($classOrServiceName, $classOrServiceName);
-        }
-
-        if ($this->has($classOrServiceName)) {
-            $reference = new Reference($classOrServiceName);
-        }
-
-        return $reference;
-    }
-
-    /**
-     * Creates a safe normalized name.
-     *
-     * @param string $className
-     * @param string $argumentName
-     * @return string
-     */
-    private function getNormalizedName(string $className, string $argumentName) : string
-    {
-        $className = 'C_'.preg_replace('/[^a-z0-9]/', '', strtolower($className));
-        $argumentName = 'A_'.preg_replace('/[^a-z0-9]/', '', strtolower($argumentName));
-
-        return $className.'.'.$argumentName;
-    }
-
-    /**
-     * Gets a service. It also tries to register the one without arguments which not yet registered.
-     *
-     * @param string $identifier
-     * @return object
-     */
-    public function get(string $identifier)
-    {
-        if (!$this->container->has($identifier) && class_exists($identifier)) {
-            $this->registerService($identifier, $identifier);
-        }
-
-        $service = $this->container->get($identifier);
-        $serviceClass = get_class($service);
-
-        if (isset($this->instantiatedSharedServices[$serviceClass])) {
-            $this->instantiatedSharedServices[$serviceClass] = true;
-        }
-
-        return $service;
-    }
-
-    /**
-     * Returns true if the given service is defined.
+     * Returns true if the given service is registered.
      *
      * @param string $identifier
      * @return bool
      */
     public function has(string $identifier) : bool
     {
-        return $this->container->has($identifier);
+        return $this->container->has($identifier)
+            || isset($this->serviceLibrary[$identifier])
+            || class_exists($identifier);
     }
 
     /**
-     * Register module specific services.
-     * If a service is already registered, it will be skipped.
+     * Gets a service.
      *
-     * @param string $moduleName
-     * @return ServiceInterface
+     * @param string $identifier
+     * @return object
      */
-    public function registerModuleServices(string $moduleName) : ServiceInterface
+    public function get(string $identifier)
     {
-        if (isset($this->configuration[$moduleName])) {
-            $this->moduleNamespace = $moduleName;
-            $this->registerServices($this->configuration[$moduleName]);
+        // Not registered but valid class name, so register it
+        if (!isset($this->serviceLibrary[$identifier]) && class_exists($identifier)) {
+            $this->registerService($identifier);
         }
 
-        return $this;
-    }
-
-    /**
-     * Sets service argument.
-     *
-     * @param string|Definition $service
-     * @param mixed             $parameter
-     * @throws RuntimeException
-     * @return ServiceInterface
-     */
-    public function setServiceArgument($service, $parameter) : ServiceInterface
-    {
-        $service = $this->getRealService($service);
-        $parameterName = $this->getRealParameterName($parameter);
-        $serviceClass = $service->getClass();
-
-        // Check if service is shared and is already initialized.
-        $this->checkSharedServiceClassState($serviceClass);
-
-        // Create a normalized name for the argument.
-        $normalizedName = $this->getNormalizedName($serviceClass, $parameterName);
-
-        // If the parameter marked as to be used as a scalar.
-        if (is_scalar($parameter) && strpos((string) $parameter, '!:') === 0) {
-            $parameter = substr((string) $parameter, 2);
-        } else {
-            // Otherwise check if the parameter is a service.
-            $parameter = $this->getReferenceServiceIfAvailable($parameter);
+        // The service is registered in the library but not in the container, so register it into the container too.
+        if (!$this->container->has($identifier)) {
+            $this->registerServiceToContainer($identifier);
         }
 
-        $this->container->setParameter($normalizedName, $parameter);
-        $service->addArgument('%'.$normalizedName.'%');
-
-        return $this;
-    }
-
-    /**
-     * Gets the real service instance.
-     *
-     * @param mixed $service
-     * @return Definition
-     */
-    private function getRealService($service) : Definition
-    {
-        if (!$service instanceof Definition) {
-            $service = $this->container->getDefinition($service);
-        }
+        $service = $this->container->get($identifier);
+        $this->serviceLibrary[$identifier][self::SERVICE_INITIALIZED] = true;
 
         return $service;
     }
 
     /**
-     * Gets the real parameter name.
+     * Registers the service into the container.
      *
-     * @param mixed $parameterName
-     * @return string
+     * @param string $identifier
+     * @return ServiceAdapter
      */
-    private function getRealParameterName($parameterName) : string
+    private function registerServiceToContainer(string $identifier) : ServiceAdapter
     {
-        if (!is_scalar($parameterName)) {
-            $parameterName = self::$parameterIndex++;
+        // At this point the service must be in the library
+        if (!isset($this->serviceLibrary[$identifier])) {
+            throw new InvalidArgumentException(
+                sprintf('Invalid service name: %s', $identifier),
+                1000
+            );
         }
 
-        return (string) $parameterName;
+        // Create the definition.
+        $definition = new Definition($this->serviceLibrary[$identifier][self::SERVICE_CLASS]);
+        $definition->setShared($this->serviceLibrary[$identifier][self::SERVICE_SHARE]);
+
+        // Register the service in the container.
+        $service = $this->container->setDefinition($identifier, $definition);
+
+        // Add arguments.
+        $argumentList = $this->setArgumentListReferences($this->serviceLibrary[$identifier][self::SERVICE_ARGUMENTS]);
+        foreach ($argumentList as $parameter) {
+            // Create a normalized name for the argument.
+            $serviceClass = $this->serviceLibrary[$identifier][self::SERVICE_CLASS];
+            $normalizedName = $this->getNormalizedName($serviceClass, $parameter);
+            $this->container->setParameter($normalizedName, $parameter);
+            $service->addArgument('%'.$normalizedName.'%');
+        }
+
+        // Register method callings.
+        foreach ($this->serviceLibrary[$identifier][self::SERVICE_METHOD_CALL] as $methodCallList) {
+            $method = $methodCallList[0];
+            $argumentList = $this->setArgumentListReferences($methodCallList[1] ?? []);
+            $service->addMethodCall($method, $argumentList);
+        }
+
+        return $this;
     }
 
     /**
-     * Checks whether the service is shared and initialized
+     * Tries to identify referce services in the argument list.
      *
-     * @param string $serviceClass
-     * @throws RuntimeException
-     * @return void
+     * @param array $argumentList
+     * @return array
      */
-    private function checkSharedServiceClassState(string $serviceClass) : void
+    private function setArgumentListReferences(array $argumentList) : array
     {
-        if (isset($this->instantiatedSharedServices[$serviceClass])
-            && $this->instantiatedSharedServices[$serviceClass] === true
-        ) {
-            throw new RuntimeException('Cannot add argument to an already initialized service.', 1000);
+        foreach ($argumentList as $key => &$value) {
+            // Associative array keys marks literal values
+            if (!is_numeric($key)) {
+                continue;
+            }
+
+            // Try to get the service. If exists (or can be registered), then it can be referenced too.
+            try {
+                $this->get($value);
+                $value = new Reference($value);
+            } catch (Exception $e) {
+                // Not a valid service: no action, go on;
+                continue;
+            }
         }
+
+        return $argumentList;
+    }
+
+    /**
+     * Creates a safe normalized name.
+     *
+     * @param string $className
+     * @param mixed $parameter
+     * @return string
+     */
+    private function getNormalizedName(string $className, $parameter) : string
+    {
+        $parameterName = !is_scalar($parameter) ? self::$parameterIndex++ : $parameter;
+
+        $className = 'C_'.preg_replace('/[^a-z0-9]/', '', strtolower($className));
+        $parameterName = 'A_'.preg_replace('/[^a-z0-9]/', '', strtolower((string) $parameterName));
+
+        return $className.'.'.$parameterName;
+    }
+
+    /**
+     * Register the service object instance.
+     *
+     * @param string  $identifier
+     * @param object  $serviceInstance
+     * @return ServiceInterface
+     */
+    public function registerServiceInstance(string $identifier, $serviceInstance) : ServiceInterface
+    {
+        // Check if the service is not initialized yet.
+        if (!$this->serviceIsInitialized($identifier)) {
+            $instanceType = gettype($serviceInstance);
+
+            // Register synthetic services
+            if ('object' !== $instanceType) {
+                throw new InvalidArgumentException(
+                    sprintf('The second parameter must be an object instance, %s given.', $instanceType),
+                    1001
+                );
+            }
+
+            $this->container->register($identifier)
+                ->setShared(true)
+                ->setSynthetic(true);
+
+            $this->container->set($identifier, $serviceInstance);
+
+            // Overwrite any previous settings.
+            $this->serviceLibrary[$identifier] = [
+                self::SERVICE_INITIALIZED => true,
+                self::SERVICE_ARGUMENTS => [],
+                self::SERVICE_METHOD_CALL => [],
+                self::SERVICE_SHARE => true,
+                self::SERVICE_CLASS => get_class($serviceInstance),
+            ];
+        }
+
+        return $this;
     }
 }

@@ -11,8 +11,9 @@
  */
 require_once __DIR__.'/functions.php';
 
-// Modify settings for `dev`
+// Set PHP settings according to the environment
 set_env_sttings();
+
 // Start render stat logging
 render_stat();
 

@@ -14,32 +14,35 @@ namespace WebHemiTest\Data\Entity;
 use WebHemi\DateTime;
 use WebHemi\Data\EntityInterface as DataEntityInterface;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class ResourceEntityTest.
  */
-class ResourceEntityTest extends TestCase
+class ResourceEntityTest extends AbstractEntityTestClass
 {
-    /** @var string */
-    private $testTime = '2016-04-26 23:21:00';
+    /**
+     * Sets up the entity class name and instance for the test.
+     */
+    public function setUpEntity()
+    {
+        $this->entityInstance = new ResourceEntity();
+        $this->entityClass = ResourceEntity::class;
+    }
 
     /**
      * Tests if the ResourceEntity implements the DataEntityInterface.
      */
     public function testInstance()
     {
-        $entity = new ResourceEntity();
+        $this->assertInstanceOf(DataEntityInterface::class, $this->entityInstance);
 
-        $this->assertInstanceOf(DataEntityInterface::class, $entity);
-
-        $entity->setResourceId(123);
-        $this->assertSame($entity->getResourceId(), $entity->getKeyData());
+        $this->entityInstance->setResourceId(123);
+        $this->assertSame($this->entityInstance->getResourceId(), $this->entityInstance->getKeyData());
 
         $expectedKey = 567;
-        $entity->setKeyData($expectedKey);
-        $this->assertSame($expectedKey, $entity->getResourceId());
-        $this->assertSame($expectedKey, $entity->getKeyData());
+        $this->entityInstance->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $this->entityInstance->getResourceId());
+        $this->assertSame($expectedKey, $this->entityInstance->getKeyData());
     }
 
     /**
@@ -60,87 +63,5 @@ class ResourceEntityTest extends TestCase
             ['dateCreated', $dateTest, $dateTest, true],
             ['dateModified', $dateTest, $dateTest, true],
         ];
-    }
-
-    /**
-     * Tests if the ResourceEntity instance has any property preset.
-     *
-     * @param string $attribute
-     *
-     * @dataProvider dataProvider
-     */
-    public function testNoInitValues($attribute)
-    {
-        $entity = new ResourceEntity();
-
-        $this->assertClassHasAttribute($attribute, ResourceEntity::class);
-        $this->assertAttributeEmpty($attribute, $entity);
-    }
-
-    /**
-     * Tests if the ResourceEntity has a specific setter method and it sets the value with the correct type.
-     *
-     * @param string $attribute
-     * @param mixed  $parameter
-     * @param mixed  $expectedData
-     * @param bool   $typeCheck
-     *
-     * @dataProvider dataProvider
-     */
-    public function testSetters($attribute, $parameter, $expectedData, $typeCheck)
-    {
-        $entity = new ResourceEntity();
-        $method = 'set' . ucfirst(preg_replace('/^is/', '', $attribute));
-
-        $this->assertTrue(method_exists($entity, $method));
-
-        $entity->{$method}($parameter);
-        $this->assertAttributeEquals($expectedData, $attribute, $entity);
-
-        if ($typeCheck) {
-            if (is_bool($expectedData)) {
-                $this->assertAttributeInternalType('boolean', $attribute, $entity);
-            } elseif (is_null($expectedData)) {
-                $this->assertAttributeSame(null, $attribute, $entity);
-            } else {
-                $this->assertAttributeInstanceOf(DateTime::class, $attribute, $entity);
-            }
-        }
-    }
-
-    /**
-     * Tests if the ResourceEntity has a specific getter method and it gets the value with the correct type.
-     *
-     * @param string $attribute
-     * @param mixed  $parameter
-     * @param mixed  $expectedData
-     * @param bool   $typeCheck
-     *
-     * @dataProvider dataProvider
-     */
-    public function testGetters($attribute, $parameter, $expectedData, $typeCheck)
-    {
-        $entity = new ResourceEntity();
-        $methodName = ucfirst(preg_replace('/^is/', '', $attribute));
-        $setMethod = 'set' . $methodName;
-        $getMethod = 'get' . $methodName;
-
-        $this->assertTrue(method_exists($entity, $setMethod));
-        $this->assertTrue(method_exists($entity, $getMethod));
-
-        $entity->{$setMethod}($parameter);
-        $actualData = $entity->{$getMethod}();
-
-        $this->assertEquals($expectedData, $actualData);
-
-        if ($typeCheck) {
-            if (is_bool($expectedData)) {
-                $this->assertInternalType('boolean', $actualData);
-            } elseif (is_null($expectedData)) {
-                $this->assertAttributeSame(null, $attribute, $entity);
-            } else {
-                $this->assertInstanceOf(DateTime::class, $actualData);
-            }
-        }
     }
 }

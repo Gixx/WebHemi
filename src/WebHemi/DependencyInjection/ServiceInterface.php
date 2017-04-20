@@ -28,13 +28,12 @@ interface ServiceInterface
     public function __construct(ConfigurationService $configuration);
 
     /**
-     * Register the service.
+     * Returns true if the given service is registered.
      *
-     * @param string        $identifier
-     * @param string|object $serviceClass
-     * @return ServiceInterface
+     * @param string $identifier
+     * @return bool
      */
-    public function registerService(string $identifier, $serviceClass) : ServiceInterface;
+    public function has(string $identifier) : bool;
 
     /**
      * Gets a service.
@@ -45,12 +44,22 @@ interface ServiceInterface
     public function get(string $identifier);
 
     /**
-     * Returns true if the given service is defined.
+     * Register the service.
      *
      * @param string $identifier
-     * @return bool
+     * @return ServiceInterface
      */
-    public function has(string $identifier) : bool;
+    public function registerService(string $identifier) : ServiceInterface;
+
+    /**
+     * Register the service object instance.
+     *
+     * @param string  $identifier
+     * @param object  $serviceInstance
+     * @return ServiceInterface
+     */
+    public function registerServiceInstance(string $identifier, $serviceInstance) : ServiceInterface;
+
 
     /**
      * Register module specific services.
@@ -60,13 +69,4 @@ interface ServiceInterface
      * @return ServiceInterface
      */
     public function registerModuleServices(string $moduleName) : ServiceInterface;
-
-    /**
-     * Sets service argument.
-     *
-     * @param mixed $service
-     * @param mixed $parameter
-     * @return ServiceInterface
-     */
-    public function setServiceArgument($service, $parameter) : ServiceInterface;
 }

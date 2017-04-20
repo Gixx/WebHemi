@@ -18,24 +18,31 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class UserMetaEntityTest.
  */
-class UserMetaEntityTest extends TestCase
+class UserMetaEntityTest extends AbstractEntityTestClass
 {
+    /**
+     * Sets up the entity class name and instance for the test.
+     */
+    public function setUpEntity()
+    {
+        $this->entityInstance = new UserMetaEntity();
+        $this->entityClass = UserMetaEntity::class;
+    }
+
     /**
      * Tests if the UserMetaEntity implements the DataEntityInterface.
      */
     public function testInstance()
     {
-        $entity = new UserMetaEntity();
+        $this->assertInstanceOf(DataEntityInterface::class, $this->entityInstance);
 
-        $this->assertInstanceOf(DataEntityInterface::class, $entity);
-
-        $entity->setUserMetaId(123);
-        $this->assertSame($entity->getUserMetaId(), $entity->getKeyData());
+        $this->entityInstance->setUserMetaId(123);
+        $this->assertSame($this->entityInstance->getUserMetaId(), $this->entityInstance->getKeyData());
 
         $expectedKey = 567;
-        $entity->setKeyData($expectedKey);
-        $this->assertSame($expectedKey, $entity->getUserMetaId());
-        $this->assertSame($expectedKey, $entity->getKeyData());
+        $this->entityInstance->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $this->entityInstance->getUserMetaId());
+        $this->assertSame($expectedKey, $this->entityInstance->getKeyData());
     }
 
     /**
@@ -46,70 +53,10 @@ class UserMetaEntityTest extends TestCase
     public function dataProvider()
     {
         return [
-            ['userMetaId', 1, 1],
-            ['userId', 2, 2],
-            ['metaKey', 'someKey', 'someKey'],
-            ['metaData', 'someData', 'someData'],
+            ['userMetaId', 1, 1, false],
+            ['userId', 2, 2, false],
+            ['metaKey', 'someKey', 'someKey', false],
+            ['metaData', 'someData', 'someData', false],
         ];
-    }
-
-    /**
-     * Tests if the UserMetaEntity instance has any property preset.
-     *
-     * @param string $attribute
-     *
-     * @dataProvider dataProvider
-     */
-    public function testNoInitValues($attribute)
-    {
-        $entity = new UserMetaEntity();
-
-        $this->assertClassHasAttribute($attribute, UserMetaEntity::class);
-        $this->assertAttributeEmpty($attribute, $entity);
-    }
-
-    /**
-     * Tests if the UserMetaEntity has a specific setter method and it sets the value with the correct type.
-     *
-     * @param string $attribute
-     * @param mixed  $parameter
-     * @param mixed  $expectedData
-     *
-     * @dataProvider dataProvider
-     */
-    public function testSetters($attribute, $parameter, $expectedData)
-    {
-        $entity = new UserMetaEntity();
-        $method = 'set' . ucfirst($attribute);
-
-        $this->assertTrue(method_exists($entity, $method));
-
-        $entity->{$method}($parameter);
-        $this->assertAttributeEquals($expectedData, $attribute, $entity);
-    }
-
-    /**
-     * Tests if the UserMetaEntity has a specific getter method and it gets the value with the correct type.
-     *
-     * @param string $attribute
-     * @param mixed  $parameter
-     * @param mixed  $expectedData
-     *
-     * @dataProvider dataProvider
-     */
-    public function testGetters($attribute, $parameter, $expectedData)
-    {
-        $entity = new UserMetaEntity();
-        $methodName = ucfirst($attribute);
-        $setMethod = 'set' . $methodName;
-        $getMethod = 'get' . $methodName;
-
-        $this->assertTrue(method_exists($entity, $setMethod));
-        $this->assertTrue(method_exists($entity, $getMethod));
-
-        $entity->{$setMethod}($parameter);
-        $actualData = $entity->{$getMethod}();
-
-        $this->assertEquals($expectedData, $actualData);
     }
 }

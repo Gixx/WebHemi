@@ -109,9 +109,8 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
     ) : bool {
         $policyResourceId = $policyEntity->getResourceId();
         $resourceId = $resourceEntity ? $resourceEntity->getResourceId() : null;
-        $allowResurce = is_null($policyResourceId) || $policyResourceId === $resourceId;
 
-        return $allowResurce;
+        return is_null($policyResourceId) || $policyResourceId === $resourceId;
     }
 
     /**
@@ -127,9 +126,8 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
     ) : bool {
         $policyApplicationId = $policyEntity->getApplicationId();
         $applicationId = $applicationEntity ? $applicationEntity->getApplicationId() : null;
-        $allowApplication = is_null($policyApplicationId) || $policyApplicationId === $applicationId;
 
-        return $allowApplication;
+        return is_null($policyApplicationId) || $policyApplicationId === $applicationId;
     }
 
     /**

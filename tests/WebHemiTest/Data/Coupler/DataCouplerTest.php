@@ -72,7 +72,7 @@ class DataCouplerTest extends TestCase
             }
         }
 
-        self::$adapter = new SQLiteAdapter(self::$dataDriver);
+        self::$adapter = new SQLiteAdapter('unit-test', self::$dataDriver);
     }
 
     /**

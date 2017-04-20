@@ -12,6 +12,7 @@
 namespace WebHemiTest\Data\Storage;
 
 use Prophecy\Argument;
+use WebHemi\DateTime;
 use WebHemi\Data\ConnectorInterface as DataAdapterInterface;
 use WebHemi\Data\Storage\User\UserGroupStorage;
 use WebHemi\Data\Entity\User\UserGroupEntity;
@@ -203,5 +204,68 @@ class UserGroupStorageTest extends TestCase
 
         $actualResult = $storage->getUserGroupByName('someName');
         $this->assertEmpty($actualResult);
+    }
+
+    /**
+     * Tests the getUserGroups() method.
+     */
+    public function testGetUserGroups()
+    {
+        $data = [
+            [
+                'id_user_group' => 1,
+                'name' => 'admin',
+                'title' => 'Admins',
+                'description' => 'Administrator group',
+                'is_read_only' => true,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' => '2017-04-26 23:21:00',
+            ],
+            [
+                'id_user_group' => 2,
+                'name' => 'guest',
+                'title' => 'Guests',
+                'description' => 'Visitor group',
+                'is_read_only' => false,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2017-04-26 23:21:00',
+            ],
+        ];
+
+        $expectedResult = [];
+
+        foreach ($data as $entityData) {
+            $entity = new UserGroupEntity();
+            $entity->setUserGroupId($entityData['id_user_group'])
+                ->setName($entityData['name'])
+                ->setTitle($entityData['title'])
+                ->setDescription($entityData['description'])
+                ->setReadOnly($entityData['is_read_only'])
+                ->setDateCreated(new DateTime($entityData['date_created']))
+                ->setDateModified(new DateTime($entityData['date_modified']));
+
+            $expectedResult[] = $entity;
+        }
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
+            ->will(
+                function ($args) use ($data) {
+                    if (empty($args[0]) && empty($args[1])) {
+                        return $data;
+                    }
+
+                    return [];
+                }
+            );
+
+        $dataEntity = new UserGroupEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new UserGroupStorage($defaultAdapterInstance, $dataEntity);
+
+        $actualResult = $storage->getUserGroups();
+
+        $this->assertArraysAreSimilar($expectedResult, $actualResult);
     }
 }

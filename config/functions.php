@@ -79,7 +79,7 @@ function render_stat() : array
     $stat['duration'] = bcsub($stat['end_time'], $stat['start_time'], 4);
 
     // Memory peak
-    $units = array('B', 'KB', 'MB', 'GB', 'TB');
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
     $bytes = max(memory_get_peak_usage(true), 0);
     $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
     $pow = min($pow, count($units) - 1);

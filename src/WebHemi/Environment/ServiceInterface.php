@@ -58,6 +58,13 @@ interface ServiceInterface
     public function getDocumentRoot(): string;
 
     /**
+     * Gets the application path.
+     *
+     * @return string
+     */
+    public function getApplicationRoot(): string;
+
+    /**
      * Gets the application domain.
      *
      * @return string

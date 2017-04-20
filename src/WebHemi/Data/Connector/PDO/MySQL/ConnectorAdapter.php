@@ -25,6 +25,8 @@ use WebHemi\Data\DriverInterface;
  */
 class ConnectorAdapter implements ConnectorInterface
 {
+    /** @var string */
+    protected $name;
     /** @var PDO */
     protected $dataDriver;
     /** @var string */
@@ -35,10 +37,11 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * ConnectorAdapter constructor.
      *
+     * @param string          $name
      * @param DriverInterface $dataDriver
      * @throws InvalidArgumentException
      */
-    public function __construct(DriverInterface $dataDriver)
+    public function __construct(string $name, DriverInterface $dataDriver)
     {
         if (!$dataDriver instanceof DriverAdapter) {
             $type = gettype($dataDriver);
@@ -56,7 +59,27 @@ class ConnectorAdapter implements ConnectorInterface
             throw new InvalidArgumentException($message, 1001);
         }
 
+        $this->name = $name;
         $this->dataDriver = $dataDriver;
+    }
+
+    /**
+     * Stuffs to reset upon cloning.
+     */
+    public function __clone()
+    {
+        $this->idKey = null;
+        $this->dataGroup = null;
+    }
+
+    /**
+     * Returns the name of the connector.
+     *
+     * @return string
+     */
+    public function getConnectorName() : string
+    {
+        return $this->name;
     }
 
     /**
@@ -369,7 +392,7 @@ class ConnectorAdapter implements ConnectorInterface
      *
      * @codeCoverageIgnore Don't test external library.
      */
-    public function saveData(? int $identifier = null, array $data) : int
+    public function saveData(? int $identifier = null, array $data = []) : int
     {
         if (empty($identifier)) {
             $query = "INSERT INTO {$this->dataGroup}";
