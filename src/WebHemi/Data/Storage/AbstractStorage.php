@@ -25,7 +25,7 @@ use WebHemi\Data\StorageInterface;
 abstract class AbstractStorage implements StorageInterface
 {
     /** @var ConnectorInterface */
-    private $connector;
+    protected $connector;
     /** @var DataEntityInterface */
     private $dataEntityPrototype;
     /** @var string */

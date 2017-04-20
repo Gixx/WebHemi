@@ -93,9 +93,9 @@ class BaseApplicationTest extends TestCase
         $pipelineManager = new PipelineManager($config);
 
         $diAdapter = new DependencyInjectionAdapter($config);
-        $diAdapter->registerService(ConfigInterface::class, $config)
-            ->registerService(EnvironmentInterface::class, $environmentManager)
-            ->registerService(PipelineInterface::class, $pipelineManager)
+        $diAdapter->registerServiceInstance(ConfigInterface::class, $config)
+            ->registerServiceInstance(EnvironmentInterface::class, $environmentManager)
+            ->registerServiceInstance(PipelineInterface::class, $pipelineManager)
             ->registerModuleServices('Global');
 
         $app = new Application($diAdapter);
@@ -128,9 +128,9 @@ class BaseApplicationTest extends TestCase
         $pipelineManager = new PipelineManager($config);
 
         $diAdapter = new DependencyInjectionAdapter($config);
-        $diAdapter->registerService(ConfigInterface::class, $config)
-            ->registerService(EnvironmentInterface::class, $environmentManager)
-            ->registerService(PipelineInterface::class, $pipelineManager)
+        $diAdapter->registerServiceInstance(ConfigInterface::class, $config)
+            ->registerServiceInstance(EnvironmentInterface::class, $environmentManager)
+            ->registerServiceInstance(PipelineInterface::class, $pipelineManager)
             ->registerModuleServices('Global');
 
         $app = new Application($diAdapter);
@@ -180,9 +180,9 @@ class BaseApplicationTest extends TestCase
         $pipelineManager = new PipelineManager($config);
 
         $diAdapter = new DependencyInjectionAdapter($config);
-        $diAdapter->registerService(ConfigInterface::class, $config)
-            ->registerService(EnvironmentInterface::class, $environmentManager)
-            ->registerService(PipelineInterface::class, $pipelineManager)
+        $diAdapter->registerServiceInstance(ConfigInterface::class, $config)
+            ->registerServiceInstance(EnvironmentInterface::class, $environmentManager)
+            ->registerServiceInstance(PipelineInterface::class, $pipelineManager)
             ->registerModuleServices('Global');
 
         $app = new Application($diAdapter);
@@ -225,9 +225,9 @@ class BaseApplicationTest extends TestCase
         $pipelineManager = new PipelineManager($config);
 
         $diAdapter = new DependencyInjectionAdapter($config);
-        $diAdapter->registerService(ConfigInterface::class, $config)
-            ->registerService(EnvironmentInterface::class, $environmentManager)
-            ->registerService(PipelineInterface::class, $pipelineManager)
+        $diAdapter->registerServiceInstance(ConfigInterface::class, $config)
+            ->registerServiceInstance(EnvironmentInterface::class, $environmentManager)
+            ->registerServiceInstance(PipelineInterface::class, $pipelineManager)
             ->registerModuleServices('Global');
 
         $app = new Application($diAdapter);
@@ -270,9 +270,9 @@ class BaseApplicationTest extends TestCase
         $pipelineManager = new PipelineManager($config);
 
         $diAdapter = new DependencyInjectionAdapter($config);
-        $diAdapter->registerService(ConfigInterface::class, $config)
-            ->registerService(EnvironmentInterface::class, $environmentManager)
-            ->registerService(PipelineInterface::class, $pipelineManager)
+        $diAdapter->registerServiceInstance(ConfigInterface::class, $config)
+            ->registerServiceInstance(EnvironmentInterface::class, $environmentManager)
+            ->registerServiceInstance(PipelineInterface::class, $pipelineManager)
             ->registerModuleServices('Global');
 
         $app = new Application($diAdapter);
@@ -314,9 +314,9 @@ class BaseApplicationTest extends TestCase
         $pipelineManager = new PipelineManager($config);
 
         $diAdapter = new DependencyInjectionAdapter($config);
-        $diAdapter->registerService(ConfigInterface::class, $config)
-            ->registerService(EnvironmentInterface::class, $environmentManager)
-            ->registerService(PipelineInterface::class, $pipelineManager)
+        $diAdapter->registerServiceInstance(ConfigInterface::class, $config)
+            ->registerServiceInstance(EnvironmentInterface::class, $environmentManager)
+            ->registerServiceInstance(PipelineInterface::class, $pipelineManager)
             ->registerModuleServices('Global');
 
         $app = new Application($diAdapter);

@@ -11,19 +11,15 @@
  */
 namespace WebHemiTest\MiddlewarePipeline;
 
-use ArrayObject;
 use WebHemi\DateTime;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Middleware\Common\DispatcherMiddleware;
-use WebHemi\Middleware\Common\FinalMiddleware;
 use WebHemi\Middleware\Common\RoutingMiddleware;
 use WebHemi\MiddlewarePipeline\ServiceAdapter\Base\ServiceAdapter as Pipeline;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
-use WebHemiTest\TestService\TestActionMiddleware;
-use WebHemiTest\TestService\TestMiddleware;
 
 /**
  * Class PipelineTest.

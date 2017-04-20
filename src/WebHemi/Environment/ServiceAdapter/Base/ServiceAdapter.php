@@ -35,6 +35,8 @@ class ServiceAdapter implements ServiceInterface
     /** @var string */
     private $documentRoot;
     /** @var string */
+    private $applicationRoot;
+    /** @var string */
     private $selectedModule;
     /** @var string */
     private $selectedApplication;
@@ -68,7 +70,7 @@ class ServiceAdapter implements ServiceInterface
         array $filesData
     ) {
         $this->configuration = $configuration->getConfig('applications');
-        $this->documentRoot = realpath(__DIR__.'/../../../../../');
+        $this->documentRoot = $this->applicationRoot = realpath(__DIR__.'/../../../../../');
 
         if (isset($serverData['HTTP_REFERER'])) {
             $serverData['HTTP_REFERER'] = urldecode($serverData['HTTP_REFERER']);
@@ -105,6 +107,16 @@ class ServiceAdapter implements ServiceInterface
     public function getDocumentRoot() : string
     {
         return $this->documentRoot;
+    }
+
+    /**
+     * Gets the application path.
+     *
+     * @return string
+     */
+    public function getApplicationRoot(): string
+    {
+        return $this->applicationRoot;
     }
 
     /**
@@ -356,7 +368,7 @@ class ServiceAdapter implements ServiceInterface
                 && $applicationData['path'] == $this->subDomain
             );
 
-        // If this method get called and will return TRUE, it means the $subDirectory paramtere will be used only for
+        // If this method get called and will return TRUE, it means the $subDirectory parameter will be used only for
         // setting the right selectedApplicationUri. To avoid complexity, we change it here. Doesn't matter.
         if ($isSubdomain) {
             $subDirectory = '';

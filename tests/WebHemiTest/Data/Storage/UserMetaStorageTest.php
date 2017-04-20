@@ -15,6 +15,7 @@ use Prophecy\Argument;
 use WebHemi\Data\ConnectorInterface as DataAdapterInterface;
 use WebHemi\Data\Storage\User\UserMetaStorage;
 use WebHemi\Data\Entity\User\UserMetaEntity;
+use WebHemi\DateTime;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
@@ -132,9 +133,9 @@ class UserMetaStorageTest extends TestCase
     }
 
     /**
-     * Test the getUserByEmail method.
+     * Tests the getUserMetaSetForUserId method.
      */
-    public function testGetUserMetaForUserId()
+    public function testGetUserMetaSetForUserId()
     {
         $data = [
             [
@@ -184,5 +185,122 @@ class UserMetaStorageTest extends TestCase
         $actualResult = $storage->getUserMetaSetForUserId(1);
         $this->assertInternalType('array', $actualResult);
         $this->assertArraysAreSimilar($expectedResult, $actualResult);
+    }
+
+    /**
+     * Tests the getUserMetaForUserId() method
+     */
+    public function testGetUserMetaForUserId()
+    {
+        $data = [
+            [
+                'id_user_meta' => 1,
+                'fk_user' => 1,
+                'meta_key' => 'body',
+                'meta_data' => 'sporty',
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ],
+            [
+                'id_user_meta' => 2,
+                'fk_user' => 1,
+                'meta_key' => 'phone',
+                'meta_data' => '+49 176 1234 5678',
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ],
+        ];
+
+        $expectedResult = [];
+
+        foreach ($data as $entityData) {
+            $entity = new UserMetaEntity();
+            $entity->setUserMetaId($entityData['id_user_meta'])
+                ->setUserId($entityData['fk_user'])
+                ->setMetaKey($entityData['meta_key'])
+                ->setMetaData($entityData['meta_data'])
+                ->setDateCreated(new DateTime($entityData['date_created']))
+                ->setDateModified(new DateTime($entityData['date_modified']));
+
+            $expectedResult[] = $entity;
+        }
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
+            ->will(
+                function ($args) use ($data) {
+                    if ($args[0]['fk_user'] == 1) {
+                        return $data;
+                    }
+
+                    return [];
+                }
+            );
+
+        $dataEntity = new UserMetaEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
+
+        $actualResult = $storage->getUserMetaForUserId(1);
+
+        $this->assertArraysAreSimilar($expectedResult, $actualResult);
+    }
+
+    /**
+     * Tests the getEntityData() method.
+     */
+    public function testGetEntityData()
+    {
+        $entityData = [
+            'id_user_meta' => 1,
+            'fk_user' => 1,
+            'meta_key' => 'body',
+            'meta_data' => 'sporty',
+            'date_created' =>  '2016-03-24 16:25:12',
+            'date_modified' =>  '2016-03-24 16:25:12',
+        ];
+
+        $entityToSave = new UserMetaEntity();
+        $entityToSave->setUserMetaId($entityData['id_user_meta'])
+            ->setUserId($entityData['fk_user'])
+            ->setMetaKey($entityData['meta_key'])
+            ->setMetaData($entityData['meta_data'])
+            ->setDateCreated(new DateTime($entityData['date_created']))
+            ->setDateModified(new DateTime($entityData['date_modified']));
+
+        $this->defaultAdapter
+            ->getData(Argument::type('int'))
+            ->will(
+                function ($args) use ($entityData) {
+                    if ($args[0] == 1) {
+                        return $entityData;
+                    }
+
+                    return [];
+                }
+            );
+
+        // This is the real test. If this function gets the same array for the second argument as the $entityData,
+        // then it means that the getEntityData() method works well. In this case the modified entity will still have
+        // the Id = 1, so we can assert it.
+        $this->defaultAdapter
+            ->saveData(Argument::type('int'), Argument::type('array'))
+            ->will(
+                function ($args) use ($entityData) {
+                    $diff = array_diff($entityData, $args[1]);
+                    // only when the ID is 1. Otherwise we need to modify the test.
+                    return count($diff) + 1;
+                }
+            );
+
+        $dataEntity = new UserMetaEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
+
+        $storage->saveEntity($entityToSave);
+
+        $this->assertSame($entityToSave->getKeyData(), $entityData['id_user_meta']);
     }
 }

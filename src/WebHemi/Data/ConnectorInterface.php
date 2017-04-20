@@ -27,9 +27,17 @@ interface ConnectorInterface
     /**
      * ConnectorInterface constructor.
      *
+     * @param string          $name
      * @param DriverInterface $dataDriver
      */
-    public function __construct(DriverInterface $dataDriver);
+    public function __construct(string $name, DriverInterface $dataDriver);
+
+    /**
+     * Returns the name of the connector.
+     *
+     * @return string
+     */
+    public function getConnectorName() : string;
 
     /**
      * Returns the DriverInterface instance.
@@ -86,7 +94,7 @@ interface ConnectorInterface
      * @param array $data
      * @return int The ID of the saved entity in the storage
      */
-    public function saveData(? int $identifier, array $data) : int;
+    public function saveData(? int $identifier, array $data = []) : int;
 
     /**
      * Removes an entity from the storage.

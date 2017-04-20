@@ -1,5 +1,16 @@
 # Change log #
 
+## Version 4.0.0-4.3 ##
+
+* Add support for connecting to multiple databases
+* Add support for service configuration inheritance 
+* Refactor the Dependency Injection Container Service:
+  * Add abstract class for the internal operation (init, resolve inheritance etc)
+  * Change the way of registering services and service instances
+  * The Symfony adapter implements only the library-specific methods
+
+**NOTE: There's an issue with the PHPUnit Code Coverage: partially covers some array assignments**
+
 ## Version 4.0.0-4.2 ##
 
 * Add Application function skeletons
@@ -27,7 +38,7 @@
 
 ## Version 4.0.0-3.3 ##
 
-* Refactor UnitTests to PHPUnit 6.0.
+* Refactor UnitTests to PHPUnit 6.
 * Add/fix unit tests, increase coverage.
 * Refactor trait used by the renderer and helper:
   * rename ThemeCheckTrait to GetSelectedThemeResourcePathTrait since that is what it does, 

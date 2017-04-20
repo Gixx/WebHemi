@@ -10,21 +10,23 @@
  * @link      http://www.gixx-web.com
  */
 
+use WebHemi\Configuration\ServiceInterface as ConfigInterface;
+use WebHemi\DateTime;
+use WebHemi\Environment\ServiceInterface as EnvironmentManager;
+use WebHemi\Http\ServiceInterface as HttpAdapterInterface;
+use WebHemi\Http\ServiceAdapter\GuzzleHttp\ServiceAdapter as GuzzleHttpAdapter;
+use WebHemi\Middleware\Common\FinalMiddleware;
+use WebHemi\Middleware\Common\DispatcherMiddleware;
+use WebHemi\Middleware\Common\RoutingMiddleware;
 use WebHemi\Renderer\ServiceInterface as RendererAdapterInterface;
 use WebHemi\Renderer\ServiceAdapter\Twig\ServiceAdapter as TwigRendererAdapter;
 use WebHemi\Router\ServiceInterface as RouterAdapterInterface;
 use WebHemi\Router\ServiceAdapter\FastRoute\ServiceAdapter as FastRouteAdapter;
-use WebHemi\Http\ServiceInterface as HttpAdapterInterface;
-use WebHemi\Http\ServiceAdapter\GuzzleHttp\ServiceAdapter as GuzzleHttpAdapter;
-use WebHemi\Environment\ServiceInterface as EnvironmentManager;
-use WebHemi\Configuration\ServiceInterface as ConfigInterface;
-use WebHemi\Middleware\Common\FinalMiddleware;
-use WebHemi\Middleware\Common\DispatcherMiddleware;
-use WebHemi\Middleware\Common\RoutingMiddleware;
 use WebHemi\Router\Result\Result;
+use WebHemiTest\TestService\EmptyRendererHelper;
+use WebHemiTest\TestService\EmptyService;
 use WebHemiTest\TestService\TestMiddleware;
 use WebHemiTest\TestService\TestActionMiddleware;
-use WebHemiTest\TestService\EmptyRendererHelper;
 
 return [
     'applications' => [
@@ -52,31 +54,31 @@ return [
         'Global' => [
             'actionOk' => [
                 'class' => TestActionMiddleware::class,
-                'arguments' => [false],
+                'arguments' => ['just a boolean' => false],
             ],
             'actionBad' => [
                 'class' => TestActionMiddleware::class,
-                'arguments' => [true],
+                'arguments' => ['boolean' => true],
             ],
             'actionForbidden' => [
                 'class' => TestActionMiddleware::class,
-                'arguments' => [true, 403],
+                'arguments' => ['should simulate an error?' => true, 'response code' => 403],
             ],
             'pipe1' => [
                 'class' => TestMiddleware::class,
-                'arguments' => ['!:pipe1']
+                'arguments' => ['this is the name' => 'pipe1']
             ],
             'pipe2' => [
                 'class' => TestMiddleware::class,
-                'arguments' => ['!:pipe2']
+                'arguments' => ['literal' => 'pipe2']
             ],
             'pipe3' => [
                 'class' => TestMiddleware::class,
-                'arguments' => ['!:pipe3']
+                'arguments' => ['no reference lookup for this' => 'pipe3']
             ],
             'pipe4' => [
                 'class' => TestMiddleware::class,
-                'arguments' => ['!:pipe4']
+                'arguments' => ['pipe name' => 'pipe4']
             ],
             // Adapter
             HttpAdapterInterface::class => [
@@ -116,11 +118,69 @@ return [
             ],
             FinalMiddleware::class => [
                 'class' => TestMiddleware::class,
-                'arguments' => ['!:final']
+                'arguments' => ['this is the final middleware simulation' => 'final']
             ],
         ],
-        'Website' => [],
-        'SomeApp' => [],
+        'Website' => [
+            DateTime::class => [
+                'arguments' => [
+                    'time' => '2016-04-05 01:02:03',
+                    DateTimeZone::class
+                ]
+            ],
+            DateTimeZone::class => [
+                'arguments' => ['timezone' => 'Europe/Berlin']
+            ],
+        ],
+        'SomeApp' => [
+            'alias' => [
+                'class' => ArrayObject::class,
+                'arguments' => [
+                    'input' => ['something', 2]
+                ]
+            ],
+            'otherAlias' => [
+                'inherits' => 'alias'
+            ],
+            'moreAlias' => [
+                'inherits' => 'otherAlias',
+                'shared' => true
+            ],
+            'lastInherit' => [
+                'inherits' => 'moreAlias'
+            ],
+            EmptyService::class => [
+                'inherits' => 'lastInherit',
+                'shared' => false
+            ],
+            'alias1' => [
+                'class' => DateTime::class,
+                'arguments' => [
+                    'date' => '2016-04-05 01:02:03'
+                ]
+            ],
+            'special' => [
+                'class'  => ArrayObject::class,
+                'calls'  => [['offsetSet', ['offset_name' => 'date', 'alias1']]],
+                'shared' => true
+            ]
+        ],
+        'OtherApp' => [
+            'aliasWithReference' => [
+                'class' => EmptyService::class,
+                'arguments' => [
+                    'key' => 'theKey',
+                    DateTime::class
+                ]
+            ],
+            'aliasWithLiteral' => [
+                'class' => EmptyService::class,
+                'arguments' => [
+                    'key' => 'theKey',
+                    'data' => DateTime::class
+                ]
+            ]
+        ]
     ],
     'logger' => [
         'unit' => [
@@ -158,7 +218,7 @@ return [
         'Website' => [
             'index' => [
                 'path'            => '/',
-                'middleware'      => 'ActionOK',
+                'middleware'      => 'actionOk',
                 'allowed_methods' => ['GET','POST'],
             ],
             'login' => [

@@ -28,10 +28,11 @@ class ConnectorAdapter extends MySQLAdapter
     /**
      * ConnectorAdapter constructor.
      *
+     * @param string          $name
      * @param DriverInterface $dataDriver
      * @throws InvalidArgumentException
      */
-    public function __construct(DriverInterface $dataDriver)
+    public function __construct(string $name, DriverInterface $dataDriver)
     {
         if (!$dataDriver instanceof DriverAdapter) {
             $type = gettype($dataDriver);
@@ -49,6 +50,7 @@ class ConnectorAdapter extends MySQLAdapter
             throw new InvalidArgumentException($message, 1001);
         }
 
+        $this->name = $name;
         $this->dataDriver = $dataDriver;
     }
 
@@ -60,7 +62,7 @@ class ConnectorAdapter extends MySQLAdapter
      * @throws RuntimeException
      * @return int The ID of the saved entity in the storage
      */
-    public function saveData(? int $identifier = null, array $data) : int
+    public function saveData(? int $identifier = null, array $data = []) : int
     {
         return empty($identifier) ? $this->insertData($data) : $this->updateData($identifier, $data);
     }

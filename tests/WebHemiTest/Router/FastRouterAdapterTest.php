@@ -138,12 +138,12 @@ class FastRouterAdapterTest extends TestCase
         $request = new ServerRequest('GET', '/');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
-        $this->assertEquals('ActionOK', $result->getMatchedMiddleware());
+        $this->assertEquals('actionOk', $result->getMatchedMiddleware());
 
         $request = new ServerRequest('POST', '/');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
-        $this->assertEquals('ActionOK', $result->getMatchedMiddleware());
+        $this->assertEquals('actionOk', $result->getMatchedMiddleware());
 
         $request = new ServerRequest('GET', '/login');
         $result = $adapterObj->match($request);
@@ -153,7 +153,6 @@ class FastRouterAdapterTest extends TestCase
         $request = new ServerRequest('POST', '/login');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_BAD_METHOD, $result->getStatus());
-
 
         $request = new ServerRequest('POST', '/some-non-existing-address');
         $result = $adapterObj->match($request);

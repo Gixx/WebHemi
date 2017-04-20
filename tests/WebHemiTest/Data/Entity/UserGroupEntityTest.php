@@ -14,32 +14,35 @@ namespace WebHemiTest\Data\Entity;
 use WebHemi\DateTime;
 use WebHemi\Data\EntityInterface as DataEntityInterface;
 use WebHemi\Data\Entity\User\UserGroupEntity;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class UserGroupEntityTest.
  */
-class UserGroupEntityTest extends TestCase
+class UserGroupEntityTest extends AbstractEntityTestClass
 {
-    /** @var string */
-    private $testTime = '2016-04-26 23:21:00';
+    /**
+     * Sets up the entity class name and instance for the test.
+     */
+    public function setUpEntity()
+    {
+        $this->entityInstance = new UserGroupEntity();
+        $this->entityClass = UserGroupEntity::class;
+    }
 
     /**
      * Tests if the UserGroupEntity implements the DataEntityInterface.
      */
     public function testInstance()
     {
-        $entity = new UserGroupEntity();
+        $this->assertInstanceOf(DataEntityInterface::class, $this->entityInstance);
 
-        $this->assertInstanceOf(DataEntityInterface::class, $entity);
-
-        $entity->setUserGroupId(123);
-        $this->assertSame($entity->getUserGroupId(), $entity->getKeyData());
+        $this->entityInstance->setUserGroupId(123);
+        $this->assertSame($this->entityInstance->getUserGroupId(), $this->entityInstance->getKeyData());
 
         $expectedKey = 567;
-        $entity->setKeyData($expectedKey);
-        $this->assertSame($expectedKey, $entity->getUserGroupId());
-        $this->assertSame($expectedKey, $entity->getKeyData());
+        $this->entityInstance->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $this->entityInstance->getUserGroupId());
+        $this->assertSame($expectedKey, $this->entityInstance->getKeyData());
     }
 
     /**
@@ -60,83 +63,5 @@ class UserGroupEntityTest extends TestCase
             ['dateCreated', $dateTest, $dateTest, true],
             ['dateModified', $dateTest, $dateTest, true],
         ];
-    }
-
-    /**
-     * Tests if the UserGroupEntity instance has any property preset.
-     *
-     * @param string $attribute
-     *
-     * @dataProvider dataProvider
-     */
-    public function testNoInitValues($attribute)
-    {
-        $entity = new UserGroupEntity();
-
-        $this->assertClassHasAttribute($attribute, UserGroupEntity::class);
-        $this->assertAttributeEmpty($attribute, $entity);
-    }
-
-    /**
-     * Tests if the UserGroupEntity has a specific setter method and it sets the value with the correct type.
-     *
-     * @param string $attribute
-     * @param mixed  $parameter
-     * @param mixed  $expectedData
-     * @param bool   $typeCheck
-     *
-     * @dataProvider dataProvider
-     */
-    public function testSetters($attribute, $parameter, $expectedData, $typeCheck)
-    {
-        $entity = new UserGroupEntity();
-        $method = 'set' . ucfirst(preg_replace('/^is/', '', $attribute));
-
-        $this->assertTrue(method_exists($entity, $method));
-
-        $entity->{$method}($parameter);
-        $this->assertAttributeEquals($expectedData, $attribute, $entity);
-
-        if ($typeCheck) {
-            if (is_bool($expectedData)) {
-                $this->assertAttributeInternalType('boolean', $attribute, $entity);
-            } else {
-                $this->assertAttributeInstanceOf(DateTime::class, $attribute, $entity);
-            }
-        }
-    }
-
-    /**
-     * Tests if the UserGroupEntity has a specific getter method and it gets the value with the correct type.
-     *
-     * @param string $attribute
-     * @param mixed  $parameter
-     * @param mixed  $expectedData
-     * @param bool   $typeCheck
-     *
-     * @dataProvider dataProvider
-     */
-    public function testGetters($attribute, $parameter, $expectedData, $typeCheck)
-    {
-        $entity = new UserGroupEntity();
-        $methodName = ucfirst(preg_replace('/^is/', '', $attribute));
-        $setMethod = 'set' . $methodName;
-        $getMethod = 'get' . $methodName;
-
-        $this->assertTrue(method_exists($entity, $setMethod));
-        $this->assertTrue(method_exists($entity, $getMethod));
-
-        $entity->{$setMethod}($parameter);
-        $actualData = $entity->{$getMethod}();
-
-        $this->assertEquals($expectedData, $actualData);
-
-        if ($typeCheck) {
-            if (is_bool($expectedData)) {
-                $this->assertInternalType('boolean', $actualData);
-            } else {
-                $this->assertInstanceOf(DateTime::class, $actualData);
-            }
-        }
     }
 }

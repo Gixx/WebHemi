@@ -111,7 +111,7 @@ trait GetSelectedThemeResourcePathTrait
      *
      * @return bool
      */
-    private function isWebsiteApplication()
+    private function isWebsiteApplication() : bool
     {
         return 'Website' == $this->environment->getSelectedModule();
     }
@@ -119,7 +119,7 @@ trait GetSelectedThemeResourcePathTrait
     /**
      * Checks the config for feature settings.
      *
-     * @param string          $feature
+     * @param string $feature
      * @return bool
      */
     private function isFeatureSupported(string $feature) : bool

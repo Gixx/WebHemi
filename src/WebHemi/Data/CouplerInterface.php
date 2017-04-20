@@ -44,7 +44,7 @@ interface CouplerInterface
      * Gets all the entities those are depending from the given entity.
      *
      * @param EntityInterface $dataEntity
-     * @return DataEntityInterface[]
+     * @return EntityInterface[]
      */
     public function getEntityDependencies(EntityInterface $dataEntity) : array;
 

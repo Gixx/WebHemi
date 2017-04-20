@@ -137,7 +137,7 @@ class TwigExtension extends Twig_Extension
         }
 
         if ($this->configuration->has('renderer/'.$module.'/'.$type)) {
-            $config = merge_array_overwrite(
+            $config = array_merge(
                 $config,
                 $this->configuration->getData('renderer/'.$module.'/'.$type)
             );

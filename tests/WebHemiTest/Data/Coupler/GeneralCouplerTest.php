@@ -63,7 +63,7 @@ class GeneralCouplerTest extends TestCase
         $databaseFile = realpath(__DIR__ . '/../../../../build/webhemi_schema.sqlite3');
 
         self::$dataDriver = new SQLiteDriver('sqlite:' . $databaseFile);
-        self::$adapter = new SQLiteAdapter(self::$dataDriver);
+        self::$adapter = new SQLiteAdapter('unit-test', self::$dataDriver);
     }
 
     /**

@@ -41,10 +41,10 @@ $session = new $sessionClass($configuration);
 /** @var DependencyInjectionInterface $dependencyInjection */
 $dependencyInjection = new $dependencyInjectionClass($configuration);
 // Add core and module services to the DI adapter
-$dependencyInjection->registerService(ConfigurationInterface::class, $configuration)
-    ->registerService(EnvironmentInterface::class, $environment)
-    ->registerService(MiddlewarePipelineInterface::class, $middlewarePipeline)
-    ->registerService(SessionInterface::class, $session)
+$dependencyInjection->registerServiceInstance(ConfigurationInterface::class, $configuration)
+    ->registerServiceInstance(EnvironmentInterface::class, $environment)
+    ->registerServiceInstance(MiddlewarePipelineInterface::class, $middlewarePipeline)
+    ->registerServiceInstance(SessionInterface::class, $session)
     ->registerModuleServices('Global')
     ->registerModuleServices($environment->getSelectedModule());
 

@@ -117,14 +117,14 @@ return [
                 'class'     => Logger\ServiceAdapter\Klogger\ServiceAdapter::class,
                 'arguments' => [
                     Configuration\ServiceInterface::class,
-                    '!:access'
+                    'logType' => 'access'
                 ]
             ],
             'EventLog' => [
                 'class'     => Logger\ServiceAdapter\Klogger\ServiceAdapter::class,
                 'arguments' => [
                     Configuration\ServiceInterface::class,
-                    '!:event'
+                    'logType' => 'event'
                 ]
             ],
             // Middleware

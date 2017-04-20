@@ -66,16 +66,17 @@ class PDOMySQLAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $adapter = new MySQLAdapter($this->dataDriver);
+        $adapter = new MySQLAdapter('unit-test', $this->dataDriver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
         $this->assertAttributeEmpty('dataGroup', $adapter);
         $this->assertAttributeEmpty('idKey', $adapter);
+        $this->assertSame('unit-test', $adapter->getConnectorName());
 
         /** @var DataDriverInterface $fakeDriver */
         $fakeDriver = $this->prophesize(DataDriverInterface::class);
 
         $this->expectException(InvalidArgumentException::class);
-        new MySQLAdapter($fakeDriver->reveal());
+        new MySQLAdapter('unit-test2', $fakeDriver->reveal());
     }
 
     /**
@@ -83,7 +84,7 @@ class PDOMySQLAdapterTest extends TestCase
      */
     public function testGetDataDriver()
     {
-        $adapter = new MySQLAdapter($this->dataDriver);
+        $adapter = new MySQLAdapter('unit-test', $this->dataDriver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
         $actualStorage = $adapter->getDataDriver();
@@ -98,7 +99,7 @@ class PDOMySQLAdapterTest extends TestCase
      */
     public function testSetDataGroup()
     {
-        $adapter = new MySQLAdapter($this->dataDriver);
+        $adapter = new MySQLAdapter('unit-test', $this->dataDriver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
         $result = $adapter->setDataGroup('webhemi_user');
@@ -113,7 +114,7 @@ class PDOMySQLAdapterTest extends TestCase
      */
     public function testSetIdKey()
     {
-        $adapter = new MySQLAdapter($this->dataDriver);
+        $adapter = new MySQLAdapter('unit-test', $this->dataDriver);
         $this->assertInstanceOf(DataAdapterInterface::class, $adapter);
 
         $result = $adapter->setIdKey('id_user');
@@ -245,7 +246,7 @@ class PDOMySQLAdapterTest extends TestCase
     ) {
         $queryBind = [];
 
-        $adapter = new MySQLAdapter($this->dataDriver);
+        $adapter = new MySQLAdapter('unit-test', $this->dataDriver);
         $adapter->setDataGroup($dataGroup);
         $adapter->setIdKey('id');
 
@@ -307,7 +308,7 @@ class PDOMySQLAdapterTest extends TestCase
     {
         $queryBind = [];
 
-        $adapter = new MySQLAdapter($this->dataDriver);
+        $adapter = new MySQLAdapter('unit-test', $this->dataDriver);
         $resultExpression = $this->invokePrivateMethod($adapter, 'getWhereExpression', [$expression, &$queryBind]);
 
         $this->assertEquals($expectedExpression, $resultExpression);
