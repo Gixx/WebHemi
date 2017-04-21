@@ -114,6 +114,10 @@ class SymfonyAdapterTest extends TestCase
         $this->assertTrue($arrayService->offsetExists('date'));
         $this->assertInstanceOf(DateTime::class, $arrayService->offsetGet('date'));
         $this->assertEquals('2016-04-05 01:02:03', $arrayService->offsetGet('date')->format('Y-m-d H:i:s'));
+
+        // With get a non registered service, will be able to test the registerServiceToContainer() method's exception
+        $this->expectException(InvalidArgumentException::class);
+        $adapter->get('something-not-existing');
     }
 
     /**
@@ -130,6 +134,12 @@ class SymfonyAdapterTest extends TestCase
         $actualObject = $adapter->get('aliasWithReference');
         $this->assertInstanceOf(EmptyService::class, $actualObject);
         $this->assertInstanceOf(DateTime::class, $actualObject->getTheKey());
+
+        /** @var EmptyEntity $actualDate */
+        $actualObject = $adapter->get('aliasWithFalseReference');
+        $this->assertInstanceOf(EmptyService::class, $actualObject);
+        $this->assertInternalType('string', $actualObject->getTheKey());
+        $this->assertSame('ItIsNotAClassName', $actualObject->getTheKey());
 
         /** @var EmptyEntity $actualDate */
         $actualObject = $adapter->get('aliasWithLiteral');

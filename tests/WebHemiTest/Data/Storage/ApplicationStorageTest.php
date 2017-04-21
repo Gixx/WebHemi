@@ -25,7 +25,10 @@ use PHPUnit\Framework\TestCase;
  */
 class ApplicationStorageTest extends TestCase
 {
+    /** @var DataAdapterInterface */
     private $defaultAdapter;
+    /** @var array */
+    private $data;
 
     use AssertTrait;
     use InvokePrivateMethodTrait;
@@ -39,6 +42,39 @@ class ApplicationStorageTest extends TestCase
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
         $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
         $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
+
+        $this->data =  [
+            0 => [
+                'id_application' => 1,
+                'name' => 'test.application',
+                'title' => 'Test Application',
+                'description' => 'A test application record',
+                'is_read_only' => 1,
+                'is_enabled' => 1,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ],
+            1 => [
+                'id_application' => 2,
+                'name' => 'test.application.2',
+                'title' => 'Test Application 2',
+                'description' => 'Another test application record',
+                'is_read_only' => 0,
+                'is_enabled' => 1,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ],
+            2 => [
+                'id_application' => 3,
+                'name' => 'test.application.3',
+                'title' => 'Test Application 3',
+                'description' => 'The last test application record',
+                'is_read_only' => 0,
+                'is_enabled' => 0,
+                'date_created' =>  '2016-03-24 16:25:12',
+                'date_modified' =>  '2016-03-24 16:25:12',
+            ]
+        ];
 
         $this->defaultAdapter = $defaultAdapter;
     }
@@ -71,29 +107,71 @@ class ApplicationStorageTest extends TestCase
     }
 
     /**
-     * Test the getApplicationById method.
+     * Test the getPolicies method.
      */
-    public function testGetApplicationById()
+    public function testGetApplications()
     {
-        $data = [
-            0 => [
-                'id_application' => 1,
-                'name' => 'test.application',
-                'title' => 'Test Application',
-                'description' => 'A test application record',
-                'is_read_only' => 1,
-                'is_enabled' => 1,
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
-            ]
-        ];
+        $data = $this->data;
 
         $this->defaultAdapter
             ->getDataSet(Argument::type('array'), Argument::type('array'))
             ->will(
                 function ($args) use ($data) {
-                    if ($args[0]['id_application'] == 1) {
+                    if (empty($args[0])) {
                         return $data;
+                    }
+                    return [];
+                }
+            );
+
+        $dataEntity = new ApplicationEntity();
+        /** @var DataAdapterInterface $defaultAdapterInstance */
+        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+        $storage = new ApplicationStorage($defaultAdapterInstance, $dataEntity);
+
+        /** @var ApplicationEntity[] $actualResult */
+        $actualResult = $storage->getApplications();
+        $this->assertSame(3, count($actualResult));
+
+        $this->assertInstanceOf(ApplicationEntity::class, $actualResult[0]);
+        $this->assertSame('Test Application', $actualResult[0]->getTitle());
+        $this->assertTrue($actualResult[0]->getReadOnly());
+        $this->assertTrue($actualResult[0]->getEnabled());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[0]]);
+        $this->assertArraysAreSimilar($data[0], $actualData);
+
+        $this->assertInstanceOf(ApplicationEntity::class, $actualResult[1]);
+        $this->assertFalse($actualResult[1]->getReadOnly());
+        $this->assertTrue($actualResult[1]->getEnabled());
+        $this->assertSame('Test Application 2', $actualResult[1]->getTitle());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[1]]);
+        $this->assertArraysAreSimilar($data[1], $actualData);
+
+        $this->assertInstanceOf(ApplicationEntity::class, $actualResult[1]);
+        $this->assertFalse($actualResult[2]->getReadOnly());
+        $this->assertFalse($actualResult[2]->getEnabled());
+        $this->assertSame('Test Application 3', $actualResult[2]->getTitle());
+        $actualData = $this->invokePrivateMethod($storage, 'getEntityData', [$actualResult[2]]);
+        $this->assertArraysAreSimilar($data[2], $actualData);
+    }
+
+    /**
+     * Test the getApplicationById method.
+     */
+    public function testGetApplicationById()
+    {
+        $data = $this->data;
+
+        $this->defaultAdapter
+            ->getDataSet(Argument::type('array'), Argument::type('array'))
+            ->will(
+                function ($args) use ($data) {
+                    if (isset($args[0]['id_application'])) {
+                        foreach ($data as $itemData) {
+                            if ($itemData['id_application'] == $args[0]['id_application']) {
+                                return [$itemData];
+                            }
+                        }
                     }
 
                     return [];
@@ -105,7 +183,7 @@ class ApplicationStorageTest extends TestCase
         $defaultAdapterInstance = $this->defaultAdapter->reveal();
         $storage = new ApplicationStorage($defaultAdapterInstance, $dataEntity);
 
-        $actualResult = $storage->getApplicationById(3);
+        $actualResult = $storage->getApplicationById(8);
         $this->assertEmpty($actualResult);
 
         /** @var ApplicationEntity $actualResult */
@@ -126,19 +204,7 @@ class ApplicationStorageTest extends TestCase
      */
     public function testGetApplicationByName()
     {
-        $data = [
-            0 => [
-                'id_application' => 1,
-                'name' => 'test.application',
-                'title' => 'Test Application',
-                'description' => 'A test application record',
-                'is_read_only' => 1,
-                'is_enabled' => 1,
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
-            ]
-        ];
-
+        $data = $this->data;
 
         $this->defaultAdapter
             ->getDataSet(Argument::type('array'), Argument::type('array'))
