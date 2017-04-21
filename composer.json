@@ -27,20 +27,19 @@
   },
   "require": {
     "php": ">=7.1",
-    "nikic/fast-route": "~1.1",
-    "guzzlehttp/psr7": "~1.3",
+    "nikic/fast-route": "~1.2",
+    "guzzlehttp/psr7": "~1.4",
     "symfony/dependency-injection": "~3.2",
-    "twig/twig": "~2.0",
+    "twig/twig": "~2.3",
     "twig/extensions": "~1.4",
     "katzgrau/klogger": "~1.2",
     "erusev/parsedown": "~1.6"
   },
   "require-dev": {
     "phpunit/phpunit": "~6.1",
-    "phpmd/phpmd": "~2.5",
-    "squizlabs/php_codesniffer": "~2.7",
-    "satooshi/php-coveralls": "~1.0",
-    "johnkary/phpunit-speedtrap": "1.0.2"
+    "phpmd/phpmd": "~2.6",
+    "squizlabs/php_codesniffer": "~2.8",
+    "satooshi/php-coveralls": "~1.0"
   },
   "scripts": {
     "check": [

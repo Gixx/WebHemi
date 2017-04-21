@@ -173,6 +173,13 @@ return [
                     DateTime::class
                 ]
             ],
+            'aliasWithFalseReference' => [
+                'class' => EmptyService::class,
+                'arguments' => [
+                    'key' => 'theKey',
+                    'ItIsNotAClassName'
+                ]
+            ],
             'aliasWithLiteral' => [
                 'class' => EmptyService::class,
                 'arguments' => [
