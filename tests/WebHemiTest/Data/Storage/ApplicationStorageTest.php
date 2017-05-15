@@ -107,7 +107,7 @@ class ApplicationStorageTest extends TestCase
     }
 
     /**
-     * Test the getPolicies method.
+     * Test the getApplications method.
      */
     public function testGetApplications()
     {

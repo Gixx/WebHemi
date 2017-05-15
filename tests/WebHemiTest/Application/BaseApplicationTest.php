@@ -175,7 +175,8 @@ class BaseApplicationTest extends TestCase
             $this->post,
             $this->server,
             $this->cookie,
-            $this->files
+            $this->files,
+            []
         );
         $pipelineManager = new PipelineManager($config);
 

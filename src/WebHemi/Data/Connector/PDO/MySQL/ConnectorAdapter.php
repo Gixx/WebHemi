@@ -325,6 +325,8 @@ class ConnectorAdapter implements ConnectorInterface
         } elseif (strpos($column, ' LIKE') !== false || (is_string($value) && strpos($value, '%') !== false)) {
             $queryParams[] = $this->getLikeColumnCondition($column);
             $queryBinds[] = $value;
+        } elseif (is_null($value)) {
+            $queryParams[] = "{$column} IS NULL";
         } else {
             $queryParams[] = $this->getSimpleColumnCondition($column);
             $queryBinds[] = $value;

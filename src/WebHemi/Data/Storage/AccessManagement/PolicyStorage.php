@@ -110,7 +110,7 @@ class PolicyStorage extends AbstractStorage
      * @param int $identifier
      * @return null|PolicyEntity
      */
-    public function getPolicyById($identifier) : ? PolicyEntity
+    public function getPolicyById(int $identifier) : ? PolicyEntity
     {
         /** @var null|PolicyEntity $dataEntity */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
@@ -124,7 +124,7 @@ class PolicyStorage extends AbstractStorage
      * @param string $name
      * @return null|PolicyEntity
      */
-    public function getPolicyByName($name) : ? PolicyEntity
+    public function getPolicyByName(string $name) : ? PolicyEntity
     {
         /** @var null|PolicyEntity $dataEntity */
         $dataEntity = $this->getDataEntity([$this->name => $name]);
@@ -135,10 +135,10 @@ class PolicyStorage extends AbstractStorage
     /**
      * Returns a set of Policy entities identified by Resource ID.
      *
-     * @param int $resourceId
+     * @param null|int $resourceId
      * @return PolicyEntity[]
      */
-    public function getPoliciesByResourceId($resourceId) : array
+    public function getPoliciesByResourceId(? int $resourceId) : array
     {
         return $this->getDataEntitySet([$this->resourceId => $resourceId]);
     }
@@ -146,10 +146,10 @@ class PolicyStorage extends AbstractStorage
     /**
      * Returns a set of Policy entities identified by Application ID.
      *
-     * @param int $applicationId
+     * @param null|int $applicationId
      * @return PolicyEntity[]
      */
-    public function getPoliciesByApplicationId($applicationId) : array
+    public function getPoliciesByApplicationId(? int $applicationId) : array
     {
         return $this->getDataEntitySet([$this->applicationId => $applicationId]);
     }
@@ -157,11 +157,11 @@ class PolicyStorage extends AbstractStorage
     /**
      * Returns a set of Policy entities identified by both Resource and Application IDs.
      *
-     * @param int $resourceId
-     * @param int $applicationId
+     * @param null|int $resourceId
+     * @param null|int $applicationId
      * @return PolicyEntity[]
      */
-    public function getPoliciesByResourceAndApplicationIds($resourceId, $applicationId) : array
+    public function getPoliciesByResourceAndApplicationIds(? int $resourceId, ? int $applicationId) : array
     {
         return $this->getDataEntitySet(
             [

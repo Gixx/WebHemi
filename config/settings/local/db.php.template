@@ -10,9 +10,10 @@ return [
             ConnectorInterface::class => [
                 'class'     => Connector\%data.connector.class%::class,
                 'arguments' => [
+                    'name' => '%data.connector.name%',
                     DriverInterface::class
                 ],
-                'shared'    => true,
+                'shared'    => %data.connector.shared%,
             ],
             DriverInterface::class => [
                 'class' => Connector\%data.driver.class%::class,
@@ -20,9 +21,6 @@ return [
                     'dsn'      => '%data.connector.type%:dbname=%data.connector.database%;charset=utf8;host=%data.connector.host%',
                     'user'     => '%data.connector.username%',
                     'password' => '%data.connector.password%',
-                    'options'  => [
-
-                    ],
                 ],
                 'calls'     => [
 

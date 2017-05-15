@@ -126,6 +126,8 @@ class PDOMySQLAdapterTest extends TestCase
      * Data provider for the Query test.
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function sqlQueryDataProvider()
     {
@@ -217,6 +219,17 @@ class PDOMySQLAdapterTest extends TestCase
                 null,
                 'SELECT * FROM cTable WHERE A = ? AND B IN (?,?,?) GROUP BY groupCol ORDER BY id LIMIT 3 OFFSET 0',
                 [10, 1, 2, 3]
+            ],
+            [
+                ['A' => null],
+                'cTable',
+                null,
+                null,
+                null,
+                'groupCol',
+                null,
+                'SELECT * FROM cTable WHERE A IS NULL GROUP BY groupCol ORDER BY id',
+                []
             ]
         ];
     }

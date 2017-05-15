@@ -98,7 +98,7 @@ class UserGroupStorage extends AbstractStorage
      * @param int $identifier
      * @return null|UserGroupEntity
      */
-    public function getUserGroupById($identifier) : ? UserGroupEntity
+    public function getUserGroupById(int $identifier) : ? UserGroupEntity
     {
         /** @var null|UserGroupEntity $dataEntity */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
@@ -112,7 +112,7 @@ class UserGroupStorage extends AbstractStorage
      * @param string $name
      * @return null|UserGroupEntity
      */
-    public function getUserGroupByName($name) : ? UserGroupEntity
+    public function getUserGroupByName(string $name) : ? UserGroupEntity
     {
         /** @var null|UserGroupEntity $dataEntity */
         $dataEntity = $this->getDataEntity([$this->name => $name]);

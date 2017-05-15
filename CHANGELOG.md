@@ -1,5 +1,15 @@
 # Change log #
 
+## Version 4.0.0-4.4 ##
+
+* Add support of CLI applications (e.g.: cronjobs)
+* Fix config inheritance and Dependency Injection issues
+* Typehints:
+  * Fix missing parameter typehints
+  * Fix typo issues
+  * Add better PHPDoc typehints (e.g.: in index.php)
+* Update packages to fix Code Coverage issues
+
 ## Version 4.0.0-4.3 ##
 
 * Add support for connecting to multiple databases

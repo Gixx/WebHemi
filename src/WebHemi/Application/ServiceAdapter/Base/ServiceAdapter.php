@@ -13,36 +13,20 @@ declare(strict_types = 1);
 
 namespace WebHemi\Application\ServiceAdapter\Base;
 
-use Throwable;
-use WebHemi\Application\ServiceInterface;
-use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionInterface;
+use WebHemi\Application\ServiceAdapter\AbstractAdapter;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Http\ResponseInterface;
 use WebHemi\Http\ServerRequestInterface;
 use WebHemi\Http\ServiceInterface as HttpInterface;
 use WebHemi\MiddlewarePipeline\ServiceInterface as PipelineInterface;
 use WebHemi\Middleware\Common as CommonMiddleware;
-use WebHemi\Middleware\MiddlewareInterface;
 use WebHemi\Session\ServiceInterface as SessionInterface;
 
 /**
  * Class ServiceAdapter
  */
-class ServiceAdapter implements ServiceInterface
+class ServiceAdapter extends AbstractAdapter
 {
-    /** @var DependencyInjectionInterface */
-    private $container;
-
-    /**
-     * ServiceAdapter constructor.
-     *
-     * @param DependencyInjectionInterface $container
-     */
-    public function __construct(DependencyInjectionInterface $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Starts the session.
      *
@@ -50,7 +34,7 @@ class ServiceAdapter implements ServiceInterface
      *
      * @codeCoverageIgnore - not testing session (yet)
      */
-    private function initSession() : void
+    protected function initSession() : void
     {
         if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
             return;
@@ -146,7 +130,7 @@ class ServiceAdapter implements ServiceInterface
      *
      * @return ServerRequestInterface
      */
-    private function getRequest()
+    protected function getRequest() : ServerRequestInterface
     {
         /** @var HttpInterface $httpAdapter */
         $httpAdapter = $this->container->get(HttpInterface::class);
@@ -173,66 +157,12 @@ class ServiceAdapter implements ServiceInterface
      *
      * @return ResponseInterface
      */
-    private function getResponse()
+    protected function getResponse() : ResponseInterface
     {
         /** @var HttpInterface $httpAdapter */
         $httpAdapter = $this->container->get(HttpInterface::class);
 
         /** @var ResponseInterface $response */
         return $httpAdapter->getResponse();
-    }
-
-    /**
-     * Instantiates and invokes a middleware
-     *
-     * @param string $middlewareClass
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     */
-    private function invokeMiddleware(
-        string $middlewareClass,
-        ServerRequestInterface&$request,
-        ResponseInterface&$response
-    ) : void {
-        try {
-            /** @var MiddlewareInterface $middleware */
-            $middleware = $this->container->get($middlewareClass);
-            $requestAttributes = $request->getAttributes();
-
-            // As an extra step if an action middleware is resolved, it should be invoked by the dispatcher.
-            if ($middleware instanceof CommonMiddleware\DispatcherMiddleware
-                && isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
-            ) {
-                /** @var MiddlewareInterface $actionMiddleware */
-                $actionMiddleware = $this->container
-                    ->get($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS]);
-                $request = $request->withAttribute(
-                    ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE,
-                    $actionMiddleware
-                );
-            }
-
-            $middleware($request, $response);
-        } catch (Throwable $exception) {
-            $code = ResponseInterface::STATUS_INTERNAL_SERVER_ERROR;
-
-            if (in_array(
-                $exception->getCode(),
-                [
-                    ResponseInterface::STATUS_FORBIDDEN,
-                    ResponseInterface::STATUS_NOT_FOUND,
-                    ResponseInterface::STATUS_BAD_METHOD,
-                    ResponseInterface::STATUS_NOT_IMPLEMENTED,
-                ]
-            )) {
-                $code = $exception->getCode();
-            }
-
-            $response = $response->withStatus($code);
-            $request = $request->withAttribute(
-                ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION,
-                $exception
-            );
-        }
     }
 }

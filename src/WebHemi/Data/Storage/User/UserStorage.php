@@ -135,7 +135,7 @@ class UserStorage extends AbstractStorage
      * @param string $email
      * @return null|UserEntity
      */
-    public function getUserByEmail($email) : ? UserEntity
+    public function getUserByEmail(string $email) : ? UserEntity
     {
         /** @var null|UserEntity $dataEntity */
         $dataEntity = $this->getDataEntity([$this->email => $email]);

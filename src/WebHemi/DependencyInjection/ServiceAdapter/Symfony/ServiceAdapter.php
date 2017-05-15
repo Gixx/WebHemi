@@ -14,7 +14,9 @@ declare(strict_types = 1);
 namespace WebHemi\DependencyInjection\ServiceAdapter\Symfony;
 
 use Exception;
+use Throwable;
 use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -61,6 +63,7 @@ class ServiceAdapter extends AbstractAdapter
      * Gets a service.
      *
      * @param string $identifier
+     * @throws RuntimeException
      * @return object
      */
     public function get(string $identifier)
@@ -75,8 +78,16 @@ class ServiceAdapter extends AbstractAdapter
             $this->registerServiceToContainer($identifier);
         }
 
-        $service = $this->container->get($identifier);
-        $this->serviceLibrary[$identifier][self::SERVICE_INITIALIZED] = true;
+        try {
+            $service = $this->container->get($identifier);
+            $this->serviceLibrary[$identifier][self::SERVICE_INITIALIZED] = true;
+        } catch (Throwable $exception) {
+            throw new RuntimeException(
+                sprintf('There was an issue during creating the object: %s', $exception->getMessage()),
+                1000,
+                $exception
+            );
+        }
 
         return $service;
     }

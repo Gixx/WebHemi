@@ -25,6 +25,8 @@ use WebHemi\Http\ServiceInterface;
  */
 class ServiceAdapter implements ServiceInterface
 {
+    /** @var EnvironmentInterface */
+    private $environmentManager;
     /** @var ServerRequest */
     private $request;
     /** @var Response */
@@ -47,6 +49,7 @@ class ServiceAdapter implements ServiceInterface
      */
     public function __construct(EnvironmentInterface $environmentManager)
     {
+        $this->environmentManager = $environmentManager;
         $this->get = $environmentManager->getEnvironmentData('GET');
         $this->post = $environmentManager->getEnvironmentData('POST');
         $this->server = $environmentManager->getEnvironmentData('SERVER');
@@ -109,9 +112,7 @@ class ServiceAdapter implements ServiceInterface
      */
     private function getScheme() : string
     {
-        $https = $this->getServerData('HTTPS', 'off');
-
-        return $https == 'on' ? 'https' : 'http';
+        return $this->environmentManager->isSecuredApplication() ? 'https' : 'http';
     }
 
     /**
@@ -138,7 +139,7 @@ class ServiceAdapter implements ServiceInterface
      */
     private function getRequestUri() : string
     {
-        $requestUri = $this->getServerData('REQUEST_URI', '/');
+        $requestUri = $this->environmentManager->getRequestUri();
 
         return (string) current(explode('?', $requestUri));
     }

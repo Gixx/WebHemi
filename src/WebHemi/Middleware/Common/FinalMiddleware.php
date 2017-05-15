@@ -77,6 +77,7 @@ class FinalMiddleware implements MiddlewareInterface
         if (!in_array($response->getStatusCode(), [ResponseInterface::STATUS_OK, ResponseInterface::STATUS_REDIRECT])) {
             $exception = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION)
                 ?? new RuntimeException($response->getReasonPhrase(), $response->getStatusCode());
+
             $this->prepareErrorResponse($exception, $request, $response);
             $this->logErrorResponse($exception, $request, $response);
         }
