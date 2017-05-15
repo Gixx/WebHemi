@@ -42,33 +42,36 @@ class EmptyDependencyInjectionContainer extends AbstractAdapter
      * Makes the resolveServiceClassName() method to be public.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return string
      */
-    public function callResolveServiceClassName(string $identifier) : string
+    public function callResolveServiceClassName(string $identifier, string $moduleName) : string
     {
-        return $this->resolveServiceClassName($identifier);
+        return $this->resolveServiceClassName($identifier, $moduleName);
     }
 
     /**
      * Makes the resolveServiceArguments() method to be public.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return array
      */
-    public function callResolveServiceArguments(string $identifier) : array
+    public function callResolveServiceArguments(string $identifier, string $moduleName) : array
     {
-        return $this->resolveServiceArguments($identifier);
+        return $this->resolveServiceArguments($identifier, $moduleName);
     }
 
     /**
      * Makes the resolveShares() method to be public.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return bool
      */
-    public function callResolveShares(string $identifier) : bool
+    public function callResolveShares(string $identifier, string $moduleName) : bool
     {
-        return $this->resolveShares($identifier);
+        return $this->resolveShares($identifier, $moduleName);
     }
 
     /**

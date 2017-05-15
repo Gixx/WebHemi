@@ -84,7 +84,7 @@ class UserMetaStorage extends AbstractStorage
      * @param int $identifier
      * @return null|UserMetaEntity
      */
-    public function getUserMetaById($identifier) : ? UserMetaEntity
+    public function getUserMetaById(int $identifier) : ? UserMetaEntity
     {
         /** @var null|UserMetaEntity $dataEntity */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
@@ -95,10 +95,10 @@ class UserMetaStorage extends AbstractStorage
     /**
      * Returns a User Meta data list identified by user ID.
      *
-     * @param mixed $userId
+     * @param int $userId
      * @return array
      */
-    public function getUserMetaSetForUserId($userId) : array
+    public function getUserMetaSetForUserId(int $userId) : array
     {
         $userMetaEntitySet = $this->getDataEntitySet([$this->userId => $userId]);
         $userMetaSet = [];
@@ -114,10 +114,10 @@ class UserMetaStorage extends AbstractStorage
     /**
      * Returns a User Meta entity list identified by user ID.
      *
-     * @param mixed $userId
+     * @param int $userId
      * @return UserMetaEntity[]
      */
-    public function getUserMetaForUserId($userId) : array
+    public function getUserMetaForUserId(int $userId) : array
     {
         return $this->getDataEntitySet([$this->userId => $userId]);
     }

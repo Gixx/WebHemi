@@ -47,9 +47,10 @@ interface ServiceInterface
      * Register the service.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return ServiceInterface
      */
-    public function registerService(string $identifier) : ServiceInterface;
+    public function registerService(string $identifier, string $moduleName = 'Global') : ServiceInterface;
 
     /**
      * Register the service object instance.

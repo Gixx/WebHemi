@@ -34,28 +34,8 @@ class EmptyEnvironmentManager extends EnvironmentManager
 
     const SESSION_SALT = 'WebHemiTestX';
 
-    /** @var ConfigInterface */
-    protected $configuration;
     /** @var string */
-    protected $documentRoot = __DIR__.'/../TestDocumentRoot';
-    /** @var string */
-    protected $applicationDomain = 'www.unittest.dev';
-    /** @var string */
-    protected $selectedModule = 'Website';
-    /** @var string */
-    protected $selectedApplication = 'website';
-    /** @var string */
-    protected $selectedApplicationUri = '/';
-    /** @var string */
-    protected $requestUri = '/';
-    /** @var string */
-    protected $selectedTheme = 'default';
-    /** @var string */
-    protected $selectedThemeResourcePath = '/resources/vendor_themes/test_theme';
-    /** @var array  */
-    protected $environmentData = [];
-    /** @var bool */
-    protected $isHttps = false;
+    protected $requestUri;
 
     /**
      * ModuleManager constructor.
@@ -66,6 +46,7 @@ class EmptyEnvironmentManager extends EnvironmentManager
      * @param array           $serverData
      * @param array           $cookieData
      * @param array           $filesData
+     * @param array           $optionsData
      */
     public function __construct(
         ConfigInterface $configuration,
@@ -73,7 +54,8 @@ class EmptyEnvironmentManager extends EnvironmentManager
         array $postData,
         array $serverData,
         array $cookieData,
-        array $filesData
+        array $filesData,
+        array $optionsData = []
     ) {
         $this->configuration = $configuration->getConfig('applications');
         $this->environmentData = [
@@ -83,6 +65,16 @@ class EmptyEnvironmentManager extends EnvironmentManager
             'COOKIE' => $cookieData,
             'FILES'  => $filesData,
         ];
+        $this->documentRoot = __DIR__.'/../TestDocumentRoot';
+        $this->applicationDomain = 'www.unittest.dev';
+        $this->selectedModule = 'Website';
+        $this->selectedApplication = 'website';
+        $this->selectedApplicationUri = '/';
+        $this->requestUri = $serverData['REQUEST_URI'] ?? '/';
+        $this->selectedTheme = 'default';
+        $this->selectedThemeResourcePath = '/resources/vendor_themes/test_theme';
+        $this->isHttps = isset($serverData['HTTPS']) && $serverData['HTTPS'] == 'on';
+        $this->options = $optionsData;
     }
 
     /**
@@ -97,30 +89,6 @@ class EmptyEnvironmentManager extends EnvironmentManager
     }
 
     /**
-     * @return string
-     */
-    public function getDocumentRoot() : string
-    {
-        return $this->documentRoot;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApplicationDomain() : string
-    {
-        return $this->applicationDomain;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSecuredApplication() : bool
-    {
-        return $this->isHttps;
-    }
-
-    /**
      * @param string $application
      * @return EmptyEnvironmentManager
      */
@@ -132,14 +100,6 @@ class EmptyEnvironmentManager extends EnvironmentManager
     }
 
     /**
-     * @return string
-     */
-    public function getSelectedApplication() : string
-    {
-        return $this->selectedApplication;
-    }
-
-    /**
      * @param $uri
      * @return EmptyEnvironmentManager
      */
@@ -148,14 +108,6 @@ class EmptyEnvironmentManager extends EnvironmentManager
         $this->selectedApplicationUri = $uri;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSelectedApplicationUri() : string
-    {
-        return $this->selectedApplicationUri;
     }
 
     /**
@@ -191,14 +143,6 @@ class EmptyEnvironmentManager extends EnvironmentManager
     }
 
     /**
-     * @return string
-     */
-    public function getSelectedModule() : string
-    {
-        return $this->selectedModule;
-    }
-
-    /**
      * @param $theme
      * @return EmptyEnvironmentManager
      */
@@ -207,14 +151,6 @@ class EmptyEnvironmentManager extends EnvironmentManager
         $this->selectedTheme = $theme;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSelectedTheme() : string
-    {
-        return $this->selectedTheme;
     }
 
     /**
@@ -229,18 +165,5 @@ class EmptyEnvironmentManager extends EnvironmentManager
         }
 
         return $this->selectedThemeResourcePath;
-    }
-
-    /**
-     * @param $key
-     * @return array
-     */
-    public function getEnvironmentData(string $key) : array
-    {
-        if (!isset($this->environmentData[$key])) {
-            throw new InvalidArgumentException(sprintf('The "%s" is not a valid environment key.', $key));
-        }
-
-        return $this->environmentData[$key];
     }
 }

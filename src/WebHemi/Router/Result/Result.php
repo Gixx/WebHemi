@@ -70,7 +70,7 @@ class Result
      */
     public function getResource() : string
     {
-        return $this->resource;
+        return $this->resource ?? '';
     }
 
     /**
@@ -98,7 +98,7 @@ class Result
      */
     public function getStatus() : int
     {
-        return $this->status;
+        return $this->status ?? self::CODE_NOT_FOUND;
     }
 
     /**
@@ -108,7 +108,7 @@ class Result
      */
     public function getStatusReason() : string
     {
-        return $this->statusReason[$this->status] ?? '';
+        return $this->statusReason[$this->getStatus()] ?? '';
     }
 
     /**
@@ -154,6 +154,6 @@ class Result
      */
     public function getParameters() : array
     {
-        return $this->parameters;
+        return $this->parameters ?? [];
     }
 }

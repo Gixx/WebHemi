@@ -90,7 +90,7 @@ interface ConnectorInterface
     /**
      * Insert or update entity in the storage.
      *
-     * @param int $identifier
+     * @param null|int $identifier
      * @param array $data
      * @return int The ID of the saved entity in the storage
      */

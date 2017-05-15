@@ -91,6 +91,7 @@ class EnvironmentManagerTest extends TestCase
     public function testConstructor()
     {
         $config = new Config($this->config);
+        $options = ['some' => 'option'];
 
         $testObj = new EnvironmentManager(
             $config,
@@ -98,7 +99,8 @@ class EnvironmentManagerTest extends TestCase
             $this->post,
             $this->server,
             $this->cookie,
-            $this->files
+            $this->files,
+            $options
         );
 
         $this->assertInstanceOf(EnvironmentManager::class, $testObj);
@@ -109,6 +111,7 @@ class EnvironmentManagerTest extends TestCase
         $this->assertEquals(EnvironmentManager::DEFAULT_THEME_RESOURCE_PATH, $testObj->getResourcePath());
         $this->assertEquals(realpath(__DIR__.'/../../../'), $testObj->getDocumentRoot());
         $this->assertEquals(realpath(__DIR__.'/../../..'), $testObj->getApplicationRoot());
+        $this->assertArraysAreSimilar($options, $testObj->getOptions());
 
         $actualServerData = $testObj->getEnvironmentData('SERVER');
         $expectedServerData = $this->server;
@@ -139,7 +142,8 @@ class EnvironmentManagerTest extends TestCase
             $this->post,
             $this->server,
             $this->cookie,
-            $this->files
+            $this->files,
+            []
         );
 
         $this->assertInstanceOf(EnvironmentManager::class, $testObj);
@@ -169,7 +173,8 @@ class EnvironmentManagerTest extends TestCase
             $this->post,
             $this->server,
             $this->cookie,
-            $this->files
+            $this->files,
+            []
         );
 
         $this->assertInstanceOf(EnvironmentManager::class, $testObj);
@@ -191,7 +196,8 @@ class EnvironmentManagerTest extends TestCase
             $this->post,
             $this->server,
             $this->cookie,
-            $this->files
+            $this->files,
+            []
         );
         $this->assertEmpty($testObj->getClientIp());
 
@@ -202,7 +208,8 @@ class EnvironmentManagerTest extends TestCase
             $this->post,
             $this->server,
             $this->cookie,
-            $this->files
+            $this->files,
+            []
         );
         $this->assertSame('some_ip', $testObj->getClientIp());
 
@@ -213,7 +220,8 @@ class EnvironmentManagerTest extends TestCase
             $this->post,
             $this->server,
             $this->cookie,
-            $this->files
+            $this->files,
+            []
         );
         $this->assertSame('some_forwarded_ip', $testObj->getClientIp());
 
@@ -224,7 +232,8 @@ class EnvironmentManagerTest extends TestCase
             $this->post,
             $this->server,
             $this->cookie,
-            $this->files
+            $this->files,
+            []
         );
         $this->assertSame('some_forwarded_ip', $testObj->getClientIp());
     }
@@ -252,7 +261,8 @@ class EnvironmentManagerTest extends TestCase
             $this->post,
             $this->server,
             $this->cookie,
-            $this->files
+            $this->files,
+            []
         );
 
         $this->assertInstanceOf(EnvironmentManager::class, $testObj);

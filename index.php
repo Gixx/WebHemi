@@ -9,11 +9,17 @@
  *
  * @link      http://www.gixx-web.com
  */
+use WebHemi\Application\ServiceAdapter\Base\ServiceAdapter as Application;
 use WebHemi\Application\ServiceInterface as ApplicationInterface;
+use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Configuration;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\DependencyInjection\ServiceAdapter\Symfony\ServiceAdapter as DependencyInjection;
 use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionInterface;
+use WebHemi\Environment\ServiceAdapter\Base\ServiceAdapter as Environment;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\MiddlewarePipeline\ServiceAdapter\Base\ServiceAdapter as MiddlewarePipeline;
 use WebHemi\MiddlewarePipeline\ServiceInterface as MiddlewarePipelineInterface;
+use WebHemi\Session\ServiceAdapter\Base\ServiceAdapter as Session;
 use WebHemi\Session\ServiceInterface as SessionInterface;
 
 require_once __DIR__.'/vendor/autoload.php';
@@ -29,16 +35,16 @@ $environmentClass = $configurationData['dependencies']['Global'][EnvironmentInte
 $middlewarePipelineClass = $configurationData['dependencies']['Global'][MiddlewarePipelineInterface::class]['class'];
 $sessionClass = $configurationData['dependencies']['Global'][SessionInterface::class]['class'];
 
-/** @var ConfigurationInterface $configuration */
+/** @var Configuration $configuration */
 $configuration = new $configurationClass($configurationData);
-/** @var EnvironmentInterface $environment */
-$environment = new $environmentClass($configuration, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES);
-/** @var MiddlewarePipelineInterface $middlewarePipeline */
+/** @var Environment $environment */
+$environment = new $environmentClass($configuration, $_GET, $_POST, $_SERVER, $_COOKIE, $_FILES, []);
+/** @var MiddlewarePipeline $middlewarePipeline */
 $middlewarePipeline = new $middlewarePipelineClass($configuration);
 $middlewarePipeline->addModulePipeLine($environment->getSelectedModule());
-/** @var SessionInterface $session */
+/** @var Session $session */
 $session = new $sessionClass($configuration);
-/** @var DependencyInjectionInterface $dependencyInjection */
+/** @var DependencyInjection $dependencyInjection */
 $dependencyInjection = new $dependencyInjectionClass($configuration);
 // Add core and module services to the DI adapter
 $dependencyInjection->registerServiceInstance(ConfigurationInterface::class, $configuration)
@@ -48,6 +54,6 @@ $dependencyInjection->registerServiceInstance(ConfigurationInterface::class, $co
     ->registerModuleServices('Global')
     ->registerModuleServices($environment->getSelectedModule());
 
-/** @var ApplicationInterface $application */
+/** @var Application $application */
 $application = new $applicationClass($dependencyInjection);
 $application->run();

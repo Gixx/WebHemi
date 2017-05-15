@@ -23,33 +23,35 @@ use WebHemi\Environment\ServiceInterface;
 class ServiceAdapter implements ServiceInterface
 {
     /** @var ConfigurationInterface */
-    private $configuration;
+    protected $configuration;
     /** @var string */
-    private $url;
+    protected $url;
     /** @var string */
-    private $subDomain;
+    protected $subDomain;
     /** @var string */
-    private $mainDomain;
+    protected $mainDomain;
     /** @var string */
-    private $applicationDomain;
+    protected $applicationDomain;
     /** @var string */
-    private $documentRoot;
+    protected $documentRoot;
     /** @var string */
-    private $applicationRoot;
+    protected $applicationRoot;
     /** @var string */
-    private $selectedModule;
+    protected $selectedModule;
     /** @var string */
-    private $selectedApplication;
+    protected $selectedApplication;
     /** @var string */
-    private $selectedApplicationUri;
+    protected $selectedApplicationUri;
     /** @var string */
-    private $selectedTheme;
+    protected $selectedTheme;
     /** @var string */
-    private $selectedThemeResourcePath;
+    protected $selectedThemeResourcePath;
     /** @var array  */
-    private $environmentData;
+    protected $environmentData;
     /** @var bool */
-    private $isHttps;
+    protected $isHttps;
+    /** @var array */
+    protected $options = [];
 
     /**
      * ServiceAdapter constructor.
@@ -60,6 +62,7 @@ class ServiceAdapter implements ServiceInterface
      * @param array                  $serverData
      * @param array                  $cookieData
      * @param array                  $filesData
+     * @param array                  $optionsData
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -67,10 +70,13 @@ class ServiceAdapter implements ServiceInterface
         array $postData,
         array $serverData,
         array $cookieData,
-        array $filesData
+        array $filesData,
+        array $optionsData
     ) {
         $this->configuration = $configuration->getConfig('applications');
-        $this->documentRoot = $this->applicationRoot = realpath(__DIR__.'/../../../../../');
+        $this->applicationRoot = realpath(__DIR__.'/../../../../../');
+        $this->documentRoot = realpath($this->applicationRoot.'/');
+        $this->options = $optionsData;
 
         if (isset($serverData['HTTP_REFERER'])) {
             $serverData['HTTP_REFERER'] = urldecode($serverData['HTTP_REFERER']);
@@ -242,6 +248,17 @@ class ServiceAdapter implements ServiceInterface
 
         return (string) $ipAddress;
     }
+
+    /**
+     * Gets the execution parameters (CLI).
+     *
+     * @return array
+     */
+    public function getOptions() : array
+    {
+        return $this->options;
+    }
+
     /**
      * Parses server data and tries to set domain information.
      *

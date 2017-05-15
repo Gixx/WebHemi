@@ -69,5 +69,7 @@ class RoutingMiddleware implements MiddlewareInterface
                     $routeResult->getParameters()
                 );
         }
+
+        $response = $response->withStatus(ResponseInterface::STATUS_PROCESSING);
     }
 }

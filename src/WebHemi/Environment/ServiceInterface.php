@@ -40,6 +40,7 @@ interface ServiceInterface
      * @param array                  $serverData
      * @param array                  $cookieData
      * @param array                  $filesData
+     * @param array                  $optionsData
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -47,7 +48,8 @@ interface ServiceInterface
         array $postData,
         array $serverData,
         array $cookieData,
-        array $filesData
+        array $filesData,
+        array $optionsData
     );
 
     /**
@@ -142,4 +144,11 @@ interface ServiceInterface
      * @return string
      */
     public function getClientIp(): string;
+
+    /**
+     * Gets the execution parameters (CLI).
+     *
+     * @return array
+     */
+    public function getOptions() : array;
 }

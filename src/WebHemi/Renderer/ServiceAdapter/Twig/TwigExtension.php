@@ -104,7 +104,7 @@ class TwigExtension extends Twig_Extension
      * @param object $callable
      * @throws RuntimeException
      */
-    private function checkExtensionType($type, $callable) : void
+    private function checkExtensionType(string $type, $callable) : void
     {
         if (($type == 'helper' && $callable instanceof HelperInterface)
             || ($type == 'filter' && $callable instanceof FilterInterface)

@@ -113,12 +113,13 @@ class GeneralAdapterTest extends TestCase
      */
     public function testInheritance($identifier, $expectedClass, $expectedArgs, $expectedShared)
     {
+        $moduleName = 'SomeApp';
         $adapter = new EmptyDependencyInjectionContainer($this->config);
-        $adapter->registerModuleServices('SomeApp');
+        $adapter->registerModuleServices($moduleName);
 
-        $actualClass = $adapter->callResolveServiceClassName($identifier);
-        $actualArgs = $adapter->callResolveServiceArguments($identifier);
-        $actualShared = $adapter->callResolveShares($identifier);
+        $actualClass = $adapter->callResolveServiceClassName($identifier, $moduleName);
+        $actualArgs = $adapter->callResolveServiceArguments($identifier, $moduleName);
+        $actualShared = $adapter->callResolveShares($identifier, $moduleName);
 
         $this->assertSame($expectedClass, $actualClass);
         $this->assertArraysAreSimilar($expectedArgs, $actualArgs);
@@ -130,15 +131,16 @@ class GeneralAdapterTest extends TestCase
      */
     public function testResolveServiceClassName()
     {
+        $moduleName = 'Global';
         $adapter = new EmptyDependencyInjectionContainer($this->config);
-        $adapter->registerModuleServices('Global');
+        $adapter->registerModuleServices($moduleName);
 
         $expectedResult = TestMiddleware::class;
 
-        $actualResult = $adapter->callResolveServiceClassName('pipe4');
+        $actualResult = $adapter->callResolveServiceClassName('pipe4', $moduleName);
         $this->assertSame($expectedResult, $actualResult);
 
         $this->expectException(RuntimeException::class);
-        $adapter->callResolveServiceClassName('non-registered-service');
+        $adapter->callResolveServiceClassName('non-registered-service', $moduleName);
     }
 }

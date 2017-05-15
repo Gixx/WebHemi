@@ -131,6 +131,9 @@ return [
             DateTimeZone::class => [
                 'arguments' => ['timezone' => 'Europe/Berlin']
             ],
+            'ThisWillHurt' => [
+                'class' => WebHemiTest\TestService\TestExceptionMiddleware::class
+            ],
         ],
         'SomeApp' => [
             'alias' => [

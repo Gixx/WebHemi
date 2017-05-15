@@ -24,13 +24,14 @@ use WebHemi\DependencyInjection\ServiceInterface;
  */
 abstract class AbstractAdapter implements ServiceInterface
 {
-    const SERVICE_CLASS = 'class';
-    const SERVICE_ARGUMENTS = 'arguments';
-    const SERVICE_METHOD_CALL = 'calls';
-    const SERVICE_SHARE = 'shared';
-    const SERVICE_SYNTHETIC = 'synthetic';
-    const SERVICE_INHERIT = 'inherits';
-    const SERVICE_INITIALIZED = 'initialized';
+    public const SERVICE_SOURCE_MODULE = 'source_module';
+    public const SERVICE_CLASS = 'class';
+    public const SERVICE_ARGUMENTS = 'arguments';
+    public const SERVICE_METHOD_CALL = 'calls';
+    public const SERVICE_SHARE = 'shared';
+    public const SERVICE_SYNTHETIC = 'synthetic';
+    public const SERVICE_INHERIT = 'inherits';
+    public const SERVICE_INITIALIZED = 'initialized';
 
     /** @var ConfigurationInterface */
     protected $configuration;
@@ -71,19 +72,21 @@ abstract class AbstractAdapter implements ServiceInterface
      * Register the service.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return ServiceInterface
      */
-    public function registerService(string $identifier) : ServiceInterface
+    public function registerService(string $identifier, string $moduleName = 'Global') : ServiceInterface
     {
         // Check if the service is not initialized yet.
         if (!$this->serviceIsInitialized($identifier)) {
             // overwrite if it was registered earlier.
             $this->serviceLibrary[$identifier] = [
+                self::SERVICE_SOURCE_MODULE => $moduleName,
                 self::SERVICE_INITIALIZED => false,
-                self::SERVICE_ARGUMENTS => $this->resolveServiceArguments($identifier),
-                self::SERVICE_METHOD_CALL => $this->resolveMethodCalls($identifier),
-                self::SERVICE_SHARE => $this->resolveShares($identifier),
-                self::SERVICE_CLASS => $this->resolveServiceClassName($identifier),
+                self::SERVICE_ARGUMENTS => $this->resolveServiceArguments($identifier, $moduleName),
+                self::SERVICE_METHOD_CALL => $this->resolveMethodCalls($identifier, $moduleName),
+                self::SERVICE_SHARE => $this->resolveShares($identifier, $moduleName),
+                self::SERVICE_CLASS => $this->resolveServiceClassName($identifier, $moduleName),
             ];
         }
 
@@ -106,22 +109,23 @@ abstract class AbstractAdapter implements ServiceInterface
      * Retrieves configuration for a service.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return array
      */
-    private function getServiceConfiguration(string $identifier) : array
+    protected function getServiceConfiguration(string $identifier, string $moduleName = null) : array
     {
-        if (isset($this->serviceLibrary[$identifier])) {
-            return $this->serviceLibrary[$identifier];
+        $configuration = $this->serviceLibrary[$identifier] ?? [];
+
+        if (isset($configuration[self::SERVICE_SOURCE_MODULE])
+            && ($configuration[self::SERVICE_SOURCE_MODULE] == $moduleName || is_null($moduleName))
+        ) {
+            return $configuration;
         }
 
-        $configuration = [];
-
         // Get all registered module configurations and merge them together.
-        foreach ($this->registeredModules as $moduleName) {
-            if ($this->configuration->has($moduleName.'/'.$identifier)) {
-                $moduleConfig = $this->configuration->getData($moduleName.'/'.$identifier);
-                $configuration = merge_array_overwrite($configuration, $moduleConfig);
-            }
+        if ($this->configuration->has($moduleName.'/'.$identifier)) {
+            $moduleConfig = $this->configuration->getData($moduleName.'/'.$identifier);
+            $configuration = merge_array_overwrite($configuration, $moduleConfig);
         }
 
         // Resolve inheritance.
@@ -151,17 +155,13 @@ abstract class AbstractAdapter implements ServiceInterface
      * Retrieves real service class name.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return string
      */
-    protected function resolveServiceClassName(string $identifier) : string
+    protected function resolveServiceClassName(string $identifier, string $moduleName) : string
     {
-        if (isset($this->serviceLibrary[$identifier])) {
-            // Class is already registered in the library so it must have a resolved class name.
-            $className = $this->serviceLibrary[$identifier][self::SERVICE_CLASS];
-        } else {
-            $serviceConfiguration = $this->getServiceConfiguration($identifier);
-            $className = $serviceConfiguration[self::SERVICE_CLASS] ?? $identifier;
-        }
+        $serviceConfiguration = $this->getServiceConfiguration($identifier, $moduleName);
+        $className = $serviceConfiguration[self::SERVICE_CLASS] ?? $identifier;
 
         if (!class_exists($className)) {
             throw new RuntimeException(
@@ -177,11 +177,12 @@ abstract class AbstractAdapter implements ServiceInterface
      * Gets argument list and resolves alias references.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return array
      */
-    protected function resolveServiceArguments(string $identifier) : array
+    protected function resolveServiceArguments(string $identifier, string $moduleName) : array
     {
-        $serviceConfiguration = $this->getServiceConfiguration($identifier);
+        $serviceConfiguration = $this->getServiceConfiguration($identifier, $moduleName);
 
         return $serviceConfiguration[self::SERVICE_ARGUMENTS] ?? [];
     }
@@ -190,11 +191,12 @@ abstract class AbstractAdapter implements ServiceInterface
      * Returns the service post-init method calls.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return array
      */
-    protected function resolveMethodCalls(string $identifier) : array
+    protected function resolveMethodCalls(string $identifier, string $moduleName) : array
     {
-        $serviceConfiguration = $this->getServiceConfiguration($identifier);
+        $serviceConfiguration = $this->getServiceConfiguration($identifier, $moduleName);
 
         return $serviceConfiguration[self::SERVICE_METHOD_CALL] ?? [];
     }
@@ -203,11 +205,12 @@ abstract class AbstractAdapter implements ServiceInterface
      * Returns the service share status.
      *
      * @param string $identifier
+     * @param string $moduleName
      * @return bool
      */
-    protected function resolveShares(string $identifier) : bool
+    protected function resolveShares(string $identifier, string $moduleName) : bool
     {
-        $serviceConfiguration = $this->getServiceConfiguration($identifier);
+        $serviceConfiguration = $this->getServiceConfiguration($identifier, $moduleName);
 
         return $serviceConfiguration[self::SERVICE_SHARE] ?? false;
     }
@@ -241,7 +244,7 @@ abstract class AbstractAdapter implements ServiceInterface
         $services = array_keys($this->configuration->getData($moduleName));
 
         while (key($services) !== null) {
-            $this->registerService(current($services));
+            $this->registerService(current($services), $moduleName);
             next($services);
         }
         return $this;

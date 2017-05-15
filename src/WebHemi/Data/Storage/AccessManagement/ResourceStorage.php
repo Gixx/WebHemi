@@ -98,7 +98,7 @@ class ResourceStorage extends AbstractStorage
      * @param int $identifier
      * @return null|ResourceEntity
      */
-    public function getResourceById($identifier) : ? ResourceEntity
+    public function getResourceById(int $identifier) : ? ResourceEntity
     {
         /** @var null|ResourceEntity $dataEntity */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
@@ -112,7 +112,7 @@ class ResourceStorage extends AbstractStorage
      * @param string $name
      * @return null|ResourceEntity
      */
-    public function getResourceByName($name) : ? ResourceEntity
+    public function getResourceByName(string $name) : ? ResourceEntity
     {
         /** @var null|ResourceEntity $dataEntity */
         $dataEntity = $this->getDataEntity([$this->name => $name]);

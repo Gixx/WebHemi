@@ -13,6 +13,8 @@ namespace WebHemiTest\DependencyInjection;
 
 use ArrayObject;
 use InvalidArgumentException;
+use RuntimeException;
+use Throwable;
 use WebHemi\DateTime;
 use WebHemi\DependencyInjection\ServiceAdapter\Symfony\ServiceAdapter as SymfonyAdapter;
 use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionAdapterInterface;
@@ -146,5 +148,18 @@ class SymfonyAdapterTest extends TestCase
         $this->assertInstanceOf(EmptyService::class, $actualObject);
         $this->assertInternalType('string', $actualObject->getTheKey());
         $this->assertSame($keyData, $actualObject->getTheKey());
+    }
+
+    public function testInstantiateError()
+    {
+        $adapter = new SymfonyAdapter($this->config);
+        $adapter->registerModuleServices('Website');
+
+        try {
+            $adapter->get('ThisWillHurt');
+        } catch (Throwable $exception) {
+            $this->assertInstanceOf(RuntimeException::class, $exception);
+            $this->assertInstanceOf(InvalidArgumentException::class, $exception->getPrevious());
+        }
     }
 }
