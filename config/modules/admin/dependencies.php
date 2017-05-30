@@ -80,6 +80,16 @@ return [
             Middleware\Action\Admin\Applications\DeleteAction::class => [
                 'inherits' => Middleware\Action\Admin\Applications\AddAction::class,
             ],
+            Middleware\Action\Admin\ControlPanel\Groups\ListAction::class => [
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    Data\Storage\User\UserGroupStorage::class
+                ]
+            ],
+            Middleware\Action\Admin\ControlPanel\Groups\ViewAction::class => [
+                'inherits' => Middleware\Action\Admin\ControlPanel\Groups\ListAction::class
+            ],
             Middleware\Action\Admin\ControlPanel\Themes\IndexAction::class => [
                 'arguments' => [
                     Configuration\ServiceInterface::class,

@@ -112,8 +112,23 @@ return [
             // Groups
             'admin-control-panel-groups-list' => [
                 'path'            => '/control-panel/groups[/]',
-                'middleware'      => Action\Admin\ControlPanel\Groups\IndexAction::class,
+                'middleware'      => Action\Admin\ControlPanel\Groups\ListAction::class,
                 'allowed_methods' => ['GET'],
+            ],
+            'admin-control-panel-groups-add' => [
+                'path'            => '/control-panel/groups/add[/]',
+                'middleware'      => Action\Admin\ControlPanel\Groups\AddAction::class,
+                'allowed_methods' => ['GET', 'POST'],
+            ],
+            'admin-control-panel-groups-view' => [
+                'path'            => '/control-panel/groups/view/{userGroupId:\d+}[/]',
+                'middleware'      => Action\Admin\ControlPanel\Groups\ViewAction::class,
+                'allowed_methods' => ['GET'],
+            ],
+            'admin-control-panel-groups-edit' => [
+                'path'            => '/control-panel/groups/edit/{userGroupId:\d+}[/]',
+                'middleware'      => Action\Admin\ControlPanel\Groups\EditAction::class,
+                'allowed_methods' => ['GET', 'POST'],
             ],
             // Resources
             'admin-control-panel-resources-list' => [
