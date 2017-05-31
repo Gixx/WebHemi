@@ -29,6 +29,8 @@ class ResourceEntity implements EntityInterface
     private $title;
     /** @var string */
     private $description;
+    /** @var string */
+    private $type;
     /** @var bool */
     private $isReadOnly;
     /** @var DateTime */
@@ -133,6 +135,25 @@ class ResourceEntity implements EntityInterface
     public function getDescription() : ? string
     {
         return $this->description;
+    }
+
+    /**
+     * @param string $type
+     * @return ResourceEntity
+     */
+    public function setType(string $type) : ResourceEntity
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getType() : ? string
+    {
+        return $this->type;
     }
 
     /**

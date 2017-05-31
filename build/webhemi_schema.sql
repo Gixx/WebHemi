@@ -80,6 +80,7 @@ CREATE TABLE `webhemi_am_resource` (
   `name` VARCHAR(255) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL,
+  `type` ENUM('route', 'custom') NOT NULL,
   `is_read_only` TINYINT(1) NOT NULL DEFAULT 0,
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modified` DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -96,20 +97,23 @@ CREATE TABLE `webhemi_am_resource` (
 LOCK TABLES `webhemi_am_resource` WRITE;
 /*!40000 ALTER TABLE `webhemi_am_resource` DISABLE KEYS */;
 INSERT INTO `webhemi_am_resource` VALUES
-  ( 1, 'admin-dashboard',                   'Dashboard',                '', 1, NOW(), NULL),
+  ( 1, 'admin-dashboard',                   'Dashboard',                '', 'route',  1, NOW(), NULL),
 
-  ( 2, 'admin-applications-list',           'List applications',        '', 1, NOW(), NULL),
-  ( 3, 'admin-applications-add',            'Add application',          '', 1, NOW(), NULL),
-  ( 4, 'admin-applications-view',           'View application',         '', 1, NOW(), NULL),
-  ( 5, 'admin-applications-preferences',    'Edit application',         '', 1, NOW(), NULL),
-  ( 6, 'admin-applications-save',           'Save application',         '', 1, NOW(), NULL),
-  ( 7, 'admin-applications-delete',         'Delete application',       '', 1, NOW(), NULL),
+  ( 2, 'admin-applications-list',           'List applications',        '', 'route',  1, NOW(), NULL),
+  ( 3, 'admin-applications-add',            'Add application',          '', 'route',  1, NOW(), NULL),
+  ( 4, 'admin-applications-view',           'View application',         '', 'route',  1, NOW(), NULL),
+  ( 5, 'admin-applications-preferences',    'Edit application',         '', 'route',  1, NOW(), NULL),
+  ( 6, 'admin-applications-save',           'Save application',         '', 'route',  1, NOW(), NULL),
+  ( 7, 'admin-applications-delete',         'Delete application',       '', 'route',  1, NOW(), NULL),
 
-  ( 8, 'admin-control-panel-index',         'List Control Panel items', '', 1, NOW(), NULL),
-  ( 9, 'admin-control-panel-themes-list',   'List themes',              '', 1, NOW(), NULL),
-  (10, 'admin-control-panel-themes-add',    'Add theme',                '', 1, NOW(), NULL),
-  (11, 'admin-control-panel-themes-view',   'View theme',               '', 1, NOW(), NULL),
-  (12, 'admin-control-panel-themes-delete', 'Delete theme',             '', 1, NOW(), NULL);
+  ( 8, 'manage-application-admin',          'Manage the admin app',     '', 'custom', 1, NOW(), NULL),
+  ( 9, 'manage-application-website',        'Manage the website app',   '', 'custom', 1, NOW(), NULL),
+
+  (10, 'admin-control-panel-index',         'List Control Panel items', '', 'route',  1, NOW(), NULL),
+  (11, 'admin-control-panel-themes-list',   'List themes',              '', 'route',  1, NOW(), NULL),
+  (12, 'admin-control-panel-themes-add',    'Add theme',                '', 'route',  1, NOW(), NULL),
+  (13, 'admin-control-panel-themes-view',   'View theme',               '', 'route',  1, NOW(), NULL),
+  (14, 'admin-control-panel-themes-delete', 'Delete theme',             '', 'route',  1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_am_resource` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -161,14 +165,17 @@ INSERT INTO `webhemi_am_policy` VALUES
   ( 8,    7,    1, 'applications-delete-review',  'Application remover (review)',  'Allow to review the application that is about to be deleted. Doesn\'t include "confirm".',  'GET', 1, NOW(), NULL),
   ( 9,    7,    1, 'applications-delete-confirm', 'Application remover (confirm)', 'Allow to delete application permanently.', 'POST', 1, NOW(), NULL),
 
-  (10,    8,    1, 'control-panel-index',         'Control panel access',          'Allow to view the Control Panel page.',      NULL, 1, NOW(), NULL),
+  (10,    8,    1, 'manage-application-admin',    'Manage Admin',                  'Allow to manage the Admin application. Use along with other Application policies.', NULL, 1, NOW(), NULL),
+  (11,    9,    1, 'manage-application-website',  'Manage Website',                'Allow to manage the Website application. Use along with other Application policies.', NULL, 1, NOW(), NULL),
 
-  (11,    9,    1, 'themes-list',                 'Theme Manager access',          'Allow to list the installed themes.', NULL, 1, NOW(), NULL),
-  (12,   10,    1, 'themes-add',                  'Theme uploader',                'Allow to upload new theme. Doesn\'t include "save".', 'GET', 1, NOW(), NULL),
-  (13,   10,    1, 'themes-add-save',             'Theme uploader (save)',         'Allow to save the uploaded theme.', 'POST', 1, NOW(), NULL),
-  (14,   11,    1, 'themes-view',                 'Theme viewer',                  'Allow to view theme properties.', NULL, 1, NOW(), NULL),
-  (15,   12,    1, 'themes-delete-review',        'Theme remover (review)',        'Allow to review the theme that is about to be deleted. Doesn\'t include "confirm".', 'GET', 1, NOW(), NULL),
-  (16,   12,    1, 'themes-delete-confirm',       'Theme remover (confirm)',       'Allow to delete theme permanently.', 'POST', 1, NOW(), NULL);
+  (12,   10,    1, 'control-panel-index',         'Control panel access',          'Allow to view the Control Panel page.',      NULL, 1, NOW(), NULL),
+
+  (13,   11,    1, 'themes-list',                 'Theme Manager access',          'Allow to list the installed themes.', NULL, 1, NOW(), NULL),
+  (14,   12,    1, 'themes-add',                  'Theme uploader',                'Allow to upload new theme. Doesn\'t include "save".', 'GET', 1, NOW(), NULL),
+  (15,   12,    1, 'themes-add-save',             'Theme uploader (save)',         'Allow to save the uploaded theme.', 'POST', 1, NOW(), NULL),
+  (16,   13,    1, 'themes-view',                 'Theme viewer',                  'Allow to view theme properties.', NULL, 1, NOW(), NULL),
+  (17,   14,    1, 'themes-delete-review',        'Theme remover (review)',        'Allow to review the theme that is about to be deleted. Doesn\'t include "confirm".', 'GET', 1, NOW(), NULL),
+  (18,   14,    1, 'themes-delete-confirm',       'Theme remover (confirm)',       'Allow to delete theme permanently.', 'POST', 1, NOW(), NULL);
 
 /*!40000 ALTER TABLE `webhemi_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -388,7 +395,11 @@ CREATE TABLE `webhemi_user_group_to_am_policy` (
 LOCK TABLES `webhemi_user_group_to_am_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_group_to_am_policy` DISABLE KEYS */;
 INSERT INTO `webhemi_user_group_to_am_policy` VALUES
-  (NULL, 1, 1);
+  (NULL, 1, 1),
+  (NULL, 2, 2),
+  (NULL, 2, 3),
+  (NULL, 2, 5),
+  (NULL, 2,11);
 /*!40000 ALTER TABLE `webhemi_user_group_to_am_policy` ENABLE KEYS */;
 UNLOCK TABLES;
 
