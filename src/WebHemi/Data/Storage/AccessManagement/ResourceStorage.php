@@ -32,6 +32,8 @@ class ResourceStorage extends AbstractStorage
     /** @var string */
     private $title = 'title';
     /** @var string */
+    private $type = 'type';
+    /** @var string */
     private $description = 'description';
     /** @var string */
     private $isReadOnly = 'is_read_only';
@@ -53,6 +55,7 @@ class ResourceStorage extends AbstractStorage
         $dataEntity->setResourceId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
+            ->setType($data[$this->type])
             ->setDescription($data[$this->description])
             ->setReadOnly((bool) $data[$this->isReadOnly])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
@@ -75,6 +78,7 @@ class ResourceStorage extends AbstractStorage
             $this->idKey => $dataEntity->getKeyData(),
             $this->name => $dataEntity->getName(),
             $this->title => $dataEntity->getTitle(),
+            $this->type => $dataEntity->getType(),
             $this->description => $dataEntity->getDescription(),
             $this->isReadOnly => (int) $dataEntity->getReadOnly(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
