@@ -12,19 +12,13 @@
 
     <rule ref="rulesets/codesize.xml" >
         <exclude name="CyclomaticComplexity" />
+        <exclude name="ExcessiveClassComplexity" />
         <exclude name="TooManyPublicMethods" />
     </rule>
 
-    <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+    <rule ref="rulesets/codesize.xml/TooManyFields">
         <properties>
-            <!-- Assuming 100% test coverage, this is the maximum complexity for the code not to be C.R.A.P.y -->
-            <property name="reportLevel" value="30" />
-        </properties>
-    </rule>
-
-    <rule ref="rulesets/codesize.xml/TooManyPublicMethods">
-        <properties>
-            <property name="maxmethods" value="20" />
+            <property name="maxfields" value="100" />
         </properties>
     </rule>
 

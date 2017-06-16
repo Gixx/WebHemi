@@ -119,6 +119,26 @@ class ConnectorAdapter implements ConnectorInterface
     }
 
     /**
+     * Returns the CREATE TABLE statement.
+     *
+     * @param string $tableName
+     * @return string
+     */
+    public function getTableDefinition(string $tableName) : string
+    {
+        $createStatement = '';
+        /** @var PDO $driver */
+        $driver = $this->getDataDriver();
+        $result = $driver->query('SHOW CREATE TABLE '.$tableName);
+
+        if ($result) {
+            $createStatement = preg_replace('/(\sAUTO_INCREMENT\=\d+)/', '', $result->fetchColumn(1));
+        }
+
+        return $createStatement;
+    }
+
+    /**
      * Get exactly one "row" of data according to the expression.
      *
      * @param int $identifier

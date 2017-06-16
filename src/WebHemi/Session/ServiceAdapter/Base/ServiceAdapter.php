@@ -183,6 +183,20 @@ class ServiceAdapter implements ServiceInterface
     }
 
     /**
+     * Returns the session id.
+     *
+     * @return string
+     */
+    public function getSessionId() : string
+    {
+        if (!$this->sessionStarted()) {
+            throw new RuntimeException('Cannot retrieve session identifier. Session is not started yet.', 1010);
+        }
+
+        return session_id();
+    }
+
+    /**
      * Sets session data.
      *
      * @param string $name

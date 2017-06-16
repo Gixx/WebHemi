@@ -116,7 +116,7 @@ class IndexAction extends AbstractMiddlewareAction
         $form
             ->addElement(
                 new HtmlElement(
-                    HtmlElement::HTML_ELEMENT_INPUT_HIDDEN,
+                    HtmlElement::HTML_ELEMENT_HIDDEN,
                     'csrf',
                     null,
                     [md5('something')]
@@ -148,7 +148,7 @@ class IndexAction extends AbstractMiddlewareAction
                 new Html5Element(Html5Element::HTML5_ELEMENT_INPUT_RANGE, 'range', 'Range', [4], [1, 6, 0.2])
             )
             ->addElement(
-                new HtmlElement(HtmlElement::HTML_ELEMENT_INPUT_SUBMIT, 'submit', 'Submit')
+                new HtmlElement(HtmlElement::HTML_ELEMENT_SUBMIT, 'submit', 'Submit')
             );
 
         return $form;

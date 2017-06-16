@@ -15,8 +15,10 @@ namespace WebHemi\Form\ServiceAdapter\Base;
 
 use JsonSerializable;
 use RuntimeException;
+use InvalidArgumentException;
 use WebHemi\Form\ElementInterface;
 use WebHemi\Form\ServiceInterface;
+use WebHemi\StringLib;
 
 /**
  * Class ServiceAdapter.
@@ -119,6 +121,36 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     }
 
     /**
+     * Returns an element
+     *
+     * @param string $elementName
+     * @throws InvalidArgumentException
+     * @return ElementInterface
+     */
+    public function getElement(string $elementName) : ElementInterface
+    {
+        $elementNames = array_keys($this->formElements);
+        $elementName = StringLib::convertNonAlphanumericToUnderscore($elementName);
+        $matchingElementNames = preg_grep('/.*\['.$elementName.'\]/', $elementNames);
+
+        if (count($matchingElementNames) > 1) {
+            throw new InvalidArgumentException(
+                sprintf('The element "%s" in field list is ambiguous.', $elementName),
+                1001
+            );
+        }
+
+        if (empty($matchingElementNames)) {
+            throw new InvalidArgumentException(
+                sprintf('The element "%s" does not exist in this form.', $elementName),
+                1002
+            );
+        }
+
+        return $this->formElements[current($matchingElementNames)];
+    }
+
+    /**
      * Returns all the elements assigned.
      *
      * @return ElementInterface[]
@@ -152,6 +184,30 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
         }
 
         return $this;
+    }
+
+    /**
+     * Validates the form.
+     *
+     * @return bool
+     */
+    public function validate() : bool
+    {
+        $isValid = true;
+
+        /**
+         * @var string $index
+         * @var ElementInterface $formElement
+         */
+        foreach ($this->formElements as $index => $formElement) {
+            $this->formElements[$index] = $formElement->validate();
+
+            if (!empty($formElement->getErrors())) {
+                $isValid = false;
+            }
+        }
+
+        return $isValid;
     }
 
     /**

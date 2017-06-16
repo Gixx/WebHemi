@@ -16,7 +16,7 @@ namespace WebHemi\Form\Element\Html;
 use InvalidArgumentException;
 use WebHemi\Form\ElementInterface;
 use WebHemi\StringLib;
-use WebHemi\Validator\ServiceInterface as ValidatorInterface;
+use WebHemi\Validator\ValidatorInterface;
 
 /**
  * Class AbstractElement.
@@ -220,7 +220,8 @@ abstract class AbstractElement implements ElementInterface
      */
     public function addValidator(ValidatorInterface $validator) : ElementInterface
     {
-        $this->validators[] = $validator;
+        $validatorClass = get_class($validator);
+        $this->validators[$validatorClass] = $validator;
 
         return $this;
     }
@@ -233,9 +234,12 @@ abstract class AbstractElement implements ElementInterface
     public function validate() : ElementInterface
     {
         /** @var ValidatorInterface $validator */
-        foreach ($this->validators as $validator) {
-            if (!$validator->validate($this->values)) {
-                $this->errors[get_class($validator)] = $validator->getErrors();
+        foreach ($this->validators as $validatorClass => $validator) {
+            $isValid = $validator->validate($this->values);
+            if (!$isValid) {
+                $this->errors[$validatorClass] = $validator->getErrors();
+            } else {
+                $this->setValues($validator->getValidData());
             }
         }
 

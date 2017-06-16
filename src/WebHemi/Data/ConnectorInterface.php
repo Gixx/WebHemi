@@ -63,6 +63,14 @@ interface ConnectorInterface
     public function setIdKey(string $idKey) : ConnectorInterface;
 
     /**
+     * Returns the CREATE TABLE statement.
+     *
+     * @param string $tableName
+     * @return string
+     */
+    public function getTableDefinition(string $tableName) : string;
+
+    /**
      * Get exactly one "row" of data according to the identifier.
      *
      * @param int $identifier
