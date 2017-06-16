@@ -67,6 +67,14 @@ interface ServiceInterface
     public function addElement(ElementInterface $formElement) : ServiceInterface;
 
     /**
+     * Returns an element
+     *
+     * @param string $elementName
+     * @return ElementInterface
+     */
+    public function getElement(string $elementName) : ElementInterface;
+
+    /**
      * Returns all the elements assigned.
      *
      * @return ElementInterface[]
@@ -80,4 +88,11 @@ interface ServiceInterface
      * @return ServiceInterface
      */
     public function loadData(array $data) : ServiceInterface;
+
+    /**
+     * Validates the form.
+     *
+     * @return bool
+     */
+    public function validate() : bool;
 }

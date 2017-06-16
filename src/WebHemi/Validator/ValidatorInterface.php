@@ -14,17 +14,24 @@ declare(strict_types = 1);
 namespace WebHemi\Validator;
 
 /**
- * Interface ServiceInterface
+ * Interface ValidatorInterface
  */
-interface ServiceInterface
+interface ValidatorInterface
 {
     /**
      * Validates data.
      *
-     * @param mixed $data
+     * @param array $data
      * @return bool
      */
-    public function validate($data) : bool;
+    public function validate(array $values) : bool;
+
+    /**
+     * Retrieve valid data.
+     *
+     * @return array
+     */
+    public function getValidData() : array;
 
     /**
      * Gets errors from validation.

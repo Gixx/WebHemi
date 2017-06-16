@@ -19,19 +19,19 @@ namespace WebHemi\Form\Element\Html;
 class Html5Element extends AbstractElement
 {
     public const HTML5_ELEMENT_DATALIST = 'datalist';
-    public const HTML5_ELEMENT_INPUT_COLOR = 'color';
-    public const HTML5_ELEMENT_INPUT_DATE = 'date';
-    public const HTML5_ELEMENT_INPUT_DATETIME = 'datetime';
-    public const HTML5_ELEMENT_INPUT_DATETIMELOCAL = 'datetime-local';
-    public const HTML5_ELEMENT_INPUT_EMAIL = 'email';
-    public const HTML5_ELEMENT_INPUT_MONTH = 'month';
-    public const HTML5_ELEMENT_INPUT_NUMBER = 'number';
-    public const HTML5_ELEMENT_INPUT_RANGE = 'range';
-    public const HTML5_ELEMENT_INPUT_SEARCH = 'search';
-    public const HTML5_ELEMENT_INPUT_TEL = 'tel';
-    public const HTML5_ELEMENT_INPUT_TIME = 'time';
-    public const HTML5_ELEMENT_INPUT_URL = 'url';
-    public const HTML5_ELEMENT_INPUT_WEEK = 'week';
+    public const HTML5_ELEMENT_INPUT_COLOR = 'inputColor';
+    public const HTML5_ELEMENT_INPUT_DATE = 'inputDate';
+    public const HTML5_ELEMENT_INPUT_DATETIME = 'inputDateTime';
+    public const HTML5_ELEMENT_INPUT_DATETIMELOCAL = 'inputDateTimeLocal';
+    public const HTML5_ELEMENT_INPUT_EMAIL = 'inputEmail';
+    public const HTML5_ELEMENT_INPUT_MONTH = 'inputMonth';
+    public const HTML5_ELEMENT_INPUT_NUMBER = 'inputNumber';
+    public const HTML5_ELEMENT_INPUT_RANGE = 'inputRange';
+    public const HTML5_ELEMENT_INPUT_SEARCH = 'inputSearch';
+    public const HTML5_ELEMENT_INPUT_TEL = 'inputTel';
+    public const HTML5_ELEMENT_INPUT_TIME = 'inputTime';
+    public const HTML5_ELEMENT_INPUT_URL = 'inputUrl';
+    public const HTML5_ELEMENT_INPUT_WEEK = 'inputWeek';
     public const HTML5_ELEMENT_KEYGEN = 'keygen';
     public const HTML5_ELEMENT_OUTPUT = 'output';
 

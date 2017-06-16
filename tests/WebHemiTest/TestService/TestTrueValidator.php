@@ -11,23 +11,34 @@
  */
 namespace WebHemiTest\TestService;
 
-use WebHemi\Validator\ServiceInterface as ValidatorInterface;
+use WebHemi\Validator\ValidatorInterface;
 
 /**
  * Class TestTrueValidator.
  */
 class TestTrueValidator implements ValidatorInterface
 {
+    private $data;
     /**
      * Validates data.
      *
-     * @param mixed $data
+     * @param array $values
      * @return boolean
      */
-    public function validate($data) : bool
+    public function validate(array $values) : bool
     {
-        unset($data);
+        $this->data = $values;
         return true;
+    }
+
+    /**
+     * Retrieve valid data.
+     *
+     * @return array
+     */
+    public function getValidData() : array
+    {
+        return $this->data;
     }
 
     /**

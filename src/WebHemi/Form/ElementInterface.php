@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Form;
 
-use WebHemi\Validator\ServiceInterface as ValidatorInterface;
+use WebHemi\Validator\ValidatorInterface;
 
 /**
  * Interface ElementInterface.

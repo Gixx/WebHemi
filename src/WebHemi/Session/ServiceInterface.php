@@ -61,6 +61,13 @@ interface ServiceInterface
     public function regenerateId() : ServiceInterface;
 
     /**
+     * Returns the session id.
+     *
+     * @return string
+     */
+    public function getSessionId() : string;
+
+    /**
      * Sets session data.
      *
      * @param string $name

@@ -32,7 +32,7 @@ class HtmlFormElementTest extends TestCase
     public function testConstructor()
     {
         $formElement = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_FILE, 'test');
-        $this->assertSame('file', $formElement->getType());
+        $this->assertSame('inputFile', $formElement->getType());
         $this->assertSame('test', $formElement->getName());
         $this->assertSame('id_test', $formElement->getId());
         $this->assertSame('test', $formElement->getLabel());

@@ -73,4 +73,27 @@ class StringLib
 
         return trim($output, '_');
     }
+
+    /**
+     * Splits text into array of lines and also trims and skips empty lines.
+     *
+     * @param string $input
+     * @param int $flags
+     * @return array
+     */
+    public static function convertTextToLines(string $input, int $flags = PREG_SPLIT_NO_EMPTY) : array
+    {
+        return preg_split('/\s*\R\s*/', trim($input), -1, $flags);
+    }
+
+    /**
+     * Joins array of lines into text.
+     *
+     * @param array $input
+     * @return string
+     */
+    public static function convertLinesToText(array $input) : string
+    {
+        return implode(PHP_EOL, $input);
+    }
 }

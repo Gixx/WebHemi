@@ -47,7 +47,7 @@ class AdminLoginForm extends AbstractPreset
 
         $submit = $this->createElement(
             HtmlElement::class,
-            HtmlElement::HTML_ELEMENT_INPUT_SUBMIT,
+            HtmlElement::HTML_ELEMENT_SUBMIT,
             'submit',
             'Login'
         );

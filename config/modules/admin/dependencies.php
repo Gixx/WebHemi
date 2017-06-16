@@ -11,16 +11,25 @@
  */
 
 use WebHemi\Acl;
+use WebHemi\Application;
 use WebHemi\Auth;
 use WebHemi\Configuration;
 use WebHemi\Data;
 use WebHemi\Environment;
 use WebHemi\Form;
 use WebHemi\Middleware;
+use WebHemi\Session;
 
 return [
     'dependencies' => [
         'Admin' => [
+            Application\Progress::class => [
+                'arguments' => [
+                    Environment\ServiceInterface::class,
+                    Session\ServiceInterface::class
+                ],
+                'shared' => false
+            ],
             // Pipeline elements
             Middleware\Security\AclMiddleware::class => [
                 'arguments' => [

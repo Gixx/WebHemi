@@ -20,7 +20,7 @@ use WebHemi\Form\MultipleElementInterface;
  */
 class HtmlMultipleElement extends AbstractElement implements MultipleElementInterface
 {
-    public const HTML_MULTIPLE_ELEMENT_INPUT_FILE = 'file';
+    public const HTML_MULTIPLE_ELEMENT_INPUT_FILE = 'inputFile';
     public const HTML_MULTIPLE_ELEMENT_SELECT = 'select';
 
     /** @var bool */
