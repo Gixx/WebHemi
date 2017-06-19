@@ -4,6 +4,7 @@
 * Add ValidatorInterface with basic validators:
   * _NotEmptyValidator_ - to check if an element's value is empty (including the multi-select elements)
   * _RangeValidator_ - to check if an element's value is within the range set up
+ 
 
 ## Version 4.0.0-4.4 ##
 
