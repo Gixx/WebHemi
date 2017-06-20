@@ -19,14 +19,19 @@ return [
                 'middleware'      => Action\Website\IndexAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
-            'website-post-list' => [
-                'path'            => '/posts',
+            'website-post-view' => [
+                'path'            => '{path:.+}.html',
+                'middleware'      => Action\Website\PostViewAction::class,
+                'allowed_methods' => ['GET'],
+            ],
+            'website-category-list' => [
+                'path'            => '/category/{category:.+}',
                 'middleware'      => Action\Website\PostListAction::class,
                 'allowed_methods' => ['GET'],
             ],
-            'website-post-view' => [
-                'path'            => '/posts/view/{id:.*}',
-                'middleware'      => Action\Website\PostViewAction::class,
+            'website-tag-list' => [
+                'path'            => '/tag/{tag:.+}',
+                'middleware'      => Action\Website\PostListAction::class,
                 'allowed_methods' => ['GET'],
             ],
         ],

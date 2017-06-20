@@ -229,6 +229,12 @@ return [
                 ],
                 'shared'    => true,
             ],
+            Renderer\Helper\FileExistsHelper::class => [
+                'arguments' => [
+                    Environment\ServiceInterface::class
+                ],
+                'shared'    => true,
+            ],
             Renderer\Helper\GetStatHelper::class => [
                 'shared'    => true,
             ],

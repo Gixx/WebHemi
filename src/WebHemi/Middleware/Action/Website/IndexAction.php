@@ -13,10 +13,6 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website;
 
-use WebHemi\Form\Element\Html\Html5Element;
-use WebHemi\Form\Element\Html\HtmlElement;
-use WebHemi\Form\Element\Html\HtmlMultipleElement;
-use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
@@ -24,6 +20,93 @@ use WebHemi\Middleware\Action\AbstractMiddlewareAction;
  */
 class IndexAction extends AbstractMiddlewareAction
 {
+    /** @var array */
+    protected $database = [];
+
+    /**
+     * IndexAction constructor.
+     */
+    public function __construct()
+    {
+        $this->database = [
+            [
+                'title'       => 'How to start a perfect day',
+                'summary'     => 'Good to know...',
+                'category'    => ['useful' => 'Useful infos'],
+                'tags'        => ['php' => 'PHP', 'coding' => 'Coding'],
+                'illustration'=> '/data/upload/filesystem/images/Nature.jpg',
+                'path'        => 'posts/view/a_perfect_day.html',
+                'publishedAt' => time(),
+                'location'    => 'München',
+                'author'      => [
+                    'name'   => 'Amadeus',
+                    'username'=> 'a.madeus',
+                    'avatar' => '/data/upload/avatars/a.madeus.png',
+                    'mood'   => ['feels cozy', 'hugging'],
+                ],
+                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
+                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
+                                       vero eos et accusam et justo duo dolores et ea rebum.'
+            ],
+            [
+                'title'       => 'Just an idea',
+                'summary'     => null,
+                'category'    => ['posts' => 'Posts'],
+                'tags'        => ['php' => 'PHP', 'coding' => 'Coding'],
+                'illustration'=> null,
+                'path'        => 'notepad/just_an_idea.html',
+                'publishedAt' => time(),
+                'location'    => null,
+                'author'      => [
+                    'name'   => 'Gabor',
+                    'username'=> 'gabor',
+                    'avatar' => '/data/upload/avatars/gabor.png',
+                    'mood'   => null,
+                ],
+                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
+                                       vero eos et accusam et justo duo dolores et ea rebum.'
+            ],
+            [
+                'title'       => 'An Owl',
+                'category'    => ['events' => 'Events'],
+                'tags'        => ['munich' => 'Munich'],
+                'illustration'=> '/data/upload/filesystem/images/Owl.jpg',
+                'path'        => 'nature/birds/notes/an_owl.html',
+                'publishedAt' => time(),
+                'location'    => 'München',
+                'author'      => [
+                    'name'   => 'Amadeus',
+                    'username'=> 'a.madeus',
+                    'avatar' => '/data/upload/avatars/a.madeus.png',
+                    'mood'   => ['feels cozy', 'hugging'],
+                ],
+                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
+                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
+                                       vero eos et accusam et justo duo dolores et ea rebum.'
+            ],
+            [
+                'title'       => 'The new Spiderman movie',
+                'summary'     => 'I didn\'t see it yet',
+                'category'    => ['something' => 'Something'],
+                'tags'        => ['munich' => 'Munich'],
+                'illustration'=> '/data/upload/filesystem/images/Spider.jpg',
+                'path'        => 'nature/arthropods/spidey.html',
+                'publishedAt' => time(),
+                'location'    => 'München',
+                'author'      => [
+                    'name'   => 'Amadeus',
+                    'username'=> 'a.madeus',
+                    'avatar' => '/data/upload/avatars/a.madeus.png',
+                    'mood'   => ['feels cozy', 'hugging'],
+                ],
+                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
+                                       vero eos et accusam et justo duo dolores et ea rebum.'
+            ]
+        ];
+    }
+
     /**
      * Gets template map name or template file path.
      *
@@ -41,116 +124,39 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        $form = $this->getTestForm();
-
-        $data = [];
-
-        if ($this->request->getMethod() == 'POST') {
-            $data = $this->request->getParsedBody();
-            $form->loadData($data);
-        }
-
         return [
-            'form' => $form,
-            'data' => $data,
-        ];
-    }
-
-    /**
-     * @return HtmlForm
-     */
-    private function getTestForm()
-    {
-        // Test refactore Form elements
-        $singleCheckbox = new HtmlElement(
-            HtmlElement::HTML_ELEMENT_INPUT_CHECKBOX,
-            'accept',
-            'Accept terms of usage.',
-            [true]
-        );
-
-        $multiCheckbox = new HtmlElement(
-            HtmlElement::HTML_ELEMENT_INPUT_CHECKBOX,
-            'my_locations',
-            'I have already been...',
-            ['uk', 'eu'],
-            [
-                'The United States' => 'us',
-                'European Union' => 'eu',
-                'United Kingdom' => 'uk'
-            ]
-        );
-
-        $radioGroup = new HtmlElement(
-            HtmlElement::HTML_ELEMENT_INPUT_RADIO,
-            'curent_lang',
-            'Current language',
-            ['hu-HU'],
-            [
-                'English' => 'en-GB',
-                'German' => 'de-DE',
-                'Hungarian' => 'hu-HU'
-            ]
-        );
-
-        $select = new HtmlMultipleElement(
-            HtmlMultipleElement::HTML_MULTIPLE_ELEMENT_SELECT,
-            'something',
-            null,
-            ['australia', 'india'],
-            [
-                'Default' => [
-                    'Europe' => 'europe',
-                    'America' => 'america',
-                    'Australia' => 'australia'
+            'activeMenu' => '',
+            'categories' => [
+                ['url' => 'posts',      'title' => 'Posts',        'icon' => 'chrome_reader_mode',      'new' => 1],
+                ['url' => 'useful',     'title' => 'Useful infos', 'icon' => 'perm_device_information', 'new' => 0],
+                ['url' => 'events',     'title' => 'Events',       'icon' => 'event_note',              'new' => 0],
+                ['url' => 'something',  'title' => 'Something',    'icon' => null,                      'new' => 8],
+            ],
+            'tags' => [
+                ['url' => 'php',    'title' => 'PHP',    'total' => 132, 'new' =>  1],
+                ['url' => 'coding', 'title' => 'Coding', 'total' => 132, 'new' =>  0],
+                ['url' => 'munich', 'title' => 'Munich', 'total' => 132, 'new' => 85]
+            ],
+            'blogPosts' => $this->database,
+            'fixPost' => [
+                'title'       => 'Welcome to my blog!',
+                'summary'     => null,
+                'category'    => null,
+                'tags'        => null,
+                'illustration'=> null,
+                'path'        => 'welcome.html',
+                'publishedAt' => time(),
+                'location'    => null,
+                'author'      => [
+                    'name'   => 'Gabor',
+                    'username'=> 'gabor',
+                    'avatar' => '/data/upload/avatars/gabor.png',
+                    'mood'   => null,
                 ],
-                'Africa' => 'africa',
-                'Asia' => 'asia',
-                'Antarctica' => 'antarctica',
-                'India' => 'india'
-            ]
-        );
-        $select->setMultiple(true);
-
-        $form = new HtmlForm('test', '', 'POST');
-        $form
-            ->addElement(
-                new HtmlElement(
-                    HtmlElement::HTML_ELEMENT_HIDDEN,
-                    'csrf',
-                    null,
-                    [md5('something')]
-                )
-            )
-            ->addElement(
-                new HtmlElement(
-                    HtmlElement::HTML_ELEMENT_INPUT_TEXT,
-                    'name',
-                    'Login name',
-                    ['Joker']
-                )
-            )
-            ->addElement(
-                new HtmlElement(
-                    HtmlElement::HTML_ELEMENT_INPUT_PASSWORD,
-                    'password',
-                    'Password'
-                )
-            )
-            ->addElement($singleCheckbox)
-            ->addElement($multiCheckbox)
-            ->addElement($radioGroup)
-            ->addElement($select)
-            ->addElement(
-                new Html5Element(Html5Element::HTML5_ELEMENT_INPUT_NUMBER, 'num', 'Num', [4], [1, 16])
-            )
-            ->addElement(
-                new Html5Element(Html5Element::HTML5_ELEMENT_INPUT_RANGE, 'range', 'Range', [4], [1, 6, 0.2])
-            )
-            ->addElement(
-                new HtmlElement(HtmlElement::HTML_ELEMENT_SUBMIT, 'submit', 'Submit')
-            );
-
-        return $form;
+                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
+                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
+                                       vero eos et accusam et justo duo dolores et ea rebum.'
+            ],
+        ];
     }
 }
