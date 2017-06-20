@@ -19,6 +19,7 @@ return [
             ],
             'helper' => [
                 Renderer\Helper\DefinedHelper::class,
+                Renderer\Helper\FileExistsHelper::class,
                 Renderer\Helper\GetStatHelper::class,
             ],
         ]

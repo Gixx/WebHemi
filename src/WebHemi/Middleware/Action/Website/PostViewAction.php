@@ -48,6 +48,18 @@ class PostViewAction extends AbstractMiddlewareAction
         }
 
         return [
+            'activeMenu' => '',
+            'categories' => [
+                ['url' => 'posts',      'title' => 'Posts',        'icon' => 'chrome_reader_mode',      'new' => 1],
+                ['url' => 'useful',     'title' => 'Useful infos', 'icon' => 'perm_device_information', 'new' => 0],
+                ['url' => 'events',     'title' => 'Events',       'icon' => 'event_note',              'new' => 0],
+                ['url' => 'something',  'title' => 'Something',    'icon' => null,                      'new' => 8],
+            ],
+            'tags' => [
+                ['url' => 'php',    'title' => 'PHP',    'total' => 132, 'new' =>  1],
+                ['url' => 'coding', 'title' => 'Coding', 'total' => 132, 'new' =>  0],
+                ['url' => 'munich', 'title' => 'Munich', 'total' => 132, 'new' => 85]
+            ],
             'blogPost' => [
                 'title'       => 'Fake test',
                 'publishedAt' => time(),
