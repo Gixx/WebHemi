@@ -39,9 +39,9 @@ class IndexAction extends AbstractMiddlewareAction
                 'publishedAt' => time(),
                 'location'    => 'München',
                 'author'      => [
-                    'name'   => 'Amadeus',
-                    'username'=> 'a.madeus',
-                    'avatar' => '/data/upload/avatars/a.madeus.png',
+                    'name'   => 'Admin',
+                    'username'=> 'admin',
+                    'avatar' => '/data/upload/avatars/admin.png',
                     'mood'   => ['feels cozy', 'hugging'],
                 ],
                 'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
@@ -126,17 +126,6 @@ class IndexAction extends AbstractMiddlewareAction
     {
         return [
             'activeMenu' => '',
-            'categories' => [
-                ['url' => 'posts',      'title' => 'Posts',        'icon' => 'chrome_reader_mode',      'new' => 1],
-                ['url' => 'useful',     'title' => 'Useful infos', 'icon' => 'perm_device_information', 'new' => 0],
-                ['url' => 'events',     'title' => 'Events',       'icon' => 'event_note',              'new' => 0],
-                ['url' => 'something',  'title' => 'Something',    'icon' => null,                      'new' => 8],
-            ],
-            'tags' => [
-                ['url' => 'php',    'title' => 'PHP',    'total' => 132, 'new' =>  1],
-                ['url' => 'coding', 'title' => 'Coding', 'total' => 132, 'new' =>  0],
-                ['url' => 'munich', 'title' => 'Munich', 'total' => 132, 'new' => 85]
-            ],
             'blogPosts' => $this->database,
             'fixPost' => [
                 'title'       => 'Welcome to my blog!',

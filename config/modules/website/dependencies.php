@@ -9,11 +9,35 @@
  *
  * @link      http://www.gixx-web.com
  */
+use WebHemi\Data;
+use WebHemi\Environment;
+use WebHemi\Middleware\Action;
+use WebHemi\Renderer;
 
 return [
     'dependencies' => [
         'Website' => [
-
+            Action\Website\UserAction::class => [
+                'arguments' => [
+                    Data\Storage\User\UserStorage::class,
+                    Data\Storage\User\UserMetaStorage::class
+                ]
+            ],
+            Renderer\Helper\GetTagsHelper::class => [
+                'arguments' => [
+                    Environment\ServiceInterface::class
+                ]
+            ],
+            Renderer\Helper\GetCategoriesHelper::class => [
+                'arguments' => [
+                    Environment\ServiceInterface::class
+                ]
+            ],
+            Renderer\Helper\GetDatesHelper::class => [
+                'arguments' => [
+                    Environment\ServiceInterface::class
+                ]
+            ]
         ],
     ],
 ];

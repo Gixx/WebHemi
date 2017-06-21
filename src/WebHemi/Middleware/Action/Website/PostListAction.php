@@ -67,22 +67,20 @@ class PostListAction extends IndexAction
                 $title = '#München';
                 $blogPosts = [$this->database[2], $this->database[3]];
             }
+        } elseif (isset($params['date'])) {
+            $currentMenu = $params['date'];
+            if ($params['date'] == '2017-05') {
+                $title = 'Archive: 2017 May';
+                $blogPosts = [$this->database[0], $this->database[1], $this->database[2]];
+            } elseif ($params['date'] == '2017-06') {
+                $title = 'Archive: 2017 June';
+                $blogPosts = [$this->database[3]];
+            }
         }
 
         return [
             'title' => $title,
             'activeMenu' => $currentMenu,
-            'categories' => [
-                ['url' => 'posts',      'title' => 'Posts',        'icon' => 'chrome_reader_mode',      'new' => 1],
-                ['url' => 'useful',     'title' => 'Useful infos', 'icon' => 'perm_device_information', 'new' => 0],
-                ['url' => 'events',     'title' => 'Events',       'icon' => 'event_note',              'new' => 0],
-                ['url' => 'something',  'title' => 'Something',    'icon' => null,                      'new' => 8],
-            ],
-            'tags' => [
-                ['url' => 'php',    'title' => 'PHP',    'total' => 132, 'new' =>  1],
-                ['url' => 'coding', 'title' => 'Coding', 'total' => 132, 'new' =>  0],
-                ['url' => 'munich', 'title' => 'Munich', 'total' => 132, 'new' => 85]
-            ],
             'blogPosts' => $blogPosts,
         ];
     }

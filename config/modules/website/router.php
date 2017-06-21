@@ -34,6 +34,16 @@ return [
                 'middleware'      => Action\Website\PostListAction::class,
                 'allowed_methods' => ['GET'],
             ],
+            'website-date-list' => [
+                'path'            => '/archive/{date:\d\d\d\d\-\d\d}',
+                'middleware'      => Action\Website\PostListAction::class,
+                'allowed_methods' => ['GET'],
+            ],
+            'website-user-page' => [
+                'path'            => '/user/{username:.+}',
+                'middleware'      => Action\Website\UserAction::class,
+                'allowed_methods' => ['GET'],
+            ],
         ],
     ],
 ];
