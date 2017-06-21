@@ -114,11 +114,24 @@ class UserMetaStorage extends AbstractStorage
     /**
      * Returns a User Meta entity list identified by user ID.
      *
-     * @param int $userId
+     * @param int  $userId
+     * @param bool $keysAsKeys -  whether to use the meta keys for the returning array too
      * @return UserMetaEntity[]
      */
-    public function getUserMetaForUserId(int $userId) : array
+    public function getUserMetaForUserId(int $userId, bool $keysAsKeys = false) : array
     {
-        return $this->getDataEntitySet([$this->userId => $userId]);
+        $metaSet = $this->getDataEntitySet([$this->userId => $userId]);
+
+        if ($keysAsKeys) {
+            $tmp = [];
+            /** @var UserMetaEntity $userMetaEntity */
+            foreach ($metaSet as $userMetaEntity) {
+                $tmp[$userMetaEntity->getMetaKey()] = $userMetaEntity;
+            }
+            $metaSet = $tmp;
+            unset($tmp);
+        }
+
+        return $metaSet;
     }
 }
