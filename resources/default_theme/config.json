@@ -2,7 +2,7 @@
   "legal": {
     "name": "default_theme",
     "title": "WebHemi Default Theme",
-    "description": "",
+    "description": "Default, full feature theme for the WebHemi application.",
     "version": "1.0",
     "author": "Gabor Ivan",
     "homepage": "http://www.gixx-web.com",
@@ -18,13 +18,28 @@
   "map": {
     "admin-login": "admin/login.twig",
     "admin-dashboard": "admin/dashboard.twig",
-    "admin-applications-index": "admin/applications/index.twig",
-    "admin-applications-add": "admin/applications/add.twig",
-    "admin-applications-edit": "admin/applications/edit.twig",
+
+    "admin-applications-list": "admin/applications/index.twig",
     "admin-applications-view": "admin/applications/view.twig",
+    "admin-applications-add": "admin/applications/add.twig",
+    "admin-applications-preferences": "admin/applications/edit.twig",
+    "admin-applications-delete": "admin/applications/delete.twig",
+
+    "admin-control-panel-index": "admin/control-panel/index.twig",
+
+    "admin-control-panel-themes-list": "admin/control-panel/themes/list.twig",
+    "admin-control-panel-themes-add": "admin/control-panel/themes/add.twig",
+    "admin-control-panel-themes-view": "admin/control-panel/themes/view.twig",
+    "admin-control-panel-themes-delete": "admin/control-panel/themes/delete.twig",
+
+    "admin-control-panel-groups-list": "admin/control-panel/groups/list.twig",
+    "admin-control-panel-groups-view": "admin/control-panel/groups/view.twig",
+
     "website-index": "website/index.twig",
     "website-post-list": "website/post-list.twig",
     "website-post-view": "website/post-view.twig",
+    "website-user": "website/user.twig",
+
     "error-401": "error/401.twig",
     "error-403": "error/403.twig",
     "error-404": "error/404.twig",
