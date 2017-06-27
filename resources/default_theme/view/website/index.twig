@@ -1,11 +1,80 @@
 {% extends "layout.twig" %}
-{% import '@WebHemi/macros/renderForm.twig' as _FORM %}
+
+{% block menu_main %}<a class="home mdl-navigation__link--current" href="">Main page</a>{% endblock %}
 
 {% block content %}
-    <h1>Welcome!</h1>
-    <a href="posts">Post list</a>
-    <hr>
-    {{ _FORM.renderForm(form) }}
-    <hr>
-    POST DATA: {{ dump(data) }}
+    <div class="mdl-grid-y">
+        <section class="wall">
+            {% if fixPost %}
+                <article>
+                    <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+                        {% if fixPost.summary is not empty %}
+                            <p class="summary">{{ fixPost.summary }}</p>
+                        {% endif %}
+                        <div class="preview">
+                            {% if fixPost.illustration is not empty %}
+                                <div class="illustration"><img src="{{ fixPost.illustration }}"></div>
+                            {% endif %}
+                            <h2>{{ fixPost.title }}</h2>
+                            <p>
+                                {{ fixPost.contentLead }}
+                                <span class="author"><a href="user/{{ fixPost.author.username }}" alt="{{ fixPost.author.name }}">{{ fixPost.author.name }}</a></span>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            {% endif %}
+            {% for blogPost in blogPosts %}
+                <article>
+                    <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+                        <div class="author">
+                            {% set avatar = blogPost.author.avatar %}
+                            {% if not fileExists(avatar) %}
+                                {% set avatar = template_resource_path ~ '/img/avatars/a_man.svg' %}
+                            {% endif %}
+                            <a class="avatar" href="user/{{ blogPost.author.username }}" alt="{{ blogPost.author.name }}"><img src="{{ avatar }}"></a>
+                            <p class="meta">
+                                <span class="user"><a href="user/{{ blogPost.author.username }}" alt="{{ blogPost.author.name }}">{{ blogPost.author.name }}</a></span>
+
+                                {% if blogPost.author.mood is not empty %}
+                                    <span class="mood">:{{ blogPost.author.mood[1]|default('slight_smile') }}: {{ blogPost.author.mood[0] }}</span>
+                                {% endif %}
+                                <br>
+                                <span class="date">{{ blogPost.publishedAt|date("F d., H:i") }}</span>
+
+                                {% if blogPost.location is not empty %}
+                                    <span class="location">from {{ blogPost.location }}</span>
+                                {% endif %}
+                                <br>
+                                <span class="category">Posted in
+                                    {% for url,title in blogPost.category %}
+                                        <a href="category/{{ url }}">{{ title }}</a>
+                                    {% endfor %}
+                        </span>
+
+                                {% if blogPost.tags|length > 0 %}
+                                    <span class="taglist">with tags
+                                        {% for url,title in blogPost.tags %}
+                                            <a href="tag/{{ url }}">#{{ title }}</a>
+                                        {% endfor %}
+                        </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        {% if blogPost.summary is not empty %}
+                            <p class="summary">{{ blogPost.summary }}</p>
+                        {% endif %}
+                        <div class="preview">
+                            {% if blogPost.illustration is not empty %}
+                                <a href="{{ blogPost.path }}" class="illustration"><img src="{{ template_resource_path }}/img/post-illustration-placeholder.jpg" data-src="{{ blogPost.illustration }}"></a>
+                            {% endif %}
+                            <h2><a href="{{ blogPost.path }}">{{ blogPost.title }}</a></h2>
+                            <p>{{ blogPost.contentLead }}</p>
+                        </div>
+                        <p class="readmore"><a href="{{ blogPost.path }}">Tovább...</a></p>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+    </div>
 {% endblock %}

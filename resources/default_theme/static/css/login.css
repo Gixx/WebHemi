@@ -5,3 +5,109 @@
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  * @link      http://www.gixx-web.com
  */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    color: #617072;
+    background-color: white;
+}
+
+.content {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+}
+
+.content h1 {
+    width: 300px;
+    height: 0 !important;
+    padding-top: 150px;
+    overflow: hidden;
+    background: url('../img/logo.png');
+    background-size: contain ;
+}
+
+.content #login {
+    display: block;
+    width: 300px;
+    margin: 0;
+    padding: 0;
+}
+
+.content #login .element {
+    display: flex;
+    margin: 5px 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.content #login .element.password {
+    height: 70px
+}
+
+.content #login .element label {
+    flex: 0 1 120px;
+    display: inline-block;
+    width: 120px;
+    padding-left: 5px;
+}
+
+.content #login .element input {
+    flex: 0 1 180px;
+    display: inline-block;
+    width: 180px;
+    text-align: center;
+    color: #617072;
+    border: none;
+    border-bottom: 1px dashed #617072;
+    background-color: white;
+}
+
+.content #login .element .error {
+    flex: 1 0 300px;
+    display: inline-block;
+    width: 300px;
+    padding-left: 140px;
+}
+
+.content #login .element .error ul {
+    padding: 0;
+    margin: 2px 0;
+    list-style: none;
+}
+
+.content #login .element .error ul li {
+    text-indent: -20px;
+}
+
+.content #login .element .error ul li:before {
+    content: "\26A0  ";
+}
+
+.content #login .element button {
+    flex: 0 1 auto;
+    display: inline-block;
+    width: 300px;
+    border: 1px solid #617072;
+    background-color: white;
+    border-radius: 2px;
+    color: #617072;
+}
+
+.content #login .element input:focus,
+.content #login .element button:focus {
+    outline: none;
+}

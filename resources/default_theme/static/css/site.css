@@ -5,19 +5,114 @@
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  * @link      http://www.gixx-web.com
  */
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    color: #617072;
+    background-color: #ffffff;
+}
+
 body {
-    background-color: #f7ecb5;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
-a {
-    color: #1b6d85;
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
 }
 
-a:visited {
-    color: #1b6d85;
-    text-decoration: none;
+body > header {
+    min-width: 200px;
+    min-height: calc(100% - 100px);
+    flex: 1 0 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.1);
+    padding: 10px 20px 0 0;
 }
 
-.element.error {
-    background: red;
+body > header > nav,
+body > header > div {
+    margin-bottom:20px;
+    width: 200px;
+}
+
+body > header > div {
+    margin-top: 30px;
+    height: 0 !important;
+    padding-top: 100px;
+    overflow: hidden;
+    background: url('../img/logo.png');
+    background-size: contain ;
+    background-repeat: no-repeat;
+}
+
+body > section {
+    background-color: #ffffff;
+    width: 800px;
+    min-width: 450px;
+    min-height: calc(100% - 100px);
+    flex: 0 0 800px;
+    box-shadow: 0 0 20px #666666;
+    z-index: 2;
+    padding: 20px;
+}
+
+body > aside {
+    min-width: 200px;
+    min-height: calc(100% - 100px);
+    flex: 1 0 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.1);
+    padding: 10px 0 0 20px;
+}
+
+body > aside > div {
+    margin-bottom:20px;
+    width: 300px;
+}
+
+body > aside > div.box {
+    border-bottom: 1px dashed #666666;
+}
+
+body > aside > div.box:nth-last-child(1) {
+    border-bottom: none;
+}
+
+body > footer {
+    width: 100%;
+    height: 100px;
+    background: #000000;
+    color: #ffffff;
+}
+
+body > footer > div {
+    width: 800px;
+    min-width: 450px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+@media only screen and (max-width: 480px) {
+    body > header,
+    body > aside {
+        display: none;
+    }
 }
