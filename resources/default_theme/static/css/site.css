@@ -24,23 +24,35 @@ body {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    font-family: 'Khula', sans-serif;
+    font-size: 15px;
+    line-height: 20px;
 }
 
 h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
+    font-family: 'Fredoka One', cursive;
+    color: rgba(255,111,0,0.75);
+    font-weight: normal;
+}
+
+a {
+    font-weight: 600;
+    color: rgba(255,111,0,0.75);
+    text-decoration: none;
 }
 
 body > header {
-    min-width: 200px;
+    min-width: 300px;
     min-height: calc(100% - 100px);
-    flex: 1 0 200px;
+    flex: 1 0 300px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-end;
     z-index: 1;
     background-color: rgba(0,0,0,0.1);
-    padding: 10px 20px 0 0;
+    padding: 20px 20px 0 0;
 }
 
 body > header > nav,
@@ -50,13 +62,14 @@ body > header > div {
 }
 
 body > header > div {
-    margin-top: 30px;
+    margin-top: 10px;
     height: 0 !important;
     padding-top: 100px;
     overflow: hidden;
     background: url('../img/logo.png');
     background-size: contain ;
     background-repeat: no-repeat;
+    line-height: 100px;
 }
 
 body > section {
@@ -70,22 +83,33 @@ body > section {
     padding: 20px;
 }
 
+body > section > article {
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #666666;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+body > section > article img {
+    max-width: 100%;
+}
+
 body > aside {
-    min-width: 200px;
+    min-width: 300px;
     min-height: calc(100% - 100px);
-    flex: 1 0 200px;
+    flex: 1 0 300px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     z-index: 1;
     background-color: rgba(0,0,0,0.1);
-    padding: 10px 0 0 20px;
+    padding: 20px 0 0 20px;
 }
 
 body > aside > div {
-    margin-bottom:20px;
-    width: 300px;
+    margin-bottom: 20px;
+    width: 280px;
 }
 
 body > aside > div.box {
@@ -110,9 +134,3 @@ body > footer > div {
     padding: 0 20px;
 }
 
-@media only screen and (max-width: 480px) {
-    body > header,
-    body > aside {
-        display: none;
-    }
-}
