@@ -12,6 +12,8 @@
  # - application_base_uri <String> - *website-relative* path of the current `application`. Default: "/"
  # - current_uri <String> - *website-relative* path of the current within the current application, e.g.: "/auth/login"
  #
+ # - activeMenu <String>
+ #
  # Default macros (for details see the macros/renderForm.twig):
  #
  # - renderForm(form <WebHemi\Form\ServiceInterface>, options <Array>)
@@ -32,8 +34,9 @@
         <meta name="subject" content="A simple blog engine">
         <meta name="copyright" content="Gixx-Web - http://www.gixx-web.com">
         <meta name="language" content="en">
-        <title>{{ title|default('WebHemi') }}</title>
+        <title>{% block title %}WebHemi{% endblock %}</title>
         <link rel=”author” href=”https://plus.google.com/+Iv%C3%A1nG%C3%A1bor” rel="me"/>
+        <link href="https://fonts.googleapis.com/css?family=Fredoka+One|Khula" rel="stylesheet">
         <link rel="stylesheet" href="{{ template_resource_path }}/css/site.css" />
     </head>
     <body>
@@ -42,166 +45,59 @@
                 <h1>WebHemi</h1>
             </div>
             <nav>
-                <ul>
-                    <li>Your menu</li>
-                    <li>Your menu</li>
-                    <li>Your menu</li>
-                    <li>Your menu</li>
-                    <li>Your menu</li>
-                </ul>
+                {% block menu %}
+                    <ul>
+                    {% block menu_main %}
+                        <li><a href="">Main page</a></li>
+                    {% endblock %}
+                    {% for category in getCategories() %}
+                        <li><a {% if activeMenu == category.url %}class="current"{% endif %}href="category/{{ category.url }}">{{ category.title }}</a></li>
+                    {% endfor %}
+                    </ul>
+                {% endblock %}
             </nav>
         </header>
 
         <section>
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-<!--
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>
-
-            <article>
-                <header>
-                    <h2>Article title</h2>
-                    <p>Posted on <time datetime="2009-09-04T16:31:24+02:00">September 4th 2009</time> by <a href="#">Writer</a> - <a href="#comments">6 comments</a></p>
-                </header>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </article>-->
+            {% block content %}
+            {% endblock %}
         </section>
 
         <aside>
+            {% block tagBox %}
             <div class="box">
-                <h2>About section</h2>
-                <p>Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+                {% set tags = getTags() %}
+                {% if tags is not empty %}
+                <h3>Tags</h3>
+                    <ul>
+                    {% for tag in tags %}
+                        <li><a {% if activeMenu == tag.url %}class="current"{% endif %}href="tag/{{ tag.url }}">{{ tag.title }}</a></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
+            {% endblock %}
+
+            {% block archiveBox %}
+            <div class="box">
+                <h3>Archive</h3>
+                <ul>
+                {% for date in getDates() %}
+                    <li><a {% if activeMenu == date.url %}class="current"{% endif %}href="archive/{{ date.url }}">{{ date.title }}</a></li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endblock %}
 
             <div class="box">
-                <h2>About section</h2>
-                <p>Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
-            </div>
-
-            <div class="box">
-                <h2>About section</h2>
+                <h3>About section</h3>
                 <p>Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
             </div>
         </aside>
 
         <footer>
             <div>
-                <p>Copyright 2009 Your name</p>
+                <p>Copyright &copy; 2017 WebHemi.</p>
             </div>
         </footer>
 
