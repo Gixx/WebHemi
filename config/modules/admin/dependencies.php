@@ -54,7 +54,7 @@ return [
                     Auth\ServiceInterface::class,
                     Auth\CredentialInterface::class,
                     Environment\ServiceInterface::class,
-                    Form\Preset\AdminLoginForm::class,
+                    'AdminLoginForm',
                 ],
             ],
             Middleware\Action\Auth\LogoutAction::class => [
@@ -78,7 +78,12 @@ return [
                 ],
             ],
             Middleware\Action\Admin\Applications\AddAction::class => [
-                'inherits' => Middleware\Action\Admin\Applications\IndexAction::class,
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    'ApplicationEditForm'
+                ],
             ],
             Middleware\Action\Admin\Applications\ViewAction::class => [
                 'inherits' => Middleware\Action\Admin\Applications\AddAction::class,
@@ -105,12 +110,21 @@ return [
                     Environment\ServiceInterface::class,
                 ],
             ],
-            // Form Presets
-            Form\Preset\AdminLoginForm::class => [
+            // Form Presets - looks kinda hack, but it is by purpose.
+            Form\PresetInterface::class => [
+                'class' => \stdClass::class,
                 'arguments' => [
                     Form\ServiceAdapter\Base\ServiceAdapter::class,
                     Form\Element\Html\HtmlElement::class
                 ]
+            ],
+            'AdminLoginForm' => [
+                'class'     => Form\Preset\AdminLoginForm::class,
+                'inherits' => Form\PresetInterface::class
+            ],
+            'ApplicationEditForm' => [
+                'class'     => Form\Preset\ApplicationEditForm::class,
+                'inherits' => Form\PresetInterface::class
             ]
         ]
     ],

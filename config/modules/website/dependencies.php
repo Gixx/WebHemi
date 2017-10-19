@@ -23,6 +23,7 @@ return [
                     Data\Storage\User\UserMetaStorage::class
                 ]
             ],
+            // Renderer Helpers
             Renderer\Helper\GetTagsHelper::class => [
                 'arguments' => [
                     Environment\ServiceInterface::class

@@ -14,9 +14,7 @@ use WebHemi\Renderer;
 return [
     'renderer' => [
         'Admin' => [
-            'filter' => [
-
-            ],
+            'filter' => [],
             'helper' => [
                 Renderer\Helper\IsAllowedHelper::class
             ],

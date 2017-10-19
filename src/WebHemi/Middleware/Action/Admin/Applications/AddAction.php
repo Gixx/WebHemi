@@ -16,6 +16,7 @@ namespace WebHemi\Middleware\Action\Admin\Applications;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Form\PresetInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
@@ -29,6 +30,7 @@ class AddAction extends AbstractMiddlewareAction
     private $authAdapter;
     /** @var EnvironmentInterface */
     private $environmentManager;
+    private $formPreset;
 
     /**
      * AddAction constructor.
@@ -36,15 +38,18 @@ class AddAction extends AbstractMiddlewareAction
      * @param ConfigurationInterface $configuration
      * @param AuthInterface          $authAdapter
      * @param EnvironmentInterface   $environmentManager
+     * @param PresetInterface        $formPreset
      */
     public function __construct(
         ConfigurationInterface $configuration,
         AuthInterface $authAdapter,
-        EnvironmentInterface $environmentManager
+        EnvironmentInterface $environmentManager,
+        PresetInterface $formPreset
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
+        $this->formPreset = $formPreset;
     }
 
     /**
@@ -64,6 +69,8 @@ class AddAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        return [];
+        return [
+            'form' => $this->formPreset->getPreset()
+        ];
     }
 }

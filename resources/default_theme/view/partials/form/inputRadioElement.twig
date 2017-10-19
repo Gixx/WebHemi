@@ -1,5 +1,5 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element radio{% if formElement.getErrors() %} error{% endif %}">
+<div class="element radio{% if formElement.getErrors() %} has-error{% endif %}">
     {% set range = formElement.getValueRange() %}
     {% if range|length > 1 %}
         <fieldset name="{{ formElement.getName() }}">

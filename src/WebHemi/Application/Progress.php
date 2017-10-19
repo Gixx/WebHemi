@@ -72,7 +72,7 @@ class Progress
     {
         if (!isset($this->callerName)) {
             try {
-                throw new Exception('Cet Trace');
+                throw new Exception('Get Trace');
             } catch (Exception $exception) {
                 $trace = $exception->getTrace()[1]['file'] ?? rand(0, 10000);
                 $trace = explode('/', $trace);
