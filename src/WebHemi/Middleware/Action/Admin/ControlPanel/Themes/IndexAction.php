@@ -102,7 +102,8 @@ class IndexAction extends AbstractMiddlewareAction
         ksort($themes);
 
         return [
-            'themes' => $themes
+            'themes' => $themes,
+            'progressId' => 'test'
         ];
     }
 }

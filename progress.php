@@ -10,7 +10,7 @@
  * @link      http://www.gixx-web.com
  */
 
-$progressId = $_GET['progress_id'] ?? false;
+$progressId = $_GET['progress_id'] ?? '_';
 $progressPath = __DIR__.'/data/progress/';
 
 if ($progressId && file_exists($progressPath.$progressId.'.json')) {

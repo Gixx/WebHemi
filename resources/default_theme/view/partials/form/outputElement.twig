@@ -1,5 +1,5 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element output{% if formElement.getErrors() %} error{% endif %}">
+<div class="element output{% if formElement.getErrors() %} has-error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     <output id="{{ formElement.getId() }}" name="{{ formElement.getName() }}"></output>
     {% if formElement.getErrors() %}

@@ -221,6 +221,13 @@ return [
                 ],
                 'shared'    => true,
             ],
+            Renderer\Filter\TagParserFilter::class => [
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Environment\ServiceInterface::class
+                ],
+                'shared'    => true,
+            ],
             // Renderer Helper
             Renderer\Helper\DefinedHelper::class => [
                 'arguments' => [

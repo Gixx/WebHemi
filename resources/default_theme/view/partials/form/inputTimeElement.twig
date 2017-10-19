@@ -1,5 +1,5 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element input time{% if formElement.getErrors() %} error{% endif %}">
+<div class="element input time{% if formElement.getErrors() %} has-error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     {% set value = formElement.getValues() %}
     <input type="time" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ value[0] }}" />

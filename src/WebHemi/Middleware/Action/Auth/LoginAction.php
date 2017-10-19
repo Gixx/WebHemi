@@ -82,6 +82,7 @@ class LoginAction extends AbstractMiddlewareAction
 
         if ($this->request->getMethod() == 'POST') {
             $postData = $this->request->getParsedBody();
+
             $this->authCredential->setCredential('username', $postData['login']['identification'] ?? '')
                 ->setCredential('password', $postData['login']['password'] ?? '');
 
