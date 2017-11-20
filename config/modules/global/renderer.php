@@ -16,7 +16,8 @@ return [
         'Global' => [
             'filter' => [
                 Renderer\Filter\MarkDownFilter::class,
-                Renderer\Filter\TagParserFilter::class
+                Renderer\Filter\TagParserFilter::class,
+                Renderer\Filter\TranslateFilter::class
             ],
             'helper' => [
                 Renderer\Helper\DefinedHelper::class,

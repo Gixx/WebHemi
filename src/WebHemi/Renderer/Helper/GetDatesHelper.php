@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Renderer\Helper;
 
+use WebHemi\DateTime;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
 
@@ -83,10 +84,25 @@ class GetDatesHelper implements HelperInterface
     public function __invoke() : array
     {
         /* TODO: tbd */
-
-        return [
-            ['url' => '2017-05', 'title' => '2017 May',  'total' => 280, 'new' => 0],
-            ['url' => '2017-06', 'title' => '2017 June', 'total' => 280, 'new' => 0],
+        $dates = [
+            new DateTime('now'),
+            new DateTime(mktime(12, 11, 10, 9, 18, 2017)),
+            new DateTime(mktime(12, 11, 10, 8, 20, 2017)),
+            new DateTime(mktime(12, 11, 10, 3, 15, 2016)),
         ];
+
+        $archives = [];
+
+        /** @var DateTime $date */
+        foreach ($dates as $date) {
+            $archives[] = [
+                'url' => $date->format('Y-m'),
+                'title' => $date->format('Y4B'),
+                'total' => 0,
+                'new' => 0
+            ];
+        }
+
+        return $archives;
     }
 }

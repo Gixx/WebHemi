@@ -85,6 +85,13 @@ class MarkDownFilter implements FilterInterface
     {
         $text = func_get_args()[0] ?? '';
 
-        return $this->parser->parse($text);
+        $content = $this->parser->parse($text);
+        $content = str_replace(
+            ['<table>', '</table>'],
+            ['<div class="table"><table>', '</table></div>'],
+            $content
+        );
+
+        return $content;
     }
 }

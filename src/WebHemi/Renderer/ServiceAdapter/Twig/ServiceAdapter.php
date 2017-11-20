@@ -20,6 +20,7 @@ use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\I18n\ServiceInterface as I18nService;
 use WebHemi\Renderer\ServiceInterface;
 use WebHemi\Renderer\Traits\GetSelectedThemeResourcePathTrait;
 
@@ -45,17 +46,24 @@ class ServiceAdapter implements ServiceInterface
     protected $configuration;
     /** @var EnvironmentInterface */
     protected $environmentManager;
+    /** @var I18nService */
+    protected $i18nService;
 
     /**
      * ServiceAdapter constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param EnvironmentInterface   $environmentManager
+     * @param I18nService            $i18nService
      */
-    public function __construct(ConfigurationInterface $configuration, EnvironmentInterface $environmentManager)
-    {
+    public function __construct(
+        ConfigurationInterface $configuration,
+        EnvironmentInterface $environmentManager,
+        I18nService $i18nService
+    ) {
         $this->configuration = $configuration;
         $this->environmentManager = $environmentManager;
+        $this->i18nService = $i18nService;
 
         $documentRoot = $environmentManager->getDocumentRoot();
         $selectedTheme = $environmentManager->getSelectedTheme();
@@ -79,6 +87,7 @@ class ServiceAdapter implements ServiceInterface
 
         $this->adapter = new Twig_Environment($loader, array('debug' => true, 'cache' => false));
         $this->adapter->addExtension(new Twig_Extension_Debug());
+
         // @codeCoverageIgnoreStart
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
             $this->adapter->addExtension(new TwigExtension());
@@ -111,10 +120,18 @@ class ServiceAdapter implements ServiceInterface
         }
 
         // Tell the template where the resources are.
-        $parameters['template_resource_path'] = $this->templateResourcePath;
-        $parameters['document_root'] = $this->environmentManager->getDocumentRoot();
-        $parameters['application_base_uri'] = $this->applicationBaseUri;
         $parameters['current_uri'] = $this->environmentManager->getRequestUri();
+        $parameters['application'] = [
+            'resourcePath' => $this->templateResourcePath,
+            'baseUri' => $this->applicationBaseUri,
+            'documentRoot' => $this->environmentManager->getDocumentRoot(),
+            'language' => $this->i18nService->getLanguage(),
+            'author' => '',
+            'authorLink' => '',
+            'description' => '',
+            'subject' => '',
+            'copyright' => ''
+        ];
 
         $output = $this->adapter->render($template, $parameters);
 

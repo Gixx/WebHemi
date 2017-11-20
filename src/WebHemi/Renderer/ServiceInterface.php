@@ -14,8 +14,9 @@ declare(strict_types = 1);
 namespace WebHemi\Renderer;
 
 use Psr\Http\Message\StreamInterface;
-use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\I18n\ServiceInterface as I18nService;
 
 /**
  * Interface ServiceInterface.
@@ -27,8 +28,13 @@ interface ServiceInterface
      *
      * @param ConfigurationInterface $configuration
      * @param EnvironmentInterface   $environmentManager
+     * @param I18nService            $i18nService
      */
-    public function __construct(ConfigurationInterface $configuration, EnvironmentInterface $environmentManager);
+    public function __construct(
+        ConfigurationInterface $configuration,
+        EnvironmentInterface $environmentManager,
+        I18nService $i18nService
+    );
 
     /**
      * Renders the template for the output.

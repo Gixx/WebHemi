@@ -7,10 +7,10 @@
  #
  # Variables provided in this template:
  #
- # - template_resource_path <String> - *website-relative* path to the static template content. Default: "/resources/default_theme/static"
- # - document_root <String> - *filesystem-relative* path to the document root, e.g.: "/var/www"
- # - application_base_uri <String> - *website-relative* path of the current `application`. Default: "/"
- # - current_uri <String> - *website-relative* path of the current within the current application, e.g.: "/auth/login"
+ # - application.resourcePath <String> - *website-relative* path to the static template content. Default: "/resources/default_theme/static"
+ # - application.documentRoot <String> - *filesystem-relative* path to the document root, e.g.: "/var/www"
+ # - application.baseUri <String> - *website-relative* path of the current `application`. Default: "/"
+ # - application.currentUri <String> - *website-relative* path of the current within the current application, e.g.: "/auth/login"
  # - loginForm <WebHemi\Form\ServiceInterface>
  #
  # Default macros (for details see the macros/renderForm.twig):
@@ -23,7 +23,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <base href="{% if application_base_uri != '/' %}{{ application_base_uri }}{% endif %}/" />
+        <base href="{%  if application.baseUri != '/' %} {{ application.baseUri }}{% endif %}/" />
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -36,7 +36,9 @@
         <meta name="language" content="en">
         <title>{{ title|default('WebHemi Admin') }}</title>
         <link rel=”author” href=”https://plus.google.com/+Iv%C3%A1nG%C3%A1bor” rel="me"/>
-        <link rel="stylesheet" href="{{ template_resource_path }}/css/login.css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+        <link rel="stylesheet" href="{{ application.resourcePath }}/css/font.css" />
+        <link rel="stylesheet" href="{{ application.resourcePath }}/css/login.css" />
     </head>
     <body>
         <div class="content">

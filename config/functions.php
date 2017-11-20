@@ -15,7 +15,7 @@
  *
  * @return void
  */
-function set_env_sttings()
+function set_environment()
 {
     $env = $_ENV['APPLICATION_ENV'] ?? 'live';
 
@@ -33,24 +33,24 @@ function set_env_sttings()
  *
  * @internal
  */
-function d(...$variables)
+function dump(...$variables)
 {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-    $FILE = __FILE__;
-    $LINE = __LINE__;
+    $file = __FILE__;
+    $line = __LINE__;
 
     if (isset($backtrace[0])) {
-        $FILE = $backtrace[0]['file'];
-        $LINE = $backtrace[0]['line'];
+        $file = $backtrace[0]['file'];
+        $line = $backtrace[0]['line'];
     }
 
     if (php_sapi_name() !== 'cli') {
-        echo '<strong>In file '.$FILE." at line ".$LINE.':</strong>';
+        echo '<strong>In file '.$file." at line ".$line.':</strong>';
     } else {
-        echo 'In file '.$FILE." at line ".$LINE.':'.PHP_EOL;
+        echo 'In file '.$file." at line ".$line.':'.PHP_EOL;
     }
 
-    var_dump(...$variables);
+    call_user_func_array('var_dump', $variables);
 }
 
 /**

@@ -18,6 +18,7 @@ use WebHemi\Data;
 use WebHemi\DependencyInjection;
 use WebHemi\Environment;
 use WebHemi\Http;
+use WebHemi\I18n;
 use WebHemi\Logger;
 use WebHemi\Middleware;
 use WebHemi\MiddlewarePipeline;
@@ -91,6 +92,20 @@ return [
                 ],
                 'shared'    => true,
             ],
+            I18n\ServiceInterface::class => [
+                'class'     => I18n\ServiceAdapter\Base\ServiceAdapter::class,
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Environment\ServiceInterface::class
+                ],
+                'shared'    => true,
+            ],
+            I18n\DriverInterface::class => [
+                'class'     => I18n\DriverAdapter\Gettext\DriverAdapter::class,
+                'arguments' => [
+                    I18n\ServiceInterface::class
+                ],
+            ],
             Parser\ServiceInterface::class => [
                 'class'     => Parser\ServiceAdapter\Parsedown\ServiceAdapter::class,
                 'shared'    => true,
@@ -99,7 +114,8 @@ return [
                 'class'     => Renderer\ServiceAdapter\Twig\ServiceAdapter::class,
                 'arguments' => [
                     Configuration\ServiceInterface::class,
-                    Environment\ServiceInterface::class
+                    Environment\ServiceInterface::class,
+                    I18n\ServiceInterface::class
                 ],
                 'shared'    => true,
             ],
@@ -225,6 +241,12 @@ return [
                 'arguments' => [
                     Configuration\ServiceInterface::class,
                     Environment\ServiceInterface::class
+                ],
+                'shared'    => true,
+            ],
+            Renderer\Filter\TranslateFilter::class => [
+                'arguments' => [
+                    I18n\DriverInterface::class
                 ],
                 'shared'    => true,
             ],

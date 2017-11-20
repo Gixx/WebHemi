@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website;
 
-use WebHemi\Http\ServerRequestInterface;
+use WebHemi\DateTime;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
@@ -50,11 +50,23 @@ class PostViewAction extends AbstractMiddlewareAction
         return [
             'activeMenu' => '',
             'blogPost' => [
-                'title'       => 'Fake test',
-                'publishedAt' => time(),
+                'title'       => 'Hogy indítsuk jól a napot',
+                'summary'     => 'Jó tudni...',
+                'category'    => ['useful' => 'Hasznos infók'],
+                'tags'        => ['php' => 'PHP', 'coding' => 'Coding'],
+                'illustration'=> '/data/upload/filesystem/images/Nature.jpg',
+                'path'        => 'posts/view/a_perfect_day.html',
+                'publishedAt' => new DateTime('now'),
+                'location'    => 'München',
                 'author'      => [
-                    'name' => 'Some User'
+                    'name'   => 'Admin',
+                    'username'=> 'admin',
+                    'avatar' => '/data/upload/avatars/admin.png',
+                    'mood'   => ['szeretve érzi magát', 'hugging'],
                 ],
+                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
+                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
+                                       vero eos et accusam et justo duo dolores et ea rebum.',
                 'content'     => $content,
                 'parameter'   => $routingParams
             ]

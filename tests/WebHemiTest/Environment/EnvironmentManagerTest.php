@@ -50,12 +50,18 @@ class EnvironmentManagerTest extends TestCase
                 'website' => [
                     'module' => 'Website',
                     'type'   => 'domain',
-                    'path'   => 'www'
+                    'path'   => 'www',
+                    'language' => 'en',
+                    'locale' => 'en_GB.UTF-8',
+                    'timezone' => 'Europe/London',
                 ],
                 'admin' => [
                     'module' => 'Admin',
                     'type'   => 'directory',
                     'path'   => 'admin',
+                    'language' => 'en',
+                    'locale' => 'en_GB.UTF-8',
+                    'timezone' => 'Europe/London',
                 ]
             ],
             'themes' => [

@@ -60,9 +60,15 @@ class IsAllowedHelperTest extends TestCase
             'applications' => [
                 'website' => [
                     'module' => 'Website',
+                    'language' => 'en',
+                    'locale' => 'en_GB.UTF-8',
+                    'timezone' => 'Europe/London',
                 ],
                 'admin' => [
                     'module' => 'Admin',
+                    'language' => 'en',
+                    'locale' => 'en_GB.UTF-8',
+                    'timezone' => 'Europe/London',
                 ],
             ],
             'router' => [

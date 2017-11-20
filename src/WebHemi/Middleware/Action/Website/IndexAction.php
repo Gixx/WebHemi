@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website;
 
+use WebHemi\DateTime;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
@@ -30,32 +31,32 @@ class IndexAction extends AbstractMiddlewareAction
     {
         $this->database = [
             [
-                'title'       => 'How to start a perfect day',
-                'summary'     => 'Good to know...',
-                'category'    => ['useful' => 'Useful infos'],
+                'title'       => 'Hogy indítsuk jól a napot',
+                'summary'     => 'Jó tudni...',
+                'category'    => ['useful' => 'Hasznos infók'],
                 'tags'        => ['php' => 'PHP', 'coding' => 'Coding'],
                 'illustration'=> '/data/upload/filesystem/images/Nature.jpg',
                 'path'        => 'posts/view/a_perfect_day.html',
-                'publishedAt' => time(),
+                'publishedAt' => new DateTime('now'),
                 'location'    => 'München',
                 'author'      => [
                     'name'   => 'Admin',
                     'username'=> 'admin',
                     'avatar' => '/data/upload/avatars/admin.png',
-                    'mood'   => ['feels cozy', 'hugging'],
+                    'mood'   => ['szeretve érzi magát', 'hugging'],
                 ],
                 'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
                                        tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
                                        vero eos et accusam et justo duo dolores et ea rebum.'
             ],
             [
-                'title'       => 'Just an idea',
+                'title'       => 'Just an idea, de egy meglehetősen hosszú címmel felvértezve',
                 'summary'     => null,
                 'category'    => ['posts' => 'Posts'],
                 'tags'        => ['php' => 'PHP', 'coding' => 'Coding'],
                 'illustration'=> null,
                 'path'        => 'notepad/just_an_idea.html',
-                'publishedAt' => time(),
+                'publishedAt' => new DateTime(mktime(12, 11, 10, 9, 18, 2017)),
                 'location'    => null,
                 'author'      => [
                     'name'   => 'Gabor',
@@ -73,13 +74,13 @@ class IndexAction extends AbstractMiddlewareAction
                 'tags'        => ['munich' => 'Munich'],
                 'illustration'=> '/data/upload/filesystem/images/Owl.jpg',
                 'path'        => 'nature/birds/notes/an_owl.html',
-                'publishedAt' => time(),
+                'publishedAt' => new DateTime(mktime(12, 11, 10, 8, 20, 2017)),
                 'location'    => 'München',
                 'author'      => [
                     'name'   => 'Amadeus',
                     'username'=> 'a.madeus',
                     'avatar' => '/data/upload/avatars/a.madeus.png',
-                    'mood'   => ['feels cozy', 'hugging'],
+                    'mood'   => null,
                 ],
                 'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
                                        tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
@@ -92,13 +93,13 @@ class IndexAction extends AbstractMiddlewareAction
                 'tags'        => ['munich' => 'Munich'],
                 'illustration'=> '/data/upload/filesystem/images/Spider.jpg',
                 'path'        => 'nature/arthropods/spidey.html',
-                'publishedAt' => time(),
+                'publishedAt' => new DateTime(mktime(12, 11, 10, 3, 15, 2016)),
                 'location'    => 'München',
                 'author'      => [
                     'name'   => 'Amadeus',
                     'username'=> 'a.madeus',
                     'avatar' => '/data/upload/avatars/a.madeus.png',
-                    'mood'   => ['feels cozy', 'hugging'],
+                    'mood'   => null,
                 ],
                 'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
                                        tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At

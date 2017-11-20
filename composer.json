@@ -27,6 +27,7 @@
   },
   "require": {
     "php": ">=7.1",
+    "ext-mcrypt": "*",
     "nikic/fast-route": "~1.2",
     "guzzlehttp/psr7": "~1.4",
     "symfony/dependency-injection": "~3.2",
