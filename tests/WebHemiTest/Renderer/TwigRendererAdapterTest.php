@@ -17,6 +17,7 @@ use WebHemi\Renderer\ServiceAdapter\Twig\ServiceAdapter as TwigRendererAdapter;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use WebHemiTest\TestService\EmptyEnvironmentManager;
+use WebHemiTest\TestService\EmptyI18nService;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -38,6 +39,8 @@ class TwigRendererAdapterTest extends TestCase
     protected $files = [];
     /** @var EmptyEnvironmentManager */
     protected $environmentManager;
+    /** @var EmptyI18nService */
+    protected $i18nService;
 
     use AssertTrait;
 
@@ -66,6 +69,11 @@ class TwigRendererAdapterTest extends TestCase
             $this->cookie,
             $this->files
         );
+
+        $this->i18nService = new EmptyI18nService(
+            $this->config,
+            $this->environmentManager
+        );
     }
 
     /**
@@ -73,13 +81,13 @@ class TwigRendererAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $resultObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+        $resultObj = new TwigRendererAdapter($this->config, $this->environmentManager, $this->i18nService);
         $this->assertInstanceOf(RendererAdapterInterface::class, $resultObj);
         $this->assertAttributeInstanceOf(\Twig_Environment::class, 'adapter', $resultObj);
 
         // test if the config doesn't has the selected theme
         $this->environmentManager->setSelectedTheme('someNoneExistingTheme');
-        $resultObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+        $resultObj = new TwigRendererAdapter($this->config, $this->environmentManager, $this->i18nService);
         $this->assertInstanceOf(RendererAdapterInterface::class, $resultObj);
     }
 
@@ -95,7 +103,7 @@ class TwigRendererAdapterTest extends TestCase
             ->setSelectedTheme('test_theme')
             ->setRequestUri('/some/page');
 
-        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager, $this->i18nService);
 
         $result = $adapterObj->render('test-page');
         $resultData = json_decode($result, true);
@@ -119,7 +127,7 @@ class TwigRendererAdapterTest extends TestCase
             ->setSelectedTheme('test_theme_no_website')
             ->setRequestUri('/some/page');
 
-        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager, $this->i18nService);
 
         $result = $adapterObj->render('test-page');
         $resultData = json_decode($result, true);
@@ -148,7 +156,7 @@ class TwigRendererAdapterTest extends TestCase
             ->setSelectedTheme('test_theme')
             ->setRequestUri('/auth/login');
 
-        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager, $this->i18nService);
 
         $result = $adapterObj->render('test-page');
         $resultData = json_decode($result, true);
@@ -172,7 +180,7 @@ class TwigRendererAdapterTest extends TestCase
             ->setSelectedTheme('test_theme_no_admin_login')
             ->setRequestUri('/auth/login');
 
-        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager, $this->i18nService);
 
         $result = $adapterObj->render('test-page');
         $resultData = json_decode($result, true);
@@ -200,7 +208,7 @@ class TwigRendererAdapterTest extends TestCase
             ->setSelectedTheme('test_theme')
             ->setRequestUri('/some/page');
 
-        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager, $this->i18nService);
 
         $result = $adapterObj->render('test-page');
         $resultData = json_decode($result, true);
@@ -224,7 +232,7 @@ class TwigRendererAdapterTest extends TestCase
             ->setSelectedTheme('test_theme_no_admin')
             ->setRequestUri('/some/page');
 
-        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager);
+        $adapterObj = new TwigRendererAdapter($this->config, $this->environmentManager, $this->i18nService);
 
         $result = $adapterObj->render('test-page');
         $resultData = json_decode($result, true);

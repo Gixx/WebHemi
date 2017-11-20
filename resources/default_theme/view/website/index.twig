@@ -13,52 +13,75 @@
 {% extends "layout.twig" %}
 
 {% block menu_main %}
-    <li><a class="current" href="">Main page</a></li>
+    <li><a class="current" href="">{{ 'News Feed'|t }}</a></li>
 {% endblock %}
 
 {% block content %}
     {% if fixPost %}
+        <section class="fixed">
+            <article>
+                <header>
+                    <h2>{{ fixPost.title }}</h2>
+                    {% if fixPost.summary is not empty %}
+                        <p class="summary">{{ fixPost.summary }}</p>
+                    {% endif %}
+                </header>
+                <p>
+                    {% if fixPost.illustration is not empty %}
+                        <img class="illustration" src="{{ fixPost.illustration }}" />
+                    {% endif %}
+                    {{ fixPost.contentLead }}
+                </p>
+                <p class="author"><a href="user/{{ fixPost.author.username }}" alt="{{ fixPost.author.name }}">{{ fixPost.author.name }}</a></p>
+            </article>
+        </section>
+    {% endif %}
+
+    <section>
+        {% for blogPost in blogPosts %}
         <article>
             <header>
-                <h2>{{ fixPost.title }}</h2>
-                {% if fixPost.summary is not empty %}
-                    <p class="summary">{{ fixPost.summary }}</p>
+                <h2><a href="{{ blogPost.path }}">{{ blogPost.title }}</a></h2>
+                <p class="meta">
+                    {% if blogPost.publishedAt.isToday() %}
+                        {% set publishDate = 'Today'|t ~ ', ' ~ blogPost.publishedAt.format('T') %}
+                    {% elseif blogPost.publishedAt.isCurrentYear() %}
+                        {% set publishDate = blogPost.publishedAt.format('BDT') %}
+                    {% else %}
+                        {% set publishDate = blogPost.publishedAt.format('Y4BDT') %}
+                    {% endif %}
+                    {{ 'Published at: %s'|t(publishDate)|raw }},
+                    {% if blogPost.location is not empty %}{{ 'In the area of %s'|t(blogPost.location)|raw }}.{% endif %}
+                    <br>
+                    {{ 'by'|t }} <a href="user/{{ blogPost.author.username }}" alt="{{ blogPost.author.name }}">{{ blogPost.author.name }}</a><br />
+
+                    {% set categoryLink = '' %}
+                    {% for url,title in blogPost.category %}
+                        {% set categoryLink = '<a href="category/' ~ url ~'">' ~ title ~ '</a>' %}
+                    {% endfor %}
+                    {{ 'In category of %s'|t(categoryLink)|raw }}
+
+
+                    {% if blogPost.tags|length > 0 %}
+                        {% set tagList = '' %}
+                            {% for url,title in blogPost.tags %}
+                                {% set tagList = tagList ~ '<a href="tag/' ~ url ~ '">#' ~ title ~ '</a> ' %}
+                            {% endfor %}
+                            , {{ 'with tags: %s'|t(tagList)|raw }}
+                    {% endif %}
+                </p>
+                {% if blogPost.summary is not empty %}
+                    <p class="summary">{{ blogPost.summary }}</p>
                 {% endif %}
             </header>
             <p>
-                {% if fixPost.illustration is not empty %}
-                    <img class="illustration" src="{{ fixPost.illustration }}" />
+                {% if blogPost.illustration is not empty %}
+                    <img class="illustration" src="{{ blogPost.illustration }}" />
                 {% endif %}
-                {{ fixPost.contentLead }}
+                {{ blogPost.contentLead }}
             </p>
-            <p class="author"><a href="user/{{ fixPost.author.username }}" alt="{{ fixPost.author.name }}">{{ fixPost.author.name }}</a></p>
+            <p class="readmore"><a href="{{ blogPost.path }}">{{ 'Read more...'|t }}</a></p>
         </article>
-    {% endif %}
-
-    {% for blogPost in blogPosts %}
-    <article>
-        <header>
-            <h2><a href="{{ blogPost.path }}">{{ blogPost.title }}</a></h2>
-            <p>
-                Posted on {{ blogPost.publishedAt|date("F d., H:i") }}
-                by <a href="user/{{ blogPost.author.username }}" alt="{{ blogPost.author.name }}">{{ blogPost.author.name }}</a><br />
-                {% if blogPost.location is not empty %}from {{ blogPost.location }}{% endif %}
-                in {% for url,title in blogPost.category %}<a href="category/{{ url }}">{{ title }}</a>{% endfor %} category
-                {% if blogPost.tags|length > 0 %}
-                    with tags {% for url,title in blogPost.tags %}<a href="tag/{{ url }}">#{{ title }} </a>{% endfor %}
-                {% endif %}
-            </p>
-            {% if blogPost.summary is not empty %}
-                <p class="summary">{{ blogPost.summary }}</p>
-            {% endif %}
-        </header>
-        <p>
-            {% if blogPost.illustration is not empty %}
-                <img class="illustration" src="{{ blogPost.illustration }}" />
-            {% endif %}
-            {{ blogPost.contentLead }}
-        </p>
-        <p class="readmore"><a href="{{ blogPost.path }}">Read more...</a></p>
-    </article>
-    {% endfor %}
+        {% endfor %}
+    </section>
 {% endblock %}

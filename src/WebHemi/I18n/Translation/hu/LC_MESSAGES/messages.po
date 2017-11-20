@@ -1,0 +1,64 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: WebHemi\n"
+"Language: hu\n"
+
+#:
+#, fuzzy
+msgid "Today"
+msgstr "Ma"
+
+#:
+#, fuzzy
+msgid "Published at: %s"
+msgstr "Publikálva: %s-kor"
+
+#:
+msgid "In the area of %s"
+msgstr "%s körzetében"
+
+#:
+msgid "In category of %s"
+msgstr "A(z) %s kategóriában"
+
+#:
+msgid "with tags: %s"
+msgstr "%s címkékkel."
+
+#:
+msgid "Read more..."
+msgstr "Tovább..."
+
+#:
+msgid "News Feed"
+msgstr "Hírfolyam"
+
+#:
+msgid "Categories"
+msgstr "Kategóriák"
+
+#:
+msgid "Tags"
+msgstr "Címkék"
+
+#:
+msgid "Archive"
+msgstr "Archívum"
+
+#:
+msgid "Copyright &copy; %d. All rights reserved."
+msgstr "Minden jog fenntartva &copy; %d."
+
+#:
+msgid "User"
+msgstr "Felhasználó"
+
+#:
+msgctxt "\"Created by:\""
+msgid "by"
+msgstr "Szerző:"
+

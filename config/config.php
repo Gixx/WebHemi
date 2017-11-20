@@ -12,7 +12,7 @@
 require_once __DIR__.'/functions.php';
 
 // Set PHP settings according to the environment
-set_env_sttings();
+set_environment();
 
 // Start render stat logging
 render_stat();

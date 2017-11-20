@@ -15,6 +15,10 @@ use WebHemi\DateTime;
 use WebHemi\Environment\ServiceInterface as EnvironmentManager;
 use WebHemi\Http\ServiceInterface as HttpAdapterInterface;
 use WebHemi\Http\ServiceAdapter\GuzzleHttp\ServiceAdapter as GuzzleHttpAdapter;
+use WebHemi\I18n\ServiceInterface as I18nServiceAdapterInterface;
+use WebHemi\I18n\ServiceAdapter\Base\ServiceAdapter as I18nServiceAdapter;
+use WebHemi\I18n\DriverInterface as I18nDriverAdapterInterface;
+use WebHemi\I18n\DriverAdapter\Gettext\DriverAdapter as I18nDriverAdapter;
 use WebHemi\Middleware\Common\FinalMiddleware;
 use WebHemi\Middleware\Common\DispatcherMiddleware;
 use WebHemi\Middleware\Common\RoutingMiddleware;
@@ -34,19 +38,28 @@ return [
             'module' => 'Website',
             'type'   => 'domain',
             'path'   => 'www',
-            'theme'  => 'default'
+            'theme'  => 'default',
+            'language' => 'en',
+            'locale' => 'en_GB.UTF-8',
+            'timezone' => 'Europe/London',
         ],
         'admin' => [
             'module' => 'Admin',
             'type'   => 'domain',
             'path'   => 'admin',
-            'theme'  => 'test_theme'
+            'theme'  => 'test_theme',
+            'language' => 'en',
+            'locale' => 'en_US.UTF-8',
+            'timezone' => 'America/Detroit',
         ],
         'some_app' => [
             'module' => 'SomeApp',
             'type'   => 'directory',
             'path'   => 'some_application',
-            'theme'  => 'test_theme'
+            'theme'  => 'test_theme',
+            'language' => 'pt',
+            'locale' => 'br_PT.UTF-8',
+            'timezone' => 'America/Sao_Paulo',
         ],
     ],
     'auth' => [],
@@ -101,9 +114,24 @@ return [
                 'class'     => TwigRendererAdapter::class,
                 'arguments' => [
                     ConfigInterface::class,
+                    EnvironmentManager::class,
+                    I18nServiceAdapterInterface::class
+                ],
+                'shared'    => true,
+            ],
+            I18nServiceAdapterInterface::class => [
+                'class'     => I18nServiceAdapter::class,
+                'arguments' => [
+                    ConfigInterface::class,
                     EnvironmentManager::class
                 ],
                 'shared'    => true,
+            ],
+            I18nDriverAdapterInterface::class => [
+                'class'     => I18nDriverAdapter::class,
+                'arguments' => [
+                    I18nServiceAdapterInterface::class
+                ],
             ],
             // Middleware
             RoutingMiddleware::class => [

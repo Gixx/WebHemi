@@ -5,3 +5,210 @@
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  * @link      http://www.gixx-web.com
  */
+
+*, *:before, *:after {
+    box-sizing: border-box;
+    color: rgb(117, 117, 117);
+}
+
+html, body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: rgb(245, 245, 245);
+    margin: 0 auto;
+    font-family: 'Asap', sans-serif;
+    font-size: 1em;
+    line-height: 1.4em;
+    display: grid;
+    align-content: stretch;
+    align-items: stretch;
+    justify-content: stretch;
+    justify-items: stretch;
+    grid-gap: 10px;
+}
+
+body > header {
+    grid-area: header;
+    background-color: rgb(245, 245, 245);
+}
+
+body > nav {
+    display: flex;
+    grid-area: nav;
+}
+
+body > nav > .container {
+    margin: 0;
+    width: 100%;
+}
+
+body > main {
+    grid-area: main;
+    background: rgb(255,255,255);
+    box-shadow: 0 0 2px 0 rgba(0,0,0,.14), 0 0 1px -2px rgba(0,0,0,.2), 0 0 5px 0 rgba(0,0,0,.12);
+}
+
+body > main p {
+    padding: 5px 15px;
+    text-align: justify;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+body > aside {
+    grid-area: aside;
+    display: flex;
+}
+
+body > aside > .container {
+    margin: 0;
+    width: 100%;
+}
+
+body > footer {
+    grid-area: footer;
+    background: rgb(55, 71, 79);
+}
+
+/* Mobile */
+@media screen and (max-width: 1025px)
+{
+    body {
+        width: 100%;
+        grid-template-columns: 100%;
+        grid-template-rows: auto 50px;
+        grid-template-areas:
+                "main"
+                "footer";
+    }
+
+    body > header {
+        position: fixed;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 0 5px 0 rgba(0,0,0,.12);
+        width: 100%;
+        height: 50px;
+    }
+
+    body > nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        z-index: 20;
+        width: 100%;
+        background-color: rgba(0,0,0,0);
+        height: 100%;
+        max-height: 100%;
+        transform: translateX(-100%);
+        transform-style: preserve-3d;
+        will-change: transform;
+    }
+
+    body > nav > .container {
+        width: 250px;
+        overflow-y: auto;
+        color: rgb(120, 144, 156);
+        background: rgb(55, 71, 79);
+        box-shadow: 10px 0 15px rgba(0,0,0, .3);
+    }
+
+    body > main {
+        margin: 60px 10px 0 10px;
+    }
+
+    body > main * {
+        max-width: 100%;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+    }
+
+    body > aside {
+        position: fixed;
+        top: 0;
+        right: 0;
+        overflow: hidden;
+        z-index: 20;
+        width: 100%;
+        background-color: rgba(0,0,0,0);
+        height: 100%;
+        max-height: 100%;
+        transform: translateX(100%);
+        transform-style: preserve-3d;
+        will-change: transform;
+    }
+
+    body > aside > .container {
+        margin-left: calc(100% - 250px);
+        width: 250px;
+        overflow-y: auto;
+        background: rgb(55, 71, 79);
+        color: rgb(120, 144, 156);
+        box-shadow: -10px 0 15px rgba(0,0,0, .3);
+    }
+
+    body > footer {
+
+    }
+
+    /* animations */
+    body > nav.open,
+    body > aside.open {
+        transform: translateX(0);
+        background-color: rgba(0,0,0,0.5);
+        transition: transform .2s ease-in-out, background-color .3s ease-in-out .2s;
+    }
+
+    body > nav.closing,
+    body > aside.closing {
+        transition: background-color .3s ease-in-out, transform .2s ease-in-out .2s;
+    }
+}
+
+/* Destktop */
+@media screen and (min-width: 1026px)
+{
+    body {
+        padding-top: 20px;
+    }
+
+    body > header a.nav,
+    body > header a.aside {
+        display: none;
+    }
+}
+
+/* Small desktop */
+@media screen and (min-width: 1026px)  and (max-width: 1380px)
+{
+    body {
+        grid-template-columns: auto 250px minmax(650px, 800px) auto;
+        grid-template-rows: 100px max-content max-content auto 100px;
+        grid-template-areas:
+                "header header header header"
+                ". nav main ."
+                ". aside main ."
+                ". . main ."
+                "footer footer footer footer";
+    }
+}
+
+/* Large desktop */
+@media screen and (min-width: 1381px)
+{
+    body {
+        grid-template-columns: auto 200px 800px 300px auto;
+        grid-template-rows: 100px auto 100px;
+        grid-template-areas:
+                "header header header header header"
+                ". nav main aside ."
+                "footer footer footer footer footer";
+    }
+}

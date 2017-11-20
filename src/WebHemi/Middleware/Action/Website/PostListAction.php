@@ -43,37 +43,43 @@ class PostListAction extends IndexAction
         if (isset($params['category'])) {
             $currentMenu = $params['category'];
             if ($params['category'] == 'posts') {
-                $title = 'Posts';
+                $title = 'Category: Posts';
                 $blogPosts = [$this->database[1]];
             } elseif ($params['category'] == 'useful') {
-                $title = 'Useful infos';
+                $title = 'Category: Useful infos';
                 $blogPosts = [$this->database[0]];
             } elseif ($params['category'] == 'events') {
-                $title = 'Events';
+                $title = 'Category: Events';
                 $blogPosts = [$this->database[2]];
             } elseif ($params['category'] == 'something') {
-                $title = 'Something';
+                $title = 'Category: Something';
                 $blogPosts = [$this->database[3]];
             }
         } elseif (isset($params['tag'])) {
             $currentMenu = $params['tag'];
             if ($params['tag'] == 'php') {
-                $title = '#PHP';
+                $title = 'Tag: #PHP';
                 $blogPosts = [$this->database[0], $this->database[1]];
             } elseif ($params['tag'] == 'coding') {
-                $title = '#Coding';
+                $title = 'Tag: #Coding';
                 $blogPosts = [$this->database[0], $this->database[1]];
             } elseif ($params['tag'] == 'munich') {
-                $title = '#München';
+                $title = 'Tag: #München';
                 $blogPosts = [$this->database[2], $this->database[3]];
             }
         } elseif (isset($params['date'])) {
             $currentMenu = $params['date'];
-            if ($params['date'] == '2017-05') {
-                $title = 'Archive: 2017 May';
-                $blogPosts = [$this->database[0], $this->database[1], $this->database[2]];
-            } elseif ($params['date'] == '2017-06') {
-                $title = 'Archive: 2017 June';
+            if ($params['date'] == '2017-11') {
+                $title = 'Archive: 2017 September';
+                $blogPosts = [$this->database[0]];
+            } elseif ($params['date'] == '2017-09') {
+                $title = 'Archive: 2017 August';
+                $blogPosts = [$this->database[1]];
+            } elseif ($params['date'] == '2017-08') {
+                $title = 'Archive: 2017 July';
+                $blogPosts = [$this->database[2]];
+            } elseif ($params['date'] == '2016-03') {
+                $title = 'Archive: 2016 December';
                 $blogPosts = [$this->database[3]];
             }
         }

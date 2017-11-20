@@ -5,8 +5,10 @@
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  * @link      http://www.gixx-web.com
  */
-* {
+
+*, *:before, *:after {
     box-sizing: border-box;
+    color: rgb(117, 117, 117);
 }
 
 html, body {

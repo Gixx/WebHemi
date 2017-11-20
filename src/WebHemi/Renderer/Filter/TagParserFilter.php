@@ -106,9 +106,9 @@ class TagParserFilter implements FilterInterface
 
     /**
      * @param string $text
-     * @return $this
+     * @return TagParserFilter
      */
-    private function getCurrentUri(string &$text)
+    private function getCurrentUri(string &$text) : TagParserFilter
     {
         $uri = rtrim($this->environmentManager->getRequestUri(), '/');
         $text = str_replace('[URL]', $uri, $text);
