@@ -13,12 +13,15 @@ namespace WebHemiTest;
 
 use PHPUnit\Framework\TestCase;
 use WebHemi\StringLib;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 
 /**
  * Class StringLibTest
  */
 class StringLibTest extends TestCase
 {
+    use AssertTrait;
+
     /**
      * Data provider for the CamelCase test.
      *
@@ -110,5 +113,62 @@ class StringLibTest extends TestCase
         $actualOutput = StringLib::convertNonAlphanumericToUnderscore($input, $extraCharacters);
 
         $this->assertSame($expectedOutput, $actualOutput);
+    }
+
+    /**
+     * Tests the convertTextToLines method.
+     */
+    public function testConvertTextToLines()
+    {
+        $input = <<<EOH
+
+ something
+
+  happens in Denmark.
+       Don't know
+   what
+
+
+
+
+               but it
+     stinks
+EOH;
+
+        $expextedOutput = [
+            'something',
+            'happens in Denmark.',
+            'Don\'t know',
+            'what',
+            'but it',
+            'stinks',
+        ];
+
+        $currentOutput = StringLib::convertTextToLines($input);
+
+        $this->assertArraysAreSimilar($expextedOutput, $currentOutput);
+    }
+
+    /**
+     * Tests the convertLinesToText method.
+     */
+    public function testConvertLinesToText()
+    {
+        $input = [
+            'something',
+            'happens in Denmark.',
+            'Don\'t know',
+            'what',
+            '',
+            'but it',
+            'stinks',
+        ];
+
+        $expextedOutput = 'something'.PHP_EOL.'happens in Denmark.'.PHP_EOL.'Don\'t know'.PHP_EOL.'what'.PHP_EOL.
+            PHP_EOL.'but it'.PHP_EOL.'stinks';
+
+        $currentOutput = StringLib::convertLinesToText($input);
+
+        $this->assertSame($expextedOutput, $currentOutput);
     }
 }

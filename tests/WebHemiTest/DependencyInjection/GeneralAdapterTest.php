@@ -18,7 +18,7 @@ use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemiTest\TestService\EmptyDependencyInjectionContainer;
 use WebHemiTest\TestService\EmptyService;
 use WebHemiTest\TestService\TestMiddleware;
-use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait;
+use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,7 +29,7 @@ class GeneralAdapterTest extends TestCase
     /** @var Config */
     private $config;
 
-    use AssertArraysAreSimilarTrait;
+    use AssertTrait;
 
     /**
      * Sets up the fixture, for example, open a network connection.

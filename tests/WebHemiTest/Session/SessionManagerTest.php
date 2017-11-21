@@ -210,6 +210,13 @@ class SessionManagerTest extends TestCase
             $this->assertInstanceOf(RuntimeException::class, $e);
             $this->assertSame(1009, $e->getCode());
         }
+
+        try {
+            $sessionManager->getSessionId();
+        } catch (Exception $e) {
+            $this->assertInstanceOf(RuntimeException::class, $e);
+            $this->assertSame(1010, $e->getCode());
+        }
     }
 
     /**

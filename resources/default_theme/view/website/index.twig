@@ -53,7 +53,8 @@
                     {{ 'Published at: %s'|t(publishDate)|raw }},
                     {% if blogPost.location is not empty %}{{ 'In the area of %s'|t(blogPost.location)|raw }}.{% endif %}
                     <br>
-                    {{ 'by'|t }} <a href="user/{{ blogPost.author.username }}" alt="{{ blogPost.author.name }}">{{ blogPost.author.name }}</a><br />
+                    {% set authorLink = '<a href="user/' ~ blogPost.author.username ~ '" alt="' ~ blogPost.author.name ~ '">' ~ blogPost.author.name ~ '</a>' %}
+                    {{ 'Author: %s'|t(authorLink)|raw }}<br />
 
                     {% set categoryLink = '' %}
                     {% for url,title in blogPost.category %}

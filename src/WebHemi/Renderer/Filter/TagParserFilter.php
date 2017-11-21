@@ -19,6 +19,8 @@ use WebHemi\Renderer\FilterInterface;
 
 /**
  * Class TagParserFilter
+ *
+ * @SuppressWarnings(PHPMD.UnusedPrivateMethod) - those methods are called by the __call() function.
  */
 class TagParserFilter implements FilterInterface
 {
