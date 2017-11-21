@@ -123,12 +123,38 @@ abstract class AbstractAdapter implements ServiceInterface
         }
 
         // Get all registered module configurations and merge them together.
-        if ($this->configuration->has($moduleName.'/'.$identifier)) {
-            $moduleConfig = $this->configuration->getData($moduleName.'/'.$identifier);
-            $configuration = merge_array_overwrite($configuration, $moduleConfig);
-        }
+        $this->getAllRegisteredModuleConfigurations($configuration, $moduleName.'/'.$identifier);
 
         // Resolve inheritance.
+        $this->resolveInheritance($configuration, $identifier);
+
+        $this->serviceConfiguration[$identifier] = $configuration;
+
+        return $configuration;
+    }
+
+    /**
+     * Get all registered module configurations and merge them together.
+     *
+     * @param array $configuration
+     * @param string $path
+     */
+    protected function getAllRegisteredModuleConfigurations(array &$configuration, string $path) : void
+    {
+        if ($this->configuration->has($path)) {
+            $moduleConfig = $this->configuration->getData($path);
+            $configuration = merge_array_overwrite($configuration, $moduleConfig);
+        }
+    }
+
+    /**
+     * Resolves the config inheritance.
+     *
+     * @param array $configuration
+     * @param string $identifier
+     */
+    protected function resolveInheritance(array &$configuration, string $identifier) : void
+    {
         if (isset($configuration[self::SERVICE_INHERIT])) {
             $parentConfiguration = $this->getServiceConfiguration($configuration[self::SERVICE_INHERIT]);
 
@@ -145,10 +171,6 @@ abstract class AbstractAdapter implements ServiceInterface
             $configuration = $parentConfiguration;
             unset($parentConfiguration, $configuration[self::SERVICE_INHERIT]);
         }
-
-        $this->serviceConfiguration[$identifier] = $configuration;
-
-        return $configuration;
     }
 
     /**

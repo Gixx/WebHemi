@@ -21,7 +21,7 @@ interface ValidatorInterface
     /**
      * Validates data.
      *
-     * @param array $data
+     * @param array $values
      * @return bool
      */
     public function validate(array $values) : bool;

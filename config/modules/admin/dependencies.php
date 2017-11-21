@@ -86,13 +86,18 @@ return [
                 ],
             ],
             Middleware\Action\Admin\Applications\ViewAction::class => [
-                'inherits' => Middleware\Action\Admin\Applications\AddAction::class,
+                'arguments' => [
+                    Configuration\ServiceInterface::class,
+                    Auth\ServiceInterface::class,
+                    Environment\ServiceInterface::class,
+                    Data\Storage\ApplicationStorage::class
+                ],
             ],
             Middleware\Action\Admin\Applications\PreferencesAction::class => [
                 'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
             ],
             Middleware\Action\Admin\Applications\DeleteAction::class => [
-                'inherits' => Middleware\Action\Admin\Applications\AddAction::class,
+                'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
             ],
             Middleware\Action\Admin\ControlPanel\Groups\ListAction::class => [
                 'arguments' => [

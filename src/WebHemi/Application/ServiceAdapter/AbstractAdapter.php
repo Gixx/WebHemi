@@ -113,9 +113,7 @@ abstract class AbstractAdapter implements ServiceInterface
 
             // As an extra step if an action middleware is resolved, it should be invoked by the dispatcher.
             if (isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
-                && ($middleware instanceof CommonMiddleware\DispatcherMiddleware
-                    || $middleware instanceof CommonMiddleware\CliDispatcherMiddleware
-                )
+                && $middleware instanceof CommonMiddleware\DispatcherMiddleware
             ) {
                 /** @var MiddlewareInterface $actionMiddleware */
                 $actionMiddleware = $this->container
