@@ -125,7 +125,7 @@ function run_unit_tests()
         if [[ -f "$FILE" ]]; then
             # Set test for message
             touch /tmp/test.git.commit
-            output="$($PROJECT_ROOT/vendor/bin/phpunit -c "$PROJECT_ROOT/phpunit.xml" "$FILE" 2>&1)"
+            output="$($PROJECT_ROOT/vendor/bin/phpunit -c "$PROJECT_ROOT/phpunit-fast.xml" "$FILE" 2>&1)"
             if [ $? -ne 0 ]; then
                 print_check_fail "$FILE"
 

@@ -33,7 +33,7 @@ tools:
 
 before_commands:
     - 'sudo composer self-update'
-    - 'composer install --prefer-source --no-interaction'
+    - 'composer install --no-interaction'
 
 build:
     environment:

@@ -65,7 +65,8 @@ class EmptyEnvironmentManager extends EnvironmentManager
             'COOKIE' => $cookieData,
             'FILES'  => $filesData,
         ];
-        $this->documentRoot = __DIR__.'/../TestDocumentRoot';
+        $this->applicationRoot = __DIR__.'/../TestDocumentRoot';
+        $this->documentRoot = realpath($this->applicationRoot.'/');
         $this->applicationDomain = 'www.unittest.dev';
         $this->selectedModule = 'Website';
         $this->selectedApplication = 'website';

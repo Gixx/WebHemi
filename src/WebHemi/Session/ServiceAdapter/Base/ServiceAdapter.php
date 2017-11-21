@@ -193,7 +193,13 @@ class ServiceAdapter implements ServiceInterface
             throw new RuntimeException('Cannot retrieve session identifier. Session is not started yet.', 1010);
         }
 
+        // @codeCoverageIgnoreStart
+        if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+            return '';
+        }
+
         return session_id();
+        // @codeCoverageIgnoreEnd
     }
 
     /**

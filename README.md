@@ -1,7 +1,7 @@
 # WebHemi #
 
 [![WebHemi Development](https://img.shields.io/badge/Development-dev--master-orange.svg)](https://github.com/Gixx/WebHemi)
-[![WebHemi Latest](https://img.shields.io/badge/Latest-v4.0.0--4.5-yellowgreen.svg)](https://github.com/Gixx/WebHemi/releases/latest)
+[![WebHemi Latest](https://img.shields.io/badge/Latest-v4.0.0--4.6-yellowgreen.svg)](https://github.com/Gixx/WebHemi/releases/latest)
 
 [![Minimum PHP Version](https://img.shields.io/badge/PHP->%3D7.1-blue.svg)](https://php.net/)
 [![Email](https://img.shields.io/badge/email-navig80@gmail.com-blue.svg?style=flat-square)](mailto:navig80@gmail.com)

@@ -1,10 +1,21 @@
 # Change log #
 
+## Version 4.0.0-4.6 ##
+
+* Improvements in the default theme.
+* Add I18n module:
+  * Service to set language, locale and timezone
+  * Driver to handle `.po` translations (currently only via the `gettext` PHP extension)
+  * The `WebHemi\DateTime` also uses the I18n module to get the correct date format
+* Fix composer package versions to avoid errors upon accidental update.
+* Increase unit test coverage.
+* Minor fixes (documentation, typos etc.)
+
 ## Version 4.0.0-4.5 ##
+
 * Add ValidatorInterface with basic validators:
   * _NotEmptyValidator_ - to check if an element's value is empty (including the multi-select elements)
   * _RangeValidator_ - to check if an element's value is within the range set up
- 
 
 ## Version 4.0.0-4.4 ##
 
@@ -25,7 +36,7 @@
   * Change the way of registering services and service instances
   * The Symfony adapter implements only the library-specific methods
 
-**NOTE: There's an issue with the PHPUnit Code Coverage: partially covers some array assignments**
+~~**NOTE: There's an issue with the PHPUnit Code Coverage: partially covers some array assignments**~~
 
 ## Version 4.0.0-4.2 ##
 
