@@ -81,6 +81,7 @@ class ListAction extends AbstractMiddlewareAction
     protected function getUserGroupList() : array
     {
         $dataList = [];
+        /** @var array $entityList */
         $entityList = $this->userGroupStorage->getUserGroups();
 
         /** @var UserGroupEntity $userGroupEntity */

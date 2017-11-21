@@ -41,7 +41,7 @@ class ViewAction extends AbstractMiddlewareAction
      * @param ConfigurationInterface $configuration
      * @param AuthInterface          $authAdapter
      * @param EnvironmentInterface   $environmentManager
-     * @parem ApplicationStorage     $applicationStorage
+     * @param ApplicationStorage     $applicationStorage
      */
     public function __construct(
         ConfigurationInterface $configuration,

@@ -120,10 +120,10 @@ class ServiceAdapter implements ServiceInterface
         }
 
         // Tell the template where the resources are.
-        $parameters['current_uri'] = $this->environmentManager->getRequestUri();
         $parameters['application'] = [
             'resourcePath' => $this->templateResourcePath,
             'baseUri' => $this->applicationBaseUri,
+            'currentUri' => $this->environmentManager->getRequestUri(),
             'documentRoot' => $this->environmentManager->getDocumentRoot(),
             'language' => $this->i18nService->getLanguage(),
             'author' => '',
