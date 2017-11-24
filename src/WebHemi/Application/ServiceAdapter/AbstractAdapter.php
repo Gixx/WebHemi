@@ -131,6 +131,7 @@ abstract class AbstractAdapter implements ServiceInterface
             if (in_array(
                 $exception->getCode(),
                 [
+                    ResponseInterface::STATUS_UNAUTHORIZED,
                     ResponseInterface::STATUS_FORBIDDEN,
                     ResponseInterface::STATUS_NOT_FOUND,
                     ResponseInterface::STATUS_BAD_METHOD,
