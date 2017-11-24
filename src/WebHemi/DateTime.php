@@ -80,7 +80,19 @@ class DateTime extends PHPDateTime implements TimeZoneInterface
     {
         if (isset($this->dateFormat[$format])) {
             $timestamp = $this->getTimestamp();
-            $dateString = strftime($this->dateFormat[$format], $timestamp);
+            $extraFromat = $this->dateFormat[$format];
+
+            if (strpos($extraFromat, '%Q') !== false) {
+                if ($this->dateFormat['ordinals']) {
+                    $replace = date('jS', $timestamp);
+                } else {
+                    $replace = '%d.';
+                }
+
+                $extraFromat = str_replace('%Q', $replace, $extraFromat);
+            }
+
+            $dateString = strftime($extraFromat, $timestamp);
         } else {
             $dateString = parent::format($format);
         }

@@ -188,9 +188,6 @@ body > footer {
 {
     body {
         height: 100%;
-    }
-
-    body {
         width: 100%;
         grid-template-columns: 100%;
         grid-template-rows: auto 50px;

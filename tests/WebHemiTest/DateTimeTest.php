@@ -109,7 +109,7 @@ class DateTimeTest extends TestCase
         $dateTime = new DateTime($testDate, $timeZoneWithDataInWebhemi);
         $resultDate = $dateTime->format('BDT');
         // The expected result is a translated.
-        $expectedDate = '10. September, 11:12 AM';
+        $expectedDate = '10th September, 11:12 AM';
         $this->assertSame($expectedDate, $resultDate);
 
         date_default_timezone_set($originalTimezone);

@@ -8,12 +8,10 @@ msgstr ""
 "Language: hu\n"
 
 #: 
-#, fuzzy
 msgid "Today"
 msgstr "Ma"
 
 #: 
-#, fuzzy
 msgid "Published at: %s"
 msgstr "Publikálva: %s-kor"
 
@@ -58,7 +56,104 @@ msgid "User"
 msgstr "Felhasználó"
 
 #: 
-#, fuzzy
 msgid "Author: %s"
 msgstr "Szerző: %s"
+
+#: 
+msgid "About the author"
+msgstr "A szerzőről"
+
+#: 
+msgid "Error 401: Unauthorized"
+msgstr "401-es hiba: Authentikáció szükséges"
+
+#: 
+msgid "<p>You have attempted to access a page for which you are not authorized. This page will automatically redirect to the %s Home Page in 10 seconds or click the following link to manually redirect this page to %s.</p>"
+msgstr "<p>Úgy tűnik, egy olyan tartalmat akartál megtekinteni, ami azonosításhoz kötött. Ez a hibaoldal automatikusan átirányít a kezdőlapra (%s) 10 másodperc múlva, vagy az alábbi linkre kattintva ezt te magad is megteheted: %s.</p>"
+
+#: 
+msgid "Error 403: Forbidden"
+msgstr "403-as hiba: Hozzáférés megtagadva"
+
+#: 
+msgid "<p>Sorry! You don't have access permissions for this page:</p>\n"
+"                <blockquote><p>%s</p></blockquote>\n"
+"                <p>Webservers and websites have directories and files that are not open to the public for security reasons.</p>\n"
+"                <p>Please try the following:</p>\n"
+"                <ul>\n"
+"                    <li>If you typed the page address in the Address bar, make sure that it is spelled correctly.</li>\n"
+"                    <li>Open the %s home page, and then look for links to the information you want.</li>\n"
+"                    <li>Click the Back button to try another link.</li>\n"
+"                </ul>"
+msgstr "<p>Sajnáljuk! Úgy tűnik, nem rendelkezel a megfeleő jogosultságokkal az alábbi oldal megtekintéséhez:</p>\n"
+"                <blockquote><p>%s</p></blockquote>\n"
+"                <p>A szerverek és weboldalak rendelkeznek olyan tartalmakkal, amik biztonsági okokból nem hozzáférhetőek mindenki számára.</p>\n"
+"                <p>Kérjük, próbálkozz a következőkkel:</p>\n"
+"                <ul>\n"
+"                    <li>Ha személyesen gépelted be a címet a Címsávba, győződj meg róla, hogy nem vétettél-e valamilyen hibát.</li>\n"
+"                    <li>Nyisd meg a kezdő oldalt a  %s címen, és keress hivatkozásokat a keresett információra vonatkozóan.</li>\n"
+"                    <li>Lépj vissza a böngésző \"Vissza\" gombjával, és próbálj ki egy másik hivatkozást.</li>\n"
+"                </ul>"
+
+#: 
+msgid "Error 404: Not Found"
+msgstr "404-es hiba: Az oldal nem található"
+
+#: 
+msgid "<p>The page you are seeking cannot be found:</p>\n"
+"                <blockquote><p>%s</p></blockquote>\n"
+"                <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>\n"
+"                <p>Please try the following:</p>\n"
+"                <ul>\n"
+"                    <li>If you typed the page address in the Address bar, make sure that it is spelled correctly.</li>\n"
+"                    <li>Open the %s home page, and then look for links to the information you want.</li>\n"
+"                    <li>Click the Back button to try another link.</li>\n"
+"                </ul>"
+msgstr "<p>A keresett oldal nem található:</p>\n"
+"                <blockquote><p>%s</p></blockquote>\n"
+"                <p>Az oldal, amit kerestél vagy törölve lett, vagy át lett nevezve, vagy csak átmenetileg nem elérhető.</p>\n"
+"                <p>Kérjük, próbálkozz a következőkkel:</p>\n"
+"                <ul>\n"
+"                    <li>Ha személyesen gépelted be a címet a Címsávba, győződj meg róla, hogy nem vétettél-e valamilyen hibát.</li>\n"
+"                    <li>Nyisd meg a kezdő oldalt a  %s címen, és keress hivatkozásokat a keresett információra vonatkozóan.</li>\n"
+"                    <li>Lépj vissza a böngésző \"Vissza\" gombjával, és próbálj ki egy másik hivatkozást.</li>\n"
+"                </ul>"
+
+#: 
+msgid "Error 405: Method Not Allowed"
+msgstr "405-ös hiba: A hozzáférési mód nem engedélyezett"
+
+#: 
+msgid "<p>The method you are using to access the page is not allowed.</p>\n"
+"                <p>Please try the following:</p>\n"
+"                <ul>\n"
+"                    <li>If you typed the page address in the Address bar, make sure that it is spelled correctly.</li>\n"
+"                    <li>Open the %s home page, and then look for links to the information you want.</li>\n"
+"                    <li>Click the Back button to try another link.</li>\n"
+"                </ul>"
+msgstr " <p>A mód, amivel az oldalt lekérdezted nem megengedett.</p>\n"
+"                <p>Kérjük próbálkozz a következőkkel:</p>\n"
+"                <ul>\n"
+"                    <li>Ha személyesen gépelted be a címet a Címsávba, győződj meg róla, hogy nem vétettél-e valamilyen hibát.</li>\n"
+"                    <li>Nyisd meg a kezdő oldalt a  %s címen, és keress hivatkozásokat a keresett információra vonatkozóan.</li>\n"
+"                    <li>Lépj vissza a böngésző \"Vissza\" gombjával, és próbálj ki egy másik hivatkozást.</li>\n"
+"                </ul>"
+
+#: 
+msgid "Error 500: Internal Server Error"
+msgstr "500-as hiba: Szerver oldali hiba"
+
+#: 
+msgid "<p>We apologize, an error occured on our side while handling your request. The details of the incident are recorded and will be investigated shortly.</p>\n"
+"                <p>In the mean time, please retry your request as it may have been temporary.</p>"
+msgstr " <p>Elnézést, úgy tűnik, hoba történt a mi oldalunkunk, miközben a kérést kezeltük. Az incidens részleteit rögzítettük és hamarosan kivizsgáljuk.</p>\n"
+"                <p>Időközben kérjük ismételd meg a kérést, mivel lehet, hogy csak egy átmeneti hibáról van szó.</p>"
+
+#: 
+msgid "Error 501: Not Implemented"
+msgstr "501-es hiba: Nincs implementálva"
+
+#: 
+msgid "<p>The server either does not recognize the request method, or it lacks the ability to fulfill the request</p>"
+msgstr "<p>A szerver vagy nem ismeri ezt a lekérési módot, vagy csak képtelen teljesíteni azt.</p>"
 

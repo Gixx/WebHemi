@@ -31,7 +31,7 @@ class IndexAction extends AbstractMiddlewareAction
     {
         $this->database = [
             [
-                'title'       => 'Hogy indítsuk jól a napot',
+                'title'       => 'Hogy indítsuk jól a napot: egy finom, gőzőlgő tea esete',
                 'summary'     => 'Jó tudni...',
                 'category'    => ['useful' => 'Hasznos infók'],
                 'tags'        => ['php' => 'PHP', 'coding' => 'Coding'],
