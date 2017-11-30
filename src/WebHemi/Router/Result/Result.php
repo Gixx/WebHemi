@@ -114,10 +114,10 @@ class Result
     /**
      * Sets matched middleware.
      *
-     * @param string $matchedMiddleware
+     * @param null|string $matchedMiddleware
      * @return Result
      */
-    public function setMatchedMiddleware(string $matchedMiddleware)
+    public function setMatchedMiddleware(? string $matchedMiddleware)
     {
         $this->matchedMiddleware = $matchedMiddleware;
 
@@ -127,11 +127,11 @@ class Result
     /**
      * Gets matched middleware.
      *
-     * @return string
+     * @return null|string
      */
-    public function getMatchedMiddleware() : string
+    public function getMatchedMiddleware() : ? string
     {
-        return $this->matchedMiddleware;
+        return $this->matchedMiddleware ?? null;
     }
 
     /**

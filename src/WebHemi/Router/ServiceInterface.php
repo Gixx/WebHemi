@@ -28,11 +28,13 @@ interface ServiceInterface
      * @param ConfigurationInterface $configuration
      * @param EnvironmentInterface   $environmentManager
      * @param Result\Result          $routeResult
+     * @param null|ProxyInterface    $routerProxy
      */
     public function __construct(
         ConfigurationInterface $configuration,
         EnvironmentInterface $environmentManager,
-        Result\Result $routeResult
+        Result\Result $routeResult,
+        ? ProxyInterface $routerProxy = null
     );
 
     /**

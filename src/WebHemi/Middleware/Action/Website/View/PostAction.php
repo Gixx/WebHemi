@@ -11,15 +11,15 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Middleware\Action\Website;
+namespace WebHemi\Middleware\Action\Website\View;
 
 use WebHemi\DateTime;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class PostViewAction
+ * Class PostAction
  */
-class PostViewAction extends AbstractMiddlewareAction
+class PostAction extends AbstractMiddlewareAction
 {
     /**
      * Gets template map name or template file path.
@@ -41,10 +41,10 @@ class PostViewAction extends AbstractMiddlewareAction
         $routingParams = $this->getRoutingParameters();
 
         $content = 'Lorem ipsum dolor sit amet...';
-        $testFile = __DIR__.'/../../../../../data/temp/markdownTest.md';
+        $testFile = __DIR__ . '/../../../../../data/temp/markdownTest.md';
 
         if (file_exists($testFile)) {
-            $content = file_get_contents(__DIR__.'/../../../../../data/temp/markdownTest.md');
+            $content = file_get_contents(__DIR__ . '/../../../../../data/temp/markdownTest.md');
         }
 
         return [

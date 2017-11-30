@@ -146,7 +146,7 @@ msgstr "500-as hiba: Szerver oldali hiba"
 #: 
 msgid "<p>We apologize, an error occured on our side while handling your request. The details of the incident are recorded and will be investigated shortly.</p>\n"
 "                <p>In the mean time, please retry your request as it may have been temporary.</p>"
-msgstr " <p>Elnézést, úgy tűnik, hoba történt a mi oldalunkunk, miközben a kérést kezeltük. Az incidens részleteit rögzítettük és hamarosan kivizsgáljuk.</p>\n"
+msgstr "<p>Elnézést, úgy tűnik, hiba történt a mi oldalunkon, miközben a kérést kezeltük. Az incidens részleteit rögzítettük és hamarosan kivizsgáljuk.</p>\n"
 "                <p>Időközben kérjük ismételd meg a kérést, mivel lehet, hogy csak egy átmeneti hibáról van szó.</p>"
 
 #: 

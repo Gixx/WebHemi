@@ -1,5 +1,19 @@
 # Change log #
 
+## Version 4.0.0-5.0 ##
+
+* Huge improvement in codebase:
+  * Add Filesystem classes (DataStorage, DataEntity, Actions)
+  * Add final version of some helpers: GetCategoriesHelper, GetTagsHelper and GetDatesHelper
+* Improvement in Router: finally found a solution how to handle dynamic content
+  * Get rid of FastRoute since it was unable to fulfill complex regular expressions like `^(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>(?!index\..?html$)[\w\-]+\.[a-z0-9]{2,5})$`
+  * Develop a simple Router
+  * Introduce RouteProxy to handle dynamic contents
+* Add/rename some database tables 
+* Extend database tables with new fields where they were necessary
+* Update unit tests to work also with the new codes
+* TODO: really make some unit tests... It's closer to 50% than ever before :(   
+
 ## Version 4.0.0-4.6 ##
 
 * Improvements in the default theme.

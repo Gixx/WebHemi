@@ -62,12 +62,16 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Gets a service.
      *
-     * @param string $identifier
+     * @param null|string $identifier
      * @throws RuntimeException
      * @return object
      */
-    public function get(string $identifier)
+    public function get(? string $identifier)
     {
+        if (is_null($identifier)) {
+            return null;
+        }
+
         // Not registered but valid class name, so register it
         if (!isset($this->serviceLibrary[$identifier]) && class_exists($identifier)) {
             $this->registerService($identifier);

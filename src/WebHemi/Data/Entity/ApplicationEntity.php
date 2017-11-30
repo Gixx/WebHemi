@@ -29,6 +29,18 @@ class ApplicationEntity implements EntityInterface
     private $title;
     /** @var string */
     private $description;
+    /** @var string */
+    private $path;
+    /** @var string */
+    private $theme;
+    /** @var string */
+    private $type;
+    /** @var string */
+    private $locale;
+    /** @var string */
+    private $timeZone;
+    /** @var string */
+    private $introduction;
     /** @var bool */
     private $isReadOnly;
     /** @var bool */
@@ -119,10 +131,10 @@ class ApplicationEntity implements EntityInterface
     }
 
     /**
-     * @param string $description
+     * @param null|string $description
      * @return ApplicationEntity
      */
-    public function setDescription(string $description) : ApplicationEntity
+    public function setDescription(? string $description) : ApplicationEntity
     {
         $this->description = $description;
 
@@ -135,6 +147,120 @@ class ApplicationEntity implements EntityInterface
     public function getDescription() : ? string
     {
         return $this->description;
+    }
+
+    /**
+     * @param null|string $path
+     * @return ApplicationEntity
+     */
+    public function setPath(? string $path) : ApplicationEntity
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getPath() : ? string
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param null|string $theme
+     * @return ApplicationEntity
+     */
+    public function setTheme(? string $theme) : ApplicationEntity
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getTheme() : ? string
+    {
+        return $this->theme;
+    }
+
+    /**
+     * @param null|string $type
+     * @return ApplicationEntity
+     */
+    public function setType(? string $type) : ApplicationEntity
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getType() : ? string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param null|string $locale
+     * @return ApplicationEntity
+     */
+    public function setLocale(? string $locale) : ApplicationEntity
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getLocale() : ? string
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param null|string $timeZone
+     * @return ApplicationEntity
+     */
+    public function setTimeZone(? string $timeZone) : ApplicationEntity
+    {
+        $this->timeZone = $timeZone;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getTimeZone() : ? string
+    {
+        return $this->timeZone;
+    }
+
+    /**
+     * @param null|string $introduction
+     * @return ApplicationEntity
+     */
+    public function setIntroduction(? string $introduction) : ApplicationEntity
+    {
+        $this->introduction = $introduction;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getIntroduction() : ? string
+    {
+        return $this->introduction;
     }
 
     /**

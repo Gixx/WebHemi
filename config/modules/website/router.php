@@ -15,33 +15,18 @@ return [
     'router' => [
         'Website' => [
             'website-index' => [
-                'path'            => '/',
-                'middleware'      => Action\Website\IndexAction::class,
+                'path' => '^/$',
+                'middleware' => Action\Website\IndexAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
-            'website-post-view' => [
-                'path'            => '{path:.+}.html',
-                'middleware'      => Action\Website\PostViewAction::class,
+            'website-view' => [
+                'path' => '^(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>(?!index\..?html$)[\w\-]+\.[a-z0-9]{2,5})$',
+                'middleware' => 'proxy',
                 'allowed_methods' => ['GET'],
             ],
-            'website-category-list' => [
-                'path'            => '/category/{category:.+}',
-                'middleware'      => Action\Website\PostListAction::class,
-                'allowed_methods' => ['GET'],
-            ],
-            'website-tag-list' => [
-                'path'            => '/tag/{tag:.+}',
-                'middleware'      => Action\Website\PostListAction::class,
-                'allowed_methods' => ['GET'],
-            ],
-            'website-date-list' => [
-                'path'            => '/archive/{date:\d\d\d\d\-\d\d}',
-                'middleware'      => Action\Website\PostListAction::class,
-                'allowed_methods' => ['GET'],
-            ],
-            'website-user-page' => [
-                'path'            => '/user/{username:.+}',
-                'middleware'      => Action\Website\UserAction::class,
+            'website-list' => [
+                'path' => '^(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>[^\.]+)(?:\/|\/index..?html)?$',
+                'middleware' => 'proxy',
                 'allowed_methods' => ['GET'],
             ],
         ],

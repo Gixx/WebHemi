@@ -13,8 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Renderer\Helper;
 
+use WebHemi\Data\StorageInterface;
+use WebHemi\Data\Storage;
+use WebHemi\Data\Entity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
+use WebHemi\Router\ProxyInterface;
+use WebHemi\StorageTrait;
 
 /**
  * Class GetCategoriesHelper
@@ -24,14 +29,18 @@ class GetCategoriesHelper implements HelperInterface
     /** @var EnvironmentInterface */
     private $environmentManager;
 
+    use StorageTrait;
+
     /**
-     * GetTagsHelper constructor.
+     * GetCategoriesHelper constructor.
      *
      * @param EnvironmentInterface $environmentManager
+     * @param StorageInterface[] ...$dataStorages
      */
-    public function __construct(EnvironmentInterface $environmentManager)
+    public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
     {
         $this->environmentManager = $environmentManager;
+        $this->addStorageInstances($dataStorages);
     }
 
     /**
@@ -82,13 +91,40 @@ class GetCategoriesHelper implements HelperInterface
      */
     public function __invoke() : array
     {
-        /* TODO: tbd */
+        $categories = [];
 
-        return [
-            ['url' => 'posts',      'title' => 'Posts',        'total' => 280, 'new' => 1],
-            ['url' => 'useful',     'title' => 'Useful infos', 'total' => 280, 'new' => 0],
-            ['url' => 'events',     'title' => 'Events',       'total' => 280, 'new' => 0],
-            ['url' => 'something',  'title' => 'Something',    'total' => 280, 'new' => 8],
-        ];
+        /** @var Storage\ApplicationStorage $applicationStorage */
+        $applicationStorage = $this->getApplicationStorage();
+        /** @var Storage\Filesystem\FilesystemCategoryStorage $categoryStorage */
+        $categoryStorage = $this->getFilesystemCategoryStorage();
+        /** @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage */
+        $directoryStorage = $this->getFilesystemDirectoryStorage();
+
+        if (!$applicationStorage || !$categoryStorage || !$directoryStorage) {
+            return [];
+        }
+
+        /** @var Entity\ApplicationEntity $application */
+        $application = $applicationStorage
+            ->getApplicationByName($this->environmentManager->getSelectedApplication());
+        $applicationId = $application->getKeyData();
+
+        /** @var array $categoryDirectoryData */
+        $categoryDirectoryData = $directoryStorage
+            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
+
+        /** @var Entity\Filesystem\FilesystemCategoryEntity[] $categoryList */
+        $categoryList = $categoryStorage
+            ->getFilesystemCategorysByApplication($applicationId);
+
+        foreach ($categoryList as $categoryEntity) {
+            $categories[] = [
+                'path' => $categoryDirectoryData['uri'],
+                'name' => $categoryEntity->getName(),
+                'title' => $categoryEntity->getTitle()
+            ];
+        }
+
+        return $categories;
     }
 }

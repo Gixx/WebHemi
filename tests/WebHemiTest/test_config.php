@@ -12,6 +12,7 @@
 
 use WebHemi\Configuration\ServiceInterface as ConfigInterface;
 use WebHemi\DateTime;
+use WebHemi\Data;
 use WebHemi\Environment\ServiceInterface as EnvironmentManager;
 use WebHemi\Http\ServiceInterface as HttpAdapterInterface;
 use WebHemi\Http\ServiceAdapter\GuzzleHttp\ServiceAdapter as GuzzleHttpAdapter;
@@ -25,12 +26,14 @@ use WebHemi\Middleware\Common\RoutingMiddleware;
 use WebHemi\Renderer\ServiceInterface as RendererAdapterInterface;
 use WebHemi\Renderer\ServiceAdapter\Twig\ServiceAdapter as TwigRendererAdapter;
 use WebHemi\Router\ServiceInterface as RouterAdapterInterface;
-use WebHemi\Router\ServiceAdapter\FastRoute\ServiceAdapter as FastRouteAdapter;
+use WebHemi\Router\ProxyInterface as RouterProxyInterface;
+use WebHemi\Router\ServiceAdapter\Base\ServiceAdapter as RouteAdapter;
 use WebHemi\Router\Result\Result;
 use WebHemiTest\TestService\EmptyRendererHelper;
 use WebHemiTest\TestService\EmptyService;
 use WebHemiTest\TestService\TestMiddleware;
 use WebHemiTest\TestService\TestActionMiddleware;
+use WebHemiTest\TestService\EmptyRouteProxy as RouteProxy;
 
 return [
     'applications' => [
@@ -102,12 +105,18 @@ return [
                 'shared'    => true,
             ],
             RouterAdapterInterface::class => [
-                'class'     => FastRouteAdapter::class,
+                'class'     => RouteAdapter::class,
                 'arguments' => [
                     ConfigInterface::class,
                     EnvironmentManager::class,
                     Result::class,
+                    RouterProxyInterface::class
                 ],
+                'shared'    => true,
+            ],
+            RouterProxyInterface::class => [
+                'class' => RouteProxy::class,
+                'arguments' => [],
                 'shared'    => true,
             ],
             RendererAdapterInterface::class => [
@@ -255,34 +264,34 @@ return [
     'router' => [
         'Website' => [
             'index' => [
-                'path'            => '/',
+                'path'            => '^/$',
                 'middleware'      => 'actionOk',
                 'allowed_methods' => ['GET','POST'],
             ],
             'login' => [
-                'path'            => '/login',
+                'path'            => '^/login$',
                 'middleware'      => 'SomeLoginMiddleware',
                 'allowed_methods' => ['GET'],
             ],
             'error' => [
-                'path' => '/error/',
-                'middleware' => 'actionBad',
+                'path'            => '^/error/$',
+                'middleware'      => 'actionBad',
                 'allowed_methods' => ['GET'],
             ],
             'forbidden' => [
-                'path' => '/restricted/',
-                'middleware' => 'actionForbidden',
+                'path'            => '^/restricted/$',
+                'middleware'      => 'actionForbidden',
                 'allowed_methods' => ['GET'],
             ]
         ],
         'SomeApp' => [
             'index' => [
-                'path'            => '/',
+                'path'            => '^/$',
                 'middleware'      => 'SomeIndexMiddleware',
                 'allowed_methods' => ['GET','POST'],
             ],
             'somepath' => [
-                'path'            => '/some/path',
+                'path'            => '^/some/path$',
                 'middleware'      => 'SomeOtherMiddleware',
                 'allowed_methods' => ['GET'],
             ],

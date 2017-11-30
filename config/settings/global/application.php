@@ -18,10 +18,16 @@ return [
         'website' => [
             'path'        => 'www',
             'theme'       => 'default',
+            'type'        => 'domain',
+            'locale'      => 'en_GB.UTF-8',
+            'timezone'    => 'Europe/London',
         ],
         'admin' => [
             'path'        => 'admin',
             'theme'       => 'default',
+            'type'        => 'directory',
+            'locale'      => 'en_GB.UTF-8',
+            'timezone'    => 'Europe/London',
         ],
     ],
 ];
