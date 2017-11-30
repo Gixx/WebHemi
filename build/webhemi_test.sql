@@ -328,7 +328,7 @@ INSERT INTO `webhemi_filesystem_to_filesystem_tag` VALUES
     (NULL, 3, 14);
 
 INSERT INTO `webhemi_filesystem_meta` VALUES
-    (NULL, 13, 'illustration', '/data/upload/avatars/admin.png', NOW(), NULL),
+    (NULL, 13, 'illustration', '/data/upload/images/Nature.jpg', NOW(), NULL),
     (NULL, 13, 'mood_key', 'hugging', NOW(), NULL),
     (NULL, 13, 'mood_name', 'feels beloved', NOW(), NULL),
     (NULL, 13, 'location', 'München', NOW(), NULL);
