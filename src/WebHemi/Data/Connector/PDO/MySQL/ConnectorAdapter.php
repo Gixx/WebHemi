@@ -270,7 +270,7 @@ class ConnectorAdapter implements ConnectorInterface
      */
     protected function getQueryHaving(array $options) : string
     {
-        return isset($options[self::OPTION_GROUP]) ? $options[self::OPTION_HAVING] : '';
+        return $options[self::OPTION_HAVING] ?? '';
     }
 
     /**
@@ -345,7 +345,9 @@ class ConnectorAdapter implements ConnectorInterface
         } elseif (strpos($column, ' LIKE') !== false || (is_string($value) && strpos($value, '%') !== false)) {
             $queryParams[] = $this->getLikeColumnCondition($column);
             $queryBinds[] = $value;
-        } elseif (is_null($value)) {
+        } elseif ($value === true) {
+            $queryParams[] = "{$column} IS NOT NULL";
+        } elseif (is_null($value) || $value === false) {
             $queryParams[] = "{$column} IS NULL";
         } else {
             $queryParams[] = $this->getSimpleColumnCondition($column);
@@ -369,17 +371,19 @@ class ConnectorAdapter implements ConnectorInterface
      *
      * Allows special cases:
      * @example  ['my_column LIKE ?' => 'some value%']
-     * @example  ['my_column LIKE' => 'some value%']
+     * @example  ['my_column NOT' => 'some value%']
      * @example  ['my_column' => 'some value%']
      *
      * @param string $column
-     * @return string 'my_column LIKE ?'
+     * @return string 'my_column LIKE ?' or 'my_column NOT LIKE ?'
      */
     protected function getLikeColumnCondition(string $column) : string
     {
-        list($columnNameOnly) = explode(' ', $column);
+        $like = strpos(' NOT ', $column) !== false ? ' NOT LIKE ' : ' LIKE ';
 
-        return $columnNameOnly.' LIKE ?';
+        list($columnNameOnly) = explode(' ', trim($column));
+
+        return $columnNameOnly.$like.'?';
     }
 
     /**

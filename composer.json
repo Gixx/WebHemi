@@ -31,9 +31,8 @@
   "require": {
     "php": ">=7.1",
     "ext-mcrypt": "*",
-    "nikic/fast-route": "1.2.0",
     "guzzlehttp/psr7": "1.4.2",
-    "symfony/dependency-injection": "3.3.9",
+    "symfony/dependency-injection": "3.3.13",
     "twig/twig": "2.4.4",
     "twig/extensions": "1.5.1",
     "katzgrau/klogger": "1.2.1",

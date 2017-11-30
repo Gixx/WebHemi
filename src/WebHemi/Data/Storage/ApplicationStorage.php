@@ -33,6 +33,18 @@ class ApplicationStorage extends AbstractStorage
     /** @var string */
     private $description = 'description';
     /** @var string */
+    private $path = 'path';
+    /** @var string */
+    private $theme = 'theme';
+    /** @var string */
+    private $type = 'type';
+    /** @var string */
+    private $locale = 'locale';
+    /** @var string */
+    private $timeZone = 'timezone';
+    /** @var string */
+    private $introduction = 'introduction';
+    /** @var string */
     private $isReadOnly = 'is_read_only';
     /** @var string */
     private $isEnabled = 'is_enabled';
@@ -54,7 +66,13 @@ class ApplicationStorage extends AbstractStorage
         $dataEntity->setApplicationId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
-            ->setDescription($data[$this->description])
+            ->setDescription($data[$this->description] ?? null)
+            ->setPath($data[$this->path] ?? null)
+            ->setTheme($data[$this->theme] ?? null)
+            ->setType($data[$this->type] ?? null)
+            ->setLocale($data[$this->locale] ?? null)
+            ->setTimeZone($data[$this->timeZone] ?? null)
+            ->setIntroduction($data[$this->introduction] ?? null)
             ->setReadOnly((bool) $data[$this->isReadOnly])
             ->setEnabled((bool) $data[$this->isEnabled])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
@@ -78,6 +96,12 @@ class ApplicationStorage extends AbstractStorage
             $this->name => $dataEntity->getName(),
             $this->title => $dataEntity->getTitle(),
             $this->description => $dataEntity->getDescription(),
+            $this->path => $dataEntity->getPath(),
+            $this->theme => $dataEntity->getTheme(),
+            $this->type => $dataEntity->getType(),
+            $this->locale => $dataEntity->getLocale(),
+            $this->timeZone => $dataEntity->getTimeZone(),
+            $this->introduction => $dataEntity->getIntroduction(),
             $this->isReadOnly => (int) $dataEntity->getReadOnly(),
             $this->isEnabled => (int) $dataEntity->getEnabled(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,

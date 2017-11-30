@@ -112,6 +112,7 @@ class AclMiddleware implements MiddlewareInterface
         } else {
             // Instead of throw a useless 401 error here, redirect the user to the login page
             $appUri = rtrim($this->environmentManager->getSelectedApplicationUri(), '/');
+
             $response = $response->withStatus(ResponseInterface::STATUS_REDIRECT, 'Found')
                 ->withHeader('Location', $appUri.'/auth/login');
         }

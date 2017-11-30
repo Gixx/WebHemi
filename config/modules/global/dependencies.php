@@ -120,11 +120,11 @@ return [
                 'shared'    => true,
             ],
             Router\ServiceInterface::class => [
-                'class'     => Router\ServiceAdapter\FastRoute\ServiceAdapter::class,
+                'class'     => Router\ServiceAdapter\Base\ServiceAdapter::class,
                 'arguments' => [
                     Configuration\ServiceInterface::class,
                     Environment\ServiceInterface::class,
-                    Router\Result\Result::class,
+                    Router\Result\Result::class
                 ],
                 'shared'    => true,
             ],
@@ -202,6 +202,41 @@ return [
                 'arguments' => [
                     Data\ConnectorInterface::class,
                     Data\Entity\AccessManagement\ResourceEntity::class
+                ],
+                'shared'    => true,
+            ],
+            Data\Storage\Filesystem\FilesystemStorage::class => [
+                'arguments' => [
+                    Data\ConnectorInterface::class,
+                    Data\Entity\Filesystem\FilesystemEntity::class
+                ],
+                'shared'    => true,
+            ],
+            Data\Storage\Filesystem\FilesystemDirectoryStorage::class => [
+                'arguments' => [
+                    Data\ConnectorInterface::class,
+                    Data\Entity\Filesystem\FilesystemDirectoryEntity::class
+                ],
+                'shared'    => true,
+            ],
+            Data\Storage\Filesystem\FilesystemDocumentStorage::class => [
+                'arguments' => [
+                    Data\ConnectorInterface::class,
+                    Data\Entity\Filesystem\FilesystemDocumentEntity::class
+                ],
+                'shared'    => true,
+            ],
+            Data\Storage\Filesystem\FilesystemTagStorage::class => [
+                'arguments' => [
+                    Data\ConnectorInterface::class,
+                    Data\Entity\Filesystem\FilesystemTagEntity::class
+                ],
+                'shared'    => true,
+            ],
+            Data\Storage\Filesystem\FilesystemCategoryStorage::class => [
+                'arguments' => [
+                    Data\ConnectorInterface::class,
+                    Data\Entity\Filesystem\FilesystemCategoryEntity::class
                 ],
                 'shared'    => true,
             ],

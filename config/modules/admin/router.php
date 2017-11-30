@@ -17,140 +17,140 @@ return [
         'Admin' => [
             // Auth
             'admin-login' => [
-                'path'            => '/auth/login[/]',
+                'path'            => '^/auth/login/?$',
                 'middleware'      => Action\Auth\LoginAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
             'admin-logout' => [
-                'path'            => '/auth/logout[/]',
+                'path'            => '^/auth/logout/?$',
                 'middleware'      => Action\Auth\LogoutAction::class,
                 'allowed_methods' => ['GET'],
             ],
             // Dashboard
             'dashboard' => [
-                'path'            => '/',
+                'path'            => '^/$',
                 'middleware'      => Action\Admin\DashboardAction::class,
                 'allowed_methods' => ['GET'],
                 'resource_name'   => 'admin-dashboard', // Define resorce name in the options
             ],
             // Applications
             'admin-applications-list' => [ // Define resource name in the index (fallback if no option presents)
-                'path'            => '/applications[/]',
+                'path'            => '^/applications/?$',
                 'middleware'      => Action\Admin\Applications\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
             'admin-applications-add' => [
-                'path'            => '/applications/add',
+                'path'            => '^/applications/add/?$',
                 'middleware'      => Action\Admin\Applications\AddAction::class,
                 'allowed_methods' => ['GET'],
             ],
             'admin-applications-view' => [
-                'path'            => '/applications/{name:[a-z0-9\-\_]+}[/]',
+                'path'            => '^/applications/(?P<name>[a-z0-9\-\_]+)/?$',
                 'middleware'      => Action\Admin\Applications\ViewAction::class,
                 'allowed_methods' => ['GET'],
             ],
             'admin-applications-preferences' => [
-                'path'            => '/applications/{name:[a-z0-9\-\_]+}/preferences[/]',
+                'path'            => '^/applications/(?P<name>[a-z0-9\-\_]+)/preferences/?$',
                 'middleware'      => Action\Admin\Applications\PreferencesAction::class,
                 'allowed_methods' => ['GET'],
             ],
             'admin-applications-save' => [
-                'path'            => '/applications/{name:[a-z0-9\-\_]+}/{action:save}[/]',
+                'path'            => '^/applications/(?P<name>[a-z0-9\-\_]+)/(?P<action>save)/?$',
                 'middleware'      => Action\Admin\Applications\SaveAction::class,
                 'allowed_methods' => ['POST'],
             ],
             'admin-applications-delete' => [
-                'path'            => '/applications/{name:[a-z0-9\-\_]+}/delete[/]',
+                'path'            => '^/applications/(?P<name>[a-z0-9\-\_]+)/delete/?$',
                 'middleware'      => Action\Admin\Applications\DeleteAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
             // Control Panel
             'admin-control-panel-index' => [
-                'path'            => '/control-panel[/]',
+                'path'            => '^/control-panel/?$',
                 'middleware'      => Action\Admin\ControlPanel\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
             // Settings
             'admin-control-panel-settings-index' => [
-                'path'            => '/control-panel/settings[/]',
+                'path'            => '^/control-panel/settings/?$',
                 'middleware'      => Action\Admin\ControlPanel\Settings\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
             // Themes
             'admin-control-panel-themes-list' => [
-                'path'            => '/control-panel/themes[/]',
+                'path'            => '^/control-panel/themes/?$',
                 'middleware'      => Action\Admin\ControlPanel\Themes\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
             'admin-control-panel-themes-add' => [
-                'path'            => '/control-panel/themes/add[/]',
+                'path'            => '^/control-panel/themes/add/?$',
                 'middleware'      => Action\Admin\ControlPanel\Themes\AddAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
             'admin-control-panel-themes-view' => [
-                'path'            => '/control-panel/themes/{name:[a-z0-9\-\_]+}[/]',
+                'path'            => '^/control-panel/themes/(?P<name>[a-z0-9\-\_]+)/?$',
                 'middleware'      => Action\Admin\ControlPanel\Themes\ViewAction::class,
                 'allowed_methods' => ['GET'],
             ],
             'admin-control-panel-themes-delete' => [
-                'path'            => '/control-panel/themes/{name:[a-z0-9\-\_]+}/delete[/]',
+                'path'            => '^/control-panel/themes/(?P<name>[a-z0-9\-\_]+)/delete/?$',
                 'middleware'      => Action\Admin\ControlPanel\Themes\DeleteAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
             // Add-Ons
             'admin-control-panel-add-ons-index' => [
-                'path'            => '/control-panel/add-ons[/]',
+                'path'            => '^/control-panel/add-ons/?$',
                 'middleware'      => Action\Admin\ControlPanel\AddOns\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
             // Users
             'admin-control-panel-users-list' => [
-                'path'            => '/control-panel/users[/]',
+                'path'            => '^/control-panel/users/?$',
                 'middleware'      => Action\Admin\ControlPanel\Users\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
             // Groups
             'admin-control-panel-groups-list' => [
-                'path'            => '/control-panel/groups[/]',
+                'path'            => '^/control-panel/groups/?$',
                 'middleware'      => Action\Admin\ControlPanel\Groups\ListAction::class,
                 'allowed_methods' => ['GET'],
             ],
             'admin-control-panel-groups-add' => [
-                'path'            => '/control-panel/groups/add[/]',
+                'path'            => '^/control-panel/groups/add/?$',
                 'middleware'      => Action\Admin\ControlPanel\Groups\AddAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
             'admin-control-panel-groups-view' => [
-                'path'            => '/control-panel/groups/view/{userGroupId:\d+}[/]',
+                'path'            => '^/control-panel/groups/view/(?P<userGroupId>\d+)/?$',
                 'middleware'      => Action\Admin\ControlPanel\Groups\ViewAction::class,
                 'allowed_methods' => ['GET'],
             ],
             'admin-control-panel-groups-edit' => [
-                'path'            => '/control-panel/groups/edit/{userGroupId:\d+}[/]',
+                'path'            => '^/control-panel/groups/edit/(?P<userGroupId>\d+)/?$',
                 'middleware'      => Action\Admin\ControlPanel\Groups\EditAction::class,
                 'allowed_methods' => ['GET', 'POST'],
             ],
             // Resources
             'admin-control-panel-resources-list' => [
-                'path'            => '/control-panel/resources[/]',
+                'path'            => '^/control-panel/resources/?$',
                 'middleware'      => Action\Admin\ControlPanel\Resources\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
             // Policies
             'admin-control-panel-policies-list' => [
-                'path'            => '/control-panel/policies[/]',
+                'path'            => '^/control-panel/policies/?$',
                 'middleware'      => Action\Admin\ControlPanel\Policies\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
             // Logs
             'admin-control-panel-logs-list' => [
-                'path'            => '/control-panel/logs[/]',
+                'path'            => '^/control-panel/logs/?$',
                 'middleware'      => Action\Admin\ControlPanel\Logs\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],
             // About
             'admin-about-index' => [
-                'path'            => '/about[/]',
+                'path'            => '^/about/?$',
                 'middleware'      => Action\Admin\About\IndexAction::class,
                 'allowed_methods' => ['GET'],
             ],

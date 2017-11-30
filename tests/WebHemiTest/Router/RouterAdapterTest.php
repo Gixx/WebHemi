@@ -11,21 +11,21 @@
  */
 namespace WebHemiTest\Adapter\Router;
 
-use FastRoute\Dispatcher;
 use PHPUnit\Framework\TestCase;
 use WebHemi\Http\ServiceAdapter\GuzzleHttp\ServerRequest;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Router\ServiceInterface as RouterAdapterInterface;
-use WebHemi\Router\ServiceAdapter\FastRoute\ServiceAdapter as FastRouteAdapter;
+use WebHemi\Router\ServiceAdapter\Base\ServiceAdapter as RouteAdapter;
 use WebHemi\Router\Result\Result;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use WebHemiTest\TestService\EmptyEnvironmentManager;
+use WebHemiTest\TestService\EmptyRouteProxy;
 
 /**
- * Class FastRouterAdapterTest.
+ * Class RouterAdapterTest.
  */
-class FastRouterAdapterTest extends TestCase
+class RouterAdapterTest extends TestCase
 {
     /** @var Config */
     protected $config = [];
@@ -43,6 +43,8 @@ class FastRouterAdapterTest extends TestCase
     protected $environmentManager;
     /** @var Result */
     protected $routeResult;
+    /** @var EmptyRouteProxy */
+    protected $routeProxy;
 
     use AssertTrait;
     use InvokePrivateMethodTrait;
@@ -73,6 +75,7 @@ class FastRouterAdapterTest extends TestCase
             $this->files
         );
         $this->routeResult = new Result();
+        $this->routeProxy = new EmptyRouteProxy();
     }
 
     /**
@@ -80,14 +83,14 @@ class FastRouterAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $adapterObj = new FastRouteAdapter(
+        $adapterObj = new RouteAdapter(
             $this->config,
             $this->environmentManager,
-            $this->routeResult
+            $this->routeResult,
+            $this->routeProxy
         );
 
         $this->assertInstanceOf(RouterAdapterInterface::class, $adapterObj);
-        $this->assertAttributeInstanceOf(Dispatcher::class, 'adapter', $adapterObj);
     }
 
     /**
@@ -95,10 +98,11 @@ class FastRouterAdapterTest extends TestCase
      */
     public function testPrivateMethod()
     {
-        $adapterObj = new FastRouteAdapter(
+        $adapterObj = new RouteAdapter(
             $this->config,
             $this->environmentManager,
-            $this->routeResult
+            $this->routeResult,
+            $this->routeProxy
         );
         $request = new ServerRequest('GET', '/');
         $result = $this->invokePrivateMethod($adapterObj, 'getApplicationRouteUri', [$request]);
@@ -110,10 +114,11 @@ class FastRouterAdapterTest extends TestCase
 
         // Change application root
         $this->environmentManager->setSelectedApplicationUri('/some_application');
-        $adapterObj = new FastRouteAdapter(
+        $adapterObj = new RouteAdapter(
             $this->config,
             $this->environmentManager,
-            $this->routeResult
+            $this->routeResult,
+            $this->routeProxy
         );
         $request = new ServerRequest('GET', '/some_application/some/path/');
         $result = $this->invokePrivateMethod($adapterObj, 'getApplicationRouteUri', [$request]);
@@ -129,10 +134,11 @@ class FastRouterAdapterTest extends TestCase
      */
     public function testRouteMatchWithDefaultApplication()
     {
-        $adapterObj = new FastRouteAdapter(
+        $adapterObj = new RouteAdapter(
             $this->config,
             $this->environmentManager,
-            $this->routeResult
+            $this->routeResult,
+            $this->routeProxy
         );
 
         $request = new ServerRequest('GET', '/');
@@ -167,10 +173,11 @@ class FastRouterAdapterTest extends TestCase
         $this->environmentManager->setSelectedModule('SomeApp')
             ->setSelectedApplicationUri('/some_application')
             ->setSelectedApplication('some_app');
-        $adapterObj = new FastRouteAdapter(
+        $adapterObj = new RouteAdapter(
             $this->config,
             $this->environmentManager,
-            $this->routeResult
+            $this->routeResult,
+            $this->routeProxy
         );
 
         $request = new ServerRequest('GET', '/some_application/');

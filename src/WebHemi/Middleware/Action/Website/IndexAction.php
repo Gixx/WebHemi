@@ -13,99 +13,35 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website;
 
+use WebHemi\Data\StorageInterface;
+use WebHemi\Data\Storage;
+use WebHemi\Data\Entity;
 use WebHemi\DateTime;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
+use WebHemi\Router\ProxyInterface;
+use WebHemi\StorageTrait;
 
 /**
  * Class IndexAction.
  */
 class IndexAction extends AbstractMiddlewareAction
 {
-    /** @var array */
-    protected $database = [];
+    /** @var EnvironmentInterface */
+    protected $environmentManager;
+
+    use StorageTrait;
 
     /**
      * IndexAction constructor.
+     *
+     * @param EnvironmentInterface $environmentManager
+     * @param StorageInterface[] ...$dataStorages
      */
-    public function __construct()
+    public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
     {
-        $this->database = [
-            [
-                'title'       => 'Hogy indítsuk jól a napot: egy finom, gőzőlgő tea esete',
-                'summary'     => 'Jó tudni...',
-                'category'    => ['useful' => 'Hasznos infók'],
-                'tags'        => ['php' => 'PHP', 'coding' => 'Coding'],
-                'illustration'=> '/data/upload/filesystem/images/Nature.jpg',
-                'path'        => 'posts/view/a_perfect_day.html',
-                'publishedAt' => new DateTime('now'),
-                'location'    => 'München',
-                'author'      => [
-                    'name'   => 'Admin',
-                    'username'=> 'admin',
-                    'avatar' => '/data/upload/avatars/admin.png',
-                    'mood'   => ['szeretve érzi magát', 'hugging'],
-                ],
-                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
-                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
-                                       vero eos et accusam et justo duo dolores et ea rebum.'
-            ],
-            [
-                'title'       => 'Just an idea, de egy meglehetősen hosszú címmel felvértezve',
-                'summary'     => null,
-                'category'    => ['posts' => 'Posts'],
-                'tags'        => ['php' => 'PHP', 'coding' => 'Coding'],
-                'illustration'=> null,
-                'path'        => 'notepad/just_an_idea.html',
-                'publishedAt' => new DateTime(mktime(12, 11, 10, 9, 18, 2017)),
-                'location'    => null,
-                'author'      => [
-                    'name'   => 'Gabor',
-                    'username'=> 'gabor',
-                    'avatar' => '/data/upload/avatars/gabor.png',
-                    'mood'   => null,
-                ],
-                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
-                                       vero eos et accusam et justo duo dolores et ea rebum.'
-            ],
-            [
-                'title'       => 'An Owl',
-                'category'    => ['events' => 'Events'],
-                'tags'        => ['munich' => 'Munich'],
-                'illustration'=> '/data/upload/filesystem/images/Owl.jpg',
-                'path'        => 'nature/birds/notes/an_owl.html',
-                'publishedAt' => new DateTime(mktime(12, 11, 10, 8, 20, 2017)),
-                'location'    => 'München',
-                'author'      => [
-                    'name'   => 'Amadeus',
-                    'username'=> 'a.madeus',
-                    'avatar' => '/data/upload/avatars/a.madeus.png',
-                    'mood'   => null,
-                ],
-                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
-                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
-                                       vero eos et accusam et justo duo dolores et ea rebum.'
-            ],
-            [
-                'title'       => 'The new Spiderman movie',
-                'summary'     => 'I didn\'t see it yet',
-                'category'    => ['something' => 'Something'],
-                'tags'        => ['munich' => 'Munich'],
-                'illustration'=> '/data/upload/filesystem/images/Spider.jpg',
-                'path'        => 'nature/arthropods/spidey.html',
-                'publishedAt' => new DateTime(mktime(12, 11, 10, 3, 15, 2016)),
-                'location'    => 'München',
-                'author'      => [
-                    'name'   => 'Amadeus',
-                    'username'=> 'a.madeus',
-                    'avatar' => '/data/upload/avatars/a.madeus.png',
-                    'mood'   => null,
-                ],
-                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
-                                       vero eos et accusam et justo duo dolores et ea rebum.'
-            ]
-        ];
+        $this->environmentManager = $environmentManager;
+        $this->addStorageInstances($dataStorages);
     }
 
     /**
@@ -125,28 +61,166 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
+        $blogPosts = [];
+
+        /** @var Entity\ApplicationEntity $applicationEntity */
+        $applicationEntity = $this->getApplicationStorage()
+            ->getApplicationByName($this->environmentManager->getSelectedApplication());
+
+        /** @var Entity\Filesystem\FilesystemEntity[] $publications */
+        $publications = $this->getFilesystemStorage()
+            ->getPublishedDocuments($applicationEntity->getApplicationId());
+
+        /** @var Entity\Filesystem\FilesystemEntity $filesystemEntity */
+        foreach ($publications as $filesystemEntity) {
+            /** @var Entity\Filesystem\FilesystemDocumentEntity $documentEntity */
+            $documentEntity = $this->getFilesystemDocumentStorage()
+                ->getFilesystemDocumentById($filesystemEntity->getDocumentId());
+
+            $documentMeta = $this->getFilesystemStorage()
+                ->getPublicationMeta($filesystemEntity->getFilesystemId());
+
+            $author = $this->getPublicationAuthor(
+                $documentEntity->getAuthorId(),
+                $applicationEntity->getApplicationId()
+            );
+            $author['mood'] = [];
+
+            if (isset($documentMeta['mood_key']) && isset($documentMeta['mood_name'])) {
+                $author['mood'] = [
+                    $documentMeta['mood_name'],
+                    $documentMeta['mood_key']
+                ];
+            }
+
+            $blogPosts[] = [
+                'author' => $author,
+                'tags' => $this->getPublicationTags(
+                    $applicationEntity->getApplicationId(),
+                    $filesystemEntity->getFilesystemId()
+                ),
+                'category' => $this->getPublicationCategory(
+                    $applicationEntity->getApplicationId(),
+                    $filesystemEntity->getCategoryId()
+                ),
+                'publishedAt' => $filesystemEntity->getDatePublished(),
+                'location' => $documentMeta['location'] ?? '',
+                'summary' => $filesystemEntity->getDescription(),
+                'illustration' => $documentMeta['illustration'] ?? '',
+                'path' => $this->getPublicationPath($filesystemEntity),
+                'title' => $filesystemEntity->getTitle(),
+                'contentLead' => $documentEntity->getContentLead(),
+                'contentBody' => $documentEntity->getContentBody()
+            ];
+        }
+
         return [
             'activeMenu' => '',
-            'blogPosts' => $this->database,
-            'fixPost' => [
-                'title'       => 'Welcome to my blog!',
-                'summary'     => null,
-                'category'    => null,
-                'tags'        => null,
-                'illustration'=> null,
-                'path'        => 'welcome.html',
-                'publishedAt' => time(),
-                'location'    => null,
-                'author'      => [
-                    'name'   => 'Gabor',
-                    'username'=> 'gabor',
-                    'avatar' => '/data/upload/avatars/gabor.png',
-                    'mood'   => null,
-                ],
-                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
-                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
-                                       vero eos et accusam et justo duo dolores et ea rebum.'
-            ],
+            'blogPosts' => $blogPosts,
+            'fixPost' => $applicationEntity->getIntroduction(),
+        ];
+    }
+
+    /**
+     * Generates the content path.
+     *
+     * @param Entity\Filesystem\FilesystemEntity $filesystemEntity
+     * @return string
+     */
+    protected function getPublicationPath(Entity\Filesystem\FilesystemEntity $filesystemEntity) : string
+    {
+        $path = $filesystemEntity->getPath().'/'.$filesystemEntity->getBaseName();
+
+        if (strpos($path, '//') !== false) {
+            $path = str_replace('//', '/', $path);
+        }
+
+        return $path;
+    }
+
+    /**
+     * Collects all the tags for a filesystem record.
+     *
+     * @param int $applicationId
+     * @param int $filesystemId
+     * @return array
+     */
+    protected function getPublicationTags(int $applicationId, int $filesystemId) : array
+    {
+        $tags = [];
+        /** @var Entity\Filesystem\FilesystemTagEntity[] $tagEntities */
+        $tagEntities = $this->getFilesystemTagStorage()
+            ->getFilesystemTagsByFilesystem($filesystemId);
+
+        if ($tagEntities) {
+            /** @var array $categoryDirectoryData */
+            $categoryDirectoryData = $this->getFilesystemDirectoryStorage()
+                ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);
+
+            /** @var Entity\Filesystem\FilesystemTagEntity $tagEntity */
+            foreach ($tagEntities as $tagEntity) {
+                $tags[] = [
+                    'url' => $categoryDirectoryData['uri'].'/'.$tagEntity->getName(),
+                    'title' => $tagEntity->getTitle()
+                ];
+            }
+        }
+
+        return $tags;
+    }
+
+    /**
+     * Gets the category for a filesystem record.
+     *
+     * @param int $applicationId
+     * @param int $categoryId
+     * @return array
+     */
+    protected function getPublicationCategory(int $applicationId, int $categoryId) : array
+    {
+        /** @var Entity\Filesystem\FilesystemCategoryEntity $categoryEntity */
+        $categoryEntity = $this->getFilesystemCategoryStorage()
+            ->getFilesystemCategoryById($categoryId);
+
+        /** @var array $categoryDirectoryData */
+        $categoryDirectoryData = $this->getFilesystemDirectoryStorage()
+            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
+
+        $category = [
+            'url' => $categoryDirectoryData['uri'].'/'.$categoryEntity->getName(),
+            'title' => $categoryEntity->getTitle()
+        ];
+        return $category;
+    }
+
+    /**
+     * Gets author information for a filesystem record.
+     *
+     * @param int $userId
+     * @param int $applicationId
+     * @return array
+     */
+    protected function getPublicationAuthor(int $userId, int $applicationId) : array
+    {
+        $user = $this->getUserStorage()
+            ->getUserById($userId);
+
+        $userMeta = $this->getUserMetaStorage()
+            ->getUserMetaSetForUserId($userId);
+
+        /** @var array $userDirectoryData */
+        $userDirectoryData = $this->getFilesystemDirectoryStorage()
+            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_USER);
+
+        return [
+            'user_id' => $userId,
+            'username' => $user->getUserName(),
+            'url' => $userDirectoryData['uri'].'/'.$user->getUserName(),
+            'name' => $userMeta['display_name'] ?? $user->getUserName(),
+            'email' => ($userMeta['email_visible'] ?? 0) ? $user->getEmail() : '',
+            'avatar' => ($userMeta['avatar_type'] ?? '') == 'gravatar'
+                ? 'http://www.gravatar.com/avatar/'.md5(strtolower($userMeta['avatar'])).'?s=256&r=g'
+                : $userMeta['avatar'] ?? ''
         ];
     }
 }

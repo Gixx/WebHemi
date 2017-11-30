@@ -34,7 +34,6 @@ $dependencyInjectionClass = $configurationData['dependencies']['Global'][Depende
 $environmentClass = $configurationData['dependencies']['Global'][EnvironmentInterface::class]['class'];
 $middlewarePipelineClass = $configurationData['dependencies']['Global'][MiddlewarePipelineInterface::class]['class'];
 $sessionClass = $configurationData['dependencies']['Global'][SessionInterface::class]['class'];
-
 /** @var Configuration $configuration */
 $configuration = new $configurationClass($configurationData);
 /** @var Environment $environment */

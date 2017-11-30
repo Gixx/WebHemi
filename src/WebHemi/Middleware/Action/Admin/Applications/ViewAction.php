@@ -73,6 +73,7 @@ class ViewAction extends AbstractMiddlewareAction
     public function getTemplateData() : array
     {
         $params = $this->getRoutingParameters();
+
         $applicationName = $params['name'] ?? '';
         $applicationEntity = $this->applicationStorage->getApplicationByName($applicationName);
 
