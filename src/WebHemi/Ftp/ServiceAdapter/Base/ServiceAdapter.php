@@ -353,19 +353,8 @@ class ServiceAdapter implements ServiceInterface
         string $destinationFileName,
         int $fileMode = self::FILE_MODE_BINARY
     ) : ServiceInterface {
-        $pathInfo = pathinfo($destinationFileName);
-
-        if ($pathInfo['dirname'] != '.') {
-            $this->setRemotePath($pathInfo['dirname']);
-            $destinationFileName = $pathInfo['basename'];
-        }
-
-        $pathInfo = pathinfo($sourceFileName);
-
-        if ($pathInfo['dirname'] != '.') {
-            $this->setLocalPath($pathInfo['dirname']);
-            $sourceFileName = $pathInfo['basename'];
-        }
+        $this->checkLocalFile($sourceFileName);
+        $this->checkRemoteFile($destinationFileName);
 
         if (!file_exists($this->localPath . '/' . $sourceFileName)) {
             throw new RuntimeException(sprintf('File not found: %s', $this->localPath . '/' . $sourceFileName), 1007);
@@ -401,37 +390,8 @@ class ServiceAdapter implements ServiceInterface
         string&$localFileName,
         int $fileMode = self::FILE_MODE_BINARY
     ) : ServiceInterface {
-        $pathInfo = pathinfo($remoteFileName);
-
-        if ($pathInfo['dirname'] != '.') {
-            $this->setRemotePath($pathInfo['dirname']);
-            $remoteFileName = $pathInfo['basename'];
-        }
-
-        $pathInfo = pathinfo($localFileName);
-
-        if ($pathInfo['dirname'] != '.') {
-            $this->setLocalPath($pathInfo['dirname']);
-            $localFileName = $pathInfo['basename'];
-        }
-
-        if (file_exists($this->localPath.'/'.$localFileName)) {
-            $variant = 1;
-            do {
-                $localFileName = $pathInfo['filename'].'('.$variant.')'.(
-                    !empty($pathInfo['extension'])
-                        ? '.'.$pathInfo['extension']
-                        : ''
-                    );
-            } while (file_exists($this->localPath.'/'.$localFileName) && $variant++ < 20);
-
-            if ($variant >= 20) {
-                throw new RuntimeException(
-                    sprintf('Too many similar files in folder %s, please cleanup first.', $this->localPath),
-                    1009
-                );
-            }
-        }
+        $this->checkRemoteFile($remoteFileName);
+        $this->checkLocalFile($localFileName, true);
 
         $downloadResult = @ftp_get(
             $this->connectionId,
@@ -448,6 +408,55 @@ class ServiceAdapter implements ServiceInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Checks local file, and generates new unique name if necessary.
+     *
+     * @param string $localFileName
+     * @param bool $forceUnique
+     */
+    private function checkLocalFile(string&$localFileName, bool $forceUnique = false) : void
+    {
+        $pathInfo = pathinfo($localFileName);
+
+        if ($pathInfo['dirname'] != '.') {
+            $this->setLocalPath($pathInfo['dirname']);
+            $localFileName = $pathInfo['basename'];
+        }
+
+        if ($forceUnique && file_exists($this->localPath.'/'.$localFileName)) {
+            $variant = 1;
+            do {
+                $localFileName = $pathInfo['filename'].'('.$variant.')'.(
+                    !empty($pathInfo['extension'])
+                        ? '.'.$pathInfo['extension']
+                        : ''
+                    );
+            } while (file_exists($this->localPath.'/'.$localFileName) && $variant++ < 20);
+
+            if ($variant >= 20) {
+                throw new RuntimeException(
+                    sprintf('Too many similar files in folder %s, please cleanup first.', $this->localPath),
+                    1009
+                );
+            }
+        }
+    }
+
+    /**
+     * Check remote file name.
+     *
+     * @param string $remoteFileName
+     */
+    private function checkRemoteFile(string&$remoteFileName) : void
+    {
+        $pathInfo = pathinfo($remoteFileName);
+
+        if ($pathInfo['dirname'] != '.') {
+            $this->setRemotePath($pathInfo['dirname']);
+            $remoteFileName = $pathInfo['basename'];
+        }
     }
 
     /**
