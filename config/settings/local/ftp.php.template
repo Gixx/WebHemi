@@ -1,0 +1,9 @@
+<?php
+
+return [
+    'ftp' => [
+        'host' => '%ftp.host%',
+        'username' => '%ftp.username%',
+        'password' => '%ft.password%',
+    ],
+];
