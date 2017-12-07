@@ -415,6 +415,7 @@ class ServiceAdapter implements ServiceInterface
      *
      * @param string $localFileName
      * @param bool $forceUnique
+     * @throws RuntimeException
      */
     private function checkLocalFile(string&$localFileName, bool $forceUnique = false) : void
     {
@@ -425,22 +426,30 @@ class ServiceAdapter implements ServiceInterface
             $localFileName = $pathInfo['basename'];
         }
 
-        if ($forceUnique && file_exists($this->localPath.'/'.$localFileName)) {
-            $variant = 1;
-            do {
-                $localFileName = $pathInfo['filename'].'('.$variant.')'.(
-                    !empty($pathInfo['extension'])
-                        ? '.'.$pathInfo['extension']
-                        : ''
-                    );
-            } while (file_exists($this->localPath.'/'.$localFileName) && $variant++ < 20);
+        if (!$forceUnique) {
+            return;
+        }
 
-            if ($variant >= 20) {
-                throw new RuntimeException(
-                    sprintf('Too many similar files in folder %s, please cleanup first.', $this->localPath),
-                    1009
-                );
-            }
+        $variant = 0;
+
+        while (file_exists($this->localPath.'/'.$localFileName) && $variant++ < 20) {
+            $fileNameParts = [
+                $pathInfo['filename'],
+                '('.$variant.')',
+                $pathInfo['extension']
+            ];
+
+            // remove empty parts (e.g.: when there's no extension)
+            $fileNameParts = array_filter($fileNameParts);
+
+            $localFileName = implode('.', $fileNameParts);
+        }
+
+        if ($variant >= 20) {
+            throw new RuntimeException(
+                sprintf('Too many similar files in folder %s, please cleanup first.', $this->localPath),
+                1009
+            );
         }
     }
 
