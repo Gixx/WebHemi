@@ -21,6 +21,8 @@ return [
     'applications' => get_application_config(),
     'auth' => get_auth_config(),
     'dependencies' => get_dependencies_config(),
+    'email' => get_email_config(),
+    'ftp' => get_ftp_config(),
     'logger' => get_logger_config(),
     'middleware_pipeline' => get_pipeline_config(),
     'renderer' => get_renderer_config(),
