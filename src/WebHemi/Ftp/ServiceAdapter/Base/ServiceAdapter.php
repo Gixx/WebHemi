@@ -16,28 +16,15 @@ namespace WebHemi\Ftp\ServiceAdapter\Base;
 use RuntimeException;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Ftp\ServiceInterface;
+use WebHemi\Ftp\AbstractServiceAdapter;
 
 /**
  * Class ServiceAdapter.
  */
-class ServiceAdapter implements ServiceInterface
+class ServiceAdapter extends AbstractServiceAdapter
 {
     /** @var resource */
     private $connectionId = null;
-    /** @var string */
-    private $localPath = __DIR__;
-    /** @var array */
-    protected $options = [];
-
-    /**
-     * ServiceAdapter constructor.
-     *
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->setOptions($configuration->getData('ftp'));
-    }
 
     /**
      * Disconnected by garbage collection.
@@ -87,43 +74,6 @@ class ServiceAdapter implements ServiceInterface
             ftp_close($this->connectionId);
             $this->connectionId = null;
         }
-    }
-
-    /**
-     * Sets an option data.
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return ServiceInterface
-     */
-    public function setOption(string $key, $value) : ServiceInterface
-    {
-        $this->options[$key] = $value;
-        return $this;
-    }
-
-    /**
-     * Sets a group of options.
-     *
-     * @param array $options
-     * @return ServiceInterface
-     */
-    public function setOptions(array $options) : ServiceInterface
-    {
-        $this->options = array_merge($this->options, $options);
-        return $this;
-    }
-
-    /**
-     * Gets a specific option data.
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
-    public function getOption(string $key, $default = null)
-    {
-        return $this->options[$key] ?? $default;
     }
 
     /**
@@ -190,49 +140,6 @@ class ServiceAdapter implements ServiceInterface
     public function getRemotePath() : string
     {
         return ftp_pwd($this->connectionId).'/';
-    }
-
-    /**
-     * Sets local path.
-     *
-     * @param string $path
-     * @return ServiceInterface
-     */
-    public function setLocalPath(string $path) : ServiceInterface
-    {
-        // if it's not an absolute path, we take it relative to the current folder
-        if (strpos($path, '/') !== 0) {
-            $path = __DIR__.'/'.$path;
-        }
-
-        if (!realpath($path) || !is_dir($path)) {
-            throw new RuntimeException(sprintf('No such directory: %s', $path), 1003);
-        }
-
-        if (!is_readable($path)) {
-            throw new RuntimeException(sprintf('Cannot read directory: %s; Permission denied.', $path), 1004);
-        }
-
-        if (!is_writable($path)) {
-            throw new RuntimeException(
-                sprintf('Cannot write data into directory: %s; Permission denied.', $path),
-                1005
-            );
-        }
-
-        $this->localPath = $path;
-
-        return $this;
-    }
-
-    /**
-     * Gets local path.
-     *
-     * @return string
-     */
-    public function getLocalPath() : string
-    {
-        return $this->localPath;
     }
 
     /**
