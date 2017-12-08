@@ -292,7 +292,7 @@ class ServiceAdapter implements ServiceInterface
         if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && empty($domainParts->getSubdomain())) {
             $schema = 'http'.($this->isSecuredApplication() ? 's' : '').'://';
             $uri = $this->environmentData['SERVER']['REQUEST_URI'];
-            header('Location: '.$schema.'www'.$domainParts->getFullHost().$uri);
+            header('Location: '.$schema.'www.'.$domainParts->getFullHost().$uri);
             exit;
         }
         // @codeCoverageIgnoreEnd

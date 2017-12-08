@@ -13,20 +13,18 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website\Directory;
 
-use WebHemi\Data\StorageInterface;
-use WebHemi\Data\Storage;
+use RuntimeException;
 use WebHemi\Data\Entity;
-use WebHemi\DateTime;
-use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
-use WebHemi\Middleware\Action\AbstractMiddlewareAction;
-use WebHemi\Router\ProxyInterface;
-use WebHemi\StorageTrait;
+use WebHemi\Middleware\Action\Website\IndexAction;
 
 /**
  * Class TagAction.
  */
-class TagAction extends AbstractMiddlewareAction
+class TagAction extends IndexAction
 {
+    /** @var string */
+    protected $templateName = 'website-post-list';
+
     /**
      * Gets template map name or template file path.
      *
@@ -34,7 +32,7 @@ class TagAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'website-post-list';
+        return $this->templateName;
     }
 
     /**
@@ -45,13 +43,50 @@ class TagAction extends AbstractMiddlewareAction
     public function getTemplateData() : array
     {
         $blogPosts = [];
-        $title = '';
         $parameters = $this->getRoutingParameters();
+        /** @var string $category */
+        $category = $parameters['uri_parameter'] ?? null;
 
+        if (!$category) {
+            throw new RuntimeException('Forbidden', 403);
+        }
+
+        /** @var Entity\ApplicationEntity $applicationEntity */
+        $applicationEntity = $this->getApplicationStorage()
+            ->getApplicationByName($this->environmentManager->getSelectedApplication());
+
+        $tagEntity = $this->getFilesystemTagStorage()
+            ->getFilesystemTagByApplicationAndName(
+                $applicationEntity->getApplicationId(),
+                $category
+            );
+
+        if (!$tagEntity) {
+            throw new RuntimeException('Not Found', 404);
+        }
+
+        /** @var Entity\Filesystem\FilesystemEntity[] $publications */
+        $publications = $this->getFilesystemStorage()
+            ->getFilesystemSetByApplicationAndTag(
+                $applicationEntity->getApplicationId(),
+                $tagEntity->getFilesystemTagId()
+            );
+
+        if (!$publications) {
+            $this->templateName = 'website-post-list-empty';
+        }
+
+        /** @var Entity\Filesystem\FilesystemEntity $filesystemEntity */
+        foreach ($publications as $filesystemEntity) {
+            $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
+        }
 
         return [
-            'title' => $title,
-            'activeMenu' => $parameters['uri_parameter'],
+            'page' => [
+                'title' => $tagEntity->getTitle(),
+                'type' => 'Tags',
+            ],
+            'activeMenu' => $category,
             'blogPosts' => $blogPosts,
         ];
     }

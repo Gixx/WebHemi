@@ -131,7 +131,7 @@ msgid "<p>The method you are using to access the page is not allowed.</p>\n"
 "                    <li>Open the %s home page, and then look for links to the information you want.</li>\n"
 "                    <li>Click the Back button to try another link.</li>\n"
 "                </ul>"
-msgstr " <p>A mód, amivel az oldalt lekérdezted nem megengedett.</p>\n"
+msgstr "<p>A mód, amivel az oldalt lekérdezted nem megengedett.</p>\n"
 "                <p>Kérjük próbálkozz a következőkkel:</p>\n"
 "                <ul>\n"
 "                    <li>Ha személyesen gépelted be a címet a Címsávba, győződj meg róla, hogy nem vétettél-e valamilyen hibát.</li>\n"
@@ -156,4 +156,48 @@ msgstr "501-es hiba: Nincs implementálva"
 #: 
 msgid "<p>The server either does not recognize the request method, or it lacks the ability to fulfill the request</p>"
 msgstr "<p>A szerver vagy nem ismeri ezt a lekérési módot, vagy csak képtelen teljesíteni azt.</p>"
+
+#: 
+msgid "Error 400: Bad Request"
+msgstr "400-as hiba: Hibás kérés"
+
+#: 
+msgid "<p>The link that you try to visit seems to be broken or invalid.</p>\n"
+"                <p>Please try the following:</p>\n"
+"                <ul>\n"
+"                    <li>If you typed the page address in the Address bar, make sure that it is spelled correctly.</li>\n"
+"                    <li>Open the %s home page, and then look for links to the information you want.</li>\n"
+"                    <li>Click the Back button to try another link.</li>\n"
+"                </ul>"
+msgstr "<p>Úgy tűnik, hogy link, amit meg akartál nézni, hibás van nem megfelelő.</p>\n"
+"                <p>Kérjük próbálkozz a következőkkel:</p>\n"
+"                <ul>\n"
+"                    <li>Ha személyesen gépelted be a címet a Címsávba, győződj meg róla, hogy nem vétettél-e valamilyen hibát.</li>\n"
+"                    <li>Nyisd meg a kezdő oldalt a  %s címen, és keress hivatkozásokat a keresett információra vonatkozóan.</li>\n"
+"                    <li>Lépj vissza a böngésző \"Vissza\" gombjával, és próbálj ki egy másik hivatkozást.</li>\n"
+"                </ul>"
+
+#: 
+msgid "List"
+msgstr "Lista"
+
+#: 
+msgid "No publications are available."
+msgstr "Nincs megjeleníthető tartalom."
+
+#: 
+msgid "<p>We are sorry. Although this page exists, but there is not any data to present at the moment.</p>\n"
+"                <p>Please try the following:</p>\n"
+"                <ul>\n"
+"                    <li>Choose another link from the menu.</li>\n"
+"                    <li>Open the %s home page, and then look for links to the information you want.</li>\n"
+"                    <li>Click the Back button to try another link.</li>\n"
+"                </ul>"
+msgstr "<p>Sajnáljuk. Habár az oldal maga létezik, de jelen pillanatban nincs semmilyen megjeleníthető tartalom rajta.</p>\n"
+"                <p>Kérjük próbálkozz a következőkkel:</p>\n"
+"                <ul>\n"
+"                    <li>Válassz egy másik linket a menüből.</li>\n"
+"                    <li>Nyisd meg a kezdő oldalt a  %s címen, és keress hivatkozásokat a keresett információra vonatkozóan.</li>\n"
+"                    <li>Lépj vissza a böngésző \"Vissza\" gombjával, és próbálj ki egy másik hivatkozást.</li>\n"
+"                </ul>"
 

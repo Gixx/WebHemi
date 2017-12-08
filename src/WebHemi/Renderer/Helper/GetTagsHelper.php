@@ -19,7 +19,7 @@ use WebHemi\Data\Entity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
 use WebHemi\Router\ProxyInterface;
-use WebHemi\StorageTrait;
+use WebHemi\Data\Traits\StorageInjectorTrait;
 
 /**
  * Class GetTagsHelper
@@ -29,7 +29,7 @@ class GetTagsHelper implements HelperInterface
     /** @var EnvironmentInterface */
     private $environmentManager;
 
-    use StorageTrait;
+    use StorageInjectorTrait;
 
     /**
      * GetTagsHelper constructor.

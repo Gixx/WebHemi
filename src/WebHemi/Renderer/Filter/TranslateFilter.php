@@ -13,8 +13,6 @@ declare(strict_types = 1);
 
 namespace WebHemi\Renderer\Filter;
 
-use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
-use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\I18n\DriverInterface;
 use WebHemi\Renderer\FilterInterface;
 
