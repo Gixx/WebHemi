@@ -72,7 +72,7 @@ class TagAction extends IndexAction
                 $tagEntity->getFilesystemTagId()
             );
 
-        if (!$publications) {
+        if (empty($publications)) {
             $this->templateName = 'website-post-list-empty';
         }
 

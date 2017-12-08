@@ -26,14 +26,14 @@ class MultiConnectorContainer implements MultiConnectorContainerInterface
     private $connectors = [];
 
     /**
-     * MultiConnectorInterface constructor.
+     * MultiConnectorContainer constructor.
      *
      * @param ConnectorInterface[] ...$connectorInterfaces
      */
     public function __construct(ConnectorInterface ...$connectorInterfaces)
     {
-        /** @var ConnectorInterface $connector */
         foreach ($connectorInterfaces as $connector) {
+            /** @var ConnectorInterface $connector */
             $this->connectors[$connector->getConnectorName()] = $connector;
         }
     }

@@ -74,7 +74,7 @@ class CategoryAction extends IndexAction
                 ]
             );
 
-        if (!$publications) {
+        if (empty($publications)) {
             $this->templateName = 'website-post-list-empty';
         }
 
