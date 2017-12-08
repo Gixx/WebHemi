@@ -13,12 +13,12 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website;
 
-use WebHemi\Data\StorageInterface;
 use WebHemi\Data\Entity;
+use WebHemi\Data\StorageInterface;
+use WebHemi\Data\Traits\StorageInjectorTrait;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 use WebHemi\Middleware\Action\Traits;
-use WebHemi\Data\Traits\StorageInjectorTrait;
 
 /**
  * Class IndexAction.

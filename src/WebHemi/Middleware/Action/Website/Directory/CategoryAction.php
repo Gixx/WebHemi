@@ -70,7 +70,7 @@ class CategoryAction extends IndexAction
             ->getPublishedDocuments(
                 $applicationEntity->getApplicationId(),
                 [
-                    'fk_category = ?' => (int)$categoryEntity->getFilesystemCategoryId(),
+                    'fk_category = ?' => (int) $categoryEntity->getFilesystemCategoryId(),
                 ]
             );
 

@@ -48,7 +48,7 @@ class FilesystemProxy implements ProxyInterface
      * @param Result $routeResult
      * @return void
      */
-    public function resolveMiddleware(string $application, Result &$routeResult) : void
+    public function resolveMiddleware(string $application, Result&$routeResult) : void
     {
         $applicationEntity = $this->getApplicationEntity($application);
 
