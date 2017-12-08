@@ -13,19 +13,15 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website\Directory;
 
-use WebHemi\Data\StorageInterface;
-use WebHemi\Data\Storage;
-use WebHemi\Data\Entity;
+use RuntimeException;
 use WebHemi\DateTime;
-use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
-use WebHemi\Middleware\Action\AbstractMiddlewareAction;
-use WebHemi\Router\ProxyInterface;
-use WebHemi\StorageTrait;
+use WebHemi\Data\Entity;
+use WebHemi\Middleware\Action\Website\IndexAction;
 
 /**
  * Class ArchiveAction.
  */
-class ArchiveAction extends AbstractMiddlewareAction
+class ArchiveAction extends IndexAction
 {
     /**
      * Gets template map name or template file path.
@@ -45,13 +41,51 @@ class ArchiveAction extends AbstractMiddlewareAction
     public function getTemplateData() : array
     {
         $blogPosts = [];
-        $title = '';
         $parameters = $this->getRoutingParameters();
+        $date = $parameters['uri_parameter'] ?? null;
 
+        if (!$date) {
+            throw new RuntimeException('Forbidden', 403);
+        }
+
+        $dateParts = explode('-', $date);
+
+        if (!preg_match('/^\d{4}\-\d{2}$/', $date) || !checkdate((int) ($dateParts[1] ?? 13), 1, (int) $dateParts[0])) {
+            throw new RuntimeException('Bad Request', 400);
+        }
+
+        /** @var Entity\ApplicationEntity $applicationEntity */
+        $applicationEntity = $this->getApplicationStorage()
+            ->getApplicationByName($this->environmentManager->getSelectedApplication());
+
+        /** @var Entity\Filesystem\FilesystemEntity[] $publications */
+        $publications = $this->getFilesystemStorage()
+            ->getPublishedDocuments(
+                $applicationEntity->getApplicationId(),
+                [
+                    'YEAR(date_published) = ?' => (int)$dateParts[0],
+                    'MONTH(date_published) = ?' => (int)$dateParts[1]
+                ]
+            );
+
+        if (!$publications) {
+            throw new RuntimeException('Not Found', 404);
+        }
+
+        /** @var DateTime $titleDate */
+        $titleDate = $publications[0]->getDatePublished();
+
+        /** @var Entity\Filesystem\FilesystemEntity $filesystemEntity */
+        foreach ($publications as $filesystemEntity) {
+            $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
+        }
 
         return [
-            'title' => $title,
-            'activeMenu' => $parameters['uri_parameter'],
+            'page' => [
+                'title' => $titleDate->format('Y4B'),
+                'type' => 'Archive',
+            ],
+            'activeMenu' => $date,
             'blogPosts' => $blogPosts,
         ];
     }

@@ -21,6 +21,8 @@ use WebHemi\Data\Entity\Filesystem\FilesystemEntity;
 
 /**
  * Class FilesystemStorage.
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class FilesystemStorage extends AbstractStorage
 {
@@ -74,6 +76,8 @@ class FilesystemStorage extends AbstractStorage
      * @param EntityInterface $dataEntity
      * @param array           $data
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity) - sorry, this will remain like this. It's a complex object, period.
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
@@ -148,7 +152,7 @@ class FilesystemStorage extends AbstractStorage
     }
 
     /**
-     * Gets the filesystem entity by custom expression.
+     * Gets the filesystem entity set by application and directory.
      *
      * @param int $applicationId
      * @param int $directoryId
@@ -165,15 +169,53 @@ class FilesystemStorage extends AbstractStorage
     }
 
     /**
-     * Gets the filesystem entity according to the application and the uri.
+     * Gets the filesystem entity set by application and tag.
+     *
+     * @param int $applicationId
+     * @param int $tagId
+     * @return FilesystemEntity[]
+     */
+    public function getFilesystemSetByApplicationAndTag(int $applicationId, int $tagId) : ? array
+    {
+        /** @var ConnectorInterface $connector */
+        $connector = $this->getConnector();
+
+        // Switch to another data group (DO NOT FORGET TO SET IT BACK!!)
+        $connector->setDataGroup('webhemi_filesystem_to_filesystem_tag')
+            ->setIdKey('id_filesystem_to_filesystem_tag');
+
+        $dataSet = $connector->getDataSet(['fk_filesystem_tag' => $tagId]);
+        $filesystemIds = [];
+
+        foreach ($dataSet as $data) {
+            $filesystemIds[] = $data['fk_filesystem'];
+        }
+
+        // switch back to the original data group
+        $connector->setDataGroup($this->dataGroup)
+            ->setIdKey($this->idKey);
+
+        return empty($filesystemIds)
+            ? []
+            : $this->getPublishedDocuments(
+                $applicationId,
+                [$this->idKey => $filesystemIds]
+            );
+    }
+
+    /**
+     * Gets the filesystem entity by application and path.
      *
      * @param int $applicationId
      * @param string $path
      * @param string $baseName
      * @return null|FilesystemEntity
      */
-    public function getFilesystemData(int $applicationId, string $path, string $baseName) : ? FilesystemEntity
-    {
+    public function getFilesystemByApplicationAndPath(
+        int $applicationId,
+        string $path,
+        string $baseName
+    ) : ? FilesystemEntity {
         /** @var null|FilesystemEntity $dataEntity */
         $dataEntity = $this->getDataEntity(
             [

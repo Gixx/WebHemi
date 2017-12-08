@@ -20,7 +20,7 @@ use WebHemi\DateTime;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
 use WebHemi\Router\ProxyInterface;
-use WebHemi\StorageTrait;
+use WebHemi\Data\Traits\StorageInjectorTrait;
 
 /**
  * Class GetDatesHelper
@@ -30,7 +30,7 @@ class GetDatesHelper implements HelperInterface
     /** @var EnvironmentInterface */
     private $environmentManager;
 
-    use StorageTrait;
+    use StorageInjectorTrait;
 
     /**
      * GetDatesHelper constructor.

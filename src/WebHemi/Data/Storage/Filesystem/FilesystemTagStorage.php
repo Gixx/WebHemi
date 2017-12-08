@@ -109,6 +109,28 @@ class FilesystemTagStorage extends AbstractStorage
     }
 
     /**
+     * Gets the filesystem category entity by the application identifier and name.
+     *
+     * @param int $applicationId
+     * @param string $name
+     * @return null|FilesystemTagEntity
+     */
+    public function getFilesystemTagByApplicationAndName(
+        int $applicationId,
+        string $name
+    ) : ? FilesystemTagEntity {
+        /** @var null|FilesystemTagEntity $dataEntity */
+        $dataEntity = $this->getDataEntity(
+            [
+                $this->idApplication => $applicationId,
+                $this->name => $name
+            ]
+        );
+
+        return $dataEntity;
+    }
+
+    /**
      * @param int $filesystemId
      * @return FilesystemTagEntity[]
      */
