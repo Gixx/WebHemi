@@ -13,8 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Coupler;
 
-use WebHemi\Data\Coupler\Traits\PolicyEntityTrait;
-use WebHemi\Data\Coupler\Traits\UserGroupEntityTrait;
+use WebHemi\Data\Traits\PolicyEntityTrait;
+use WebHemi\Data\Traits\UserGroupEntityTrait;
 use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 use WebHemi\Data\Entity\AccessManagement\PolicyEntity;

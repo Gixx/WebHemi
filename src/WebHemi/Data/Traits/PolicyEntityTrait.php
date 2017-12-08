@@ -11,7 +11,7 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Data\Coupler\Traits;
+namespace WebHemi\Data\Traits;
 
 use WebHemi\DateTime;
 use RuntimeException;
