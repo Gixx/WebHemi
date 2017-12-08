@@ -130,18 +130,7 @@ class ServiceAdapter implements ServiceInterface
             $pattern = '#'.$routeData['path'].'#';
 
             if (preg_match_all($pattern, $uri, $matches, PREG_SET_ORDER, 0)) {
-                $parameters = [];
-
-                foreach ($matches[0] as $index => $value) {
-                    if (!is_numeric($index)) {
-                        $parameters[$index] = $value;
-                    }
-                }
-
-                if ($this->module == 'Website') {
-                    $parameters['path'] = !empty($matches[0]['path']) ? $matches[0]['path'] : '/';
-                    $parameters['basename'] = !empty($matches[0]['basename']) ? $matches[0]['basename'] : 'index.html';
-                }
+                $parameters = $this->getMatchParameters($matches);
 
                 $routeDefinition = [
                     'uri'             => $uri,
@@ -155,5 +144,29 @@ class ServiceAdapter implements ServiceInterface
             }
         }
         return $routeDefinition;
+    }
+
+    /**
+     * Gets the paramters from the route pattern match result.
+     *
+     * @param array $matches
+     * @return array
+     */
+    private function getMatchParameters(array $matches) : array
+    {
+        $parameters = [];
+
+        foreach ($matches[0] as $index => $value) {
+            if (!is_numeric($index)) {
+                $parameters[$index] = $value;
+            }
+        }
+
+        if ($this->module == 'Website') {
+            $parameters['path'] = !empty($matches[0]['path']) ? $matches[0]['path'] : '/';
+            $parameters['basename'] = !empty($matches[0]['basename']) ? $matches[0]['basename'] : 'index.html';
+        }
+
+        return $parameters;
     }
 }

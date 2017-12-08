@@ -270,27 +270,59 @@ class ServiceAdapter implements ServiceInterface
             $fileInfo = pathinfo($fileData['filename']);
 
             $fileList[] = [
-                'type' => $fileData['type'] == 'd' ? 'directory' : ($fileData['type'] == 'l' ? 'symlink' : 'file'),
+                'type' => $this->getFileType($fileData['type']),
                 'chmod' => $this->getOctalChmod($fileData['rights']),
                 'symlinks' => $fileData['symlinks'],
                 'user' => $fileData['user'],
                 'group' => $fileData['group'],
                 'size' => $fileData['size'],
-                'date' => date(
-                    'Y-m-d H:i:s',
-                    strtotime(
-                        strpos($fileData['time'], ':') !== false
-                            ? $fileData['month'].' '.$fileData['day'].' '.date('Y').' '.$fileData['time']
-                            : $fileData['date'].' 12:00:00'
-                    )
-                ),
+                'date' => $this->getFileDate($fileData),
                 'basename' => $fileInfo['basename'],
                 'filename' => $fileInfo['filename'],
-                'extension' => isset($fileInfo['extension']) ? $fileInfo['extension'] : '',
+                'extension' => $fileInfo['extension'] ?? '',
             ];
         }
 
         return $fileList;
+    }
+
+    /**
+     * @param string $fileData
+     * @return string
+     */
+    private function getFileType(string $fileData) : string
+    {
+        switch ($fileData) {
+            case 'd':
+                $fileType = 'directory';
+                break;
+
+            case 'l':
+                $fileType = 'symlink';
+                break;
+
+            default:
+                $fileType = 'file';
+        }
+
+        return $fileType;
+    }
+
+    /**
+     * @param array $fileData
+     * @return string
+     */
+    private function getFileDate(array $fileData) : string
+    {
+        if (strpos($fileData['time'], ':') !== false) {
+            $date = $fileData['month'].' '.$fileData['day'].' '.date('Y').' '.$fileData['time'];
+        } else {
+            $date = $fileData['date'].' 12:00:00';
+        }
+
+        $time = strtotime($date);
+
+        return date('Y-m-d H:i:s', $time);
     }
 
     /**

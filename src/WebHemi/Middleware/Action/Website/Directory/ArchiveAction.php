@@ -68,7 +68,7 @@ class ArchiveAction extends IndexAction
                 ]
             );
 
-        if (!$publications) {
+        if (empty($publications)) {
             throw new RuntimeException('Not Found', 404);
         }
 
