@@ -28,7 +28,7 @@ use PHPUnit\Framework\SkippedTestError;
  */
 class DataCouplerTest extends TestCase
 {
-    /** @var DataDriverInterface */
+    /** @var SQLiteDriver */
     protected static $dataDriver;
     /** @var SQLiteAdapter */
     protected static $adapter;
@@ -90,8 +90,8 @@ class DataCouplerTest extends TestCase
      *
      * @covers \WebHemi\Data\Coupler\AbstractCoupler
      * @covers \WebHemi\Data\Coupler\UserToPolicyCoupler
-     * @covers \WebHemi\Data\Coupler\Traits\UserEntityTrait
-     * @covers \WebHemi\Data\Coupler\Traits\PolicyEntityTrait
+     * @covers \WebHemi\Data\Traits\UserEntityTrait
+     * @covers \WebHemi\Data\Traits\PolicyEntityTrait
      */
     public function testUserToPolicyCoupler()
     {
@@ -103,7 +103,9 @@ class DataCouplerTest extends TestCase
         $this->assertInstanceOf(Coupler\UserToPolicyCoupler::class, $coupler);
 
         // test: user 90000
+        /** @var Entity\User\UserEntity $userEntity */
         $userEntity = $userStorage->getUserById(90000);
+        /** @var Entity\AccessManagement\PolicyEntity[] $policies */
         $policies = $coupler->getEntityDependencies($userEntity);
         $this->assertEquals(2, count($policies));
         $this->assertInstanceOf(Entity\AccessManagement\PolicyEntity::class, $policies[0]);
@@ -112,6 +114,7 @@ class DataCouplerTest extends TestCase
         $this->assertEquals(90001, $policies[1]->getPolicyId());
 
         // test in backward: policy 90001
+        /** @var Entity\User\UserEntity[] $users */
         $users = $coupler->getEntityDependencies($policies[1]);
         $this->assertEquals(2, count($users));
         $this->assertInstanceOf(Entity\User\UserEntity::class, $users[0]);
@@ -121,7 +124,9 @@ class DataCouplerTest extends TestCase
         $this->assertEquals(90001, $users[1]->getUserId());
 
         // test: user 90001
+        /** @var Entity\User\UserEntity $userEntity */
         $userEntity = $userStorage->getUserById(90001);
+        /** @var Entity\AccessManagement\PolicyEntity[] $policies */
         $policies = $coupler->getEntityDependencies($userEntity);
         $this->assertEquals(3, count($policies));
         $this->assertEquals(90001, $policies[0]->getPolicyId());
@@ -150,8 +155,8 @@ class DataCouplerTest extends TestCase
      *
      * @covers \WebHemi\Data\Coupler\AbstractCoupler
      * @covers \WebHemi\Data\Coupler\UserToGroupCoupler
-     * @covers \WebHemi\Data\Coupler\Traits\UserEntityTrait
-     * @covers \WebHemi\Data\Coupler\Traits\UserGroupEntityTrait
+     * @covers \WebHemi\Data\Traits\UserEntityTrait
+     * @covers \WebHemi\Data\Traits\UserGroupEntityTrait
      */
     public function testUserToGroupCoupler()
     {
@@ -164,6 +169,7 @@ class DataCouplerTest extends TestCase
 
         // test: user 90000
         $userEntity = $userStorage->getUserById(90000);
+        /** @var Entity\User\UserGroupEntity[] $groups */
         $groups = $coupler->getEntityDependencies($userEntity);
         $this->assertEquals(2, count($groups));
         $this->assertInstanceOf(Entity\User\UserGroupEntity::class, $groups[0]);
@@ -178,6 +184,7 @@ class DataCouplerTest extends TestCase
         $this->assertEquals($userEntity->getUserId(), $users[0]->getUserId());
 
         // test backward: group 90001
+        /** @var Entity\User\UserEntity[] $users */
         $users = $coupler->getEntityDependencies($groups[1]);
         $this->assertEquals(2, count($users));
         $this->assertInstanceOf(Entity\User\UserEntity::class, $users[0]);
@@ -209,8 +216,8 @@ class DataCouplerTest extends TestCase
      *
      * @covers \WebHemi\Data\Coupler\AbstractCoupler
      * @covers \WebHemi\Data\Coupler\UserGroupToPolicyCoupler
-     * @covers \WebHemi\Data\Coupler\Traits\UserGroupEntityTrait
-     * @covers \WebHemi\Data\Coupler\Traits\PolicyEntityTrait
+     * @covers \WebHemi\Data\Traits\UserGroupEntityTrait
+     * @covers \WebHemi\Data\Traits\PolicyEntityTrait
      */
     public function testUserGroupToPolicyCoupler()
     {
@@ -227,6 +234,7 @@ class DataCouplerTest extends TestCase
 
         // test: group 90000
         $userGroupEntity = $userGroupStorage->getUserGroupById(90000);
+        /** @var Entity\AccessManagement\PolicyEntity[] $policies */
         $policies = $coupler->getEntityDependencies($userGroupEntity);
         $this->assertEquals(2, count($policies));
         $this->assertInstanceOf(Entity\AccessManagement\PolicyEntity::class, $policies[0]);
@@ -235,6 +243,7 @@ class DataCouplerTest extends TestCase
         $this->assertEquals(90001, $policies[1]->getPolicyId());
 
         // test backward: policy 90001
+        /** @var Entity\User\UserGroupEntity[] $userGroups */
         $userGroups = $coupler->getEntityDependencies($policies[1]);
         $this->assertEquals(1, count($userGroups));
         $this->assertInstanceOf(Entity\User\UserGroupEntity::class, $userGroups[0]);
@@ -242,7 +251,9 @@ class DataCouplerTest extends TestCase
         $this->assertEquals(90000, $userGroups[0]->getUserGroupId());
 
         // test: group 90001
+        /** @var Entity\User\UserGroupEntity $userGroupEntity */
         $userGroupEntity = $userGroupStorage->getUserGroupById(90001);
+        /** @var Entity\AccessManagement\PolicyEntity[] $policies */
         $policies = $coupler->getEntityDependencies($userGroupEntity);
         $this->assertEquals(2, count($policies));
         $this->assertInstanceOf(Entity\AccessManagement\PolicyEntity::class, $policies[0]);
