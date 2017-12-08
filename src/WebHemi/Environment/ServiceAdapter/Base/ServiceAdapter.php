@@ -18,46 +18,16 @@ use InvalidArgumentException;
 use LayerShifter\TLDExtract\Extract;
 use LayerShifter\TLDExtract\Result;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
-use WebHemi\Environment\ServiceInterface;
+use WebHemi\Environment\AbstractAdapter;
 
 /**
  * Class ServiceAdapter.
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class ServiceAdapter implements ServiceInterface
+class ServiceAdapter extends AbstractAdapter
 {
-    /** @var ConfigurationInterface */
-    protected $configuration;
     /** @var Extract */
-    protected $domainAdapter;
-    /** @var string */
-    protected $url;
-    /** @var string */
-    protected $subDomain;
-    /** @var string */
-    protected $mainDomain;
-    /** @var string */
-    protected $applicationDomain;
-    /** @var string */
-    protected $documentRoot;
-    /** @var string */
-    protected $applicationRoot;
-    /** @var string */
-    protected $selectedModule;
-    /** @var string */
-    protected $selectedApplication;
-    /** @var string */
-    protected $selectedApplicationUri;
-    /** @var string */
-    protected $selectedTheme;
-    /** @var string */
-    protected $selectedThemeResourcePath;
-    /** @var array  */
-    protected $environmentData;
-    /** @var bool */
-    protected $isHttps;
-    /** @var array */
-    protected $options = [];
+    private $domainAdapter;
 
     /**
      * ServiceAdapter constructor.
@@ -115,67 +85,6 @@ class ServiceAdapter implements ServiceInterface
     }
 
     /**
-     * Gets the document root path.
-     *
-     * @return string
-     */
-    public function getDocumentRoot() : string
-    {
-        return $this->documentRoot;
-    }
-
-    /**
-     * Gets the application path.
-     *
-     * @return string
-     */
-    public function getApplicationRoot(): string
-    {
-        return $this->applicationRoot;
-    }
-
-    /**
-     * Gets the application domain.
-     *
-     * @return string
-     */
-    public function getApplicationDomain() : string
-    {
-        return $this->applicationDomain;
-    }
-
-    /**
-     * Gets the application SSL status.
-     *
-     * @return bool
-     */
-    public function isSecuredApplication() : bool
-    {
-        return $this->isHttps;
-    }
-
-    /**
-     * Gets the selected application.
-     *
-     * @return string
-     */
-    public function getSelectedApplication() : string
-    {
-        return $this->selectedApplication;
-    }
-
-    /**
-     * Get the URI path for the selected application. Required for the RouterAdapter to work with directory-based
-     * applications correctly.
-     *
-     * @return string
-     */
-    public function getSelectedApplicationUri() : string
-    {
-        return $this->selectedApplicationUri;
-    }
-
-    /**
      * Gets the request URI
      *
      * @return string
@@ -183,36 +92,6 @@ class ServiceAdapter implements ServiceInterface
     public function getRequestUri() : string
     {
         return rtrim($this->environmentData['SERVER']['REQUEST_URI'], '/');
-    }
-
-    /**
-     * Gets the selected module.
-     *
-     * @return string
-     */
-    public function getSelectedModule() : string
-    {
-        return $this->selectedModule;
-    }
-
-    /**
-     * Gets the selected theme.
-     *
-     * @return string
-     */
-    public function getSelectedTheme() : string
-    {
-        return $this->selectedTheme;
-    }
-
-    /**
-     * Gets the resource path for the selected theme.
-     *
-     * @return string
-     */
-    public function getResourcePath() : string
-    {
-        return $this->selectedThemeResourcePath;
     }
 
     /**
@@ -256,16 +135,6 @@ class ServiceAdapter implements ServiceInterface
         }
 
         return (string) $ipAddress;
-    }
-
-    /**
-     * Gets the execution parameters (CLI).
-     *
-     * @return array
-     */
-    public function getOptions() : array
-    {
-        return $this->options;
     }
 
     /**
@@ -322,16 +191,7 @@ class ServiceAdapter implements ServiceInterface
 
         $applications = $this->configuration->toArray();
         $aplicationNames = array_keys($applications);
-        $selectedApplication = self::DEFAULT_APPLICATION;
-
-        foreach ($aplicationNames as $applicationName) {
-            if ($this->checkDirectoryIsValid($applicationName, $subDirectory)
-                || $this->checkDomainIsValid($applicationName)
-            ) {
-                $selectedApplication = $applicationName;
-                break;
-            }
-        }
+        $selectedApplication = $this->getSelectedApplicationName($aplicationNames, $subDirectory);
 
         $applicationData = $applications[$selectedApplication];
 
@@ -348,6 +208,30 @@ class ServiceAdapter implements ServiceInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Gets the selected application's name.
+     *
+     * @param array $aplicationNames
+     * @param string $subDirectory
+     * @return string'
+     */
+    private function getSelectedApplicationName(array $aplicationNames, string $subDirectory) : string
+    {
+        $selectedApplication = self::DEFAULT_APPLICATION;
+
+        /** @var string $applicationName */
+        foreach ($aplicationNames as $applicationName) {
+            if ($this->checkDirectoryIsValid($applicationName, $subDirectory)
+                || $this->checkDomainIsValid($applicationName)
+            ) {
+                $selectedApplication = (string) $applicationName;
+                break;
+            }
+        }
+
+        return $selectedApplication;
     }
 
     /**
