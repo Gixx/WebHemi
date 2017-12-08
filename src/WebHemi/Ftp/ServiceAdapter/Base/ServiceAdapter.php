@@ -134,7 +134,7 @@ class ServiceAdapter implements ServiceInterface
      */
     public function setSecureConnection(bool $state) : ServiceInterface
     {
-        $this->setOption('secure', (bool)$state);
+        $this->setOption('secure', (bool) $state);
 
         if (!empty($this->connectionId)) {
             ftp_close($this->connectionId);
@@ -153,7 +153,7 @@ class ServiceAdapter implements ServiceInterface
      */
     public function setPassiveMode(bool $state) : ServiceInterface
     {
-        ftp_pasv($this->connectionId, (bool)$state);
+        ftp_pasv($this->connectionId, (bool) $state);
         return $this;
     }
 
@@ -170,7 +170,7 @@ class ServiceAdapter implements ServiceInterface
         }
 
         if (strpos($path, '/') !== 0) {
-            $path = $this->getRemotePath() . $path;
+            $path = $this->getRemotePath().$path;
         }
 
         $chdirResult = @ftp_chdir($this->connectionId, $path);
@@ -189,7 +189,7 @@ class ServiceAdapter implements ServiceInterface
      */
     public function getRemotePath() : string
     {
-        return ftp_pwd($this->connectionId) . '/';
+        return ftp_pwd($this->connectionId).'/';
     }
 
     /**
@@ -202,7 +202,7 @@ class ServiceAdapter implements ServiceInterface
     {
         // if it's not an absolute path, we take it relative to the current folder
         if (strpos($path, '/') !== 0) {
-            $path = __DIR__ . '/' . $path;
+            $path = __DIR__.'/'.$path;
         }
 
         if (!realpath($path) || !is_dir($path)) {
@@ -280,8 +280,8 @@ class ServiceAdapter implements ServiceInterface
                     'Y-m-d H:i:s',
                     strtotime(
                         strpos($fileData['time'], ':') !== false
-                            ? $fileData['month'] . ' ' . $fileData['day'] . ' ' . date('Y') . ' ' . $fileData['time']
-                            : $fileData['date'] . ' 12:00:00'
+                            ? $fileData['month'].' '.$fileData['day'].' '.date('Y').' '.$fileData['time']
+                            : $fileData['date'].' 12:00:00'
                     )
                 ),
                 'basename' => $fileInfo['basename'],
@@ -334,7 +334,7 @@ class ServiceAdapter implements ServiceInterface
             $mode += $mapper[$i][$permissions[$i]] ?? 0;
         }
 
-        return (string)$mode;
+        return (string) $mode;
     }
 
     /**
@@ -356,14 +356,14 @@ class ServiceAdapter implements ServiceInterface
         $this->checkLocalFile($sourceFileName);
         $this->checkRemoteFile($destinationFileName);
 
-        if (!file_exists($this->localPath . '/' . $sourceFileName)) {
-            throw new RuntimeException(sprintf('File not found: %s', $this->localPath . '/' . $sourceFileName), 1007);
+        if (!file_exists($this->localPath.'/'.$sourceFileName)) {
+            throw new RuntimeException(sprintf('File not found: %s', $this->localPath.'/'.$sourceFileName), 1007);
         }
 
         $uploadResult = @ftp_put(
             $this->connectionId,
             $destinationFileName,
-            $this->localPath . '/' . $sourceFileName,
+            $this->localPath.'/'.$sourceFileName,
             $fileMode
         );
 
@@ -395,7 +395,7 @@ class ServiceAdapter implements ServiceInterface
 
         $downloadResult = @ftp_get(
             $this->connectionId,
-            $this->localPath . '/' . $localFileName,
+            $this->localPath.'/'.$localFileName,
             $remoteFileName,
             $fileMode
         );

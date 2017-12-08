@@ -68,7 +68,7 @@ class IndexAction extends AbstractMiddlewareAction
 
         foreach ($this->configuration->getData('themes') as $themeName => $themeData) {
             $themeStaticPath = '/resources/'.
-                ($themeName == 'default' ? 'default_theme' : 'vendor_themes/' . $themeName)
+                ($themeName == 'default' ? 'default_theme' : 'vendor_themes/'.$themeName)
                 . '/static/';
 
 
@@ -82,19 +82,19 @@ class IndexAction extends AbstractMiddlewareAction
                 'license' => $themeData['legal']['license'] ?? '',
                 'read_only' => isset($usedThemes[$themeName]),
                 'feature_website' => isset($themeData['features']['website_support'])
-                    ? (bool)$themeData['features']['website_support']
+                    ? (bool) $themeData['features']['website_support']
                     : false,
                 'feature_login' => isset($themeData['features']['admin_login_support'])
-                    ? (bool)$themeData['features']['admin_login_support']
+                    ? (bool) $themeData['features']['admin_login_support']
                     : false,
                 'feature_admin' => isset($themeData['features']['admin_support'])
-                    ? (bool)$themeData['features']['admin_support']
+                    ? (bool) $themeData['features']['admin_support']
                     : false,
                 'logo' => isset($themeData['legal']['logo'])
-                    ? $themeStaticPath . $themeData['legal']['logo']
+                    ? $themeStaticPath.$themeData['legal']['logo']
                     : '',
                 'preview' => isset($themeData['legal']['preview'])
-                    ? $themeStaticPath . $themeData['legal']['preview']
+                    ? $themeStaticPath.$themeData['legal']['preview']
                     : '',
             ];
         }

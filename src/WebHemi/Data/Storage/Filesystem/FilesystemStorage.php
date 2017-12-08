@@ -13,11 +13,11 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage\Filesystem;
 
-use WebHemi\DateTime;
 use WebHemi\Data\ConnectorInterface;
 use WebHemi\Data\EntityInterface;
-use WebHemi\Data\Storage\AbstractStorage;
 use WebHemi\Data\Entity\Filesystem\FilesystemEntity;
+use WebHemi\Data\Storage\AbstractStorage;
+use WebHemi\DateTime;
 
 /**
  * Class FilesystemStorage.
@@ -84,12 +84,12 @@ class FilesystemStorage extends AbstractStorage
         /* @var FilesystemEntity $dataEntity */
         $dataEntity->setFilesystemId((int) $data[$this->idKey])
             ->setApplicationId((int) $data[$this->idApplication])
-            ->setCategoryId(isset($data[$this->idCategory]) ? (int)$data[$this->idCategory] : null)
-            ->setParentId(isset($data[$this->idParent]) ? (int)$data[$this->idParent] : null)
-            ->setDocumentId(isset($data[$this->idDocument]) ? (int)$data[$this->idDocument] : null)
-            ->setFileId(isset($data[$this->idFile]) ? (int)$data[$this->idFile] : null)
-            ->setDirectoryId(isset($data[$this->idDirectory]) ? (int)$data[$this->idDirectory] : null)
-            ->setLinkId(isset($data[$this->idLink]) ? (int)$data[$this->idLink] : null)
+            ->setCategoryId(isset($data[$this->idCategory]) ? (int) $data[$this->idCategory] : null)
+            ->setParentId(isset($data[$this->idParent]) ? (int) $data[$this->idParent] : null)
+            ->setDocumentId(isset($data[$this->idDocument]) ? (int) $data[$this->idDocument] : null)
+            ->setFileId(isset($data[$this->idFile]) ? (int) $data[$this->idFile] : null)
+            ->setDirectoryId(isset($data[$this->idDirectory]) ? (int) $data[$this->idDirectory] : null)
+            ->setLinkId(isset($data[$this->idLink]) ? (int) $data[$this->idLink] : null)
             ->setPath($data[$this->path])
             ->setBaseName($data[$this->baseName])
             ->setTitle($data[$this->title])
