@@ -49,7 +49,7 @@ class UserAction extends IndexAction
         $parameters = $this->getRoutingParameters();
         $userName = $parameters['uri_parameter'] ?? '';
         $user = $this->getUser($userName);
-        $userMeta = $this->getUserMeta((int)$user->getUserId());
+        $userMeta = $this->getUserMeta((int) $user->getUserId());
 
         $blogPosts = [];
 

@@ -14,8 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Action\Website\Directory;
 
 use RuntimeException;
-use WebHemi\DateTime;
 use WebHemi\Data\Entity;
+use WebHemi\DateTime;
 use WebHemi\Middleware\Action\Website\IndexAction;
 
 /**
@@ -63,8 +63,8 @@ class ArchiveAction extends IndexAction
             ->getPublishedDocuments(
                 $applicationEntity->getApplicationId(),
                 [
-                    'YEAR(date_published) = ?' => (int)$dateParts[0],
-                    'MONTH(date_published) = ?' => (int)$dateParts[1]
+                    'YEAR(date_published) = ?' => (int) $dateParts[0],
+                    'MONTH(date_published) = ?' => (int) $dateParts[1]
                 ]
             );
 
