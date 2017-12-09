@@ -97,12 +97,34 @@ class FilesystemCategoryStorage extends AbstractStorage
     }
 
     /**
+     * Gets the filesystem category entity by the application identifier and name.
+     *
+     * @param int $applicationId
+     * @param string $name
+     * @return null|FilesystemCategoryEntity
+     */
+    public function getFilesystemCategoryByApplicationAndName(
+        int $applicationId,
+        string $name
+    ) : ? FilesystemCategoryEntity {
+        /** @var null|FilesystemCategoryEntity $dataEntity */
+        $dataEntity = $this->getDataEntity(
+            [
+                $this->idApplication => $applicationId,
+                $this->name => $name
+            ]
+        );
+
+        return $dataEntity;
+    }
+
+    /**
      * Gets the filesystem category entity list by the application identifier.
      *
      * @param int $applicationId
      * @return FilesystemCategoryEntity[]
      */
-    public function getFilesystemCategorysByApplication(int $applicationId) : ? array
+    public function getFilesystemCategoriesByApplication(int $applicationId) : ? array
     {
         return $this->getDataEntitySet([$this->idApplication => $applicationId]);
     }

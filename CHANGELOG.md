@@ -1,5 +1,13 @@
 # Change log #
 
+## Version 4.0.0-5.1 ##
+
+* Refactor the Environment module to truely support multiple domains that points to the same document root.
+* Add HTTP Clien module (just in case)
+* Add FTP module (I have plans to use it)
+* Add Mailer module
+* TODO: I should really write some unit tests... It's the lowest coverage EVER :(
+
 ## Version 4.0.0-5.0 ##
 
 * Huge improvement in codebase:
@@ -12,7 +20,6 @@
 * Add/rename some database tables 
 * Extend database tables with new fields where they were necessary
 * Update unit tests to work also with the new codes
-* TODO: really make some unit tests... It's closer to 50% than ever before :(   
 
 ## Version 4.0.0-4.6 ##
 

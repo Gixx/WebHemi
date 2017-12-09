@@ -48,7 +48,7 @@ class FilesystemProxy implements ProxyInterface
      * @param Result $routeResult
      * @return void
      */
-    public function resolveMiddleware(string $application, Result &$routeResult) : void
+    public function resolveMiddleware(string $application, Result&$routeResult) : void
     {
         $applicationEntity = $this->getApplicationEntity($application);
 
@@ -60,6 +60,7 @@ class FilesystemProxy implements ProxyInterface
         $fileSystemEntity = $this->getFilesystemEntityByRouteParams($applicationEntity, $parameters);
 
         if (!$fileSystemEntity) {
+            $routeResult->setMatchedMiddleware(null);
             return;
         }
 
@@ -116,13 +117,14 @@ class FilesystemProxy implements ProxyInterface
         $path = $parameters['path'];
         $baseName = $parameters['basename'];
 
-        $fileSystemEntity = $fileSystemStorage->getFilesystemData(
+        /** @var Entity\Filesystem\FilesystemEntity $fileSystemEntity */
+        $fileSystemEntity = $fileSystemStorage->getFilesystemByApplicationAndPath(
             $applicationEntity->getApplicationId(),
             $path,
             $baseName
         );
 
-        // If we don't find it as a created content, we try with the preserved contents
+        // If we don't find it as a created content, we try with the preserved contents (tag, categories etc)
         if (!$fileSystemEntity && $path != '/') {
             $uri = trim($path.'/'.$baseName, '/');
             $parts = explode('/', $uri);

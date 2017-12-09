@@ -27,6 +27,22 @@ class IndexAction extends AbstractMiddlewareAction
     private $configuration;
     /** @var EnvironmentInterface */
     private $environment;
+    /** @var array */
+    private $defaultData = [
+        'name' => null,
+        'title' => null,
+        'description' => '',
+        'version' => '',
+        'author' => 'Unknown',
+        'homepage' => '',
+        'license' => '',
+        'read_only' => false,
+        'feature_website' => false,
+        'feature_login' => false,
+        'feature_admin' => false,
+        'logo' => '',
+        'preview' => '',
+    ];
 
     /**
      * IndexAction constructor.
@@ -68,35 +84,23 @@ class IndexAction extends AbstractMiddlewareAction
 
         foreach ($this->configuration->getData('themes') as $themeName => $themeData) {
             $themeStaticPath = '/resources/'.
-                ($themeName == 'default' ? 'default_theme' : 'vendor_themes/' . $themeName)
+                ($themeName == 'default' ? 'default_theme' : 'vendor_themes/'.$themeName)
                 . '/static/';
 
+            $themes[$themeName] = $this->defaultData;
+            $themes[$themeName]['name'] = $themes[$themeName]['title'] = $themeName;
+            $themes[$themeName]['read_only'] = isset($usedThemes[$themeName]);
+            $themes[$themeName]['feature_website'] = (bool) ($themeData['features']['website_support'] ?? false);
+            $themes[$themeName]['feature_login'] = (bool) ($themeData['features']['admin__login_support'] ?? false);
+            $themes[$themeName]['feature_admin'] = (bool) ($themeData['features']['admin_support'] ?? false);
 
-            $themes[$themeName] = [
-                'name' => $themeName,
-                'title' => $themeData['legal']['title'] ?? $themeName,
-                'description' => $themeData['legal']['description'] ?? '',
-                'version' => $themeData['legal']['version'] ?? '',
-                'author' => $themeData['legal']['author'] ?? 'Unknown',
-                'homepage' => $themeData['legal']['homepage'] ?? '',
-                'license' => $themeData['legal']['license'] ?? '',
-                'read_only' => isset($usedThemes[$themeName]),
-                'feature_website' => isset($themeData['features']['website_support'])
-                    ? (bool)$themeData['features']['website_support']
-                    : false,
-                'feature_login' => isset($themeData['features']['admin_login_support'])
-                    ? (bool)$themeData['features']['admin_login_support']
-                    : false,
-                'feature_admin' => isset($themeData['features']['admin_support'])
-                    ? (bool)$themeData['features']['admin_support']
-                    : false,
-                'logo' => isset($themeData['legal']['logo'])
-                    ? $themeStaticPath . $themeData['legal']['logo']
-                    : '',
-                'preview' => isset($themeData['legal']['preview'])
-                    ? $themeStaticPath . $themeData['legal']['preview']
-                    : '',
-            ];
+            foreach ($themeData['legal'] as $name => $value) {
+                if (in_array($name, ['logo', 'preview'])) {
+                    $value = $themeStaticPath.$value;
+                }
+
+                $themes[$themeName][$name] = $value;
+            }
         }
 
         ksort($themes);

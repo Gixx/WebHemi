@@ -13,13 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Renderer\Helper;
 
-use WebHemi\Data\StorageInterface;
-use WebHemi\Data\Storage;
 use WebHemi\Data\Entity;
+use WebHemi\Data\Storage;
+use WebHemi\Data\StorageInterface;
+use WebHemi\Data\Traits\StorageInjectorTrait;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
 use WebHemi\Router\ProxyInterface;
-use WebHemi\StorageTrait;
 
 /**
  * Class GetCategoriesHelper
@@ -29,7 +29,7 @@ class GetCategoriesHelper implements HelperInterface
     /** @var EnvironmentInterface */
     private $environmentManager;
 
-    use StorageTrait;
+    use StorageInjectorTrait;
 
     /**
      * GetCategoriesHelper constructor.
@@ -115,7 +115,7 @@ class GetCategoriesHelper implements HelperInterface
 
         /** @var Entity\Filesystem\FilesystemCategoryEntity[] $categoryList */
         $categoryList = $categoryStorage
-            ->getFilesystemCategorysByApplication($applicationId);
+            ->getFilesystemCategoriesByApplication($applicationId);
 
         foreach ($categoryList as $categoryEntity) {
             $categories[] = [

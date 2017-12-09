@@ -18,6 +18,8 @@ use WebHemi\DateTime;
 
 /**
  * Class FilesystemEntity.
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class FilesystemEntity implements EntityInterface
 {
@@ -437,7 +439,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return FilesystemEntity
      */
     public function setDateModified(? DateTime $dateModified) : FilesystemEntity
@@ -456,7 +458,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $datePublished
+     * @param null|DateTime $datePublished
      * @return FilesystemEntity
      */
     public function setDatePublished(? DateTime $datePublished) : FilesystemEntity
