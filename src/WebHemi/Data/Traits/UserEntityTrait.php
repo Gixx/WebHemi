@@ -11,17 +11,17 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Data\Coupler\Traits;
+namespace WebHemi\Data\Traits;
 
 use WebHemi\DateTime;
 use RuntimeException;
 use WebHemi\Data\EntityInterface;
-use WebHemi\Data\Entity\User\UserGroupEntity;
+use WebHemi\Data\Entity\User\UserEntity;
 
 /**
- * Class UserGroupEntityTrait.
+ * Class UserEntityTrait.
  */
-trait UserGroupEntityTrait
+trait UserEntityTrait
 {
     /**
      * Returns a new instance of the required entity.
@@ -33,23 +33,25 @@ trait UserGroupEntityTrait
     abstract protected function getNewEntityInstance(string $entityClassName) : EntityInterface;
 
     /**
-     * Creates a new Policy Entity instance form the data.
+     * Creates a new User Entity instance form the data.
      *
      * @param array $data
-     * @return UserGroupEntity
+     * @return UserEntity
      */
-    protected function createUserGroupEntity(array $data) : UserGroupEntity
+    protected function createUserEntity(array $data) : UserEntity
     {
-        /** @var UserGroupEntity $entity */
-        $entity = $this->getNewEntityInstance(UserGroupEntity::class);
+        /** @var UserEntity $entity */
+        $entity = $this->getNewEntityInstance(UserEntity::class);
 
-        $entity->setUserGroupId((int) $data['id_user_group'])
-            ->setName($data['name'])
-            ->setTitle($data['title'])
-            ->setDescription($data['description'])
-            ->setReadOnly((bool) $data['is_read_only'])
+        $entity->setUserId((int) $data['id_user'])
+            ->setUserName($data['username'])
+            ->setEmail($data['email'])
+            ->setPassword($data['password'])
+            ->setHash($data['hash'])
+            ->setActive((bool) $data['is_active'])
+            ->setEnabled((bool) $data['is_enabled'])
             ->setDateCreated(new DateTime($data['date_created'] ?? 'now'))
-            ->setDateModified(new DateTime($data['date_created'] ?? 'now'));
+            ->setDateModified(new DateTime($data['date_modified'] ?? 'now'));
 
         return $entity;
     }

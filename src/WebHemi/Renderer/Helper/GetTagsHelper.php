@@ -13,13 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Renderer\Helper;
 
-use WebHemi\Data\StorageInterface;
-use WebHemi\Data\Storage;
 use WebHemi\Data\Entity;
+use WebHemi\Data\Storage;
+use WebHemi\Data\StorageInterface;
+use WebHemi\Data\Traits\StorageInjectorTrait;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
 use WebHemi\Router\ProxyInterface;
-use WebHemi\StorageTrait;
 
 /**
  * Class GetTagsHelper
@@ -29,7 +29,7 @@ class GetTagsHelper implements HelperInterface
     /** @var EnvironmentInterface */
     private $environmentManager;
 
-    use StorageTrait;
+    use StorageInjectorTrait;
 
     /**
      * GetTagsHelper constructor.

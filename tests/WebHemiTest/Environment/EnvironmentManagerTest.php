@@ -50,7 +50,8 @@ class EnvironmentManagerTest extends TestCase
                 'website' => [
                     'module' => 'Website',
                     'type'   => 'domain',
-                    'path'   => 'www',
+                    'path'   => '/',
+                    'domain' => 'unittest.dev',
                     'language' => 'en',
                     'locale' => 'en_GB.UTF-8',
                     'timezone' => 'Europe/London',
@@ -59,6 +60,7 @@ class EnvironmentManagerTest extends TestCase
                     'module' => 'Admin',
                     'type'   => 'directory',
                     'path'   => 'admin',
+                    'domain' => 'unittest.dev',
                     'language' => 'en',
                     'locale' => 'en_GB.UTF-8',
                     'timezone' => 'Europe/London',
@@ -135,8 +137,9 @@ class EnvironmentManagerTest extends TestCase
     public function testDirectoryApplicationSettings()
     {
         $this->config['applications']['TestApplication'] = [
+            'domain' => 'unittest.dev',
             'type' => 'directory',
-            'path' => 'test_app',
+            'path' => '/test_app',
         ];
         $this->server['REQUEST_URI'] = '/test_app/some_page';
 
@@ -164,8 +167,9 @@ class EnvironmentManagerTest extends TestCase
     public function testDomainApplicationSettings()
     {
         $this->config['applications']['TestApplication'] = [
+            'domain' => 'test.app.unittest.dev',
             'type' => 'domain',
-            'path' => 'test.app',
+            'path' => '/',
         ];
         $this->server['HTTP_HOST'] = 'test.app.unittest.dev';
         $this->server['SERVER_NAME'] = 'test.app.unittest.dev';
@@ -250,8 +254,9 @@ class EnvironmentManagerTest extends TestCase
     public function testThemePathSettings()
     {
         $this->config['applications']['TestApplication'] = [
+            'domain' => 'test.app.unittest.dev',
             'type' => 'domain',
-            'path' => 'test.app',
+            'path' => '/',
             'theme' => 'test_theme'
 
         ];

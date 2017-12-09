@@ -13,13 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website\View;
 
-use WebHemi\DateTime;
-use WebHemi\Middleware\Action\AbstractMiddlewareAction;
+use WebHemi\Data\Entity;
+use WebHemi\Middleware\Action\Website\IndexAction;
 
 /**
  * Class PostAction
  */
-class PostAction extends AbstractMiddlewareAction
+class PostAction extends IndexAction
 {
     /**
      * Gets template map name or template file path.
@@ -40,36 +40,24 @@ class PostAction extends AbstractMiddlewareAction
     {
         $routingParams = $this->getRoutingParameters();
 
-        $content = 'Lorem ipsum dolor sit amet...';
-        $testFile = __DIR__ . '/../../../../../data/temp/markdownTest.md';
+        /** @var Entity\ApplicationEntity $applicationEntity */
+        $applicationEntity = $this->getApplicationStorage()
+            ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
-        if (file_exists($testFile)) {
-            $content = file_get_contents(__DIR__ . '/../../../../../data/temp/markdownTest.md');
-        }
+        /** @var Entity\Filesystem\FilesystemEntity[] $publications */
+        $filesystemEntity = $this->getFilesystemStorage()
+            ->getFilesystemByApplicationAndPath(
+                $applicationEntity->getApplicationId(),
+                $routingParams['path'],
+                $routingParams['basename']
+            );
 
         return [
             'activeMenu' => '',
-            'blogPost' => [
-                'title'       => 'Hogy indítsuk jól a napot: egy finom, gőzőlgő tea esete',
-                'summary'     => 'Jó tudni...',
-                'category'    => ['useful' => 'Hasznos infók'],
-                'tags'        => ['php' => 'PHP', 'coding' => 'Coding'],
-                'illustration'=> '/data/upload/filesystem/images/Nature.jpg',
-                'path'        => 'posts/view/a_perfect_day.html',
-                'publishedAt' => new DateTime('now'),
-                'location'    => 'München',
-                'author'      => [
-                    'name'   => 'Admin',
-                    'username'=> 'admin',
-                    'avatar' => '/data/upload/avatars/admin.png',
-                    'mood'   => ['szeretve érzi magát', 'hugging'],
-                ],
-                'contentLead' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
-                                       tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At 
-                                       vero eos et accusam et justo duo dolores et ea rebum.',
-                'content'     => $content,
-                'parameter'   => $routingParams
-            ]
+            'page' => [
+                'type' => 'Categories',
+            ],
+            'blogPost' => $this->getBlobPostData($applicationEntity, $filesystemEntity),
         ];
     }
 }

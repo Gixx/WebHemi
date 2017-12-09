@@ -23,6 +23,7 @@ interface ResponseInterface extends PsrResponseInterface
     public const STATUS_PROCESSING = 102;
     public const STATUS_OK = 200;
     public const STATUS_REDIRECT = 302;
+    public const STATUS_BAD_REQUEST = 400;
     public const STATUS_UNAUTHORIZED = 401;
     public const STATUS_FORBIDDEN = 403;
     public const STATUS_NOT_FOUND = 404;

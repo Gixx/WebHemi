@@ -13,14 +13,16 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage\Filesystem;
 
-use WebHemi\DateTime;
 use WebHemi\Data\ConnectorInterface;
 use WebHemi\Data\EntityInterface;
-use WebHemi\Data\Storage\AbstractStorage;
 use WebHemi\Data\Entity\Filesystem\FilesystemEntity;
+use WebHemi\Data\Storage\AbstractStorage;
+use WebHemi\DateTime;
 
 /**
  * Class FilesystemStorage.
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class FilesystemStorage extends AbstractStorage
 {
@@ -74,18 +76,20 @@ class FilesystemStorage extends AbstractStorage
      * @param EntityInterface $dataEntity
      * @param array           $data
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity) - sorry, this will remain like this. It's a complex object, period.
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
         /* @var FilesystemEntity $dataEntity */
         $dataEntity->setFilesystemId((int) $data[$this->idKey])
             ->setApplicationId((int) $data[$this->idApplication])
-            ->setCategoryId(isset($data[$this->idCategory]) ? (int)$data[$this->idCategory] : null)
-            ->setParentId(isset($data[$this->idParent]) ? (int)$data[$this->idParent] : null)
-            ->setDocumentId(isset($data[$this->idDocument]) ? (int)$data[$this->idDocument] : null)
-            ->setFileId(isset($data[$this->idFile]) ? (int)$data[$this->idFile] : null)
-            ->setDirectoryId(isset($data[$this->idDirectory]) ? (int)$data[$this->idDirectory] : null)
-            ->setLinkId(isset($data[$this->idLink]) ? (int)$data[$this->idLink] : null)
+            ->setCategoryId(isset($data[$this->idCategory]) ? (int) $data[$this->idCategory] : null)
+            ->setParentId(isset($data[$this->idParent]) ? (int) $data[$this->idParent] : null)
+            ->setDocumentId(isset($data[$this->idDocument]) ? (int) $data[$this->idDocument] : null)
+            ->setFileId(isset($data[$this->idFile]) ? (int) $data[$this->idFile] : null)
+            ->setDirectoryId(isset($data[$this->idDirectory]) ? (int) $data[$this->idDirectory] : null)
+            ->setLinkId(isset($data[$this->idLink]) ? (int) $data[$this->idLink] : null)
             ->setPath($data[$this->path])
             ->setBaseName($data[$this->baseName])
             ->setTitle($data[$this->title])
@@ -148,7 +152,7 @@ class FilesystemStorage extends AbstractStorage
     }
 
     /**
-     * Gets the filesystem entity by custom expression.
+     * Gets the filesystem entity set by application and directory.
      *
      * @param int $applicationId
      * @param int $directoryId
@@ -165,15 +169,53 @@ class FilesystemStorage extends AbstractStorage
     }
 
     /**
-     * Gets the filesystem entity according to the application and the uri.
+     * Gets the filesystem entity set by application and tag.
+     *
+     * @param int $applicationId
+     * @param int $tagId
+     * @return FilesystemEntity[]
+     */
+    public function getFilesystemSetByApplicationAndTag(int $applicationId, int $tagId) : ? array
+    {
+        /** @var ConnectorInterface $connector */
+        $connector = $this->getConnector();
+
+        // Switch to another data group (DO NOT FORGET TO SET IT BACK!!)
+        $connector->setDataGroup('webhemi_filesystem_to_filesystem_tag')
+            ->setIdKey('id_filesystem_to_filesystem_tag');
+
+        $dataSet = $connector->getDataSet(['fk_filesystem_tag' => $tagId]);
+        $filesystemIds = [];
+
+        foreach ($dataSet as $data) {
+            $filesystemIds[] = $data['fk_filesystem'];
+        }
+
+        // switch back to the original data group
+        $connector->setDataGroup($this->dataGroup)
+            ->setIdKey($this->idKey);
+
+        return empty($filesystemIds)
+            ? []
+            : $this->getPublishedDocuments(
+                $applicationId,
+                [$this->idKey => $filesystemIds]
+            );
+    }
+
+    /**
+     * Gets the filesystem entity by application and path.
      *
      * @param int $applicationId
      * @param string $path
      * @param string $baseName
      * @return null|FilesystemEntity
      */
-    public function getFilesystemData(int $applicationId, string $path, string $baseName) : ? FilesystemEntity
-    {
+    public function getFilesystemByApplicationAndPath(
+        int $applicationId,
+        string $path,
+        string $baseName
+    ) : ? FilesystemEntity {
         /** @var null|FilesystemEntity $dataEntity */
         $dataEntity = $this->getDataEntity(
             [

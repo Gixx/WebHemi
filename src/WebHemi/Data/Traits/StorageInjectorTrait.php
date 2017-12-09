@@ -11,7 +11,7 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi;
+namespace WebHemi\Data\Traits;
 
 use WebHemi\Data\StorageInterface;
 use WebHemi\Data\Storage;
@@ -19,7 +19,7 @@ use WebHemi\Data\Storage;
 /**
  * Trait StorageTrait
  */
-trait StorageTrait
+trait StorageInjectorTrait
 {
     /** @var StorageInterface[] */
     protected $dataStorages = [];

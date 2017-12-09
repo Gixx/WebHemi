@@ -36,42 +36,6 @@ return [
                 ],
                 'shared'    => true,
             ],
-            // Proxies
-            'view-post' => [
-                'class' => Website\View\PostAction::class,
-            ],
-            'list-post' => [
-                'class' => Website\Directory\PostAction::class,
-            ],
-            'list-category' => [
-                'class' => Website\Directory\CategoryAction::class,
-            ],
-            'list-tag' => [
-                'class' => Website\Directory\TagAction::class,
-            ],
-            'list-archive' => [
-                'class' => Website\Directory\ArchiveAction::class,
-            ],
-            'list-gallery' => [
-                'class' => Website\Directory\GalleryAction::class,
-            ],
-            'list-binary' => [
-                'class' => Website\Directory\BinaryAction::class,
-            ],
-            'list-user' => [
-                'class' => Website\Directory\UserAction::class,
-                'arguments' => [
-                    Environment\ServiceInterface::class,
-                    Data\Storage\ApplicationStorage::class,
-                    Data\Storage\User\UserStorage::class,
-                    Data\Storage\User\UserMetaStorage::class,
-                    Data\Storage\Filesystem\FilesystemStorage::class,
-                    Data\Storage\Filesystem\FilesystemTagStorage::class,
-                    Data\Storage\Filesystem\FilesystemCategoryStorage::class,
-                    Data\Storage\Filesystem\FilesystemDirectoryStorage::class,
-                    Data\Storage\Filesystem\FilesystemDocumentStorage::class,
-                ]
-            ],
             // Actions
             Website\IndexAction::class => [
                 'arguments' => [
@@ -85,6 +49,39 @@ return [
                     Data\Storage\Filesystem\FilesystemDirectoryStorage::class,
                     Data\Storage\Filesystem\FilesystemDocumentStorage::class,
                 ]
+            ],
+            // Proxies
+            'view-post' => [
+                'class' => Website\View\PostAction::class,
+                'inherits' => Website\IndexAction::class
+            ],
+            'list-post' => [
+                'class' => Website\Directory\PostAction::class,
+                'inherits' => Website\IndexAction::class
+            ],
+            'list-category' => [
+                'class' => Website\Directory\CategoryAction::class,
+                'inherits' => Website\IndexAction::class
+            ],
+            'list-tag' => [
+                'class' => Website\Directory\TagAction::class,
+                'inherits' => Website\IndexAction::class
+            ],
+            'list-archive' => [
+                'class' => Website\Directory\ArchiveAction::class,
+                'inherits' => Website\IndexAction::class
+            ],
+            'list-gallery' => [
+                'class' => Website\Directory\GalleryAction::class,
+                'inherits' => Website\IndexAction::class
+            ],
+            'list-binary' => [
+                'class' => Website\Directory\BinaryAction::class,
+                'inherits' => Website\IndexAction::class
+            ],
+            'list-user' => [
+                'class' => Website\Directory\UserAction::class,
+                'inherits' => Website\IndexAction::class
             ],
             // Renderer Helpers
             Renderer\Helper\GetTagsHelper::class => [

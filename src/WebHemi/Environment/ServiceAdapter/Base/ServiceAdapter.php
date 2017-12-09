@@ -13,45 +13,21 @@ declare(strict_types = 1);
 
 namespace WebHemi\Environment\ServiceAdapter\Base;
 
+use Exception;
 use InvalidArgumentException;
+use LayerShifter\TLDExtract\Extract;
+use LayerShifter\TLDExtract\Result;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
-use WebHemi\Environment\ServiceInterface;
+use WebHemi\Environment\AbstractAdapter;
 
 /**
  * Class ServiceAdapter.
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class ServiceAdapter implements ServiceInterface
+class ServiceAdapter extends AbstractAdapter
 {
-    /** @var ConfigurationInterface */
-    protected $configuration;
-    /** @var string */
-    protected $url;
-    /** @var string */
-    protected $subDomain;
-    /** @var string */
-    protected $mainDomain;
-    /** @var string */
-    protected $applicationDomain;
-    /** @var string */
-    protected $documentRoot;
-    /** @var string */
-    protected $applicationRoot;
-    /** @var string */
-    protected $selectedModule;
-    /** @var string */
-    protected $selectedApplication;
-    /** @var string */
-    protected $selectedApplicationUri;
-    /** @var string */
-    protected $selectedTheme;
-    /** @var string */
-    protected $selectedThemeResourcePath;
-    /** @var array  */
-    protected $environmentData;
-    /** @var bool */
-    protected $isHttps;
-    /** @var array */
-    protected $options = [];
+    /** @var Extract */
+    private $domainAdapter;
 
     /**
      * ServiceAdapter constructor.
@@ -63,6 +39,7 @@ class ServiceAdapter implements ServiceInterface
      * @param array                  $cookieData
      * @param array                  $filesData
      * @param array                  $optionsData
+     * @throws Exception
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -74,7 +51,9 @@ class ServiceAdapter implements ServiceInterface
         array $optionsData
     ) {
         $this->configuration = $configuration->getConfig('applications');
+        $this->domainAdapter = new Extract();
         $this->applicationRoot = realpath(__DIR__.'/../../../../../');
+        // In case when the backend sources are out of the document root.
         $this->documentRoot = realpath($this->applicationRoot.'/');
         $this->options = $optionsData;
 
@@ -102,68 +81,7 @@ class ServiceAdapter implements ServiceInterface
         $this->selectedApplicationUri = self::DEFAULT_APPLICATION_URI;
 
         $this->setDomain()
-            ->selectModuleApplicationAndTheme();
-    }
-
-    /**
-     * Gets the document root path.
-     *
-     * @return string
-     */
-    public function getDocumentRoot() : string
-    {
-        return $this->documentRoot;
-    }
-
-    /**
-     * Gets the application path.
-     *
-     * @return string
-     */
-    public function getApplicationRoot(): string
-    {
-        return $this->applicationRoot;
-    }
-
-    /**
-     * Gets the application domain.
-     *
-     * @return string
-     */
-    public function getApplicationDomain() : string
-    {
-        return $this->applicationDomain;
-    }
-
-    /**
-     * Gets the application SSL status.
-     *
-     * @return bool
-     */
-    public function isSecuredApplication() : bool
-    {
-        return $this->isHttps;
-    }
-
-    /**
-     * Gets the selected application.
-     *
-     * @return string
-     */
-    public function getSelectedApplication() : string
-    {
-        return $this->selectedApplication;
-    }
-
-    /**
-     * Get the URI path for the selected application. Required for the RouterAdapter to work with directory-based
-     * applications correctly.
-     *
-     * @return string
-     */
-    public function getSelectedApplicationUri() : string
-    {
-        return $this->selectedApplicationUri;
+            ->setApplication();
     }
 
     /**
@@ -174,36 +92,6 @@ class ServiceAdapter implements ServiceInterface
     public function getRequestUri() : string
     {
         return rtrim($this->environmentData['SERVER']['REQUEST_URI'], '/');
-    }
-
-    /**
-     * Gets the selected module.
-     *
-     * @return string
-     */
-    public function getSelectedModule() : string
-    {
-        return $this->selectedModule;
-    }
-
-    /**
-     * Gets the selected theme.
-     *
-     * @return string
-     */
-    public function getSelectedTheme() : string
-    {
-        return $this->selectedTheme;
-    }
-
-    /**
-     * Gets the resource path for the selected theme.
-     *
-     * @return string
-     */
-    public function getResourcePath() : string
-    {
-        return $this->selectedThemeResourcePath;
     }
 
     /**
@@ -250,98 +138,69 @@ class ServiceAdapter implements ServiceInterface
     }
 
     /**
-     * Gets the execution parameters (CLI).
-     *
-     * @return array
-     */
-    public function getOptions() : array
-    {
-        return $this->options;
-    }
-
-    /**
      * Parses server data and tries to set domain information.
      *
+     * @throws Exception
      * @return ServiceAdapter
      */
     private function setDomain() : ServiceAdapter
     {
-        $domain = $this->environmentData['SERVER']['SERVER_NAME'];
-        $subDomain = '';
-        $urlParts = parse_url($this->url);
-
-        // If the host is not an IP address, then check the sub-domain-based module names too
-        if (!preg_match(
-            '/^((\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/',
-            $urlParts['host']
-        )) {
-            $domainParts = explode('.', $urlParts['host']);
-            // @todo find out how to support complex TLDs like `.co.uk` or `.com.br`
-            $tld = array_pop($domainParts);
-            $domain = array_pop($domainParts).'.'.$tld;
-            // the rest is the sub-domain
-            $subDomain = implode('.', $domainParts);
+        if ('dev' == getenv('APPLICATION_ENV')) {
+            $this->domainAdapter->setExtractionMode(Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
         }
 
-        // If no sub-domain presents, then it should be handled as the default sub-domain set for the 'website'
-        if (empty($subDomain)) {
-            $subDomain = $this->configuration->getData('website/path')[0];
+        /** @var Result $domainParts */
+        $domainParts = $this->domainAdapter->parse($this->url);
+
+        if (empty($domainParts->getSuffix())) {
+            throw new Exception('This application does not support IP access');
         }
 
-        $this->subDomain = $subDomain;
-        $this->mainDomain = $domain;
-        $this->applicationDomain = $this->subDomain.'.'.$this->mainDomain;
-
-        // Redirecting when the app domain is not equal to the server data
+        // Redirecting to www when no subdomain is present
         // @codeCoverageIgnoreStart
-        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE')
-            && $this->environmentData['SERVER']['HTTP_HOST'] != $this->applicationDomain
-        ) {
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && empty($domainParts->getSubdomain())) {
             $schema = 'http'.($this->isSecuredApplication() ? 's' : '').'://';
             $uri = $this->environmentData['SERVER']['REQUEST_URI'];
-            header('Location: '.$schema.$this->applicationDomain.$uri);
+            header('Location: '.$schema.'www.'.$domainParts->getFullHost().$uri);
             exit;
         }
         // @codeCoverageIgnoreEnd
+
+        $this->subDomain = $domainParts->getSubdomain();
+        $this->mainDomain = $domainParts->getHostname().'.'.$domainParts->getSuffix();
+        $this->applicationDomain = $domainParts->getFullHost();
 
         return $this;
     }
 
     /**
-     * From the parsed domain data, selects the application, module and theme.
+     * Sets application related data.
      *
+     * @throws Exception
      * @return ServiceAdapter
      */
-    private function selectModuleApplicationAndTheme() : ServiceAdapter
+    private function setApplication() : ServiceAdapter
     {
-        $urlParts = parse_url($this->url);
-        $applications = $this->configuration->toArray();
+        // for safety purposes
+        if (!isset($this->applicationDomain)) {
+            $this->setDomain();
+        }
 
-        // Only the first segment is important (if exists).
+        $urlParts = parse_url($this->url);
         list($subDirectory) = explode('/', ltrim($urlParts['path'], '/'), 2);
 
-        $applicationDataFixture = [
-            'type' => self::APPLICATION_TYPE_DIRECTORY,
-            'module' => self::DEFAULT_MODULE,
-            'theme' => self::DEFAULT_THEME,
-        ];
+        $applications = $this->configuration->toArray();
+        $aplicationNames = array_keys($applications);
+        $selectedApplication = $this->getSelectedApplicationName($aplicationNames, $subDirectory);
 
-        // Run through the available application-modules to validate and find active module
-        foreach ($applications as $applicationName => $applicationData) {
-            // Don't risk, fix.
-            $applicationData = array_merge($applicationDataFixture, $applicationData);
+        $applicationData = $applications[$selectedApplication];
 
-            if ($this->checkDirectoryIsValid($applicationName, $applicationData, $subDirectory)
-                || $this->checkDomainIsValid($applicationName, $applicationData, $subDirectory)
-            ) {
-                $this->selectedModule = $applicationData['module'];
-                $this->selectedApplication = (string) $applicationName;
-                $this->selectedTheme = $applicationData['theme'];
-
-                $this->selectedApplicationUri = '/'.$subDirectory;
-                break;
-            }
-        }
+        $this->selectedModule = $applicationData['module'] ?? self::DEFAULT_MODULE;
+        $this->selectedApplication = $selectedApplication;
+        $this->selectedTheme = $applicationData['theme'] ?? self::DEFAULT_THEME;
+        $this->selectedApplicationUri = $applicationData['type'] == self::APPLICATION_TYPE_DIRECTORY
+            ? '/'.$subDirectory
+            : '/';
 
         // Final check for config and resources.
         if ($this->selectedTheme !== self::DEFAULT_THEME) {
@@ -352,45 +211,60 @@ class ServiceAdapter implements ServiceInterface
     }
 
     /**
+     * Gets the selected application's name.
+     *
+     * @param array $aplicationNames
+     * @param string $subDirectory
+     * @return string'
+     */
+    private function getSelectedApplicationName(array $aplicationNames, string $subDirectory) : string
+    {
+        $selectedApplication = self::DEFAULT_APPLICATION;
+
+        /** @var string $applicationName */
+        foreach ($aplicationNames as $applicationName) {
+            if ($this->checkDirectoryIsValid($applicationName, $subDirectory)
+                || $this->checkDomainIsValid($applicationName)
+            ) {
+                $selectedApplication = (string) $applicationName;
+                break;
+            }
+        }
+
+        return $selectedApplication;
+    }
+
+    /**
      * Checks from type, path it the current URI segment is valid.
      *
      * @param string $applicationName
-     * @param array  $applicationData
      * @param string $subDirectory
      * @return bool
      */
-    private function checkDirectoryIsValid(string $applicationName, array $applicationData, string $subDirectory) : bool
+    private function checkDirectoryIsValid(string $applicationName, string $subDirectory) : bool
     {
-        return $this->subDomain == $this->configuration->getData('website/path')[0]
-            && $applicationName != 'website'
+        $applications = $this->configuration->toArray();
+        $applicationData = $applications[$applicationName];
+
+        return $applicationName != 'website'
+            && $this->applicationDomain == $applicationData['domain']
             && !empty($subDirectory)
             && $applicationData['type'] == self::APPLICATION_TYPE_DIRECTORY
-            && $applicationData['path'] == $subDirectory;
+            && $applicationData['path'] == '/'.$subDirectory;
     }
 
     /**
      * Checks from type and path if the domain is valid. If so, it sets the $subDirectory to the default.
      *
      * @param string $applicationName
-     * @param array  $applicationData
-     * @param string $subDirectory
      * @return bool
      */
-    private function checkDomainIsValid(string $applicationName, array $applicationData, string&$subDirectory) : bool
+    private function checkDomainIsValid(string $applicationName) : bool
     {
-        $isSubdomain = $applicationName == 'website'
-            || (
-                $this->subDomain != $this->configuration->getData('website/path')[0]
-                && $applicationData['type'] == self::APPLICATION_TYPE_DOMAIN
-                && $applicationData['path'] == $this->subDomain
-            );
+        $applications = $this->configuration->toArray();
+        $applicationData = $applications[$applicationName];
 
-        // If this method get called and will return TRUE, it means the $subDirectory parameter will be used only for
-        // setting the right selectedApplicationUri. To avoid complexity, we change it here. Doesn't matter.
-        if ($isSubdomain) {
-            $subDirectory = '';
-        }
-
-        return $isSubdomain;
+        return $this->applicationDomain == $applicationData['domain']
+            && $applicationData['type'] == self::APPLICATION_TYPE_DOMAIN;
     }
 }

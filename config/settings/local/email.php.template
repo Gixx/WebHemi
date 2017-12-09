@@ -1,0 +1,15 @@
+<?php
+
+return [
+    'email' => [
+        'host' => '%email.host%',
+        'port' => %email.port%, // 25
+        'secure' => %email.secure%, // null, 'ssl', 'tls'
+        'auth' => %email.auth%, // null, 'login', 'oauth'
+        'username' => '%email.username%',
+        'password' => '%email.password%',
+        'oauthToken' => '%email.oauthToken%',
+        'senderName' => '%email.senderName%',
+        'senderAddress' => '%email.senderEmail%',
+    ],
+];

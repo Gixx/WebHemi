@@ -16,18 +16,20 @@
 return [
     'applications' => [
         'website' => [
-            'path'        => 'www',
-            'theme'       => 'default',
-            'type'        => 'domain',
-            'locale'      => 'en_GB.UTF-8',
-            'timezone'    => 'Europe/London',
+            'domain'   => $_SERVER['SERVER_NAME'],
+            'path'     => '/',
+            'type'     => 'domain',
+            'theme'    => 'default',
+            'locale'   => 'en_GB.UTF-8',
+            'timezone' => 'Europe/London',
         ],
         'admin' => [
-            'path'        => 'admin',
-            'theme'       => 'default',
-            'type'        => 'directory',
-            'locale'      => 'en_GB.UTF-8',
-            'timezone'    => 'Europe/London',
+            'domain'   => $_SERVER['SERVER_NAME'],
+            'path'     => '/admin',
+            'type'     => 'directory',
+            'theme'    => 'default',
+            'locale'   => 'en_GB.UTF-8',
+            'timezone' => 'Europe/London',
         ],
     ],
 ];

@@ -17,9 +17,11 @@
  */
 function set_environment()
 {
-    $env = $_ENV['APPLICATION_ENV'] ?? 'live';
+    if (!getenv('APPLICATION_ENV')) {
+        putenv('APPLICATION_ENV=live');
+    }
 
-    if ('dev' == $env) {
+    if ('dev' == getenv('APPLICATION_ENV')) {
         error_reporting(E_ALL);
         ini_set('display_errors', 'on');
         ini_set('xdebug.var_display_max_depth', 10);
@@ -147,11 +149,12 @@ function get_application_config()
     $readOnlyApplicationConfig = [
         'applications' => [
             'website' => [
-                'module'      => 'Website',
-                'type'        => 'domain',
+                'module' => 'Website',
+                'path'   => '/',
+                'type'   => 'domain',
             ],
             'admin' => [
-                'module'      => 'Admin',
+                'module' => 'Admin',
             ],
         ],
     ];
@@ -351,4 +354,38 @@ function get_logger_config()
     $loggerConfig = merge_array_overwrite($globalLoggerConfig, $localLoggerConfig);
 
     return $loggerConfig['logger'];
+}
+
+/**
+ * Returns the ftp config.
+ *
+ * @return mixed
+ */
+function get_ftp_config()
+{
+    $globalFtpConfig = require __DIR__.'/settings/global/ftp.php';
+    $localFtpConfig = (file_exists(__DIR__.'/settings/local/ftp.php'))
+        ? require __DIR__.'/settings/local/ftp.php'
+        : [];
+
+    $ftpConfig = merge_array_overwrite($globalFtpConfig, $localFtpConfig);
+
+    return $ftpConfig['ftp'];
+}
+
+/**
+ * Returns the email config.
+ *
+ * @return mixed
+ */
+function get_email_config()
+{
+    $globalEmailConfig = require __DIR__.'/settings/global/email.php';
+    $localEmailConfig = (file_exists(__DIR__.'/settings/local/email.php'))
+        ? require __DIR__.'/settings/local/email.php'
+        : [];
+
+    $emailConfig = merge_array_overwrite($globalEmailConfig, $localEmailConfig);
+
+    return $emailConfig['email'];
 }
