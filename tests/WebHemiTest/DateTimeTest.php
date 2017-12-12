@@ -94,6 +94,7 @@ class DateTimeTest extends TestCase
 
         $timeZoneWithNoDataInWebhemi = new DateTimeZone('Africa/Abidjan');
         $timeZoneWithDataInWebhemi = new DateTimeZone('Europe/London');
+        $timeZoneWithDataInWebhemiHu = new DateTimeZone('Europe/Budapest');
 
 
         $testDate = '2017-09-10 11:12:13';
@@ -109,7 +110,14 @@ class DateTimeTest extends TestCase
         $dateTime = new DateTime($testDate, $timeZoneWithDataInWebhemi);
         $resultDate = $dateTime->format('BDT');
         // The expected result is a translated.
-        $expectedDate = '10th September, 11:12 AM';
+        $expectedDate = '10th September, 11:12 am';
+        $this->assertSame(strtolower($expectedDate), strtolower($resultDate));
+
+        date_default_timezone_set('Europe/Budapest');
+        $dateTime = new DateTime($testDate, $timeZoneWithDataInWebhemiHu);
+        $resultDate = $dateTime->format('BDT');
+        // The expected result is a translated.
+        $expectedDate = 'September 10. 11:12';
         $this->assertSame($expectedDate, $resultDate);
 
         date_default_timezone_set($originalTimezone);

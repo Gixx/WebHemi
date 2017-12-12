@@ -17,6 +17,8 @@ use WebHemi\Form\Element\Html\HtmlElement;
 
 /**
  * Class AdminLoginForm
+ *
+ * @codeCoverageIgnore - only composes an object.
  */
 class AdminLoginForm extends AbstractPreset
 {
@@ -24,8 +26,6 @@ class AdminLoginForm extends AbstractPreset
      * Initialize and add elements to the form.
      *
      * @return void
-     *
-     * @codeCoverageIgnore - only composes an object.
      */
     protected function init() : void
     {

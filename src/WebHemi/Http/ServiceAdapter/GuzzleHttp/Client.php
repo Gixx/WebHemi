@@ -19,6 +19,8 @@ use WebHemi\Http\ClientInterface;
 
 /**
  * Class HttpClient
+ *
+ * @codeCoverageIgnore - don't test third party library until this only a forwards the calls.
  */
 class Client implements ClientInterface
 {

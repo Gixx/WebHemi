@@ -19,6 +19,8 @@ use WebHemi\Form\ServiceInterface as FormInterface;
 use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
 use WebHemi\Form\Element\Html\HtmlElement as HtmlFormElement;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
+use WebHemiTest\TestService\TestFalseValidator;
+use WebHemiTest\TestService\TestTrueValidator;
 
 /**
  * Class FormTest
@@ -111,8 +113,41 @@ class HtmlFormTest extends TestCase
 
         $this->assertTrue(isset($elements[$expectedName]));
         $this->assertInstanceOf(FormElementInterface::class, $elements[$expectedName]);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1001);
+        $form->addElement($elementInstance);
     }
 
+    /**
+     * Tests getElement method.
+     */
+    public function testGetElement()
+    {
+        $name = 'someForm';
+        $action = 'some/action';
+
+        $form = new HtmlForm($name, $action);
+        $this->assertEmpty($form->getElements());
+
+        $element = $this->prophesize(FormElementInterface::class);
+        $element->getName()->willReturn('some_element');
+        $element->setName(Argument::type('string'))->willReturn($element->reveal());
+        /** @var FormElementInterface $elementInstance */
+        $elementInstance = $element->reveal();
+
+        $form->addElement($elementInstance);
+        $actualElement = $form->getElement('some_element');
+        $this->assertTrue($elementInstance === $actualElement);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1002);
+        $form->getElement('non_existing');
+    }
+
+    /**
+     * Tests loadData() method.
+     */
     public function testLoadData()
     {
         $name = 'someForm';
@@ -158,5 +193,38 @@ class HtmlFormTest extends TestCase
         $elements = $form->getElements();
         $this->assertArraysAreSimilar([1], $elements['someForm[some_data]']->getValues());
         $this->assertArraysAreSimilar(['deep_index' => 2], $elements['someForm[some_other_data]']->getValues());
+    }
+
+    /**
+     * Tests the validate() method.
+     */
+    public function testValidator()
+    {
+        $name = 'someForm';
+        $action = 'some/action';
+        $form = new HtmlForm($name, $action);
+
+        $trueValidator = new TestTrueValidator();
+        $falseValidator = new TestFalseValidator();
+
+        // Add element with validator
+        $firstElementInstance = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_TEXT, 'some_data_1');
+        $firstElementInstance->addValidator($trueValidator);
+        $form->addElement($firstElementInstance);
+        $validateResult = $form->validate();
+        $this->assertTrue($validateResult);
+
+        // Add element without validator
+        $secondElementInstance = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_TEXT, 'some_data_2');
+        $form->addElement($secondElementInstance);
+        $validateResult = $form->validate();
+        $this->assertTrue($validateResult);
+
+        // Add element with validator that will fail
+        $thirdElementInstance = new HtmlFormElement(HtmlFormElement::HTML_ELEMENT_INPUT_TEXT, 'some_data_3');
+        $thirdElementInstance->addValidator($falseValidator);
+        $form->addElement($thirdElementInstance);
+        $validateResult = $form->validate();
+        $this->assertFalse($validateResult);
     }
 }

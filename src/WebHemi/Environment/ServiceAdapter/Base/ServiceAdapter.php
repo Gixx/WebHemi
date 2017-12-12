@@ -145,9 +145,11 @@ class ServiceAdapter extends AbstractAdapter
      */
     private function setDomain() : ServiceAdapter
     {
-        if ('dev' == getenv('APPLICATION_ENV')) {
+        // @codeCoverageIgnoreStart
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') &&'dev' == getenv('APPLICATION_ENV')) {
             $this->domainAdapter->setExtractionMode(Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
         }
+        // @codeCoverageIgnoreEnd
 
         /** @var Result $domainParts */
         $domainParts = $this->domainAdapter->parse($this->url);
@@ -181,10 +183,12 @@ class ServiceAdapter extends AbstractAdapter
      */
     private function setApplication() : ServiceAdapter
     {
-        // for safety purposes
+        // For safety purposes only, But it can't happen unless somebody change/overwrite the constructor.
+        // @codeCoverageIgnoreStart
         if (!isset($this->applicationDomain)) {
-            $this->setDomain();
+            throw new Exception('Domain is not set');
         }
+        // @codeCoverageIgnoreEnd
 
         $urlParts = parse_url($this->url);
         list($subDirectory) = explode('/', ltrim($urlParts['path'], '/'), 2);
@@ -215,7 +219,7 @@ class ServiceAdapter extends AbstractAdapter
      *
      * @param array $aplicationNames
      * @param string $subDirectory
-     * @return string'
+     * @return string
      */
     private function getSelectedApplicationName(array $aplicationNames, string $subDirectory) : string
     {

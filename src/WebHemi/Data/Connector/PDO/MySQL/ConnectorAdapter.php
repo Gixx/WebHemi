@@ -123,6 +123,8 @@ class ConnectorAdapter implements ConnectorInterface
      *
      * @param string $tableName
      * @return string
+     *
+     * @codeCoverageIgnore Don't test external library.
      */
     public function getTableDefinition(string $tableName) : string
     {
