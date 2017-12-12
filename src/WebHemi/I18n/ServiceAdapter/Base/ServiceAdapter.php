@@ -88,7 +88,7 @@ class ServiceAdapter implements ServiceInterface
      *
      * @return string
      */
-    public function getTerrytory() : string
+    public function getTerritory() : string
     {
         return $this->territory;
     }
@@ -130,7 +130,7 @@ class ServiceAdapter implements ServiceInterface
 
             $this->territory = $matches['territory'];
 
-            $this->codeSet = $matches['codeSet'] ?? 'utf8';
+            $this->codeSet = $matches['codeSet'] ?? 'UTF-8';
             $localeCodeSet = strtolower(str_replace('-', '', $this->codeSet));
 
             $composedLocale = $language.'_'.$this->territory.'.'.$localeCodeSet;
@@ -139,6 +139,8 @@ class ServiceAdapter implements ServiceInterface
             setlocale(LC_ALL, $composedLocale);
             setlocale(LC_MESSAGES, $composedLocale);
             setlocale(LC_CTYPE, $composedLocale);
+
+            $this->locale = $composedLocale;
         } else {
             throw new InvalidArgumentException(sprintf('Invalid locale: %s', $locale), 1000);
         }

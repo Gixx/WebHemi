@@ -230,6 +230,28 @@ class PDOMySQLAdapterTest extends TestCase
                 null,
                 'SELECT * FROM cTable WHERE A IS NULL GROUP BY groupCol ORDER BY id',
                 []
+            ],
+            [
+                ['A' => false],
+                'cTable',
+                null,
+                null,
+                null,
+                'groupCol',
+                null,
+                'SELECT * FROM cTable WHERE A IS NULL GROUP BY groupCol ORDER BY id',
+                []
+            ],
+            [
+                ['A' => true],
+                'cTable',
+                null,
+                null,
+                null,
+                'groupCol',
+                null,
+                'SELECT * FROM cTable WHERE A IS NOT NULL GROUP BY groupCol ORDER BY id',
+                []
             ]
         ];
     }

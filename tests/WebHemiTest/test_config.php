@@ -61,7 +61,7 @@ return [
             'path'   => 'some_application',
             'theme'  => 'test_theme',
             'language' => 'pt',
-            'locale' => 'br_PT.UTF-8',
+            'locale' => 'pt_BR.UTF-8',
             'timezone' => 'America/Sao_Paulo',
         ],
     ],

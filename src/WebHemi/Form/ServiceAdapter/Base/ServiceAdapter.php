@@ -104,17 +104,22 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
      * Adds an element to the form.
      *
      * @param ElementInterface $formElement
+     * @throws InvalidArgumentException
      * @return ServiceInterface
      */
     public function addElement(ElementInterface $formElement) : ServiceInterface
     {
         $elementName = $formElement->getName();
+        $elementName = $this->name.'['.$elementName.']';
 
-        if (!isset($this->formElements[$elementName])) {
-            $elementName = $this->name.'['.$elementName.']';
-            $formElement->setName($elementName);
+        if (isset($this->formElements[$elementName])) {
+            throw new InvalidArgumentException(
+                sprintf('The element "%s" in field list is ambiguous.', $elementName),
+                1001
+            );
         }
 
+        $formElement->setName($elementName);
         $this->formElements[$elementName] = $formElement;
 
         return $this;
@@ -132,13 +137,6 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
         $elementNames = array_keys($this->formElements);
         $elementName = StringLib::convertNonAlphanumericToUnderscore($elementName);
         $matchingElementNames = preg_grep('/.*\['.$elementName.'\]/', $elementNames);
-
-        if (count($matchingElementNames) > 1) {
-            throw new InvalidArgumentException(
-                sprintf('The element "%s" in field list is ambiguous.', $elementName),
-                1001
-            );
-        }
 
         if (empty($matchingElementNames)) {
             throw new InvalidArgumentException(

@@ -281,4 +281,38 @@ class EnvironmentManagerTest extends TestCase
         $this->assertEquals('/', $testObj->getSelectedApplicationUri());
         $this->assertEquals('/resources/vendor_themes/test_theme', $testObj->getResourcePath());
     }
+
+    /**
+     * Tests setDomain() error.
+     */
+    public function testSetDomainWithIp()
+    {
+        $this->config['applications']['TestApplication'] = [
+            'domain' => '192.168.100.12',
+            'type' => 'domain',
+            'path' => '/',
+            'theme' => 'test_theme'
+
+        ];
+        $this->server['HTTP_HOST'] = '192.168.100.12';
+        $this->server['SERVER_NAME'] = '192.168.100.12';
+        $this->server['REQUEST_URI'] = '/test_app/some_page';
+
+        $config = new Config($this->getOrderedConfig());
+        $expectedError = 'This application does not support IP access';
+
+        try {
+            new EnvironmentManager(
+                $config,
+                $this->get,
+                $this->post,
+                $this->server,
+                $this->cookie,
+                $this->files,
+                []
+            );
+        } catch (\Throwable $exception) {
+            $this->assertSame($expectedError, $exception->getMessage());
+        }
+    }
 }

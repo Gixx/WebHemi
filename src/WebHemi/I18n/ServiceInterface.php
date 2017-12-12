@@ -44,7 +44,7 @@ interface ServiceInterface
      *
      * @return string
      */
-    public function getTerrytory() : string;
+    public function getTerritory() : string;
 
     /**
      * Gets the Locale.

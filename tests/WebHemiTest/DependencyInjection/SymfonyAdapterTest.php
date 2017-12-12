@@ -105,6 +105,10 @@ class SymfonyAdapterTest extends TestCase
         $this->assertInstanceOf(DateTime::class, $actualDate);
         $this->assertEquals('2016-04-05 01:02:03', $actualDate->format('Y-m-d H:i:s'));
 
+        // For some reason it may happen that the DI doesn't get a paramter...
+        $serviceResult = $adapter->get(null);
+        $this->assertNull($serviceResult);
+
         // Get a non-registered service being registered with default parameters.
         $serviceResult = $adapter->get(ArrayObject::class);
         $this->assertInstanceOf(ArrayObject::class, $serviceResult);

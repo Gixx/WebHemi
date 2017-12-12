@@ -17,6 +17,8 @@ use WebHemi\Form\Element\Html\HtmlElement;
 
 /**
  * Class ApplicationEditForm
+ *
+ * @codeCoverageIgnore - only composes an object.
  */
 class ApplicationEditForm extends AbstractPreset
 {
