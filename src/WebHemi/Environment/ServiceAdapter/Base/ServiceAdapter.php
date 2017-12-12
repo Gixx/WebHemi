@@ -145,11 +145,7 @@ class ServiceAdapter extends AbstractAdapter
      */
     private function setDomain() : ServiceAdapter
     {
-        // @codeCoverageIgnoreStart
-        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') &&'dev' == getenv('APPLICATION_ENV')) {
-            $this->domainAdapter->setExtractionMode(Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
-        }
-        // @codeCoverageIgnoreEnd
+        $this->setAdapterOptions();
 
         /** @var Result $domainParts */
         $domainParts = $this->domainAdapter->parse($this->url);
@@ -158,21 +154,52 @@ class ServiceAdapter extends AbstractAdapter
             throw new Exception('This application does not support IP access');
         }
 
-        // Redirecting to www when no subdomain is present
-        // @codeCoverageIgnoreStart
-        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && empty($domainParts->getSubdomain())) {
-            $schema = 'http'.($this->isSecuredApplication() ? 's' : '').'://';
-            $uri = $this->environmentData['SERVER']['REQUEST_URI'];
-            header('Location: '.$schema.'www.'.$domainParts->getFullHost().$uri);
-            exit;
-        }
-        // @codeCoverageIgnoreEnd
+        $this->checkSubdomain($domainParts);
 
         $this->subDomain = $domainParts->getSubdomain();
         $this->mainDomain = $domainParts->getHostname().'.'.$domainParts->getSuffix();
         $this->applicationDomain = $domainParts->getFullHost();
 
         return $this;
+    }
+
+    /**
+     * Set some adapter specific options.
+     *
+     * @return int
+     *
+     * @codeCoverageIgnore - don't test third party library
+     */
+    private function setAdapterOptions() : int
+    {
+        try {
+            if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && 'dev' == getenv('APPLICATION_ENV')) {
+                $this->domainAdapter->setExtractionMode(Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
+            }
+        } catch (\Throwable $exception) {
+            return $exception->getCode();
+        }
+        // @codeCoverageIgnoreEnd
+
+        return 0;
+    }
+
+    /**
+     * Checks whether the subdomain exists, and rediretcs if no.
+     *
+     * @param Result $domainParts
+     *
+     * @codeCoverageIgnore - don't test redirect
+     */
+    private function checkSubdomain(Result $domainParts) : void
+    {
+        // Redirecting to www when no subdomain is present
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && empty($domainParts->getSubdomain())) {
+            $schema = 'http'.($this->isSecuredApplication() ? 's' : '').'://';
+            $uri = $this->environmentData['SERVER']['REQUEST_URI'];
+            header('Location: '.$schema.'www.'.$domainParts->getFullHost().$uri);
+            exit;
+        }
     }
 
     /**
