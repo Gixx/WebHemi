@@ -272,16 +272,21 @@ return [
                 ],
                 'shared'    => true,
             ],
-            Renderer\Filter\TagParserFilter::class => [
+            Renderer\Filter\TranslateFilter::class => [
                 'arguments' => [
-                    Configuration\ServiceInterface::class,
+                    I18n\DriverInterface::class
+                ],
+                'shared'    => true,
+            ],
+            Renderer\Filter\Tags\Url::class => [
+                'arguments' => [
                     Environment\ServiceInterface::class
                 ],
                 'shared'    => true,
             ],
-            Renderer\Filter\TranslateFilter::class => [
+            Renderer\Filter\TagParserFilter::class => [
                 'arguments' => [
-                    I18n\DriverInterface::class
+                    Renderer\Filter\Tags\Url::class
                 ],
                 'shared'    => true,
             ],

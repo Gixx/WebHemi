@@ -19,19 +19,12 @@ use WebHemi\Router\ProxyInterface;
 
 /**
  * Trait GetPublicationCategoryTrait
+ *
+ * @method Storage\Filesystem\FilesystemCategoryStorage getFilesystemCategoryStorage()
+ * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
  */
 trait GetPublicationCategoryTrait
 {
-    /**
-     * @return null|Storage\Filesystem\FilesystemCategoryStorage
-     */
-    abstract protected function getFilesystemCategoryStorage() : ? Storage\Filesystem\FilesystemCategoryStorage;
-
-    /**
-     * @return null|Storage\Filesystem\FilesystemDirectoryStorage
-     */
-    abstract protected function getFilesystemDirectoryStorage() : ? Storage\Filesystem\FilesystemDirectoryStorage;
-
     /**
      * Gets the category for a filesystem record.
      *

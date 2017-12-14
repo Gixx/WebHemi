@@ -30,11 +30,22 @@ class EmptyRouteProxy implements ProxyInterface
      */
     public function resolveMiddleware(string $application, Result &$routeResult) : void
     {
-        // To avoid stipid PHP MD errors...
-        if ($application = 'test') {
-            $application = $routeResult->getResource();
+        $parameters = $routeResult->getParameters();
+        unset($application);
+
+        switch ($parameters['basename']) {
+            case 'actionok.html':
+                $middleware = 'ActionOK';
+                break;
+
+            case 'actionbad.html':
+                $middleware = 'ActionBad';
+                break;
+
+            default:
+                $middleware = '';
         }
 
-        // TODO find out
+        $routeResult->setMatchedMiddleware($middleware);
     }
 }

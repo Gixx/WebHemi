@@ -16,28 +16,16 @@ namespace WebHemi\Middleware\Action\Traits;
 use WebHemi\Data\Entity;
 use WebHemi\Data\Storage;
 use WebHemi\Router\ProxyInterface;
-use WebHemi\Data\Traits\StorageInjectorTrait;
 
 /**
  * Trait GetPublicationAuthorTrait
+ *
+ * @method Storage\User\UserStorage getUserStorage()
+ * @method Storage\User\UserMetaStorage getUserMetaStorage()
+ * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
  */
 trait GetPublicationAuthorTrait
 {
-    /**
-     * @return null|Storage\User\UserStorage
-     */
-    abstract protected function getUserStorage() : ? Storage\User\UserStorage;
-
-    /**
-     * @return null|Storage\User\UserMetaStorage
-     */
-    abstract protected function getUserMetaStorage() : ? Storage\User\UserMetaStorage;
-
-    /**
-     * @return null|Storage\Filesystem\FilesystemDirectoryStorage
-     */
-    abstract protected function getFilesystemDirectoryStorage() : ? Storage\Filesystem\FilesystemDirectoryStorage;
-
     /**
      * Gets author information for a filesystem record.
      *

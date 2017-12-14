@@ -179,7 +179,6 @@ class ServiceAdapter extends AbstractAdapter
         } catch (\Throwable $exception) {
             return $exception->getCode();
         }
-        // @codeCoverageIgnoreEnd
 
         return 0;
     }
@@ -210,9 +209,9 @@ class ServiceAdapter extends AbstractAdapter
      */
     private function setApplication() : ServiceAdapter
     {
-        // For safety purposes only, But it can't happen unless somebody change/overwrite the constructor.
         // @codeCoverageIgnoreStart
         if (!isset($this->applicationDomain)) {
+            // For safety purposes only, But it can't happen unless somebody change/overwrite the constructor.
             throw new Exception('Domain is not set');
         }
         // @codeCoverageIgnoreEnd

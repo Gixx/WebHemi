@@ -13,42 +13,37 @@ declare(strict_types = 1);
 
 namespace WebHemi\Renderer\Filter;
 
-use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
-use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\FilterInterface;
+use WebHemi\Renderer\TagFilterInterface;
 
 /**
  * Class TagParserFilter
- *
- * @SuppressWarnings(PHPMD.UnusedPrivateMethod) - those methods are called by the __call() function.
  */
 class TagParserFilter implements FilterInterface
 {
-    /** @var ConfigurationInterface */
-    private $configuration;
-    /** @var EnvironmentInterface */
-    private $environmentManager;
-
-    private $allowedTags = [
-        'URL' => 'getCurrentUri',
-    ];
+    /** @var TagFilterInterface[] */
+    private $tagFilters;
 
     /**
      * TagParserFilter constructor.
      *
-     * @param ConfigurationInterface $configuration
-     * @param EnvironmentInterface $environmentManager
+     * @param TagFilterInterface[] ...$tagFilterInterfaces
      */
-    public function __construct(ConfigurationInterface $configuration, EnvironmentInterface $environmentManager)
+    public function __construct(TagFilterInterface ...$tagFilterInterfaces)
     {
-        $this->configuration = $configuration;
-        $this->environmentManager = $environmentManager;
+        foreach ($tagFilterInterfaces as $instance) {
+            $filterClass = get_class($instance);
+
+            $this->tagFilters[$filterClass] = $instance;
+        }
     }
 
     /**
      * Should return the name of the helper.
      *
      * @return string
+     *
+     * @codeCoverageIgnore - plain text
      */
     public static function getName() : string
     {
@@ -59,6 +54,8 @@ class TagParserFilter implements FilterInterface
      * Should return the definition of the helper.
      *
      * @return string
+     *
+     * @codeCoverageIgnore - plain text
      */
     public static function getDefinition() : string
     {
@@ -69,6 +66,8 @@ class TagParserFilter implements FilterInterface
      * Should return a description text.
      *
      * @return string
+     *
+     * @codeCoverageIgnore - plain text
      */
     public static function getDescription() : string
     {
@@ -79,6 +78,8 @@ class TagParserFilter implements FilterInterface
      * Gets filter options for the render.
      *
      * @return array
+     *
+     * @codeCoverageIgnore - empty array
      */
     public static function getOptions() : array
     {
@@ -97,24 +98,20 @@ class TagParserFilter implements FilterInterface
     {
         $text = func_get_args()[0] ?? '';
 
-        foreach ($this->allowedTags as $tagName => $action) {
-            if (strpos($text, '['.$tagName.']') !== false) {
-                $this->$action($text);
+        $matches = [];
+
+        if (preg_match_all('/\#(\w+)\#/', $text, $matches)) {
+            foreach ($matches[1] as $tagFilter) {
+                $className = __NAMESPACE__.'\\Tags\\'.$tagFilter;
+
+                if (isset($this->tagFilters[$className])) {
+                    /** @var TagFilterInterface $filter */
+                    $filter = $this->tagFilters[$className];
+                    $text = $filter->filter($text);
+                }
             }
         }
 
         return $text;
-    }
-
-    /**
-     * @param string $text
-     * @return TagParserFilter
-     */
-    private function getCurrentUri(string&$text) : TagParserFilter
-    {
-        $uri = rtrim($this->environmentManager->getRequestUri(), '/');
-        $text = str_replace('[URL]', $uri, $text);
-
-        return $this;
     }
 }

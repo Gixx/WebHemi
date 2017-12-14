@@ -24,6 +24,10 @@ use WebHemi\Router\ProxyInterface;
 
 /**
  * Class GetDatesHelper
+ *
+ * @method Storage\ApplicationStorage getApplicationStorage()
+ * @method Storage\Filesystem\FilesystemStorage getFilesystemStorage()
+ * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
  */
 class GetDatesHelper implements HelperInterface
 {

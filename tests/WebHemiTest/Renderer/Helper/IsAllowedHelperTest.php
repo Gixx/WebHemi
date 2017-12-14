@@ -9,7 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTestX\Renderer;
+namespace WebHemiTestX\Renderer\Helper;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

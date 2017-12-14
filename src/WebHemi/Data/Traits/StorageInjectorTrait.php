@@ -33,7 +33,10 @@ trait StorageInjectorTrait
     {
         foreach ($dataStorages as $instance) {
             if ($instance instanceof StorageInterface) {
-                $storageClass = get_class($instance);
+                $storageClassFullName = get_class($instance);
+                $classNamespacePath = explode('\\', $storageClassFullName);
+
+                $storageClass = array_pop($classNamespacePath);
 
                 $this->dataStorages[$storageClass] = $instance;
             }
@@ -41,66 +44,18 @@ trait StorageInjectorTrait
     }
 
     /**
-     * @return null|Storage\ApplicationStorage
+     * Retrieves
+     *
+     * @param string $name
+     * @param array $arguments
+     * @return null|StorageInterface
      */
-    protected function getApplicationStorage() : ? Storage\ApplicationStorage
+    public function __call(string $name, array $arguments) : ? StorageInterface
     {
-        return $this->dataStorages[Storage\ApplicationStorage::class] ?? null;
-    }
+        unset($arguments);
 
-    /**
-     * @return null|Storage\Filesystem\FilesystemStorage
-     */
-    protected function getFilesystemStorage() : ? Storage\Filesystem\FilesystemStorage
-    {
-        return $this->dataStorages[Storage\Filesystem\FilesystemStorage::class] ?? null;
-    }
+        $className = preg_replace('/^get/', '', $name);
 
-    /**
-     * @return null|Storage\Filesystem\FilesystemCategoryStorage
-     */
-    protected function getFilesystemCategoryStorage() : ? Storage\Filesystem\FilesystemCategoryStorage
-    {
-        return $this->dataStorages[Storage\Filesystem\FilesystemCategoryStorage::class] ?? null;
-    }
-
-    /**
-     * @return null|Storage\Filesystem\FilesystemDirectoryStorage
-     */
-    protected function getFilesystemDirectoryStorage() : ? Storage\Filesystem\FilesystemDirectoryStorage
-    {
-        return $this->dataStorages[Storage\Filesystem\FilesystemDirectoryStorage::class] ?? null;
-    }
-
-    /**
-     * @return null|Storage\Filesystem\FilesystemDocumentStorage
-     */
-    protected function getFilesystemDocumentStorage() : ? Storage\Filesystem\FilesystemDocumentStorage
-    {
-        return $this->dataStorages[Storage\Filesystem\FilesystemDocumentStorage::class] ?? null;
-    }
-
-    /**
-     * @return null|Storage\Filesystem\FilesystemTagStorage
-     */
-    protected function getFilesystemTagStorage() : ? Storage\Filesystem\FilesystemTagStorage
-    {
-        return $this->dataStorages[Storage\Filesystem\FilesystemTagStorage::class] ?? null;
-    }
-
-    /**
-     * @return null|Storage\User\UserStorage
-     */
-    protected function getUserStorage() : ? Storage\User\UserStorage
-    {
-        return $this->dataStorages[Storage\User\UserStorage::class] ?? null;
-    }
-
-    /**
-     * @return null|Storage\User\UserMetaStorage
-     */
-    protected function getUserMetaStorage() : ? Storage\User\UserMetaStorage
-    {
-        return $this->dataStorages[Storage\User\UserMetaStorage::class] ?? null;
+        return $this->dataStorages[$className] ?? null;
     }
 }

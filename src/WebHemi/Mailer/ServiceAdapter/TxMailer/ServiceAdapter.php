@@ -19,7 +19,9 @@ use WebHemi\Mailer\ServiceInterface;
 
 /**
  * Class ServiceAdapter
+ *
  * @SuppressWarnings(PHPMD.ShortMethodName)
+ * @codeCoverageIgnore - no need to test external library
  */
 class ServiceAdapter implements ServiceInterface
 {
@@ -141,6 +143,7 @@ class ServiceAdapter implements ServiceInterface
     public function addAttachment(string $name, string $path) : ServiceInterface
     {
         $this->mailer->addAttachment($name, $path);
+
         return $this;
     }
 
