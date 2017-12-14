@@ -79,10 +79,10 @@ class FilesystemDirectoryEntity implements EntityInterface
     }
 
     /**
-     * @param string $description
+     * @param null|string $description
      * @return FilesystemDirectoryEntity
      */
-    public function setDescription(string $description) : FilesystemDirectoryEntity
+    public function setDescription(? string $description) : FilesystemDirectoryEntity
     {
         $this->description = $description;
 
@@ -98,10 +98,10 @@ class FilesystemDirectoryEntity implements EntityInterface
     }
 
     /**
-     * @param string $directoryType
+     * @param null|string $directoryType
      * @return FilesystemDirectoryEntity
      */
-    public function setDirectoryType(string $directoryType) : FilesystemDirectoryEntity
+    public function setDirectoryType(? string $directoryType) : FilesystemDirectoryEntity
     {
         $this->directoryType = $directoryType;
 
@@ -117,7 +117,7 @@ class FilesystemDirectoryEntity implements EntityInterface
     }
 
     /**
-     * @param string $proxy
+     * @param null|string $proxy
      * @return FilesystemDirectoryEntity
      */
     public function setProxy(? string $proxy) : FilesystemDirectoryEntity
@@ -174,10 +174,10 @@ class FilesystemDirectoryEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return FilesystemDirectoryEntity
      */
-    public function setDateModified(DateTime $dateModified) : FilesystemDirectoryEntity
+    public function setDateModified(? DateTime $dateModified) : FilesystemDirectoryEntity
     {
         $this->dateModified = $dateModified;
 

@@ -76,7 +76,7 @@ class ApplicationStorage extends AbstractStorage
             ->setReadOnly((bool) $data[$this->isReadOnly])
             ->setEnabled((bool) $data[$this->isEnabled])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
-            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
+            ->setDateModified(!empty($data[$this->dateModified]) ? new DateTime($data[$this->dateModified]) : null);
     }
 
     /**

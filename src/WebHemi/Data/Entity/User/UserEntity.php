@@ -216,10 +216,10 @@ class UserEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return UserEntity
      */
-    public function setDateModified(DateTime $dateModified) : UserEntity
+    public function setDateModified(? DateTime $dateModified) : UserEntity
     {
         $this->dateModified = $dateModified;
 

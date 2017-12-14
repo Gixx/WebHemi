@@ -53,7 +53,7 @@ class UserMetaStorage extends AbstractStorage
             ->setMetaKey($data[$this->metaKey])
             ->setMetaData($data[$this->metaData])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
-            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
+            ->setDateModified(!empty($data[$this->dateModified]) ? new DateTime($data[$this->dateModified]) : null);
     }
 
     /**

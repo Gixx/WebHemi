@@ -237,10 +237,10 @@ class PolicyEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return PolicyEntity
      */
-    public function setDateModified(DateTime $dateModified) : PolicyEntity
+    public function setDateModified(? DateTime $dateModified) : PolicyEntity
     {
         $this->dateModified = $dateModified;
 

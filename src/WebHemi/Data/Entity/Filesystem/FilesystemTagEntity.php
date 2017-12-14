@@ -79,10 +79,10 @@ class FilesystemTagEntity implements EntityInterface
     }
 
     /**
-     * @param int $applicationId
+     * @param null|int $applicationId
      * @return FilesystemTagEntity
      */
-    public function setApplicationId(int $applicationId) : FilesystemTagEntity
+    public function setApplicationId(? int $applicationId) : FilesystemTagEntity
     {
         $this->applicationId = $applicationId;
 
@@ -98,10 +98,10 @@ class FilesystemTagEntity implements EntityInterface
     }
 
     /**
-     * @param string $name
+     * @param null|string $name
      * @return FilesystemTagEntity
      */
-    public function setName(string $name) : FilesystemTagEntity
+    public function setName(? string $name) : FilesystemTagEntity
     {
         $this->name = $name;
 
@@ -117,10 +117,10 @@ class FilesystemTagEntity implements EntityInterface
     }
 
     /**
-     * @param string $title
+     * @param null|string $title
      * @return FilesystemTagEntity
      */
-    public function setTitle(string $title) : FilesystemTagEntity
+    public function setTitle(? string $title) : FilesystemTagEntity
     {
         $this->title = $title;
 
@@ -136,10 +136,10 @@ class FilesystemTagEntity implements EntityInterface
     }
 
     /**
-     * @param string $description
+     * @param null|string $description
      * @return FilesystemTagEntity
      */
-    public function setDescription(string $description) : FilesystemTagEntity
+    public function setDescription(? string $description) : FilesystemTagEntity
     {
         $this->description = $description;
 
@@ -174,10 +174,10 @@ class FilesystemTagEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return FilesystemTagEntity
      */
-    public function setDateModified(DateTime $dateModified) : FilesystemTagEntity
+    public function setDateModified(? DateTime $dateModified) : FilesystemTagEntity
     {
         $this->dateModified = $dateModified;
 

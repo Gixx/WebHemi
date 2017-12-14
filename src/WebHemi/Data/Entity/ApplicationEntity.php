@@ -321,10 +321,10 @@ class ApplicationEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return ApplicationEntity
      */
-    public function setDateModified(DateTime $dateModified) : ApplicationEntity
+    public function setDateModified(? DateTime $dateModified) : ApplicationEntity
     {
         $this->dateModified = $dateModified;
 

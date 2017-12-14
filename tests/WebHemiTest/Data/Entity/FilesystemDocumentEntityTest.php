@@ -1,0 +1,70 @@
+<?php
+/**
+ * WebHemi.
+ *
+ * PHP version 7.1
+ *
+ * @copyright 2012 - 2017 Gixx-web (http://www.gixx-web.com)
+ * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ *
+ * @link      http://www.gixx-web.com
+ */
+namespace WebHemiTest\Data\Entity;
+
+use WebHemi\DateTime;
+use WebHemi\Data\EntityInterface as DataEntityInterface;
+use WebHemi\Data\Entity\Filesystem\FilesystemDocumentEntity;
+
+/**
+ * Class FilesystemDocumentEntityTest.
+ */
+class FilesystemDocumentEntityTest extends AbstractEntityTestClass
+{
+    /**
+     * Sets up the entity class name and instance for the test.
+     */
+    public function setUpEntity()
+    {
+        $this->entityInstance = new FilesystemDocumentEntity();
+        $this->entityClass = FilesystemDocumentEntity::class;
+    }
+
+    /**
+     * Tests if the FilesystemEntity implements the DataEntityInterface.
+     */
+    public function testInstance()
+    {
+        $this->assertInstanceOf(DataEntityInterface::class, $this->entityInstance);
+
+        $this->entityInstance->setFilesystemDocumentId(123);
+        $this->assertSame($this->entityInstance->getFilesystemDocumentId(), $this->entityInstance->getKeyData());
+
+        $expectedKey = 567;
+        $this->entityInstance->setKeyData($expectedKey);
+        $this->assertSame($expectedKey, $this->entityInstance->getFilesystemDocumentId());
+        $this->assertSame($expectedKey, $this->entityInstance->getKeyData());
+    }
+
+    /**
+     * Data provider for the tests.
+     *
+     * @return array
+     */
+    public function dataProvider()
+    {
+        $dateTest = new DateTime($this->testTime);
+
+        return [
+            ['filesystemDocumentId', 1, 1, false],
+            ['parentRevisionId', 1, 1, false],
+            ['parentRevisionId', null, null, true],
+            ['authorId', 1, 1, false],
+            ['authorId', null, null, true],
+            ['contentRevision', 1, 1, true],
+            ['contentLead','some lead','some lead', false],
+            ['contentBody','some body','some body', false],
+            ['dateCreated', $dateTest, $dateTest, true],
+            ['dateModified', $dateTest, $dateTest, true],
+        ];
+    }
+}

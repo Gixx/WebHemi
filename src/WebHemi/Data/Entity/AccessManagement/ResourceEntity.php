@@ -195,10 +195,10 @@ class ResourceEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return ResourceEntity
      */
-    public function setDateModified(DateTime $dateModified) : ResourceEntity
+    public function setDateModified(? DateTime $dateModified) : ResourceEntity
     {
         $this->dateModified = $dateModified;
 

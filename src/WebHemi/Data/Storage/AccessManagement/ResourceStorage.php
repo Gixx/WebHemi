@@ -59,7 +59,7 @@ class ResourceStorage extends AbstractStorage
             ->setDescription($data[$this->description])
             ->setReadOnly((bool) $data[$this->isReadOnly])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
-            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
+            ->setDateModified(!empty($data[$this->dateModified]) ? new DateTime($data[$this->dateModified]) : null);
     }
 
     /**
