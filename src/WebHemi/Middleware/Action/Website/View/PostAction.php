@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website\View;
 
+use RuntimeException;
 use WebHemi\Data\Entity;
 use WebHemi\Middleware\Action\Website\IndexAction;
 
@@ -44,13 +45,17 @@ class PostAction extends IndexAction
         $applicationEntity = $this->getApplicationStorage()
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
-        /** @var Entity\Filesystem\FilesystemEntity[] $publications */
+        /** @var null|Entity\Filesystem\FilesystemEntity $filesystemEntity */
         $filesystemEntity = $this->getFilesystemStorage()
             ->getFilesystemByApplicationAndPath(
                 $applicationEntity->getApplicationId(),
                 $routingParams['path'],
                 $routingParams['basename']
             );
+
+        if (!$filesystemEntity instanceof Entity\Filesystem\FilesystemEntity) {
+            throw new RuntimeException('Page not found', 404);
+        }
 
         return [
             'activeMenu' => '',
