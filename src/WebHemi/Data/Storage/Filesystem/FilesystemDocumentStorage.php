@@ -60,7 +60,7 @@ class FilesystemDocumentStorage extends AbstractStorage
             ->setContentLead($data[$this->contentLead])
             ->setContentBody($data[$this->contentBody])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
-            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
+            ->setDateModified(!empty($data[$this->dateModified]) ? new DateTime($data[$this->dateModified]) : null);
     }
 
     /**

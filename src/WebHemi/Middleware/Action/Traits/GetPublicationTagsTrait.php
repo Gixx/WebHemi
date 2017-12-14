@@ -39,7 +39,7 @@ trait GetPublicationTagsTrait
         $tagEntities = $this->getFilesystemTagStorage()
             ->getFilesystemTagsByFilesystem($filesystemId);
 
-        if ($tagEntities) {
+        if (!empty($tagEntities)) {
             /** @var array $categoryDirectoryData */
             $categoryDirectoryData = $this->getFilesystemDirectoryStorage()
                 ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);

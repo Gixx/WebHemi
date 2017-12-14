@@ -100,6 +100,8 @@ abstract class AbstractEntityTestClass extends TestCase
                 $this->assertAttributeInternalType('boolean', $attribute, $this->entityInstance);
             } elseif (is_null($expectedData)) {
                 $this->assertAttributeInternalType('null', $attribute, $this->entityInstance);
+            } elseif (is_numeric($expectedData)) {
+                $this->assertAttributeInternalType('int', $attribute, $this->entityInstance);
             } else {
                 $this->assertAttributeInstanceOf(DateTime::class, $attribute, $this->entityInstance);
             }
@@ -135,6 +137,8 @@ abstract class AbstractEntityTestClass extends TestCase
                 $this->assertInternalType('boolean', $actualData);
             } elseif (is_null($expectedData)) {
                 $this->assertNull($actualData);
+            } elseif (is_numeric($expectedData)) {
+                $this->assertInternalType('int', $actualData);
             } else {
                 $this->assertInstanceOf(DateTime::class, $actualData);
             }

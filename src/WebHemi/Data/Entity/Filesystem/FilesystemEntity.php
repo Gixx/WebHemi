@@ -108,10 +108,10 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param int $applicationId
+     * @param null|int $applicationId
      * @return FilesystemEntity
      */
-    public function setApplicationId(int $applicationId) : FilesystemEntity
+    public function setApplicationId(? int $applicationId) : FilesystemEntity
     {
         $this->applicationId = $applicationId;
 
@@ -146,7 +146,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param int|null $parentId
+     * @param null|int $parentId
      * @return FilesystemEntity
      */
     public function setParentId(? int $parentId) : FilesystemEntity
@@ -195,7 +195,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param int|null $documentId
+     * @param null|int $documentId
      * @return FilesystemEntity
      */
     public function setDocumentId(? int $documentId) : FilesystemEntity
@@ -210,7 +210,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return null|int
      */
     public function getDocumentId() : ? int
     {
@@ -218,7 +218,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param int|null $fileId
+     * @param null|int $fileId
      * @return FilesystemEntity
      */
     public function setFileId(? int $fileId) : FilesystemEntity
@@ -233,7 +233,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return null|int
      */
     public function getFileId() : ? int
     {
@@ -241,7 +241,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param int|null $directoryId
+     * @param null|int $directoryId
      * @return FilesystemEntity
      */
     public function setDirectoryId(? int $directoryId) : FilesystemEntity
@@ -256,7 +256,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return null|int
      */
     public function getDirectoryId() : ? int
     {
@@ -264,7 +264,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param int|null $linkId
+     * @param null|int $linkId
      * @return FilesystemEntity
      */
     public function setLinkId(? int $linkId) : FilesystemEntity
@@ -279,7 +279,7 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return null|int
      */
     public function getLinkId() : ? int
     {
@@ -287,10 +287,10 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param string $path
+     * @param null|string $path
      * @return FilesystemEntity
      */
-    public function setPath(string $path) : FilesystemEntity
+    public function setPath(? string $path) : FilesystemEntity
     {
         $this->path = $path;
 
@@ -306,10 +306,10 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param string $baseName
+     * @param null|string $baseName
      * @return FilesystemEntity
      */
-    public function setBaseName(string $baseName) : FilesystemEntity
+    public function setBaseName(? string $baseName) : FilesystemEntity
     {
         $this->baseName = $baseName;
 
@@ -325,10 +325,10 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param string $title
+     * @param null|string $title
      * @return FilesystemEntity
      */
-    public function setTitle(string $title) : FilesystemEntity
+    public function setTitle(? string $title) : FilesystemEntity
     {
         $this->title = $title;
 
@@ -344,10 +344,10 @@ class FilesystemEntity implements EntityInterface
     }
 
     /**
-     * @param string $description
+     * @param null|string $description
      * @return FilesystemEntity
      */
-    public function setDescription(string $description) : FilesystemEntity
+    public function setDescription(? string $description) : FilesystemEntity
     {
         $this->description = $description;
 

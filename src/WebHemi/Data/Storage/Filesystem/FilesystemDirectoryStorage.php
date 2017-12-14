@@ -58,7 +58,7 @@ class FilesystemDirectoryStorage extends AbstractStorage
             ->setProxy($data[$this->proxy])
             ->setAutoIndex((bool) $data[$this->isAutoIndex])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
-            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
+            ->setDateModified(!empty($data[$this->dateModified]) ? new DateTime($data[$this->dateModified]) : null);
     }
 
     /**

@@ -65,7 +65,7 @@ class PolicyStorage extends AbstractStorage
             ->setMethod($data[$this->method])
             ->setReadOnly((bool) $data[$this->isReadOnly])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
-            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
+            ->setDateModified(!empty($data[$this->dateModified]) ? new DateTime($data[$this->dateModified]) : null);
     }
 
     /**

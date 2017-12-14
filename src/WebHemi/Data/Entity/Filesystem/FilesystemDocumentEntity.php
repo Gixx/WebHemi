@@ -119,10 +119,10 @@ class FilesystemDocumentEntity implements EntityInterface
     }
 
     /**
-     * @param int $contentRevision
+     * @param null|int $contentRevision
      * @return FilesystemDocumentEntity
      */
-    public function setContentRevision(int $contentRevision) : FilesystemDocumentEntity
+    public function setContentRevision(? int $contentRevision) : FilesystemDocumentEntity
     {
         $this->contentRevision = $contentRevision;
 
@@ -138,10 +138,10 @@ class FilesystemDocumentEntity implements EntityInterface
     }
 
     /**
-     * @param string $contentLead
+     * @param null|string $contentLead
      * @return FilesystemDocumentEntity
      */
-    public function setContentLead(string $contentLead) : FilesystemDocumentEntity
+    public function setContentLead(? string $contentLead) : FilesystemDocumentEntity
     {
         $this->contentLead = $contentLead;
 
@@ -157,10 +157,10 @@ class FilesystemDocumentEntity implements EntityInterface
     }
 
     /**
-     * @param string $contentBody
+     * @param null|string $contentBody
      * @return FilesystemDocumentEntity
      */
-    public function setContentBody(string $contentBody) : FilesystemDocumentEntity
+    public function setContentBody(? string $contentBody) : FilesystemDocumentEntity
     {
         $this->contentBody = $contentBody;
 
@@ -195,10 +195,10 @@ class FilesystemDocumentEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return FilesystemDocumentEntity
      */
-    public function setDateModified(DateTime $dateModified) : FilesystemDocumentEntity
+    public function setDateModified(? DateTime $dateModified) : FilesystemDocumentEntity
     {
         $this->dateModified = $dateModified;
 

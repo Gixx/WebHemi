@@ -79,10 +79,10 @@ class FilesystemCategoryEntity implements EntityInterface
     }
 
     /**
-     * @param int $applicationId
+     * @param null|int $applicationId
      * @return FilesystemCategoryEntity
      */
-    public function setApplicationId(int $applicationId) : FilesystemCategoryEntity
+    public function setApplicationId(? int $applicationId) : FilesystemCategoryEntity
     {
         $this->applicationId = $applicationId;
 
@@ -98,10 +98,10 @@ class FilesystemCategoryEntity implements EntityInterface
     }
 
     /**
-     * @param string $name
+     * @param null|string $name
      * @return FilesystemCategoryEntity
      */
-    public function setName(string $name) : FilesystemCategoryEntity
+    public function setName(? string $name) : FilesystemCategoryEntity
     {
         $this->name = $name;
 
@@ -117,10 +117,10 @@ class FilesystemCategoryEntity implements EntityInterface
     }
 
     /**
-     * @param string $title
+     * @param null|string $title
      * @return FilesystemCategoryEntity
      */
-    public function setTitle(string $title) : FilesystemCategoryEntity
+    public function setTitle(? string $title) : FilesystemCategoryEntity
     {
         $this->title = $title;
 
@@ -174,10 +174,10 @@ class FilesystemCategoryEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return FilesystemCategoryEntity
      */
-    public function setDateModified(DateTime $dateModified) : FilesystemCategoryEntity
+    public function setDateModified(? DateTime $dateModified) : FilesystemCategoryEntity
     {
         $this->dateModified = $dateModified;
 

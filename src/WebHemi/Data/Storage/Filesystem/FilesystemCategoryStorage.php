@@ -56,7 +56,7 @@ class FilesystemCategoryStorage extends AbstractStorage
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
-            ->setDateModified(new DateTime($data[$this->dateModified] ?? 'now'));
+            ->setDateModified(!empty($data[$this->dateModified]) ? new DateTime($data[$this->dateModified]) : null);
     }
 
     /**

@@ -174,10 +174,10 @@ class UserGroupEntity implements EntityInterface
     }
 
     /**
-     * @param DateTime $dateModified
+     * @param null|DateTime $dateModified
      * @return UserGroupEntity
      */
-    public function setDateModified(DateTime $dateModified) : UserGroupEntity
+    public function setDateModified(? DateTime $dateModified) : UserGroupEntity
     {
         $this->dateModified = $dateModified;
 
