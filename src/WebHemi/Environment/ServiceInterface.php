@@ -57,35 +57,35 @@ interface ServiceInterface
      *
      * @return string
      */
-    public function getDocumentRoot(): string;
+    public function getDocumentRoot() : string;
 
     /**
      * Gets the application path.
      *
      * @return string
      */
-    public function getApplicationRoot(): string;
+    public function getApplicationRoot() : string;
 
     /**
      * Gets the application domain.
      *
      * @return string
      */
-    public function getApplicationDomain(): string;
+    public function getApplicationDomain() : string;
 
     /**
      * Gets the application SSL status.
      *
      * @return bool
      */
-    public function isSecuredApplication(): bool;
+    public function isSecuredApplication() : bool;
 
     /**
      * Gets the selected application.
      *
      * @return string
      */
-    public function getSelectedApplication(): string;
+    public function getSelectedApplication() : string;
 
     /**
      * Get the URI path for the selected application. Required for the RouterAdapter to work with directory-based
@@ -93,42 +93,49 @@ interface ServiceInterface
      *
      * @return string
      */
-    public function getSelectedApplicationUri(): string;
+    public function getSelectedApplicationUri() : string;
+
+    /**
+     * Gets the full address
+     *
+     * @return string
+     */
+    public function getAddress() : string;
 
     /**
      * Gets the request URI
      *
      * @return string
      */
-    public function getRequestUri(): string;
+    public function getRequestUri() : string;
 
     /**
      * Gets the selected module.
      *
      * @return string
      */
-    public function getSelectedModule(): string;
+    public function getSelectedModule() : string;
 
     /**
      * Gets the selected theme.
      *
      * @return string
      */
-    public function getSelectedTheme(): string;
+    public function getSelectedTheme() : string;
 
     /**
      * Gets the resource path for the selected theme.
      *
      * @return string
      */
-    public function getResourcePath(): string;
+    public function getResourcePath() : string;
 
     /**
      * Gets the request method.
      *
      * @return string
      */
-    public function getRequestMethod(): string;
+    public function getRequestMethod() : string;
 
     /**
      * Gets environment data.
@@ -136,14 +143,14 @@ interface ServiceInterface
      * @param string $key
      * @return array
      */
-    public function getEnvironmentData(string $key): array;
+    public function getEnvironmentData(string $key) : array;
 
     /**
      * Gets the client IP address.
      *
      * @return string
      */
-    public function getClientIp(): string;
+    public function getClientIp() : string;
 
     /**
      * Gets the execution parameters (CLI).

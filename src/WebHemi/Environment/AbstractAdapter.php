@@ -137,6 +137,16 @@ abstract class AbstractAdapter implements ServiceInterface
     }
 
     /**
+     * Gets the full address
+     *
+     * @return string
+     */
+    public function getAddress() : string
+    {
+        return $this->url;
+    }
+
+    /**
      * Gets the request URI
      *
      * @return string
