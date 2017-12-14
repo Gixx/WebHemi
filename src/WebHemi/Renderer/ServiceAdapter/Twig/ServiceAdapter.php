@@ -15,6 +15,7 @@ namespace WebHemi\Renderer\ServiceAdapter\Twig;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use Throwable;
 use Twig_Environment;
 use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
@@ -55,6 +56,7 @@ class ServiceAdapter implements ServiceInterface
      * @param ConfigurationInterface $configuration
      * @param EnvironmentInterface   $environmentManager
      * @param I18nService            $i18nService
+     * @throws Throwable
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -100,7 +102,7 @@ class ServiceAdapter implements ServiceInterface
      *
      * @param string $template
      * @param array  $parameters
-     * @throws InvalidArgumentException
+     * @throws Throwable
      * @return StreamInterface
      */
     public function render(string $template, array $parameters = []) : StreamInterface
@@ -121,12 +123,16 @@ class ServiceAdapter implements ServiceInterface
 
         // Tell the template where the resources are.
         $parameters['application'] = [
+            'address' => $this->environmentManager->getAddress(),
+            'domainName' => $this->environmentManager->getApplicationDomain(),
+            'domainAddress' => 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'
+                .$this->environmentManager->getApplicationDomain(),
             'resourcePath' => $this->templateResourcePath,
-            'domain' => $this->environmentManager->getApplicationDomain(),
             'baseUri' => $this->applicationBaseUri,
             'currentUri' => $this->environmentManager->getRequestUri(),
             'documentRoot' => $this->environmentManager->getDocumentRoot(),
             'language' => $this->i18nService->getLanguage(),
+            'locale' => $this->i18nService->getLocale(),
             'author' => '',
             'authorLink' => '',
             'description' => '',
