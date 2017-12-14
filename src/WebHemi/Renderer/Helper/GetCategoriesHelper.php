@@ -23,6 +23,10 @@ use WebHemi\Router\ProxyInterface;
 
 /**
  * Class GetCategoriesHelper
+ *
+ * @method Storage\ApplicationStorage getApplicationStorage()
+ * @method Storage\Filesystem\FilesystemCategoryStorage getFilesystemCategoryStorage()
+ * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
  */
 class GetCategoriesHelper implements HelperInterface
 {

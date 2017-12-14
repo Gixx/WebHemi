@@ -19,19 +19,12 @@ use WebHemi\Router\ProxyInterface;
 
 /**
  * Trait GetPublicationTagsTrait
+ *
+ * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
+ * @method Storage\Filesystem\FilesystemTagStorage getFilesystemTagStorage()
  */
 trait GetPublicationTagsTrait
 {
-    /**
-     * @return null|Storage\Filesystem\FilesystemTagStorage
-     */
-    abstract protected function getFilesystemTagStorage() : ? Storage\Filesystem\FilesystemTagStorage;
-
-    /**
-     * @return null|Storage\Filesystem\FilesystemDirectoryStorage
-     */
-    abstract protected function getFilesystemDirectoryStorage() : ? Storage\Filesystem\FilesystemDirectoryStorage;
-
     /**
      * Collects all the tags for a filesystem record.
      *

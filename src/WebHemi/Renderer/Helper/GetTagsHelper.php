@@ -23,6 +23,10 @@ use WebHemi\Router\ProxyInterface;
 
 /**
  * Class GetTagsHelper
+ *
+ * @method Storage\ApplicationStorage getApplicationStorage()
+ * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
+ * @method Storage\Filesystem\FilesystemTagStorage getFilesystemTagStorage()
  */
 class GetTagsHelper implements HelperInterface
 {

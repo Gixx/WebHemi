@@ -50,6 +50,7 @@ $dependencyInjection->registerServiceInstance(ConfigurationInterface::class, $co
     ->registerServiceInstance(EnvironmentInterface::class, $environment)
     ->registerServiceInstance(MiddlewarePipelineInterface::class, $middlewarePipeline)
     ->registerServiceInstance(SessionInterface::class, $session)
+    ->registerServiceInstance(DependencyInjectionInterface::class, $dependencyInjection)
     ->registerModuleServices('Global')
     ->registerModuleServices($environment->getSelectedModule());
 

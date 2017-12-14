@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Action\Website;
 
 use WebHemi\Data\Entity;
+use WebHemi\Data\Storage;
 use WebHemi\Data\StorageInterface;
 use WebHemi\Data\Traits\StorageInjectorTrait;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
@@ -22,6 +23,10 @@ use WebHemi\Middleware\Action\Traits;
 
 /**
  * Class IndexAction.
+ *
+ * @method Storage\ApplicationStorage getApplicationStorage()
+ * @method Storage\Filesystem\FilesystemStorage getFilesystemStorage()
+ * @method Storage\Filesystem\FilesystemDocumentStorage getFilesystemDocumentStorage()
  */
 class IndexAction extends AbstractMiddlewareAction
 {

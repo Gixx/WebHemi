@@ -9,7 +9,7 @@
  *
  * @link      http://www.gixx-web.com
  */
-namespace WebHemiTest\Renderer;
+namespace WebHemiTest\Renderer\Helper;
 
 use PHPUnit\Framework\TestCase;
 use WebHemi\Renderer\HelperInterface as RendererHelperInterface;
@@ -46,9 +46,9 @@ class DefinedHelperTest extends TestCase
     {
         parent::setUp();
 
-        $config = require __DIR__ . '/../test_config.php';
+        $config = require __DIR__ . '/../../test_config.php';
         $this->config = new Config($config);
-        $this->documentRoot = realpath(__DIR__.'/../TestDocumentRoot/');
+        $this->documentRoot = realpath(__DIR__ . '/../../TestDocumentRoot/');
     }
 
     /**

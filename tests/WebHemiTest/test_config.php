@@ -274,15 +274,20 @@ return [
                 'allowed_methods' => ['GET'],
             ],
             'error' => [
-                'path'            => '^/error/$',
+                'path'            => '^/error/?$',
                 'middleware'      => 'actionBad',
                 'allowed_methods' => ['GET'],
             ],
             'forbidden' => [
-                'path'            => '^/restricted/$',
+                'path'            => '^/restricted/?$',
                 'middleware'      => 'actionForbidden',
                 'allowed_methods' => ['GET'],
-            ]
+            ],
+            'proxy-test' => [
+                'path' => '^/proxytest(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>[\w\-]+\.[a-z0-9]{2,5})$',
+                'middleware'      => 'proxy',
+                'allowed_methods' => ['GET'],
+            ],
         ],
         'SomeApp' => [
             'index' => [
@@ -355,4 +360,6 @@ return [
             ],
         ],
     ],
+    'ftp' => [],
+    'email' => []
 ];

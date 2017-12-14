@@ -14,12 +14,13 @@ declare(strict_types = 1);
 namespace WebHemi\Ftp\ServiceAdapter\Base;
 
 use RuntimeException;
-use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Ftp\ServiceInterface;
-use WebHemi\Ftp\AbstractServiceAdapter;
+use WebHemi\Ftp\ServiceAdapter\AbstractServiceAdapter;
 
 /**
  * Class ServiceAdapter.
+ *
+ * @codeCoverageIgnore - don't test third party library.
  */
 class ServiceAdapter extends AbstractServiceAdapter
 {
@@ -233,50 +234,6 @@ class ServiceAdapter extends AbstractServiceAdapter
     }
 
     /**
-     * Converts file rights string into octal value.
-     *
-     * @param string $permissions The UNIX-style permission string, e.g.: 'drwxr-xr-x'
-     * @return string
-     */
-    private function getOctalChmod(string $permissions) : string
-    {
-        $mode = 0;
-        $mapper = [
-            0 => [], // type like d as directory, l as link etc.
-            // Owner
-            1 => ['r' => 0400],
-            2 => ['w' => 0200],
-            3 => [
-                'x' => 0100,
-                's' => 04100,
-                'S' => 04000
-            ],
-            // Group
-            4 => ['r' => 040],
-            5 => ['w' => 020],
-            6 => [
-                'x' => 010,
-                's' => 02010,
-                'S' => 02000
-            ],
-            // World
-            7 => ['r' => 04],
-            8 => ['w' => 02],
-            9 => [
-                'x' => 01,
-                't' => 01001,
-                'T' => 01000
-            ],
-        ];
-
-        for ($i = 1; $i <= 9; $i++) {
-            $mode += $mapper[$i][$permissions[$i]] ?? 0;
-        }
-
-        return (string) $mode;
-    }
-
-    /**
      * Uploads file to remote host.
      *
      * @see self::setRemotePath
@@ -350,54 +307,11 @@ class ServiceAdapter extends AbstractServiceAdapter
     }
 
     /**
-     * Checks local file, and generates new unique name if necessary.
-     *
-     * @param string $localFileName
-     * @param bool $forceUnique
-     * @throws RuntimeException
-     */
-    private function checkLocalFile(string&$localFileName, bool $forceUnique = false) : void
-    {
-        $pathInfo = pathinfo($localFileName);
-
-        if ($pathInfo['dirname'] != '.') {
-            $this->setLocalPath($pathInfo['dirname']);
-            $localFileName = $pathInfo['basename'];
-        }
-
-        if (!$forceUnique) {
-            return;
-        }
-
-        $variant = 0;
-
-        while (file_exists($this->localPath.'/'.$localFileName) && $variant++ < 20) {
-            $fileNameParts = [
-                $pathInfo['filename'],
-                '('.$variant.')',
-                $pathInfo['extension']
-            ];
-
-            // remove empty parts (e.g.: when there's no extension)
-            $fileNameParts = array_filter($fileNameParts);
-
-            $localFileName = implode('.', $fileNameParts);
-        }
-
-        if ($variant >= 20) {
-            throw new RuntimeException(
-                sprintf('Too many similar files in folder %s, please cleanup first.', $this->localPath),
-                1009
-            );
-        }
-    }
-
-    /**
      * Check remote file name.
      *
      * @param string $remoteFileName
      */
-    private function checkRemoteFile(string&$remoteFileName) : void
+    protected function checkRemoteFile(string&$remoteFileName) : void
     {
         $pathInfo = pathinfo($remoteFileName);
 

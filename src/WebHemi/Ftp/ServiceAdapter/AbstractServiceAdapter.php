@@ -11,10 +11,11 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Ftp;
+namespace WebHemi\Ftp\ServiceAdapter;
 
 use RuntimeException;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\Ftp\ServiceInterface;
 
 /**
  * Class AbstractServiceAdapter
@@ -135,6 +136,8 @@ abstract class AbstractServiceAdapter implements ServiceInterface
             throw new RuntimeException(sprintf('No such directory: %s', $path), 1003);
         }
 
+        // @codeCoverageIgnoreStart
+        // docker is root. Can't test these cases...
         if (!is_readable($path)) {
             throw new RuntimeException(sprintf('Cannot read directory: %s; Permission denied.', $path), 1004);
         }
@@ -145,11 +148,102 @@ abstract class AbstractServiceAdapter implements ServiceInterface
                 1005
             );
         }
+        // @codeCoverageIgnoreEnd
 
         $this->localPath = $path;
 
         return $this;
     }
+
+    /**
+     * Checks local file, and generates new unique name if necessary.
+     *
+     * @param string $localFileName
+     * @param bool $forceUnique
+     * @throws RuntimeException
+     */
+    protected function checkLocalFile(string&$localFileName, bool $forceUnique = false) : void
+    {
+        $pathInfo = pathinfo($localFileName);
+
+        if ($pathInfo['dirname'] != '.') {
+            $this->setLocalPath($pathInfo['dirname']);
+        }
+
+        $localFileName = $pathInfo['basename'];
+
+        if (!$forceUnique) {
+            return;
+        }
+
+        $variant = 0;
+        $fileName = $pathInfo['filename'];
+        $extension = $pathInfo['extension'];
+
+        while (file_exists($this->localPath.'/'.$fileName.'.'.$extension) && $variant++ < 20) {
+            $fileName = $pathInfo['filename'].'.('.($variant).')';
+        }
+
+        if (preg_match('/\.\(20\)$/', $fileName)) {
+            throw new RuntimeException(
+                sprintf('Too many similar files in folder %s, please cleanup first.', $this->localPath),
+                1009
+            );
+        }
+
+        $localFileName = $fileName.'.'.$extension;
+    }
+
+    /**
+     * Converts file rights string into octal value.
+     *
+     * @param string $permissions The UNIX-style permission string, e.g.: 'drwxr-xr-x'
+     * @return string
+     */
+    protected function getOctalChmod(string $permissions) : string
+    {
+        $mode = 0;
+        $mapper = [
+            0 => [], // type like d as directory, l as link etc.
+            // Owner
+            1 => ['r' => 0400],
+            2 => ['w' => 0200],
+            3 => [
+                'x' => 0100,
+                's' => 04100,
+                'S' => 04000
+            ],
+            // Group
+            4 => ['r' => 040],
+            5 => ['w' => 020],
+            6 => [
+                'x' => 010,
+                's' => 02010,
+                'S' => 02000
+            ],
+            // World
+            7 => ['r' => 04],
+            8 => ['w' => 02],
+            9 => [
+                'x' => 01,
+                't' => 01001,
+                'T' => 01000
+            ],
+        ];
+
+        for ($i = 1; $i <= 9; $i++) {
+            $mode += $mapper[$i][$permissions[$i]] ?? 00;
+        }
+
+        return '0'.decoct($mode);
+    }
+
+    /**
+     * Check remote file name.
+     *
+     * @param string $remoteFileName
+     */
+    abstract protected function checkRemoteFile(string&$remoteFileName) : void;
 
     /**
      * Gets local path.

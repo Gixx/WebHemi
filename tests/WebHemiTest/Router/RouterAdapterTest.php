@@ -204,4 +204,31 @@ class RouterAdapterTest extends TestCase
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_NOT_FOUND, $result->getStatus());
     }
+
+    /**
+     * Tests routing with default application.
+     */
+    public function testRouteMatchWithProxy()
+    {
+        $adapterObj = new RouteAdapter(
+            $this->config,
+            $this->environmentManager,
+            $this->routeResult,
+            $this->routeProxy
+        );
+
+        $request = new ServerRequest('GET', '/proxytest/test/level/1/actionok.html');
+        $result = $adapterObj->match($request);
+        $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
+        $this->assertEquals('ActionOK', $result->getMatchedMiddleware());
+
+        $request = new ServerRequest('GET', '/proxytest/some/sub/directory/actionbad.html');
+        $result = $adapterObj->match($request);
+        $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
+        $this->assertEquals('ActionBad', $result->getMatchedMiddleware());
+
+        $request = new ServerRequest('GET', '/proxytest/some/sub/directory/index.html');
+        $result = $adapterObj->match($request);
+        $this->assertEquals(Result::CODE_NOT_FOUND, $result->getStatus());
+    }
 }
