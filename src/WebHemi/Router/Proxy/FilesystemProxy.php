@@ -58,7 +58,6 @@ class FilesystemProxy implements ProxyInterface
 
         $parameters = $routeResult->getParameters();
         $fileSystemEntity = $this->getFilesystemEntityByRouteParams($applicationEntity, $parameters);
-
         if (!$fileSystemEntity) {
             $routeResult->setMatchedMiddleware(null);
             return;

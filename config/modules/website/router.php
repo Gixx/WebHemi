@@ -20,12 +20,12 @@ return [
                 'allowed_methods' => ['GET', 'POST'],
             ],
             'website-view' => [
-                'path' => '^(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>(?!index\..?html$)[\w\-]+\.[a-z0-9]{2,5})$',
+                'path' => '^(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>(?!index\.html$)[\w\-\.]+\.[a-z0-9]{2,5})$',
                 'middleware' => 'proxy',
                 'allowed_methods' => ['GET'],
             ],
             'website-list' => [
-                'path' => '^(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>[^\.]+)(?:\/|\/index..?html)?$',
+                'path' => '^(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>(?!index\.html$)[\w\-\.]+)(?:\/|\/index\.html)?$',
                 'middleware' => 'proxy',
                 'allowed_methods' => ['GET'],
             ],

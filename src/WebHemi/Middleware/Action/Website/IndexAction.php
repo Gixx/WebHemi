@@ -87,6 +87,7 @@ class IndexAction extends AbstractMiddlewareAction
         return [
             'activeMenu' => '',
             'application' => $this->getApplicationData($applicationEntity),
+            'fixPost' => $applicationEntity->getIntroduction(),
             'blogPosts' => $blogPosts,
         ];
     }
@@ -176,7 +177,7 @@ class IndexAction extends AbstractMiddlewareAction
 
         return [
             'userId' => $userId,
-            'username' => $user->getUserName(),
+            'userName' => $user->getUserName(),
             'url' => $userDirectoryData['uri'].'/'.$user->getUserName(),
             'meta' => $userMeta,
         ];

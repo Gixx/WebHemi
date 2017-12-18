@@ -201,3 +201,7 @@ msgstr "<p>Sajnáljuk. Habár az oldal maga létezik, de jelen pillanatban nincs
 "                    <li>Lépj vissza a böngésző \"Vissza\" gombjával, és próbálj ki egy másik hivatkozást.</li>\n"
 "                </ul>"
 
+#: 
+msgid "Introduction"
+msgstr "Bemutatkozás"
+
