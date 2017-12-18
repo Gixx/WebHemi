@@ -18,6 +18,8 @@ use WebHemi\DateTime;
 
 /**
  * Class ApplicationEntity.
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class ApplicationEntity implements EntityInterface
 {
@@ -28,7 +30,15 @@ class ApplicationEntity implements EntityInterface
     /** @var string */
     private $title;
     /** @var string */
+    private $introduction;
+    /** @var string */
+    private $subject;
+    /** @var string */
     private $description;
+    /** @var string */
+    private $keywords;
+    /** @var string */
+    private $copyright;
     /** @var string */
     private $path;
     /** @var string */
@@ -39,8 +49,6 @@ class ApplicationEntity implements EntityInterface
     private $locale;
     /** @var string */
     private $timeZone;
-    /** @var string */
-    private $introduction;
     /** @var bool */
     private $isReadOnly;
     /** @var bool */
@@ -147,6 +155,63 @@ class ApplicationEntity implements EntityInterface
     public function getDescription() : ? string
     {
         return $this->description;
+    }
+
+    /**
+     * @param null|string $subject
+     * @return ApplicationEntity
+     */
+    public function setSubject(? string $subject) : ApplicationEntity
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSubject() : ? string
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @param null|string $keywords
+     * @return ApplicationEntity
+     */
+    public function setKeywords(? string $keywords) : ApplicationEntity
+    {
+        $this->keywords = $keywords;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getKeywords() : ? string
+    {
+        return $this->keywords;
+    }
+
+    /**
+     * @param null|string $copyright
+     * @return ApplicationEntity
+     */
+    public function setCopyright(? string $copyright) : ApplicationEntity
+    {
+        $this->copyright = $copyright;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getCopyright() : ? string
+    {
+        return $this->copyright;
     }
 
     /**

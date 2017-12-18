@@ -62,6 +62,7 @@ class PostAction extends IndexAction
             'page' => [
                 'type' => 'Categories',
             ],
+            'application' => $this->getApplicationData($applicationEntity),
             'blogPost' => $this->getBlobPostData($applicationEntity, $filesystemEntity),
         ];
     }

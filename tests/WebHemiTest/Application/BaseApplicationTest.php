@@ -12,6 +12,7 @@
 namespace WebHemiTest\Application;
 
 use PHPUnit\Framework\TestCase;
+use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionInterface;
 use WebHemi\DependencyInjection\ServiceAdapter\Symfony\ServiceAdapter as DependencyInjectionAdapter;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\MiddlewarePipeline\ServiceInterface as PipelineInterface;
@@ -131,6 +132,7 @@ class BaseApplicationTest extends TestCase
         $diAdapter->registerServiceInstance(ConfigInterface::class, $config)
             ->registerServiceInstance(EnvironmentInterface::class, $environmentManager)
             ->registerServiceInstance(PipelineInterface::class, $pipelineManager)
+            ->registerServiceInstance(DependencyInjectionInterface::class, $diAdapter)
             ->registerModuleServices('Global');
 
         $app = new Application($diAdapter);

@@ -13,11 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage\Filesystem;
 
+use PDO;
 use WebHemi\Data\ConnectorInterface;
 use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\Filesystem\FilesystemEntity;
 use WebHemi\Data\Storage\AbstractStorage;
 use WebHemi\DateTime;
+use WebHemi\StringLib;
 
 /**
  * Class FilesystemStorage.
@@ -169,41 +171,6 @@ class FilesystemStorage extends AbstractStorage
     }
 
     /**
-     * Gets the filesystem entity set by application and tag.
-     *
-     * @param int $applicationId
-     * @param int $tagId
-     * @return FilesystemEntity[]
-     */
-    public function getFilesystemSetByApplicationAndTag(int $applicationId, int $tagId) : ? array
-    {
-        /** @var ConnectorInterface $connector */
-        $connector = $this->getConnector();
-
-        // Switch to another data group (DO NOT FORGET TO SET IT BACK!!)
-        $connector->setDataGroup('webhemi_filesystem_to_filesystem_tag')
-            ->setIdKey('id_filesystem_to_filesystem_tag');
-
-        $dataSet = $connector->getDataSet(['fk_filesystem_tag' => $tagId]);
-        $filesystemIds = [];
-
-        foreach ($dataSet as $data) {
-            $filesystemIds[] = $data['fk_filesystem'];
-        }
-
-        // switch back to the original data group
-        $connector->setDataGroup($this->dataGroup)
-            ->setIdKey($this->idKey);
-
-        return empty($filesystemIds)
-            ? []
-            : $this->getPublishedDocuments(
-                $applicationId,
-                [$this->idKey => $filesystemIds]
-            );
-    }
-
-    /**
      * Gets the filesystem entity by application and path.
      *
      * @param int $applicationId
@@ -287,6 +254,112 @@ class FilesystemStorage extends AbstractStorage
     }
 
     /**
+     * Gets the published documents by author id
+     *
+     * @param int $applicationId
+     * @param int $userId
+     * @param string|null $order
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array
+     */
+    public function getPublishedDocumentsByAuthor(
+        int $applicationId,
+        int $userId,
+        string $order = null,
+        int $limit = null,
+        int $offset = null
+    ) : array {
+        /** @var PDO $adapter */
+        $adapter = $this->getConnector()->getDataDriver();
+
+        if (empty($order)) {
+            $order = $this->datePublished.' DESC';
+        }
+
+        $query = file_get_contents(__DIR__.'/SpecialQueries/getPublishedDocumentsByAuthor.sql');
+
+        if (is_numeric($limit)) {
+            $query .= ' LIMIT :limit';
+
+            if (is_numeric($offset)) {
+                $query .= ' OFFSET :offset';
+            }
+        }
+
+        $statement = $adapter->prepare($query);
+        $statement->bindParam(':applicationId', $applicationId, PDO::PARAM_INT);
+        $statement->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $statement->bindParam(':orderBy', $order, PDO::PARAM_STR);
+
+        if (is_numeric($limit)) {
+            $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+
+            if (is_numeric($offset)) {
+                $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+            }
+        }
+
+        $statement->execute();
+        $dataList = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $this->getEntitySetFromDataSet($dataList);
+    }
+
+    /**
+     * Gets the published documents by tag id
+     *
+     * @param int $applicationId
+     * @param int $filesystemTagId
+     * @param string|null $order
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array
+     */
+    public function getPublishedDocumentsByTag(
+        int $applicationId,
+        int $filesystemTagId,
+        string $order = null,
+        int $limit = null,
+        int $offset = null
+    ) : array {
+        /** @var PDO $adapter */
+        $adapter = $this->getConnector()->getDataDriver();
+
+        if (empty($order)) {
+            $order = $this->datePublished.' DESC';
+        }
+
+        $query = file_get_contents(__DIR__.'/SpecialQueries/getPublishedDocumentsByTag.sql');
+
+        if (is_numeric($limit)) {
+            $query .= ' LIMIT :limit';
+
+            if (is_numeric($offset)) {
+                $query .= ' OFFSET :offset';
+            }
+        }
+
+        $statement = $adapter->prepare($query);
+        $statement->bindParam(':applicationId', $applicationId, PDO::PARAM_INT);
+        $statement->bindParam(':tagId', $filesystemTagId, PDO::PARAM_INT);
+        $statement->bindParam(':orderBy', $order, PDO::PARAM_STR);
+
+        if (is_numeric($limit)) {
+            $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+
+            if (is_numeric($offset)) {
+                $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+            }
+        }
+
+        $statement->execute();
+        $dataList = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $this->getEntitySetFromDataSet($dataList);
+    }
+
+    /**
      * Gets simple structured meta information for a filesystem record.
      *
      * @param int $filesystemId
@@ -310,7 +383,8 @@ class FilesystemStorage extends AbstractStorage
             ->setIdKey($this->idKey);
 
         foreach ($filesystemRecord as $data) {
-            $filesystemMetaSet[$data['meta_key']] = $data['meta_data'];
+            $key = lcfirst(StringLib::convertUnderscoreToCamelCase($data['meta_key']));
+            $filesystemMetaSet[$key] = $data['meta_data'];
         }
 
         return $filesystemMetaSet;

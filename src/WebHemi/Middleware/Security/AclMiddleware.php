@@ -133,7 +133,7 @@ class AclMiddleware implements MiddlewareInterface
         $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, []);
         $templateData[ServerRequestInterface::REQUEST_ATTR_AUTHENTICATED_USER] = $identity;
         $templateData[ServerRequestInterface::REQUEST_ATTR_AUTHENTICATED_USER_META] = $this->userMetaStorage
-            ->getUserMetaSetForUserId($identity->getUserId());
+            ->getUserMetaEntitySetForUserId($identity->getUserId(), true);
 
         return $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
     }

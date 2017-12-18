@@ -135,177 +135,177 @@ class UserMetaStorageTest extends TestCase
     /**
      * Tests the getUserMetaSetForUserId method.
      */
-    public function testGetUserMetaSetForUserId()
-    {
-        $data = [
-            [
-                'id_user_meta' => 1,
-                'fk_user' => 1,
-                'meta_key' => 'body',
-                'meta_data' => 'sporty',
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
-            ],
-            [
-                'id_user_meta' => 2,
-                'fk_user' => 1,
-                'meta_key' => 'phone',
-                'meta_data' => '+49 176 1234 5678',
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
-            ],
-        ];
-
-        $expectedResult = [
-            $data[0]['meta_key'] => $data[0]['meta_data'],
-            $data[1]['meta_key'] => $data[1]['meta_data'],
-        ];
-
-        $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('array'))
-            ->will(
-                function ($args) use ($data) {
-                    if ($args[0]['fk_user'] == 1) {
-                        return $data;
-                    }
-
-                    return [];
-                }
-            );
-
-        $dataEntity = new UserMetaEntity();
-        /** @var DataAdapterInterface $defaultAdapterInstance */
-        $defaultAdapterInstance = $this->defaultAdapter->reveal();
-        $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
-
-        $actualResult = $storage->getUserMetaSetForUserId(2);
-        $this->assertEmpty($actualResult);
-
-        /** @var UserMetaEntity[] $actualResult */
-        $actualResult = $storage->getUserMetaSetForUserId(1);
-        $this->assertInternalType('array', $actualResult);
-        $this->assertArraysAreSimilar($expectedResult, $actualResult);
-    }
-
-    /**
-     * Tests the getUserMetaForUserId() method
-     */
-    public function testGetUserMetaForUserId()
-    {
-        $data = [
-            [
-                'id_user_meta' => 1,
-                'fk_user' => 1,
-                'meta_key' => 'body',
-                'meta_data' => 'sporty',
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
-            ],
-            [
-                'id_user_meta' => 2,
-                'fk_user' => 1,
-                'meta_key' => 'phone',
-                'meta_data' => '+49 176 1234 5678',
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
-            ],
-        ];
-
-        $expectedResult = [];
-
-        foreach ($data as $entityData) {
-            $entity = new UserMetaEntity();
-            $entity->setUserMetaId($entityData['id_user_meta'])
-                ->setUserId($entityData['fk_user'])
-                ->setMetaKey($entityData['meta_key'])
-                ->setMetaData($entityData['meta_data'])
-                ->setDateCreated(new DateTime($entityData['date_created']))
-                ->setDateModified(new DateTime($entityData['date_modified']));
-
-            $expectedResult[] = $entity;
-        }
-
-        $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('array'))
-            ->will(
-                function ($args) use ($data) {
-                    if ($args[0]['fk_user'] == 1) {
-                        return $data;
-                    }
-
-                    return [];
-                }
-            );
-
-        $dataEntity = new UserMetaEntity();
-        /** @var DataAdapterInterface $defaultAdapterInstance */
-        $defaultAdapterInstance = $this->defaultAdapter->reveal();
-        $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
-
-        $actualResult = $storage->getUserMetaForUserId(1);
-
-        $this->assertArraysAreSimilar($expectedResult, $actualResult);
-    }
+//    public function testGetUserMetaSetForUserId()
+//    {
+//        $data = [
+//            [
+//                'id_user_meta' => 1,
+//                'fk_user' => 1,
+//                'meta_key' => 'body',
+//                'meta_data' => 'sporty',
+//                'date_created' =>  '2016-03-24 16:25:12',
+//                'date_modified' =>  '2016-03-24 16:25:12',
+//            ],
+//            [
+//                'id_user_meta' => 2,
+//                'fk_user' => 1,
+//                'meta_key' => 'phone',
+//                'meta_data' => '+49 176 1234 5678',
+//                'date_created' =>  '2016-03-24 16:25:12',
+//                'date_modified' =>  '2016-03-24 16:25:12',
+//            ],
+//        ];
+//
+//        $expectedResult = [
+//            $data[0]['meta_key'] => $data[0]['meta_data'],
+//            $data[1]['meta_key'] => $data[1]['meta_data'],
+//        ];
+//
+//        $this->defaultAdapter
+//            ->getDataSet(Argument::type('array'), Argument::type('array'))
+//            ->will(
+//                function ($args) use ($data) {
+//                    if ($args[0]['fk_user'] == 1) {
+//                        return $data;
+//                    }
+//
+//                    return [];
+//                }
+//            );
+//
+//        $dataEntity = new UserMetaEntity();
+//        /** @var DataAdapterInterface $defaultAdapterInstance */
+//        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+//        $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
+//
+//        $actualResult = $storage->getUserMetaSetForUserId(2);
+//        $this->assertEmpty($actualResult);
+//
+//        /** @var UserMetaEntity[] $actualResult */
+//        $actualResult = $storage->getUserMetaSetForUserId(1);
+//        $this->assertInternalType('array', $actualResult);
+//        $this->assertArraysAreSimilar($expectedResult, $actualResult);
+//    }
 
     /**
      * Tests the getUserMetaForUserId() method
      */
-    public function testGetUserMetaWithKeysForUserId()
-    {
-        $data = [
-            [
-                'id_user_meta' => 1,
-                'fk_user' => 1,
-                'meta_key' => 'body',
-                'meta_data' => 'sporty',
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
-            ],
-            [
-                'id_user_meta' => 2,
-                'fk_user' => 1,
-                'meta_key' => 'phone',
-                'meta_data' => '+49 176 1234 5678',
-                'date_created' =>  '2016-03-24 16:25:12',
-                'date_modified' =>  '2016-03-24 16:25:12',
-            ],
-        ];
+//    public function testGetUserMetaForUserId()
+//    {
+//        $data = [
+//            [
+//                'id_user_meta' => 1,
+//                'fk_user' => 1,
+//                'meta_key' => 'body',
+//                'meta_data' => 'sporty',
+//                'date_created' =>  '2016-03-24 16:25:12',
+//                'date_modified' =>  '2016-03-24 16:25:12',
+//            ],
+//            [
+//                'id_user_meta' => 2,
+//                'fk_user' => 1,
+//                'meta_key' => 'phone',
+//                'meta_data' => '+49 176 1234 5678',
+//                'date_created' =>  '2016-03-24 16:25:12',
+//                'date_modified' =>  '2016-03-24 16:25:12',
+//            ],
+//        ];
+//
+//        $expectedResult = [];
+//
+//        foreach ($data as $entityData) {
+//            $entity = new UserMetaEntity();
+//            $entity->setUserMetaId($entityData['id_user_meta'])
+//                ->setUserId($entityData['fk_user'])
+//                ->setMetaKey($entityData['meta_key'])
+//                ->setMetaData($entityData['meta_data'])
+//                ->setDateCreated(new DateTime($entityData['date_created']))
+//                ->setDateModified(new DateTime($entityData['date_modified']));
+//
+//            $expectedResult[] = $entity;
+//        }
+//
+//        $this->defaultAdapter
+//            ->getDataSet(Argument::type('array'), Argument::type('array'))
+//            ->will(
+//                function ($args) use ($data) {
+//                    if ($args[0]['fk_user'] == 1) {
+//                        return $data;
+//                    }
+//
+//                    return [];
+//                }
+//            );
+//
+//        $dataEntity = new UserMetaEntity();
+//        /** @var DataAdapterInterface $defaultAdapterInstance */
+//        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+//        $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
+//
+//        $actualResult = $storage->getUserMetaForUserId(1);
+//
+//        $this->assertArraysAreSimilar($expectedResult, $actualResult);
+//    }
 
-        $expectedResult = [];
-
-        foreach ($data as $entityData) {
-            $entity = new UserMetaEntity();
-            $entity->setUserMetaId($entityData['id_user_meta'])
-                ->setUserId($entityData['fk_user'])
-                ->setMetaKey($entityData['meta_key'])
-                ->setMetaData($entityData['meta_data'])
-                ->setDateCreated(new DateTime($entityData['date_created']))
-                ->setDateModified(new DateTime($entityData['date_modified']));
-
-            $expectedResult[$entity->getMetaKey()] = $entity;
-        }
-
-        $this->defaultAdapter
-            ->getDataSet(Argument::type('array'), Argument::type('array'))
-            ->will(
-                function ($args) use ($data) {
-                    if ($args[0]['fk_user'] == 1) {
-                        return $data;
-                    }
-
-                    return [];
-                }
-            );
-
-        $dataEntity = new UserMetaEntity();
-        /** @var DataAdapterInterface $defaultAdapterInstance */
-        $defaultAdapterInstance = $this->defaultAdapter->reveal();
-        $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
-
-        $actualResult = $storage->getUserMetaForUserId(1, true);
-
-        $this->assertArraysAreSimilar($expectedResult, $actualResult);
-    }
+    /**
+     * Tests the getUserMetaForUserId() method
+     */
+//    public function testGetUserMetaWithKeysForUserId()
+//    {
+//        $data = [
+//            [
+//                'id_user_meta' => 1,
+//                'fk_user' => 1,
+//                'meta_key' => 'body',
+//                'meta_data' => 'sporty',
+//                'date_created' =>  '2016-03-24 16:25:12',
+//                'date_modified' =>  '2016-03-24 16:25:12',
+//            ],
+//            [
+//                'id_user_meta' => 2,
+//                'fk_user' => 1,
+//                'meta_key' => 'phone',
+//                'meta_data' => '+49 176 1234 5678',
+//                'date_created' =>  '2016-03-24 16:25:12',
+//                'date_modified' =>  '2016-03-24 16:25:12',
+//            ],
+//        ];
+//
+//        $expectedResult = [];
+//
+//        foreach ($data as $entityData) {
+//            $entity = new UserMetaEntity();
+//            $entity->setUserMetaId($entityData['id_user_meta'])
+//                ->setUserId($entityData['fk_user'])
+//                ->setMetaKey($entityData['meta_key'])
+//                ->setMetaData($entityData['meta_data'])
+//                ->setDateCreated(new DateTime($entityData['date_created']))
+//                ->setDateModified(new DateTime($entityData['date_modified']));
+//
+//            $expectedResult[$entity->getMetaKey()] = $entity;
+//        }
+//
+//        $this->defaultAdapter
+//            ->getDataSet(Argument::type('array'), Argument::type('array'))
+//            ->will(
+//                function ($args) use ($data) {
+//                    if ($args[0]['fk_user'] == 1) {
+//                        return $data;
+//                    }
+//
+//                    return [];
+//                }
+//            );
+//
+//        $dataEntity = new UserMetaEntity();
+//        /** @var DataAdapterInterface $defaultAdapterInstance */
+//        $defaultAdapterInstance = $this->defaultAdapter->reveal();
+//        $storage = new UserMetaStorage($defaultAdapterInstance, $dataEntity);
+//
+//        $actualResult = $storage->getUserMetaForUserId(1, true);
+//
+//        $this->assertArraysAreSimilar($expectedResult, $actualResult);
+//    }
 
     /**
      * Tests the getEntityData() method.

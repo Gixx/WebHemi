@@ -86,6 +86,7 @@ class ArchiveAction extends IndexAction
                 'type' => 'Archive',
             ],
             'activeMenu' => $date,
+            'application' => $this->getApplicationData($applicationEntity),
             'blogPosts' => $blogPosts,
         ];
     }

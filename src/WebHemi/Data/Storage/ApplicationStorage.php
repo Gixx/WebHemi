@@ -19,6 +19,8 @@ use WebHemi\Data\Entity\ApplicationEntity;
 
 /**
  * Class ApplicationStorage.
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class ApplicationStorage extends AbstractStorage
 {
@@ -31,7 +33,15 @@ class ApplicationStorage extends AbstractStorage
     /** @var string */
     private $title = 'title';
     /** @var string */
+    private $introduction = 'introduction';
+    /** @var string */
+    private $subject = 'subject';
+    /** @var string */
     private $description = 'description';
+    /** @var string */
+    private $keywords = 'keywords';
+    /** @var string */
+    private $copyright = 'copyright';
     /** @var string */
     private $path = 'path';
     /** @var string */
@@ -42,8 +52,6 @@ class ApplicationStorage extends AbstractStorage
     private $locale = 'locale';
     /** @var string */
     private $timeZone = 'timezone';
-    /** @var string */
-    private $introduction = 'introduction';
     /** @var string */
     private $isReadOnly = 'is_read_only';
     /** @var string */
@@ -66,13 +74,16 @@ class ApplicationStorage extends AbstractStorage
         $dataEntity->setApplicationId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
+            ->setIntroduction($data[$this->introduction] ?? null)
+            ->setSubject($data[$this->subject] ?? null)
             ->setDescription($data[$this->description] ?? null)
+            ->setKeywords($data[$this->keywords] ?? null)
+            ->setCopyright($data[$this->copyright] ?? null)
             ->setPath($data[$this->path] ?? null)
             ->setTheme($data[$this->theme] ?? null)
             ->setType($data[$this->type] ?? null)
             ->setLocale($data[$this->locale] ?? null)
             ->setTimeZone($data[$this->timeZone] ?? null)
-            ->setIntroduction($data[$this->introduction] ?? null)
             ->setReadOnly((bool) $data[$this->isReadOnly])
             ->setEnabled((bool) $data[$this->isEnabled])
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
@@ -95,13 +106,16 @@ class ApplicationStorage extends AbstractStorage
             $this->idKey => $dataEntity->getKeyData(),
             $this->name => $dataEntity->getName(),
             $this->title => $dataEntity->getTitle(),
+            $this->introduction => $dataEntity->getIntroduction(),
+            $this->subject => $dataEntity->getSubject(),
             $this->description => $dataEntity->getDescription(),
+            $this->keywords => $dataEntity->getKeywords(),
+            $this->copyright => $dataEntity->getCopyright(),
             $this->path => $dataEntity->getPath(),
             $this->theme => $dataEntity->getTheme(),
             $this->type => $dataEntity->getType(),
             $this->locale => $dataEntity->getLocale(),
             $this->timeZone => $dataEntity->getTimeZone(),
-            $this->introduction => $dataEntity->getIntroduction(),
             $this->isReadOnly => (int) $dataEntity->getReadOnly(),
             $this->isEnabled => (int) $dataEntity->getEnabled(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,

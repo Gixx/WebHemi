@@ -1,6 +1,6 @@
 -- New application
 INSERT INTO `webhemi_application` VALUES
-    (3, 'thomas', 'Thomas von Fürstenfeld', 'Személyes blog cenzúrázatlanul.', 'thomas.von', 'thomas', 'domain', 'hu_HU.UTF-8', 'Europe/Budapest', '# Üdvözöllek a blogomon!
+    (3, 'thomas', 'Thomas von Fürstenfeld', '# Üdvözöllek a blogomon!
 
 Iván Gábor a becses nevem, és ezt a blogot a megboldogult "München dosszié" c. másik blogom méltó (ha nem méltóbb) utódjának szánom.
 
@@ -10,23 +10,27 @@ Az úgynevezett "*blog motor*" még fejlesztési fázisban van, de jól haladok 
 
 Annak idején, amikor kiköltöztem Németországba, első kézből származó, hasznos információkat írtam a kezdeti lépésekről, amik elég nagy népszerűségnek örvendtek. Legalábbis a látogatószám és a visszajelzések erre engedtek következtetni. De aztán gonosz egyének feltörték az akkori tárhelyszolgáltatómat (a Wordpress alkalmazás biztonsági résein keresztül), és telepakolták weboldalamat mindenféle vírussal. Sajnálatos dolog volt, de annyira felbőszített az eset, hogy leszedtem az egészet, és elhatároztam, hogy ha a Wordpress nem képes biztonságos blogmotort a rendelkezésemre bocsájtani, akkor inkább írok egy sajátot.
 
-Kevéske szabadidőmet az elmúlt lassan három évben ennek szenteltem, és már közel van a vége. Egyébként a régi blogról sikerült megmenteni a "*Kezdő lépések*" sorozatot, ezt természetesen újra fel fogom tölteni alkalomadtán.', 1, 1, NOW(), NULL);
+Kevéske szabadidőmet az elmúlt lassan három évben ennek szenteltem, és már közel van a vége. Egyébként a régi blogról sikerült megmenteni a "*Kezdő lépések*" sorozatot, ezt természetesen újra fel fogom tölteni alkalomadtán.',
+        'Személyes blog cenzúrázatlanul.', 'Ez a blog a megboldogult "München dosszié" c. korábbi blog utódja.', 'blog,Magyaroszág,Németország,München,Fürstenfeldbruck,Thomas,határátkelés,diszidálás', 'Minden jog fenntartva. © 2017. Thomas von Fürstenfeld', 'thomas.von', 'thomas', 'domain', 'hu_HU.UTF-8', 'Europe/Budapest', 1, 1, NOW(), NULL);
 
 INSERT INTO `webhemi_user` VALUES
-    (3, 'gabor', 'navig80@gmail.com', '$2y$09$dmrDfcYZt9jORA4vx9MKpeyRt0ilCH/gxSbSHcfBtGaghMJ30tKzS', 'hash-thomas-blog', 1, 1, NOW(), NULL);
+    (3, 'gabor.ivan', 'navig80@gmail.com', '$2y$09$dmrDfcYZt9jORA4vx9MKpeyRt0ilCH/gxSbSHcfBtGaghMJ30tKzS', 'hash-thomas-blog', 1, 1, NOW(), NULL);
 
 INSERT INTO `webhemi_user_meta` VALUES
     (NULL, 3, 'display_name', 'Iván Gábor', NOW(), NULL),
     (NULL, 3, 'gender', 'male', NOW(), NULL),
-    (NULL, 3, 'avatar', 'gixx@gixx-web.com', NOW(), NULL),
-    (NULL, 3, 'avatar_type', 'gravatar', NOW(), NULL),
-    (NULL, 3, 'email_visible', '0', NOW(), NULL),
+    (NULL, 3, 'avatar', '/data/upload/filesystem/avatar/gabor.ivan.jpg', NOW(), NULL),
+    (NULL, 3, 'cover_image', '/data/upload/filesystem/avatar/gabor.ivan-cover.jpg', NOW(), NULL),
+    (NULL, 3, 'birth', '1980-02-19', NOW(), NULL),
     (NULL, 3, 'location', 'München', NOW(), NULL),
-    (NULL, 3, 'instant_messengers', '', NOW(), NULL),
+    (NULL, 3, 'address', '82256, Fürstenfeldbruck', NOW(), NULL),
+    (NULL, 3, 'public_email', '', NOW(), NULL),
     (NULL, 3, 'phone_numbers', '', NOW(), NULL),
-    (NULL, 3, 'social_networks', '', NOW(), NULL),
-    (NULL, 3, 'websites', '', NOW(), NULL),
-    (NULL, 3, 'introduction', '', NOW(), NULL);
+    (NULL, 3, 'instant_messengers', '', NOW(), NULL),
+    (NULL, 3, 'workplaces', '', NOW(), NULL),
+    (NULL, 3, 'social_networks', '{"LinkedIn":"https://www.linkedin.com/in/gaborivan/", "Facebook":"https://www.facebook.com/ivan.gabor.80", "Xing":"https://www.xing.com/profile/Gabor_Ivan2"}', NOW(), NULL),
+    (NULL, 3, 'websites', '{"Blog":"http://thomas.von.fuerstenfeld.blog","Referencia":"http://www.gixx-web.com"}', NOW(), NULL),
+    (NULL, 3, 'introduction', 'Férje egy csodálatos asszonynak, apja egy nagyszerű fiúnak, gazdája egy gyönyörű macskának. Foglalkozását tekintve web-fejlesztő egy németországi, de nemzetközi vizekre merészkedő fiatal E-kereskedelemmel foglalkozó cégnél.', NOW(), NULL);
 
 INSERT INTO `webhemi_user_to_user_group` VALUES
     (NULL, 3, 1);
@@ -321,16 +325,20 @@ INSERT INTO `webhemi_filesystem` VALUES
     (14, 3, 1,    NULL, 2,    NULL, NULL, NULL, '/', 'a_perfect_day.html', 'Hogy indítsuk jól a napot: egy finom, gőzőlgő tea esete',  'Jó tudni...', 0, 0, 0, NOW(), NULL, NOW());
 
 INSERT INTO `webhemi_filesystem_to_filesystem_tag` VALUES
-    (NULL, 1, 13),
-    (NULL, 2, 13),
-    (NULL, 3, 13),
-    (NULL, 1, 14),
-    (NULL, 3, 14);
+    (NULL, 13, 1),
+    (NULL, 13, 2),
+    (NULL, 13, 3),
+    (NULL, 14, 1),
+    (NULL, 14, 3);
 
 INSERT INTO `webhemi_filesystem_meta` VALUES
+    (NULL, 13, 'subject', 'test subject', NOW(), NULL),
+    (NULL, 13, 'description', 'test description', NOW(), NULL),
+    (NULL, 13, 'keywords', 'lorem,ipsum,dolor,sit', NOW(), NULL),
     (NULL, 13, 'illustration', '/data/upload/filesystem/images/Nature.jpg', NOW(), NULL),
-    (NULL, 13, 'mood_key', 'hugging', NOW(), NULL),
-    (NULL, 13, 'mood_name', 'feels beloved', NOW(), NULL),
+    (NULL, 13, 'share_image', '/data/upload/filesystem/images/Nature_600x600.png', NOW(), NULL),
+    (NULL, 13, 'author_mood_key', 'hugging', NOW(), NULL),
+    (NULL, 13, 'author_mood_name', 'feels beloved', NOW(), NULL),
     (NULL, 13, 'location', 'München', NOW(), NULL);
 
 /*
