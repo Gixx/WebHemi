@@ -19,14 +19,19 @@ use WebHemi\Data\StorageInterface;
 use WebHemi\Data\Traits\StorageInjectorTrait;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
-use WebHemi\Middleware\Action\Traits;
+use WebHemi\Router\ProxyInterface;
 
 /**
  * Class IndexAction.
  *
  * @method Storage\ApplicationStorage getApplicationStorage()
- * @method Storage\Filesystem\FilesystemStorage getFilesystemStorage()
+ * @method Storage\Filesystem\FilesystemCategoryStorage getFilesystemCategoryStorage()
+ * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
  * @method Storage\Filesystem\FilesystemDocumentStorage getFilesystemDocumentStorage()
+ * @method Storage\Filesystem\FilesystemStorage getFilesystemStorage()
+ * @method Storage\Filesystem\FilesystemTagStorage getFilesystemTagStorage()
+ * @method Storage\User\UserStorage getUserStorage()
+ * @method Storage\User\UserMetaStorage getUserMetaStorage()
  */
 class IndexAction extends AbstractMiddlewareAction
 {
@@ -34,10 +39,6 @@ class IndexAction extends AbstractMiddlewareAction
     protected $environmentManager;
 
     use StorageInjectorTrait;
-    use Traits\GetPublicationAuthorTrait;
-    use Traits\GetPublicationPathTrait;
-    use Traits\GetPublicationTagsTrait;
-    use Traits\GetPublicationCategoryTrait;
 
     /**
      * IndexAction constructor.
@@ -85,8 +86,27 @@ class IndexAction extends AbstractMiddlewareAction
 
         return [
             'activeMenu' => '',
+            'application' => $this->getApplicationData($applicationEntity),
             'blogPosts' => $blogPosts,
-            'fixPost' => $applicationEntity->getIntroduction(),
+        ];
+    }
+
+    /**
+     * Gets application data to render.
+     *
+     * @param Entity\ApplicationEntity $applicationEntity
+     * @return array
+     */
+    protected function getApplicationData(Entity\ApplicationEntity $applicationEntity) : array
+    {
+        return [
+            'name' => $applicationEntity->getName(),
+            'title' => $applicationEntity->getTitle(),
+            'introduction' => $applicationEntity->getIntroduction(),
+            'subject' => $applicationEntity->getSubject(),
+            'description' => $applicationEntity->getDescription(),
+            'keywords' => $applicationEntity->getKeywords(),
+            'coptright' => $applicationEntity->getCopyright()
         ];
     }
 
@@ -112,14 +132,6 @@ class IndexAction extends AbstractMiddlewareAction
             $documentEntity->getAuthorId(),
             $applicationEntity->getApplicationId()
         );
-        $author['mood'] = [];
-
-        if (isset($documentMeta['mood_key']) && isset($documentMeta['mood_name'])) {
-            $author['mood'] = [
-                $documentMeta['mood_name'],
-                $documentMeta['mood_key']
-            ];
-        }
 
         return [
             'author' => $author,
@@ -131,14 +143,116 @@ class IndexAction extends AbstractMiddlewareAction
                 $applicationEntity->getApplicationId(),
                 $filesystemEntity->getCategoryId()
             ),
-            'publishedAt' => $filesystemEntity->getDatePublished(),
-            'location' => $documentMeta['location'] ?? '',
-            'summary' => $filesystemEntity->getDescription(),
-            'illustration' => $documentMeta['illustration'] ?? '',
             'path' => $this->getPublicationPath($filesystemEntity),
             'title' => $filesystemEntity->getTitle(),
+            'summary' => $filesystemEntity->getDescription(),
             'contentLead' => $documentEntity->getContentLead(),
-            'contentBody' => $documentEntity->getContentBody()
+            'contentBody' => $documentEntity->getContentBody(),
+            'publishedAt' => $filesystemEntity->getDatePublished(),
+            'meta' => $documentMeta,
         ];
+    }
+
+    /**
+     * Gets author information for a filesystem record.
+     *
+     * @param int $userId
+     * @param int $applicationId
+     * @return array
+     */
+    protected function getPublicationAuthor(int $userId, int $applicationId) : array
+    {
+        /** @var Entity\User\UserEntity $user */
+        $user = $this->getUserStorage()
+            ->getUserById($userId);
+
+        /** @var array $userMeta */
+        $userMeta = $this->getUserMetaStorage()
+            ->getUserMetaArrayForUserId($userId);
+
+        /** @var array $userDirectoryData */
+        $userDirectoryData = $this->getFilesystemDirectoryStorage()
+            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_USER);
+
+        return [
+            'userId' => $userId,
+            'username' => $user->getUserName(),
+            'url' => $userDirectoryData['uri'].'/'.$user->getUserName(),
+            'meta' => $userMeta,
+        ];
+    }
+
+    /**
+     * Generates the content path.
+     *
+     * @param Entity\Filesystem\FilesystemEntity $filesystemEntity
+     * @return string
+     */
+    protected function getPublicationPath(Entity\Filesystem\FilesystemEntity $filesystemEntity) : string
+    {
+        $path = $filesystemEntity->getPath().'/'.$filesystemEntity->getBaseName();
+
+        while (strpos($path, '//') !== false) {
+            $path = str_replace('//', '/', $path);
+        }
+
+        return ltrim($path, '/');
+    }
+
+    /**
+     * Collects all the tags for a filesystem record.
+     *
+     * @param int $applicationId
+     * @param int $filesystemId
+     * @return array
+     */
+    protected function getPublicationTags(int $applicationId, int $filesystemId) : array
+    {
+        $tags = [];
+        /** @var Entity\Filesystem\FilesystemTagEntity[] $tagEntities */
+        $tagEntities = $this->getFilesystemTagStorage()
+            ->getFilesystemTagsByFilesystem($filesystemId);
+
+        if (!empty($tagEntities)) {
+            /** @var array $categoryDirectoryData */
+            $categoryDirectoryData = $this->getFilesystemDirectoryStorage()
+                ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);
+
+            /** @var Entity\Filesystem\FilesystemTagEntity $tagEntity */
+            foreach ($tagEntities as $tagEntity) {
+                $tags[] = [
+                    'url' => $categoryDirectoryData['uri'].'/'.$tagEntity->getName(),
+                    'name' => $tagEntity->getName(),
+                    'title' => $tagEntity->getTitle()
+                ];
+            }
+        }
+
+        return $tags;
+    }
+
+    /**
+     * Gets the category for a filesystem record.
+     *
+     * @param int $applicationId
+     * @param int $categoryId
+     * @return array
+     */
+    protected function getPublicationCategory(int $applicationId, int $categoryId) : array
+    {
+        /** @var Entity\Filesystem\FilesystemCategoryEntity $categoryEntity */
+        $categoryEntity = $this->getFilesystemCategoryStorage()
+            ->getFilesystemCategoryById($categoryId);
+
+        /** @var array $categoryDirectoryData */
+        $categoryDirectoryData = $this->getFilesystemDirectoryStorage()
+            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
+
+        $category = [
+            'url' => $categoryDirectoryData['uri'].'/'.$categoryEntity->getName(),
+            'name' => $categoryEntity->getName(),
+            'title' => $categoryEntity->getTitle()
+        ];
+        return $category;
     }
 }

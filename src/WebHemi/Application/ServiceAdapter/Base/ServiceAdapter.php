@@ -134,22 +134,9 @@ class ServiceAdapter extends AbstractAdapter
     {
         /** @var HttpInterface $httpAdapter */
         $httpAdapter = $this->container->get(HttpInterface::class);
-        /** @var EnvironmentInterface $environmentManager */
-        $environmentManager = $this->container->get(EnvironmentInterface::class);
 
         /** @var ServerRequestInterface $request */
-        $request = $httpAdapter->getRequest()
-            ->withAttribute(
-                ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA,
-                [
-                    'selected_module' => $environmentManager->getSelectedModule(),
-                    'application_domain' => 'http'.($environmentManager->isSecuredApplication() ? 's' : '')
-                        .'://'
-                        .$environmentManager->getApplicationDomain()
-                ]
-            );
-
-        return $request;
+        return $httpAdapter->getRequest();
     }
 
     /**

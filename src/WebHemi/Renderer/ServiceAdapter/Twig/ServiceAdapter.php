@@ -121,8 +121,9 @@ class ServiceAdapter implements ServiceInterface
             );
         }
 
-        // Tell the template where the resources are.
-        $parameters['application'] = [
+        // Merge mandatory Application data.
+        $applicationParams['application'] = [
+            'selectedModule' => $this->environmentManager->getSelectedModule(),
             'address' => $this->environmentManager->getAddress(),
             'domainName' => $this->environmentManager->getApplicationDomain(),
             'domainAddress' => 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'
@@ -133,12 +134,9 @@ class ServiceAdapter implements ServiceInterface
             'documentRoot' => $this->environmentManager->getDocumentRoot(),
             'language' => $this->i18nService->getLanguage(),
             'locale' => $this->i18nService->getLocale(),
-            'author' => '',
-            'authorLink' => '',
-            'description' => '',
-            'subject' => '',
-            'copyright' => ''
         ];
+
+        $parameters = merge_array_overwrite($parameters, $applicationParams);
 
         $output = $this->adapter->render($template, $parameters);
 

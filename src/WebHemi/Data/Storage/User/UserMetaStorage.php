@@ -17,6 +17,7 @@ use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\User\UserMetaEntity;
 use WebHemi\Data\Storage\AbstractStorage;
 use WebHemi\DateTime;
+use WebHemi\StringLib;
 
 /**
  * Class UserMetaStorage.
@@ -98,17 +99,49 @@ class UserMetaStorage extends AbstractStorage
      * @param int $userId
      * @return array
      */
-    public function getUserMetaSetForUserId(int $userId) : array
+    public function getUserMetaArrayForUserId(int $userId) : array
     {
         $userMetaEntitySet = $this->getDataEntitySet([$this->userId => $userId]);
         $userMetaSet = [];
 
         /** @var UserMetaEntity $metaEntity */
         foreach ($userMetaEntitySet as $metaEntity) {
-            $userMetaSet[$metaEntity->getMetaKey()] = $metaEntity->getMetaData();
+            $data = $this->processMetaEntity($metaEntity);
+            $userMetaSet[$data['key']] = $data['value'];
         }
 
         return $userMetaSet;
+    }
+
+    /**
+     * Processes a user meta entity.
+     *
+     * @param UserMetaEntity $metaEntity
+     * @return array
+     */
+    private function processMetaEntity(UserMetaEntity $metaEntity) : array
+    {
+
+        $key = $metaEntity->getMetaKey();
+        $data = $metaEntity->getMetaData();
+
+        if ($key == 'avatar' && strpos($data, 'gravatar://') === 0) {
+            $data = str_replace('gravatar://', '', $data);
+            $data = 'http://www.gravatar.com/avatar/'.md5(strtolower($data)).'?s=256&r=g';
+        }
+
+        $jsonDataKeys = ['workplaces', 'instant_messengers', 'phone_numbers', 'social_networks', 'websites'];
+
+        if (in_array($key, $jsonDataKeys) && !empty($data)) {
+            $data = json_decode($data, true);
+        }
+
+        $data = [
+            'key' => lcfirst(StringLib::convertUnderscoreToCamelCase($key)),
+            'value' => $data
+        ];
+
+        return $data;
     }
 
     /**
@@ -118,7 +151,7 @@ class UserMetaStorage extends AbstractStorage
      * @param bool $keysAsKeys -  whether to use the meta keys for the returning array too
      * @return UserMetaEntity[]
      */
-    public function getUserMetaForUserId(int $userId, bool $keysAsKeys = false) : array
+    public function getUserMetaEntitySetForUserId(int $userId, bool $keysAsKeys = false) : array
     {
         $metaSet = $this->getDataEntitySet([$this->userId => $userId]);
 

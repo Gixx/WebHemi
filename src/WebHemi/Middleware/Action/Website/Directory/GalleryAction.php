@@ -13,12 +13,13 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website\Directory;
 
-use WebHemi\Middleware\Action\AbstractMiddlewareAction;
+use WebHemi\Data\Entity;
+use WebHemi\Middleware\Action\Website\IndexAction;
 
 /**
  * Class GalleryAction.
  */
-class GalleryAction extends AbstractMiddlewareAction
+class GalleryAction extends IndexAction
 {
     /**
      * Gets template map name or template file path.
@@ -27,7 +28,7 @@ class GalleryAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'website-post-list';
+        return 'website-image-list';
     }
 
     /**
@@ -37,13 +38,19 @@ class GalleryAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
+        /** @var Entity\ApplicationEntity $applicationEntity */
+        $applicationEntity = $this->getApplicationStorage()
+            ->getApplicationByName($this->environmentManager->getSelectedApplication());
+
         $blogPosts = [];
-        $title = '';
-        $currentMenu = '';
 
         return [
-            'title' => $title,
-            'activeMenu' => $currentMenu,
+            'page' => [
+                'title' => '',
+                'type' => 'Gallery',
+            ],
+            'activeMenu' => '',
+            'application' => $this->getApplicationData($applicationEntity),
             'blogPosts' => $blogPosts,
         ];
     }

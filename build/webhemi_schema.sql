@@ -36,14 +36,17 @@ CREATE TABLE `webhemi_application` (
     `id_application` INT(10) UNSIGNED             NOT NULL AUTO_INCREMENT,
     `name`           VARCHAR(30)                  NOT NULL,
     `title`          VARCHAR(255)                 NOT NULL,
-    `description`    TEXT                         NOT NULL DEFAULT '',
+    -- introduction can be a fixed content on the index page
+    `introduction`   TEXT                                  DEFAULT NULL,
+    `subject`        VARCHAR(255)                 NOT NULL DEFAULT '',
+    `description`    VARCHAR(255)                 NOT NULL DEFAULT '',
+    `keywords`       VARCHAR(255)                 NOT NULL DEFAULT '',
+    `copyright`      VARCHAR(255)                 NOT NULL DEFAULT '',
     `path`           VARCHAR(20)                  NOT NULL,
     `theme`          VARCHAR(20)                  NOT NULL DEFAULT 'deafult',
     `type`           ENUM ('domain', 'directory') NOT NULL DEFAULT 'directory',
     `locale`         VARCHAR(20)                  NOT NULL DEFAULT 'en_GB.UTF-8',
     `timezone`       VARCHAR(100)                 NOT NULL DEFAULT 'Europe/London',
-    -- introduction can be a fixed content on the index page
-    `introduction`   TEXT                                  DEFAULT NULL,
     `is_read_only`   TINYINT(1)                   NOT NULL DEFAULT 0,
     `is_enabled`     TINYINT(1)                   NOT NULL DEFAULT 0,
     `date_created`   DATETIME                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -64,8 +67,8 @@ LOCK TABLES `webhemi_application` WRITE;
 /*!40000 ALTER TABLE `webhemi_application`
     DISABLE KEYS */;
 INSERT INTO `webhemi_application` VALUES
-    (1, 'admin', 'Admin', 'Administrative area.', 'admin', 'default', 'directory', 'en_GB.UTF-8', 'Europe/London', '', 1, 1, NOW(), NULL),
-    (2, 'website', 'Website', 'The default application for the `www` subdomain.', 'www', 'default', 'domain', 'en_GB.UTF-8', 'Europe/London', '<h1>Welcome to the WebHemi!</h1><p>After many years of endless development of a big, robust, super-universal blog engine which was suppose to build on a well known framework, I decided to re-think my goals and the way I want to reach them. Now I try to create a small, fast and "only as much as necessary", clean-code blog engine  that tries to completely apply the S.O.L.I.D. principles, uses the PSR-7 HTTP Messages Interfaces and the Middleware concept.</p>', 1, 1, NOW(), NULL);
+    (1, 'admin', 'Admin', '', '', '', '', '', 'admin', 'default', 'directory', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL),
+    (2, 'website', 'Website', '<h1>Welcome to the WebHemi!</h1><p>After many years of endless development of a big, robust, super-universal blog engine which was suppose to build on a well known framework, I decided to re-think my goals and the way I want to reach them. Now I try to create a small, fast and "only as much as necessary", clean-code blog engine  that tries to completely apply the S.O.L.I.D. principles, uses the PSR-7 HTTP Messages Interfaces and the Middleware concept.</p>', 'Technical stuff', 'The default application for the `www` subdomain.', 'php,html,javascript,css', 'Copyright © 2017. WebHemi', 'www', 'default', 'domain', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_application`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -735,8 +738,8 @@ DROP TABLE IF EXISTS `webhemi_filesystem_to_filesystem_tag`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `webhemi_filesystem_to_filesystem_tag` (
     `id_filesystem_to_filesystem_tag` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `fk_filesystem_tag`    INT(10) UNSIGNED NOT NULL,
     `fk_filesystem`        INT(10) UNSIGNED NOT NULL,
+    `fk_filesystem_tag`    INT(10) UNSIGNED NOT NULL,
     PRIMARY KEY (`id_filesystem_to_filesystem_tag`),
     UNIQUE KEY `unq_filesystem_to_filesystem_tag` (`fk_filesystem_tag`, `fk_filesystem`),
     KEY `idx_filesystem_to_filesystem_tag_filesystem_tag` (`fk_filesystem_tag`),

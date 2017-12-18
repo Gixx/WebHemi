@@ -45,9 +45,9 @@ class CategoryAction extends IndexAction
         $blogPosts = [];
         $parameters = $this->getRoutingParameters();
         /** @var string $category */
-        $category = $parameters['uri_parameter'] ?? null;
+        $category = $parameters['uri_parameter'] ?? '';
 
-        if (!$category) {
+        if (empty($category)) {
             throw new RuntimeException('Forbidden', 403);
         }
 
@@ -55,13 +55,14 @@ class CategoryAction extends IndexAction
         $applicationEntity = $this->getApplicationStorage()
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
+        /** @var Entity\Filesystem\FilesystemCategoryEntity $categoryEntity */
         $categoryEntity = $this->getFilesystemCategoryStorage()
             ->getFilesystemCategoryByApplicationAndName(
                 $applicationEntity->getApplicationId(),
                 $category
             );
 
-        if (!$categoryEntity) {
+        if (!$categoryEntity instanceof Entity\Filesystem\FilesystemCategoryEntity) {
             throw new RuntimeException('Not Found', 404);
         }
 
@@ -86,9 +87,12 @@ class CategoryAction extends IndexAction
         return [
             'page' => [
                 'title' => $categoryEntity->getTitle(),
+                'name' => $categoryEntity->getName(),
+                'description' => $categoryEntity->getDescription(),
                 'type' => 'Categories',
             ],
             'activeMenu' => $category,
+            'application' => $this->getApplicationData($applicationEntity),
             'blogPosts' => $blogPosts,
         ];
     }

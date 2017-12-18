@@ -76,6 +76,9 @@ class EmptyEnvironmentManager extends EnvironmentManager
         $this->selectedThemeResourcePath = '/resources/vendor_themes/test_theme';
         $this->isHttps = isset($serverData['HTTPS']) && $serverData['HTTPS'] == 'on';
         $this->options = $optionsData;
+        $this->url = 'http'.($this->isHttps ? 's' : '').'://'
+            .$this->environmentData['SERVER']['HTTP_HOST']
+            .$this->environmentData['SERVER']['REQUEST_URI'];
     }
 
     /**

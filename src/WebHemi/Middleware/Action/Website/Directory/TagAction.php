@@ -44,10 +44,10 @@ class TagAction extends IndexAction
     {
         $blogPosts = [];
         $parameters = $this->getRoutingParameters();
-        /** @var string $category */
-        $category = $parameters['uri_parameter'] ?? null;
+        /** @var string $tagName */
+        $tagName = $parameters['uri_parameter'] ?? null;
 
-        if (!$category) {
+        if (empty($tagName)) {
             throw new RuntimeException('Forbidden', 403);
         }
 
@@ -55,22 +55,20 @@ class TagAction extends IndexAction
         $applicationEntity = $this->getApplicationStorage()
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
+        /** @var Entity\Filesystem\FilesystemTagEntity $tagEntity */
         $tagEntity = $this->getFilesystemTagStorage()
             ->getFilesystemTagByApplicationAndName(
                 $applicationEntity->getApplicationId(),
-                $category
+                $tagName
             );
 
-        if (!$tagEntity) {
+        if (!$tagEntity instanceof Entity\Filesystem\FilesystemTagEntity) {
             throw new RuntimeException('Not Found', 404);
         }
 
         /** @var Entity\Filesystem\FilesystemEntity[] $publications */
         $publications = $this->getFilesystemStorage()
-            ->getFilesystemSetByApplicationAndTag(
-                $applicationEntity->getApplicationId(),
-                $tagEntity->getFilesystemTagId()
-            );
+            ->getPublishedDocumentsByTag($applicationEntity->getApplicationId(), $tagEntity->getFilesystemTagId());
 
         if (empty($publications)) {
             $this->templateName = 'website-post-list-empty';
@@ -84,9 +82,12 @@ class TagAction extends IndexAction
         return [
             'page' => [
                 'title' => $tagEntity->getTitle(),
+                'name' => $tagEntity->getName(),
+                'description' => $tagEntity->getDescription(),
                 'type' => 'Tags',
             ],
-            'activeMenu' => $category,
+            'activeMenu' => $tagName,
+            'application' => $this->getApplicationData($applicationEntity),
             'blogPosts' => $blogPosts,
         ];
     }

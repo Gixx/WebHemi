@@ -32,6 +32,7 @@ class EmptyI18nService extends I18nService
             $this->language = $matches['language'];
             $this->territory = $matches['territory'];
             $this->codeSet = $matches['codeSet'] ?? 'utf8';
+            $this->locale = $locale;
         }
 
         return $this;
