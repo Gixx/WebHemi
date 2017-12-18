@@ -44,10 +44,10 @@ class CategoryAction extends IndexAction
     {
         $blogPosts = [];
         $parameters = $this->getRoutingParameters();
-        /** @var string $category */
-        $category = $parameters['uri_parameter'] ?? '';
+        /** @var string $categoryName */
+        $categoryName = $parameters['uri_parameter'] ?? '';
 
-        if (empty($category)) {
+        if (empty($categoryName)) {
             throw new RuntimeException('Forbidden', 403);
         }
 
@@ -59,7 +59,7 @@ class CategoryAction extends IndexAction
         $categoryEntity = $this->getFilesystemCategoryStorage()
             ->getFilesystemCategoryByApplicationAndName(
                 $applicationEntity->getApplicationId(),
-                $category
+                $categoryName
             );
 
         if (!$categoryEntity instanceof Entity\Filesystem\FilesystemCategoryEntity) {
@@ -91,7 +91,7 @@ class CategoryAction extends IndexAction
                 'description' => $categoryEntity->getDescription(),
                 'type' => 'Categories',
             ],
-            'activeMenu' => $category,
+            'activeMenu' => $categoryName,
             'application' => $this->getApplicationData($applicationEntity),
             'blogPosts' => $blogPosts,
         ];

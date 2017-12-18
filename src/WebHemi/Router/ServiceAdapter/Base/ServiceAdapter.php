@@ -143,6 +143,7 @@ class ServiceAdapter implements ServiceInterface
                 break;
             }
         }
+
         return $routeDefinition;
     }
 
