@@ -26,5 +26,4 @@ data/upload/favicons/*
 /data/upload/filesystem/images/*
 !/data/upload/filesystem/images/.gitkeep
 /build/webhemi_live.sql
-/build/webhemi_test.sql
 /build/10ev.md
