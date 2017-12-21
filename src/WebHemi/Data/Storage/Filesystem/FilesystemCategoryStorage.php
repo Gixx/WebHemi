@@ -36,6 +36,8 @@ class FilesystemCategoryStorage extends AbstractStorage
     /** @var string */
     private $description = 'description';
     /** @var string */
+    private $itemOrder = 'item_order';
+    /** @var string */
     private $dateCreated = 'date_created';
     /** @var string */
     private $dateModified = 'date_modified';
@@ -55,6 +57,7 @@ class FilesystemCategoryStorage extends AbstractStorage
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
             ->setDescription($data[$this->description])
+            ->setItemOrder($data[$this->itemOrder] ?? 'DESC')
             ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
             ->setDateModified(!empty($data[$this->dateModified]) ? new DateTime($data[$this->dateModified]) : null);
     }
@@ -77,6 +80,7 @@ class FilesystemCategoryStorage extends AbstractStorage
             $this->title => $dataEntity->getTitle(),
             $this->name => $dataEntity->getName(),
             $this->description => $dataEntity->getDescription(),
+            $this->itemOrder => $dataEntity->getItemOrder(),
             $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
             $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
         ];

@@ -25,5 +25,5 @@ data/upload/favicons/*
 !/data/progress/.gitkeep
 /data/upload/filesystem/images/*
 !/data/upload/filesystem/images/.gitkeep
-/build/webhemi_live.sql
-/build/10ev.md
+/build/docs/*
+!/build/docs/.gitkeep

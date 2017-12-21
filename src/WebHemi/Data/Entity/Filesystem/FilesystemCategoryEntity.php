@@ -31,6 +31,8 @@ class FilesystemCategoryEntity implements EntityInterface
     private $title;
     /** @var string */
     private $description;
+    /** @var string */
+    private $itemOrder;
     /** @var DateTime */
     private $dateCreated;
     /** @var DateTime */
@@ -152,6 +154,25 @@ class FilesystemCategoryEntity implements EntityInterface
     public function getDescription() : ? string
     {
         return $this->description;
+    }
+
+    /**
+     * @param string $itemOrder
+     * @return FilesystemCategoryEntity
+     */
+    public function setItemOrder(string $itemOrder) : FilesystemCategoryEntity
+    {
+        $this->itemOrder = $itemOrder;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getItemOrder() : ? string
+    {
+        return $this->itemOrder;
     }
 
     /**

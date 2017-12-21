@@ -72,7 +72,8 @@ class CategoryAction extends IndexAction
                 $applicationEntity->getApplicationId(),
                 [
                     'fk_category = ?' => (int) $categoryEntity->getFilesystemCategoryId(),
-                ]
+                ],
+                'date_published '.($categoryEntity->getItemOrder() ?? 'DESC')
             );
 
         if (empty($publications)) {
