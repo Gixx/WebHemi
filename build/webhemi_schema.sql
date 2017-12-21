@@ -577,6 +577,7 @@ CREATE TABLE `webhemi_filesystem_category` (
     `name`                   VARCHAR(255)     NOT NULL,
     `title`                  VARCHAR(30)      NOT NULL,
     `description`            TEXT             NOT NULL DEFAULT '',
+    `item_order`             ENUM('ASC','DESC') NOT NULL DEFAULT 'DESC',
     `date_created`           DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_modified`          DATETIME                  DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id_filesystem_category`),
