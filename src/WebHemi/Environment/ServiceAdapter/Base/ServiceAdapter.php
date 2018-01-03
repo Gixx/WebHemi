@@ -157,7 +157,7 @@ class ServiceAdapter extends AbstractAdapter
         $this->checkSubdomain($domainParts);
 
         $this->subDomain = $domainParts->getSubdomain();
-        $this->mainDomain = $domainParts->getHostname().'.'.$domainParts->getSuffix();
+        $this->topDomain = $domainParts->getHostname().'.'.$domainParts->getSuffix();
         $this->applicationDomain = $domainParts->getFullHost();
 
         return $this;
