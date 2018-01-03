@@ -29,33 +29,6 @@ function set_environment()
 }
 
 /**
- * Damn var dumping in a user-friendly way.
- *
- * @param array $variables
- *
- * @internal
- */
-function dump(...$variables)
-{
-    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-    $file = __FILE__;
-    $line = __LINE__;
-
-    if (isset($backtrace[0])) {
-        $file = $backtrace[0]['file'];
-        $line = $backtrace[0]['line'];
-    }
-
-    if (php_sapi_name() !== 'cli') {
-        echo '<strong>In file '.$file." at line ".$line.':</strong>';
-    } else {
-        echo 'In file '.$file." at line ".$line.':'.PHP_EOL;
-    }
-
-    call_user_func_array('var_dump', $variables);
-}
-
-/**
  * Collects and returns some information about the render time. First call will start start, the others will return.
  *
  * @return array
@@ -135,52 +108,81 @@ function merge_array_overwrite()
 }
 
 /**
- * Gets the application config by combine the default, a custom and the read-only settings.
+ * Reads the module config directory and returns the config.
  *
+ * @param string $path
  * @return array
  */
-function get_application_config()
+function compose_config($path = 'modules')
 {
-    $defaultApplicationConfig = require __DIR__.'/settings/global/application.php';
-    $localApplicationConfig = [];
-    $readOnlyApplications = [
-        'admin',
-        'website'
-    ];
-    $readOnlyApplicationConfig = [
-        'applications' => [
-            'website' => [
-                'module' => 'Website',
-                'path'   => '/',
-                'type'   => 'domain',
-            ],
-            'admin' => [
-                'module' => 'Admin',
-            ],
-        ],
-    ];
+    $config = [];
+    $path = trim($path, '/');
 
-    if (file_exists(__DIR__ . '/settings/local/application.php')) {
-        $localApplicationConfig = require __DIR__ . '/settings/local/application.php';
-    }
+    $configPath = realpath(__DIR__.'/'.$path);
+    $entries = glob($configPath.'/*');
 
-    $applicationConfig = merge_array_overwrite(
-        $defaultApplicationConfig,
-        $localApplicationConfig,
-        $readOnlyApplicationConfig
-    );
-
-    // ensure that nobody plays with the modules
-    foreach ($applicationConfig['applications'] as $application => &$settings) {
-        if (!in_array($application, $readOnlyApplications)) {
-            $settings['module'] = 'Website';
+    foreach ($entries as $entry) {
+        if (is_file($entry) && preg_match('/.*\.php$/', $entry)) {
+            $entryConfig = require $entry;
+            $config = merge_array_overwrite($config, $entryConfig);
+        } elseif (is_dir($entry)) {
+            $modulePath = str_replace(__DIR__, '', $entry);
+            $config = merge_array_overwrite($config, compose_config($modulePath));
         }
     }
 
-    // It is important that the custom application should be checked first, then the 'admin', and the 'website' last.
-    $applicationConfig['applications'] = array_reverse($applicationConfig['applications']);
+    return $config;
+}
 
-    return $applicationConfig['applications'];
+/**
+ * Gets the full config
+ *
+ * @return array
+ */
+function get_full_config()
+{
+    static $config;
+
+    if (!isset($config)) {
+        $settingsConfig = compose_config('settings');
+        $modulesConfig = compose_config('modules');
+
+        $config = merge_array_overwrite($settingsConfig, $modulesConfig);
+
+        $readOnlyApplications = [
+            'admin',
+            'website'
+        ];
+        $readOnlyApplicationConfig = [
+            'applications' => [
+                'website' => [
+                    'module' => 'Website',
+                    'path'   => '/',
+                    'type'   => 'domain',
+                ],
+                'admin' => [
+                    'module' => 'Admin',
+                ],
+            ],
+        ];
+
+        $config = merge_array_overwrite($config, $readOnlyApplicationConfig);
+
+        // ensure that nobody plays with the modules
+        foreach ($config['applications'] as $application => &$settings) {
+            if (!in_array($application, $readOnlyApplications)) {
+                $settings['module'] = 'Website';
+            }
+        }
+
+        // It is important that the custom application should be checked first, then the 'admin', and the 'website' last
+        $config['applications'] = array_reverse($config['applications']);
+
+        // Add theme config from actual installed themes
+        $config['themes'] = get_theme_config();
+    }
+
+    return $config;
 }
 
 /**
@@ -212,181 +214,4 @@ function get_theme_config()
     }
     closedir($handle);
     return $themeConfig['themes'];
-}
-
-/**
- * Reads the module config directory and returns the config.
- *
- * @param string $path
- * @return array
- */
-function get_full_module_config($path = 'modules')
-{
-    $moduleConfig = [];
-    $path = trim($path, '/');
-
-    $moduleConfigPath = realpath(__DIR__.'/'.$path);
-    $handle = opendir($moduleConfigPath);
-
-    if (!$handle) {
-        return $moduleConfig;
-    }
-
-    while (false !== ($entry = readdir($handle))) {
-        if (in_array($entry, ['.', '..'])) {
-            continue;
-        }
-
-        if (is_file($moduleConfigPath.'/'.$entry)) {
-            $config = require $moduleConfigPath.'/'.$entry;
-            $moduleConfig = merge_array_overwrite($moduleConfig, $config);
-        } elseif (is_dir($moduleConfigPath.'/'.$entry)) {
-            $moduleConfig = merge_array_overwrite($moduleConfig, get_full_module_config($path.'/'.$entry));
-        }
-    }
-    closedir($handle);
-    return $moduleConfig;
-}
-
-/**
- * Returns the renderer config.
- *
- * @return array
- */
-function get_renderer_config()
-{
-    $moduleConfig = get_full_module_config();
-
-    return $moduleConfig['renderer'];
-}
-
-/**
- * Returns the routing config.
- *
- * @return array
- */
-function get_router_config()
-{
-    $moduleConfig = get_full_module_config();
-
-    return $moduleConfig['router'];
-}
-
-/**
- * Returns the dependencies config.
- *
- * @return array
- */
-function get_dependencies_config()
-{
-    $moduleConfig = get_full_module_config();
-
-    // Add global Database dependencies
-    $dataDriverConfig = require __DIR__.'/settings/global/db.php';
-    $moduleConfig = merge_array_overwrite($moduleConfig, $dataDriverConfig);
-
-    // Add local Database dependencies if exist.
-    if (file_exists(__DIR__.'/settings/local/db.php')) {
-        $dataDriverConfig = require __DIR__.'/settings/local/db.php';
-        $moduleConfig = merge_array_overwrite($moduleConfig, $dataDriverConfig);
-    }
-
-    return $moduleConfig['dependencies'];
-}
-
-/**
- * Returns the pipeline config.
- *
- * @return array
- */
-function get_pipeline_config()
-{
-    $moduleConfig = get_full_module_config();
-
-    return $moduleConfig['middleware_pipeline'];
-}
-
-/**
- * Returns the auth config.
- *
- * @return array
- */
-function get_auth_config()
-{
-    $globalAuthConfig = require __DIR__.'/settings/global/auth.php';
-    $localAuthConfig = (file_exists(__DIR__.'/settings/local/auth.php'))
-        ? require __DIR__.'/settings/local/auth.php'
-        : [];
-
-    $authConfig = merge_array_overwrite($globalAuthConfig, $localAuthConfig);
-
-    return $authConfig['auth'];
-}
-
-/**
- * Returns the session config.
- *
- * @return array
- */
-function get_session_config()
-{
-    $globalSessionConfig = require __DIR__.'/settings/global/session.php';
-    $localSessionConfig = (file_exists(__DIR__.'/settings/local/session.php'))
-        ? require __DIR__.'/settings/local/session.php'
-        : [];
-
-    $sessionConfig = merge_array_overwrite($globalSessionConfig, $localSessionConfig);
-
-    return $sessionConfig['session'];
-}
-
-/**
- * Returns the logging config.
- *
- * @return mixed
- */
-function get_logger_config()
-{
-    $globalLoggerConfig = require __DIR__.'/settings/global/logger.php';
-    $localLoggerConfig = (file_exists(__DIR__.'/settings/local/logger.php'))
-        ? require __DIR__.'/settings/local/logger.php'
-        : [];
-
-    $loggerConfig = merge_array_overwrite($globalLoggerConfig, $localLoggerConfig);
-
-    return $loggerConfig['logger'];
-}
-
-/**
- * Returns the ftp config.
- *
- * @return mixed
- */
-function get_ftp_config()
-{
-    $globalFtpConfig = require __DIR__.'/settings/global/ftp.php';
-    $localFtpConfig = (file_exists(__DIR__.'/settings/local/ftp.php'))
-        ? require __DIR__.'/settings/local/ftp.php'
-        : [];
-
-    $ftpConfig = merge_array_overwrite($globalFtpConfig, $localFtpConfig);
-
-    return $ftpConfig['ftp'];
-}
-
-/**
- * Returns the email config.
- *
- * @return mixed
- */
-function get_email_config()
-{
-    $globalEmailConfig = require __DIR__.'/settings/global/email.php';
-    $localEmailConfig = (file_exists(__DIR__.'/settings/local/email.php'))
-        ? require __DIR__.'/settings/local/email.php'
-        : [];
-
-    $emailConfig = merge_array_overwrite($globalEmailConfig, $localEmailConfig);
-
-    return $emailConfig['email'];
 }

@@ -36,7 +36,6 @@ return [
             ],
             DependencyInjection\ServiceInterface::class => [
                 'class' => DependencyInjection\ServiceAdapter\Base\ServiceAdapter::class,
-//                'class' => DependencyInjection\ServiceAdapter\Symfony\ServiceAdapter::class,
             ],
             Environment\ServiceInterface::class => [
                 'class' => Environment\ServiceAdapter\Base\ServiceAdapter::class,

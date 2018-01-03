@@ -56,12 +56,10 @@ $dependencyInjection->registerServiceInstance(DependencyInjectionInterface::clas
     ->registerModuleServices('Admin');
 
 $diList = [];
-
 $fullConfig = $configuration->getData('dependencies');
-$fullConfig = array_reverse($fullConfig);
 
 foreach ($fullConfig as $module => $dependencies) {
-    if ($module == 'Cronjob' || $module == 'Website') {
+    if ($module == 'Cronjob') {
         continue;
     }
     foreach ($dependencies as $reference => $config) {
