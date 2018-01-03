@@ -125,6 +125,7 @@ class ServiceAdapter implements ServiceInterface
         $applicationParams['application'] = [
             'selectedModule' => $this->environmentManager->getSelectedModule(),
             'address' => $this->environmentManager->getAddress(),
+            'topDomain' => $this->environmentManager->getTopDomain(),
             'domainName' => $this->environmentManager->getApplicationDomain(),
             'domainAddress' => 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'
                 .$this->environmentManager->getApplicationDomain(),

@@ -29,7 +29,7 @@ abstract class AbstractAdapter implements ServiceInterface
     /** @var string */
     protected $subDomain;
     /** @var string */
-    protected $mainDomain;
+    protected $topDomain;
     /** @var string */
     protected $applicationDomain;
     /** @var string */
@@ -103,6 +103,16 @@ abstract class AbstractAdapter implements ServiceInterface
     public function getApplicationDomain() : string
     {
         return $this->applicationDomain;
+    }
+
+    /**
+     * Gets the top domain.
+     *
+     * @return string
+     */
+    public function getTopDomain() : string
+    {
+        return $this->topDomain;
     }
 
     /**

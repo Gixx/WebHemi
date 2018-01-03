@@ -74,6 +74,13 @@ interface ServiceInterface
     public function getApplicationDomain() : string;
 
     /**
+     * Gets the top domain.
+     *
+     * @return string
+     */
+    public function getTopDomain() : string;
+
+    /**
      * Gets the application SSL status.
      *
      * @return bool
