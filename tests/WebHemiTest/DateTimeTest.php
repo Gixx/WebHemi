@@ -54,11 +54,19 @@ class DateTimeTest extends TestCase
      */
     public function checkerProvider()
     {
+        $notThisDay = date('d') == 1 ? 2 : (date('d') - 1);
+        $notThisMonth = date('m') == 1 ? 2 : (date('m') - 1);
+
+        $today = time();
+        $thisMonth = mktime(1, 2, 3, date('m'), $notThisDay, date('Y'));
+        $thisYear =  mktime(1, 2, 3, $notThisMonth, 1, date('Y'));
+        $notThisYear =  mktime(1, 2, 3, 1, 1, 2000);
+
         return [
-            [date('Y-m-d'), true, true, true],
-            [date('Y-m-d', (time()-(60*60*25))), false, (date('d') != '1' ), (date('m') != '1' )],
-            [date('Y-m-d', (time()-(60*60*24*33))), false, false, (date('m') != '1' )],
-            [date('Y-m-d', (time()-(60*60*24*366))), false, false, false],
+            [date('Y-m-d', $today), true, true, true],
+            [date('Y-m-d', $thisMonth), false, true, true],
+            [date('Y-m-d', $thisYear), false, false, true],
+            [date('Y-m-d', $notThisYear), false, false, false],
         ];
     }
 

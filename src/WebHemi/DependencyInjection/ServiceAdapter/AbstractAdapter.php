@@ -112,7 +112,7 @@ abstract class AbstractAdapter implements ServiceInterface
      * @param string $moduleName
      * @return array
      */
-    protected function getServiceConfiguration(string $identifier, string $moduleName = null) : array
+    public function getServiceConfiguration(string $identifier, string $moduleName = null) : array
     {
         $configuration = $this->serviceLibrary[$identifier] ?? [];
 

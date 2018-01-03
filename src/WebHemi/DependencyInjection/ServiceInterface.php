@@ -44,6 +44,15 @@ interface ServiceInterface
     public function get(string $identifier);
 
     /**
+     * Retrieves configuration for a service.
+     *
+     * @param string $identifier
+     * @param string $moduleName
+     * @return array
+     */
+    public function getServiceConfiguration(string $identifier, string $moduleName = null) : array;
+
+    /**
      * Register the service.
      *
      * @param string $identifier

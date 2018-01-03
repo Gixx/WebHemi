@@ -117,7 +117,7 @@ return [
             ],
             // Form Presets - looks kinda hack, but it is by purpose.
             Form\PresetInterface::class => [
-                'class' => \stdClass::class,
+                'class' => Form\Preset\SimplePreset::class,
                 'arguments' => [
                     Form\ServiceAdapter\Base\ServiceAdapter::class,
                     Form\Element\Html\HtmlElement::class

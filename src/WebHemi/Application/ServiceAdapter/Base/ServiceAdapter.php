@@ -34,7 +34,7 @@ class ServiceAdapter extends AbstractAdapter
      *
      * @codeCoverageIgnore - not testing session (yet)
      */
-    protected function initSession() : void
+    public function initSession() : void
     {
         if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
             return;

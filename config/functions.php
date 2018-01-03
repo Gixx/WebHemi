@@ -70,7 +70,8 @@ function render_stat() : array
             'start_time' => microtime(true),
             'end_time' => null,
             'duration' => 0,
-            'memory' => 0
+            'memory' => 0,
+            'memory_bytes' => 0,
         ];
 
         return $stat;
@@ -78,15 +79,17 @@ function render_stat() : array
 
     // Get time
     $stat['end_time'] = microtime(true);
-    $stat['duration'] = bcsub($stat['end_time'], $stat['start_time'], 4);
+    $stat['duration'] = number_format(($stat['end_time'] - $stat['start_time']), '4', '.', '');
 
     // Memory peak
-    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
     $bytes = max(memory_get_peak_usage(true), 0);
+    $stat['memory_bytes'] = number_format($bytes).' bytes';
+
     $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
     $pow = min($pow, count($units) - 1);
     $bytes /= (1 << (10 * $pow));
-    $stat['memory'] = round($bytes, 2) . ' ' . $units[$pow];
+    $stat['memory'] = round($bytes, 2).' '.$units[$pow];
 
     return $stat;
 }
@@ -135,8 +138,6 @@ function merge_array_overwrite()
  * Gets the application config by combine the default, a custom and the read-only settings.
  *
  * @return array
- *
- * @throws Exception
  */
 function get_application_config()
 {

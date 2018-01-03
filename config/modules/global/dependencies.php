@@ -31,14 +31,12 @@ return [
     'dependencies' => [
         'Global' => [
             // Core objects
-            Application\ServiceInterface::class => [
-                'class' => Application\ServiceAdapter\Base\ServiceAdapter::class,
-            ],
             Configuration\ServiceInterface::class => [
                 'class' => Configuration\ServiceAdapter\Base\ServiceAdapter::class,
             ],
             DependencyInjection\ServiceInterface::class => [
-                'class' => DependencyInjection\ServiceAdapter\Symfony\ServiceAdapter::class,
+                'class' => DependencyInjection\ServiceAdapter\Base\ServiceAdapter::class,
+//                'class' => DependencyInjection\ServiceAdapter\Symfony\ServiceAdapter::class,
             ],
             Environment\ServiceInterface::class => [
                 'class' => Environment\ServiceAdapter\Base\ServiceAdapter::class,
@@ -48,6 +46,13 @@ return [
             ],
             Session\ServiceInterface::class => [
                 'class' => Session\ServiceAdapter\Base\ServiceAdapter::class,
+            ],
+            Application\ServiceInterface::class => [
+                'class' => Application\ServiceAdapter\Base\ServiceAdapter::class,
+                'arguments' => [
+                    DependencyInjection\ServiceInterface::class
+                ],
+                'shared'    => true,
             ],
             // Services
             Acl\ServiceInterface::class => [

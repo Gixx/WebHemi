@@ -40,6 +40,13 @@ abstract class AbstractAdapter implements ServiceInterface
     }
 
     /**
+     * Starts the session.
+     *
+     * @return void
+     */
+    abstract public function initSession() : void;
+
+    /**
      * Runs the application. This is where the magic happens.
      * According tho the environment settings this must build up the middleware pipeline and execute it.
      *
