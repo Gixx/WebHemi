@@ -1,5 +1,10 @@
 # Change log #
 
+## Version 4.0.0-5.2 ##
+* Replace the Symfony Dependency Injection Container with a WebHemi solution with keep the performance (speed) but reduce
+the memory consumption
+* Change copyright information to 2018
+
 ## Version 4.0.0-5.1 ##
 
 * Refactor the Environment module to truely support multiple domains that points to the same document root.
