@@ -115,21 +115,21 @@ return [
                 'middleware'      => Action\Admin\ControlPanel\Groups\ListAction::class,
                 'allowed_methods' => ['GET'],
             ],
-            'admin-control-panel-groups-add' => [
-                'path'            => '^/control-panel/groups/add/?$',
-                'middleware'      => Action\Admin\ControlPanel\Groups\AddAction::class,
-                'allowed_methods' => ['GET', 'POST'],
-            ],
+//            'admin-control-panel-groups-add' => [
+//                'path'            => '^/control-panel/groups/add/?$',
+//                'middleware'      => Action\Admin\ControlPanel\Groups\AddAction::class,
+//                'allowed_methods' => ['GET', 'POST'],
+//            ],
             'admin-control-panel-groups-view' => [
                 'path'            => '^/control-panel/groups/view/(?P<userGroupId>\d+)/?$',
                 'middleware'      => Action\Admin\ControlPanel\Groups\ViewAction::class,
                 'allowed_methods' => ['GET'],
             ],
-            'admin-control-panel-groups-edit' => [
-                'path'            => '^/control-panel/groups/edit/(?P<userGroupId>\d+)/?$',
-                'middleware'      => Action\Admin\ControlPanel\Groups\EditAction::class,
-                'allowed_methods' => ['GET', 'POST'],
-            ],
+//            'admin-control-panel-groups-edit' => [
+//                'path'            => '^/control-panel/groups/edit/(?P<userGroupId>\d+)/?$',
+//                'middleware'      => Action\Admin\ControlPanel\Groups\EditAction::class,
+//                'allowed_methods' => ['GET', 'POST'],
+//            ],
             // Resources
             'admin-control-panel-resources-list' => [
                 'path'            => '^/control-panel/resources/?$',
