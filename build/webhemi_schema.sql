@@ -499,12 +499,12 @@ LOCK TABLES `webhemi_filesystem_directory` WRITE;
 /*!40000 ALTER TABLE `webhemi_filesystem_directory`
     DISABLE KEYS */;
 INSERT INTO `webhemi_filesystem_directory` VALUES
-    (1, 'Categories post collection', 'document', 'list-category', 0, NOW(), NOW()),
-    (2, 'Tags post collection', 'document', 'list-tag', 0, NOW(), NOW()),
-    (3, 'Archive post collection', 'document', 'list-archive', 0, NOW(), NOW()),
-    (4, 'All uploaded images collection', 'gallery', 'list-gallery', 0, NOW(), NOW()),
-    (5, 'All uploaded files collection', 'binary', 'list-binary', 0, NOW(), NOW()),
-    (6, 'User page and post collection', 'document', 'list-user', 0, NOW(), NOW());
+    (1, 'Categories post collection', 'document', 'list-category', 1, NOW(), NOW()),
+    (2, 'Tags post collection', 'document', 'list-tag', 1, NOW(), NOW()),
+    (3, 'Archive post collection', 'document', 'list-archive', 1, NOW(), NOW()),
+    (4, 'All uploaded images collection', 'gallery', 'list-gallery', 1, NOW(), NOW()),
+    (5, 'All uploaded files collection', 'binary', 'list-binary', 1, NOW(), NOW()),
+    (6, 'User page and post collection', 'document', 'list-user', 1, NOW(), NOW());
 /*!40000 ALTER TABLE `webhemi_filesystem_directory`
     ENABLE KEYS */;
 UNLOCK TABLES;

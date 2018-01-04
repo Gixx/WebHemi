@@ -42,9 +42,9 @@ class UserAction extends IndexAction
         $blogPosts = [];
         $parameters = $this->getRoutingParameters();
 
-        $userName = $parameters['uri_parameter'] ?? '';
+        $userName = $parameters['basename'] ?? '';
 
-        if (empty($userName)) {
+        if ($parameters['path'] == '/' || empty($userName)) {
             throw new RuntimeException('Forbidden', 403);
         }
 

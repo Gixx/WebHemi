@@ -45,9 +45,9 @@ class CategoryAction extends IndexAction
         $blogPosts = [];
         $parameters = $this->getRoutingParameters();
         /** @var string $categoryName */
-        $categoryName = $parameters['uri_parameter'] ?? '';
+        $categoryName = $parameters['basename'] ?? '';
 
-        if (empty($categoryName)) {
+        if ($parameters['path'] == '/' || empty($categoryName)) {
             throw new RuntimeException('Forbidden', 403);
         }
 

@@ -154,13 +154,10 @@ return [
                 ]
             ],
             Middleware\Common\DispatcherMiddleware::class => [
-                'arguments' => [
-                    Renderer\ServiceInterface::class,
-                ]
+                'arguments' => []
             ],
             Middleware\Common\FinalMiddleware::class => [
                 'arguments' => [
-                    Renderer\ServiceInterface::class,
                     Auth\ServiceInterface::class,
                     Environment\ServiceInterface::class,
                     'AccessLog'

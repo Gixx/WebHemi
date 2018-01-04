@@ -72,8 +72,8 @@ class ServiceAdapter implements ServiceInterface
         $uri        = $this->getApplicationRouteUri($request);
 
         $result = clone $this->result;
+        $result->setStatus(Result::CODE_FOUND);
         $routeDefinition = $this->findRouteDefinition($uri);
-
         if (empty($routeDefinition)) {
             return $result->setStatus(Result::CODE_NOT_FOUND);
         }
@@ -91,11 +91,7 @@ class ServiceAdapter implements ServiceInterface
             $this->proxy->resolveMiddleware($this->application, $result);
         }
 
-        if (empty($result->getMatchedMiddleware())) {
-            return $result->setStatus(Result::CODE_NOT_FOUND);
-        }
-
-        return $result->setStatus(Result::CODE_FOUND);
+        return $result;
     }
 
     /**

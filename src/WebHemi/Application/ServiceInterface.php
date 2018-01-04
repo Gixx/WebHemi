@@ -30,16 +30,34 @@ interface ServiceInterface
     /**
      * Starts the session.
      *
-     * @return void
+     * @return ServiceInterface
      */
-    public function initSession() : void;
+    public function initSession() : ServiceInterface;
 
     /**
      * Runs the application. This is where the magic happens.
      * For example for a web application this initializes the Request and Response objects, builds the middleware
-     * pipeline, applies the Router and the Dispatch.
+     * pipeline, applies the Router and the Dispatcher.
+     *
+     * @return ServiceInterface
+     */
+    public function run() : ServiceInterface;
+
+    /**
+     * Renders the response body and sends it to the client.
      *
      * @return void
+     *
+     * @codeCoverageIgnore - no output for tests
      */
-    public function run() : void;
+    public function renderOutput() : void;
+
+    /**
+     * Sends the response body to the client.
+     *
+     * @return void
+     *
+     * @codeCoverageIgnore - no output for tests
+     */
+    public function sendOutput() : void;
 }

@@ -18,16 +18,21 @@ use WebHemi\Application\ServiceInterface;
 use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionInterface;
 use WebHemi\Http\ResponseInterface;
 use WebHemi\Http\ServerRequestInterface;
-use WebHemi\Middleware\Common as CommonMiddleware;
-use WebHemi\Middleware\MiddlewareInterface;
+use WebHemi\Http\ServiceInterface as HttpInterface;
 
 /**
  * Class AbstractAdapter
  */
 abstract class AbstractAdapter implements ServiceInterface
 {
+    /** @var Throwable */
+    public $error;
     /** @var DependencyInjectionInterface */
     protected $container;
+    /** @var ServerRequestInterface */
+    protected $request;
+    /** @var ResponseInterface */
+    protected $response;
 
     /**
      * ServiceAdapter constructor.
@@ -37,14 +42,20 @@ abstract class AbstractAdapter implements ServiceInterface
     public function __construct(DependencyInjectionInterface $container)
     {
         $this->container = $container;
+        /** @var HttpInterface $httpAdapter */
+        $httpAdapter = $this->container->get(HttpInterface::class);
+        /** @var ServerRequestInterface $request */
+        $this->request = $httpAdapter->getRequest();
+        /** @var ResponseInterface $response */
+        $this->response = $httpAdapter->getResponse();
     }
 
     /**
      * Starts the session.
      *
-     * @return void
+     * @return ServiceInterface
      */
-    abstract public function initSession() : void;
+    abstract public function initSession() : ServiceInterface;
 
     /**
      * Runs the application. This is where the magic happens.
@@ -82,78 +93,25 @@ abstract class AbstractAdapter implements ServiceInterface
      * If a middleware other than the Routing, Dispatcher and Final Middleware has no priority set, it will be
      * considered to have priority = 50.
      *
+     * @return ServiceInterface
+     */
+    abstract public function run() : ServiceInterface;
+
+    /**
+     * Renders the response body and sends it to the client.
+     *
      * @return void
+     *
+     * @codeCoverageIgnore - no output for tests
      */
-    abstract public function run() : void;
+    abstract public function renderOutput() : void;
 
     /**
-     * Gets the Request object.
+     * Sends the response body to the client.
      *
-     * @return ServerRequestInterface
-     */
-    abstract protected function getRequest() : ServerRequestInterface;
-
-    /**
-     * Gets the Response object.
-     *
-     * @return ResponseInterface
-     */
-    abstract protected function getResponse() : ResponseInterface;
-
-    /**
-     * Instantiates and invokes a middleware
-     *
-     * @param string $middlewareClass
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
      * @return void
+     *
+     * @codeCoverageIgnore - no output for tests
      */
-    protected function invokeMiddleware(
-        string $middlewareClass,
-        ServerRequestInterface&$request,
-        ResponseInterface&$response
-    ) : void {
-        try {
-            /** @var MiddlewareInterface $middleware */
-            $middleware = $this->container->get($middlewareClass);
-            $requestAttributes = $request->getAttributes();
-
-            // As an extra step if an action middleware is resolved, it should be invoked by the dispatcher.
-            if (isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
-                && $middleware instanceof CommonMiddleware\DispatcherMiddleware
-            ) {
-                /** @var MiddlewareInterface $actionMiddleware */
-                $actionMiddleware = $this->container
-                    ->get($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS]);
-                $request = $request->withAttribute(
-                    ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE,
-                    $actionMiddleware
-                );
-            }
-
-            $middleware($request, $response);
-        } catch (Throwable $exception) {
-            $code = ResponseInterface::STATUS_INTERNAL_SERVER_ERROR;
-
-            if (in_array(
-                $exception->getCode(),
-                [
-                    ResponseInterface::STATUS_BAD_REQUEST,
-                    ResponseInterface::STATUS_UNAUTHORIZED,
-                    ResponseInterface::STATUS_FORBIDDEN,
-                    ResponseInterface::STATUS_NOT_FOUND,
-                    ResponseInterface::STATUS_BAD_METHOD,
-                    ResponseInterface::STATUS_NOT_IMPLEMENTED,
-                ]
-            )) {
-                $code = $exception->getCode();
-            }
-
-            $response = $response->withStatus($code);
-            $request = $request->withAttribute(
-                ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION,
-                $exception
-            );
-        }
-    }
+    abstract public function sendOutput() : void;
 }

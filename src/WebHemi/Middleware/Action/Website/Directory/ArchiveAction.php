@@ -42,9 +42,9 @@ class ArchiveAction extends IndexAction
     {
         $blogPosts = [];
         $parameters = $this->getRoutingParameters();
-        $date = $parameters['uri_parameter'] ?? null;
+        $date = $parameters['basename'] ?? null;
 
-        if (!$date) {
+        if ($parameters['path'] == '/' || empty($date)) {
             throw new RuntimeException('Forbidden', 403);
         }
 
