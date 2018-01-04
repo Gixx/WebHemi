@@ -13,13 +13,18 @@ declare(strict_types = 1);
 
 namespace WebHemi\Application\ServiceAdapter\Base;
 
+use Throwable;
+use RuntimeException;
+use Psr\Http\Message\StreamInterface;
+use WebHemi\Application\ServiceInterface;
 use WebHemi\Application\ServiceAdapter\AbstractAdapter;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Http\ResponseInterface;
 use WebHemi\Http\ServerRequestInterface;
-use WebHemi\Http\ServiceInterface as HttpInterface;
 use WebHemi\MiddlewarePipeline\ServiceInterface as PipelineInterface;
 use WebHemi\Middleware\Common as CommonMiddleware;
+use WebHemi\Middleware\MiddlewareInterface;
+use WebHemi\Renderer\ServiceInterface as RendererInterface;
 use WebHemi\Session\ServiceInterface as SessionInterface;
 
 /**
@@ -30,14 +35,14 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Starts the session.
      *
-     * @return void
+     * @return ServiceInterface
      *
      * @codeCoverageIgnore - not testing session (yet)
      */
-    public function initSession() : void
+    public function initSession() : ServiceInterface
     {
         if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
-            return;
+            return $this;
         }
 
         /** @var SessionInterface $sessionManager */
@@ -53,6 +58,8 @@ class ServiceAdapter extends AbstractAdapter
         $httpOnly = true;
 
         $sessionManager->start($name, $timeOut, $path, $domain, $secure, $httpOnly);
+
+        return $this;
     }
 
     /**
@@ -91,65 +98,231 @@ class ServiceAdapter extends AbstractAdapter
      * If a middleware other than the Routing, Dispatcher and Final Middleware has no priority set, it will be
      * considered to have priority = 50.
      *
-     * @return void
+     * @return ServiceInterface
      */
-    public function run() : void
+    public function run() : ServiceInterface
     {
-        // Start session.
-        $this->initSession();
+        try {
+            /** @var PipelineInterface $pipelineManager */
+            $pipelineManager = $this->container->get(PipelineInterface::class);
 
-        /** @var PipelineInterface $pipelineManager */
-        $pipelineManager = $this->container->get(PipelineInterface::class);
-        $request = $this->getRequest();
-        $response = $this->getResponse();
+            /** @var string $middlewareClass */
+            $middlewareClass = $pipelineManager->start();
 
-        /** @var string $middlewareClass */
-        $middlewareClass = $pipelineManager->start();
+            while ($middlewareClass !== null
+                && $this->response->getStatusCode() == ResponseInterface::STATUS_PROCESSING
+            ) {
+                $this->invokeMiddleware($middlewareClass);
+                $middlewareClass = $pipelineManager->next();
+            };
 
-        while ($middlewareClass !== null
-            && $response->getStatusCode() == ResponseInterface::STATUS_PROCESSING
-        ) {
-            $this->invokeMiddleware($middlewareClass, $request, $response);
-            $middlewareClass = $pipelineManager->next();
-        };
+            // If there was no error, we mark as ready for output.
+            if ($this->response->getStatusCode() == ResponseInterface::STATUS_PROCESSING) {
+                $this->response = $this->response->withStatus(ResponseInterface::STATUS_OK);
+            }
 
-        // If there was no error, we mark as ready for output.
-        if ($response->getStatusCode() == ResponseInterface::STATUS_PROCESSING) {
-            $response = $response->withStatus(ResponseInterface::STATUS_OK);
+            /** @var CommonMiddleware\FinalMiddleware $finalMiddleware */
+            $finalMiddleware = $this->container->get(CommonMiddleware\FinalMiddleware::class);
+
+            // Check response and log errors if necessary
+            $finalMiddleware($this->request, $this->response);
+        } catch (Throwable $exception) {
+            $code = ResponseInterface::STATUS_INTERNAL_SERVER_ERROR;
+
+            if (in_array(
+                $exception->getCode(),
+                [
+                    ResponseInterface::STATUS_BAD_REQUEST,
+                    ResponseInterface::STATUS_UNAUTHORIZED,
+                    ResponseInterface::STATUS_FORBIDDEN,
+                    ResponseInterface::STATUS_NOT_FOUND,
+                    ResponseInterface::STATUS_BAD_METHOD,
+                    ResponseInterface::STATUS_NOT_IMPLEMENTED,
+                ]
+            )) {
+                $code = $exception->getCode();
+            }
+
+            $this->response = $this->response->withStatus($code);
+            $this->request = $this->request
+                ->withAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION, $exception);
         }
 
-        /** @var CommonMiddleware\FinalMiddleware $finalMiddleware */
-        $finalMiddleware = $this->container->get(CommonMiddleware\FinalMiddleware::class);
-
-        // Send out headers and content.
-        $finalMiddleware($request, $response);
+        return $this;
     }
 
     /**
-     * Gets the Request object.
+     * Renders the response body and sends it to the client.
      *
-     * @return ServerRequestInterface
+     * @return void
+     *
+     * @codeCoverageIgnore - no output for tests
      */
-    protected function getRequest() : ServerRequestInterface
+    public function renderOutput() : void
     {
-        /** @var HttpInterface $httpAdapter */
-        $httpAdapter = $this->container->get(HttpInterface::class);
+        // Create template only when there's no redirect
+        if (!$this->request->isXmlHttpRequest()
+            && ResponseInterface::STATUS_REDIRECT != $this->response->getStatusCode()
+        ) {
+            /** @var RendererInterface $templateRenderer */
+            $templateRenderer = $this->container->get(RendererInterface::class);
+            /** @var string $template */
+            $template = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_TEMPLATE);
+            /** @var array $data */
+            $data = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
+            /** @var null|Throwable $exception */
+            $exception = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
 
-        /** @var ServerRequestInterface $request */
-        return $httpAdapter->getRequest();
+            // If there was any error, change the remplate
+            if (!empty($exception)) {
+                $template = 'error-'.$this->response->getStatusCode();
+                $data['exception'] = $exception;
+            }
+
+            /** @var StreamInterface $body */
+            $body = $templateRenderer->render($template, $data);
+            $this->response = $this->response->withBody($body);
+        }
+
+        $this->sendOutput();
     }
 
     /**
-     * Gets the Response object.
+     * Sends the response body to the client.
      *
-     * @return ResponseInterface
+     * @return void
+     *
+     * @codeCoverageIgnore - no output for tests
      */
-    protected function getResponse() : ResponseInterface
+    public function sendOutput() : void
     {
-        /** @var HttpInterface $httpAdapter */
-        $httpAdapter = $this->container->get(HttpInterface::class);
+        // @codeCoverageIgnoreStart
+        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && headers_sent()) {
+            throw new RuntimeException('Unable to emit response; headers already sent', 1000);
+        }
+        // @codeCoverageIgnoreEnd
 
-        /** @var ResponseInterface $response */
-        return $httpAdapter->getResponse();
+        $output = $this->response->getBody();
+        $contentLength = $this->response->getBody()->getSize();
+
+        if ($this->request->isXmlHttpRequest()) {
+            /** @var array $templateData */
+            $templateData = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
+            $templateData['output'] = (string) $output;
+            /** @var null|Throwable $exception */
+            $exception = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
+
+            if (!empty($exception)) {
+                $templateData['exception'] = $exception;
+            }
+
+            $output = json_encode($templateData);
+            $contentLength = strlen($output);
+            $this->response = $this->response->withHeader('Content-Type', 'application/json; charset=UTF-8');
+        }
+
+        $this->injectContentLength($contentLength);
+        $this->sendHttpHeader();
+        $this->sendOutputHeaders($this->response->getHeaders());
+        echo $output;
+    }
+
+    /**
+     * Instantiates and invokes a middleware
+     *
+     * @param string $middlewareClass
+     * @return void
+     */
+    protected function invokeMiddleware(string $middlewareClass) : void
+    {
+        /** @var MiddlewareInterface $middleware */
+        $middleware = $this->container->get($middlewareClass);
+        $requestAttributes = $this->request->getAttributes();
+
+        // As an extra step if an action middleware is resolved, it should be invoked by the dispatcher.
+        if (isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
+            && $middleware instanceof CommonMiddleware\DispatcherMiddleware
+        ) {
+            /** @var MiddlewareInterface $actionMiddleware */
+            $actionMiddleware = $this->container
+                ->get($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS]);
+            $this->request = $this->request->withAttribute(
+                ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE,
+                $actionMiddleware
+            );
+        }
+
+        $middleware($this->request, $this->response);
+    }
+
+    /**
+     * Inject the Content-Length header if is not already present.
+     *
+     * NOTE: if there will be chunk content displayed, check if the response getSize counts the real size correctly
+     *
+     * @param null|int $contentLength
+     * @return void
+     *
+     * @codeCoverageIgnore - no putput for tests.
+     */
+    protected function injectContentLength(? int $contentLength) : void
+    {
+        $contentLength = intval($contentLength);
+
+        if (!$this->response->hasHeader('Content-Length') && $contentLength > 0) {
+            $this->response = $this->response->withHeader('Content-Length', (string) $contentLength);
+        }
+    }
+
+    /**
+     * Filter a header name to word case.
+     *
+     * @param string $headerName
+     * @return string
+     */
+    protected function filterHeaderName(string $headerName) : string
+    {
+        $filtered = str_replace('-', ' ', $headerName);
+        $filtered = ucwords($filtered);
+        return str_replace(' ', '-', $filtered);
+    }
+
+    /**
+     * Sends the HTTP header.
+     *
+     * @return void
+     *
+     * @codeCoverageIgnore - vendor and core function calls
+     */
+    protected function sendHttpHeader() : void
+    {
+        $reasonPhrase = $this->response->getReasonPhrase();
+        header(sprintf(
+            'HTTP/%s %d%s',
+            $this->response->getProtocolVersion(),
+            $this->response->getStatusCode(),
+            ($reasonPhrase ? ' '.$reasonPhrase : '')
+        ));
+    }
+
+    /**
+     * Sends out output headers.
+     *
+     * @param array $headers
+     * @return void
+     *
+     * @codeCoverageIgnore - vendor and core function calls in loop
+     */
+    protected function sendOutputHeaders(array $headers) : void
+    {
+        foreach ($headers as $headerName => $values) {
+            $name  = $this->filterHeaderName($headerName);
+            $first = true;
+
+            foreach ($values as $value) {
+                header(sprintf('%s: %s', $name, $value), $first);
+                $first = false;
+            }
+        }
     }
 }

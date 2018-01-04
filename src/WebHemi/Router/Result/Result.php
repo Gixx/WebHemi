@@ -21,6 +21,7 @@ use InvalidArgumentException;
 class Result
 {
     public const CODE_FOUND = 200;
+    public const CODE_FORBIDDEN = 403;
     public const CODE_NOT_FOUND = 404;
     public const CODE_BAD_METHOD = 405;
 
@@ -33,6 +34,7 @@ class Result
     /** @var array */
     private $statusReason = [
         self::CODE_FOUND      => 'Resource found.',
+        self::CODE_FORBIDDEN  => 'The requested resource is not accessible.',
         self::CODE_NOT_FOUND  => 'The requested resource cannot be found.',
         self::CODE_BAD_METHOD => 'Bad request method was used by the client.'
     ];
@@ -48,6 +50,7 @@ class Result
         unset($this->matchedMiddleware);
         unset($this->parameters);
         unset($this->resource);
+        unset($this->parameters);
     }
 
     /**

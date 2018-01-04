@@ -335,4 +335,61 @@ class BaseApplicationTest extends TestCase
         $this->assertSame(405, TestMiddleware::$responseStatus);
         $this->assertEmpty(TestMiddleware::$responseBody);
     }
+
+    /**
+     * Data provider for the tests.
+     *
+     * @return array
+     */
+    public function dataProvider()
+    {
+        return [
+            ['Some headerName','Some-HeaderName'],
+            ['some header-name','Some-Header-Name'],
+            ['some-header-Name','Some-Header-Name'],
+            ['SomeHeaderName','SomeHeaderName'],
+            ['Some_Header_Name','Some_Header_Name'],
+        ];
+    }
+
+    /**
+     * Test header filter.
+     *
+     * @param string $inputData
+     * @param string $expectedResult
+     *
+     * @dataProvider dataProvider
+     */
+    public function testFilterHeaderName($inputData, $expectedResult)
+    {
+        $this->server = [
+            'HTTP_HOST'    => 'unittest.dev',
+            'SERVER_NAME'  => 'unittest.dev',
+            'REQUEST_URI'  => '/page-not-exists/',
+            'QUERY_STRING' => '',
+        ];
+
+        $config = new Config($this->config);
+        $environmentManager = new EmptyEnvironmentManager(
+            $config,
+            $this->get,
+            $this->post,
+            $this->server,
+            $this->cookie,
+            $this->files
+        );
+        $pipelineManager = new PipelineManager($config);
+
+        $diAdapter = new DependencyInjectionAdapter($config);
+        $diAdapter->registerServiceInstance(ConfigInterface::class, $config)
+            ->registerServiceInstance(EnvironmentInterface::class, $environmentManager)
+            ->registerServiceInstance(PipelineInterface::class, $pipelineManager)
+            ->registerModuleServices('Global');
+
+        $app = new Application($diAdapter);
+
+        $actualResult = $this->invokePrivateMethod($app, 'filterHeaderName', [$inputData]);
+
+        $this->assertSame($expectedResult, $actualResult);
+    }
 }

@@ -50,31 +50,56 @@ class FilesystemProxy implements ProxyInterface
      */
     public function resolveMiddleware(string $application, Result&$routeResult) : void
     {
+        /** @var Entity\ApplicationEntity $applicationEntity */
         $applicationEntity = $this->getApplicationEntity($application);
 
-        if (!$applicationEntity) {
+        if (!$applicationEntity instanceof Entity\ApplicationEntity) {
             return;
         }
 
         $parameters = $routeResult->getParameters();
-        $fileSystemEntity = $this->getFilesystemEntityByRouteParams($applicationEntity, $parameters);
-        if (!$fileSystemEntity) {
-            $routeResult->setMatchedMiddleware(null);
+
+        /** @var Entity\Filesystem\FilesystemEntity $fileSystemEntity */
+        $fileSystemEntity = $this->getFilesystemEntityByRouteParams($applicationEntity, $routeResult);
+
+        if (!$fileSystemEntity instanceof Entity\Filesystem\FilesystemEntity) {
+            $routeResult->setStatus(Result::CODE_NOT_FOUND)
+                ->setMatchedMiddleware(null);
             return;
         }
 
         if ($fileSystemEntity->getType() == Entity\Filesystem\FilesystemEntity::TYPE_DIRECTORY) {
-            // DirectoryId must exists, as well as the relevant directory entity...
-            $fileSystemDirectoryEntity = $this->getFilesystemDirectoryEntity($fileSystemEntity->getDirectoryId());
-            // Theoretically this alway should be valid, since the proxy is not editable
-            $middleware = $fileSystemDirectoryEntity->getProxy() ?? self::LIST_POST;
-
-            $routeResult->setMatchedMiddleware($middleware);
+            $this->validateDirectoryMiddleware($fileSystemEntity, $routeResult);
         } else {
-            $routeResult->setMatchedMiddleware(self::VIEW_POST);
+            $routeResult->setStatus(Result::CODE_FOUND)
+                ->setMatchedMiddleware(self::VIEW_POST);
         }
 
         $routeResult->setParameters($parameters);
+    }
+
+    /**
+     * @param Entity\Filesystem\FilesystemEntity $fileSystemEntity
+     * @param Result $routeResult
+     * @return void
+     */
+    protected function validateDirectoryMiddleware(
+        Entity\Filesystem\FilesystemEntity $fileSystemEntity,
+        Result&$routeResult
+    ) : void {
+        // DirectoryId must exists, as well as the relevant directory entity...
+        /** @var Entity\Filesystem\FilesystemDirectoryEntity $fileSystemDirectoryEntity */
+        $fileSystemDirectoryEntity = $this->getFilesystemDirectoryEntity($fileSystemEntity->getDirectoryId());
+
+        if ($fileSystemDirectoryEntity->getAutoIndex() === false) {
+            $routeResult->setStatus(Result::CODE_FORBIDDEN)
+                ->setMatchedMiddleware(null);
+        } else {
+            // Theoretically this alway should be valid, since the proxy is not editable
+            $middleware = $fileSystemDirectoryEntity->getProxy() ?? self::LIST_POST;
+            $routeResult->setStatus(Result::CODE_FOUND)
+                ->setMatchedMiddleware($middleware);
+        }
     }
 
     /**
@@ -99,12 +124,12 @@ class FilesystemProxy implements ProxyInterface
      * Gets the filesystem entity.
      *
      * @param Entity\ApplicationEntity $applicationEntity
-     * @param array $parameters
+     * @param Result $routeResult
      * @return null|Entity\Filesystem\FilesystemEntity
      */
     private function getFilesystemEntityByRouteParams(
         Entity\ApplicationEntity $applicationEntity,
-        array &$parameters
+        Result&$routeResult
     ) : ? Entity\Filesystem\FilesystemEntity {
         /** @var Storage\Filesystem\FilesystemStorage $fileSystemStorage */
         $fileSystemStorage = $this->dataStorages[Storage\Filesystem\FilesystemStorage::class] ?? null;
@@ -113,6 +138,7 @@ class FilesystemProxy implements ProxyInterface
             return null;
         }
 
+        $parameters = $routeResult->getParameters();
         $path = $parameters['path'];
         $baseName = $parameters['basename'];
 
@@ -124,7 +150,7 @@ class FilesystemProxy implements ProxyInterface
         );
 
         // If we don't find it as a created content, we try with the preserved contents (tag, categories etc)
-        if (!$fileSystemEntity && $path != '/') {
+        if (!$fileSystemEntity && $path != '/' && $routeResult->getResource() == 'website-list') {
             $uri = trim($path.'/'.$baseName, '/');
             $parts = explode('/', $uri);
 
@@ -134,7 +160,9 @@ class FilesystemProxy implements ProxyInterface
                 'uri_parameter' => implode('/', $parts)
             ];
 
-            $fileSystemEntity = $this->getFilesystemEntityByRouteParams($applicationEntity, $parameters);
+            $routeResult->setParameters($parameters);
+
+            $fileSystemEntity = $this->getFilesystemEntityByRouteParams($applicationEntity, $routeResult);
         }
 
         return $fileSystemEntity;

@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Security;
 
-use Exception;
+use RuntimeException;
 use WebHemi\Acl\ServiceInterface as AclInterface;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
 use WebHemi\Http\ResponseInterface;
@@ -80,7 +80,7 @@ class AclMiddleware implements MiddlewareInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     * @throws Exception
+     * @throws RuntimeException
      * @return void
      */
     public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
@@ -107,7 +107,7 @@ class AclMiddleware implements MiddlewareInterface
             $request = $this->setIdentityForTemplate($request, $identity);
 
             if (!$hasAccess) {
-                throw new Exception('Forbidden', 403);
+                throw new RuntimeException('Forbidden', 403);
             }
         } else {
             // Instead of throw a useless 401 error here, redirect the user to the login page

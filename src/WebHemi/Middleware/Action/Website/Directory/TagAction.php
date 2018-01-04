@@ -45,9 +45,9 @@ class TagAction extends IndexAction
         $blogPosts = [];
         $parameters = $this->getRoutingParameters();
         /** @var string $tagName */
-        $tagName = $parameters['uri_parameter'] ?? null;
+        $tagName = $parameters['basename'] ?? null;
 
-        if (empty($tagName)) {
+        if ($parameters['path'] == '/' || empty($tagName)) {
             throw new RuntimeException('Forbidden', 403);
         }
 
