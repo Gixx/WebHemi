@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Http;
 
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 /**
  * Interface ClientInterface.
@@ -25,7 +25,7 @@ interface ClientInterface
      *
      * @param string $url
      * @param array $data
-     * @return ResponseInterface
+     * @return PsrResponseInterface
      */
-    public function post(string $url, array $data) : ResponseInterface;
+    public function post(string $url, array $data) : PsrResponseInterface;
 }
