@@ -19,6 +19,7 @@ use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionInterface
 use WebHemi\Http\ResponseInterface;
 use WebHemi\Http\ServerRequestInterface;
 use WebHemi\Http\ServiceInterface as HttpInterface;
+use WebHemi\I18n\ServiceInterface as I18nInterface;
 
 /**
  * Class AbstractAdapter
@@ -33,6 +34,8 @@ abstract class AbstractAdapter implements ServiceInterface
     protected $request;
     /** @var ResponseInterface */
     protected $response;
+    /** @var I18nInterface */
+    protected $i18n;
 
     /**
      * ServiceAdapter constructor.
@@ -56,6 +59,18 @@ abstract class AbstractAdapter implements ServiceInterface
      * @return ServiceInterface
      */
     abstract public function initSession() : ServiceInterface;
+
+    /**
+     * Initializes the I18n Service.
+     *
+     * @return ServiceInterface
+     */
+    public function initInternationalization() : ServiceInterface
+    {
+        $this->i18n = $this->container->get(I18nInterface::class);
+
+        return $this;
+    }
 
     /**
      * Runs the application. This is where the magic happens.

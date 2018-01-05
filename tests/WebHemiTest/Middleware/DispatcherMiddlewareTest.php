@@ -12,12 +12,9 @@
 namespace WebHemiTest\Middleware;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use WebHemi\Http\ServiceAdapter\GuzzleHttp\ServerRequest;
 use WebHemi\Http\ServiceAdapter\GuzzleHttp\Response;
-use WebHemi\Renderer\ServiceInterface as RendererAdapterInterface;
 use WebHemi\Middleware\Common\DispatcherMiddleware;
 use WebHemiTest\TestService\TestMiddleware;
 use WebHemiTest\TestService\TestActionMiddleware;
@@ -53,20 +50,7 @@ class DispatcherMiddlewareTest extends TestCase
             ->withAttribute(ServerRequest::REQUEST_ATTR_DISPATCH_DATA, ['test' => 'test']);
         $response = new Response(Response::STATUS_PROCESSING);
 
-        $streamProphecy = $this->prophesize(StreamInterface::class);
-        $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
-
-        $templateRendererProphecy->render(Argument::type('string'), Argument::type('array'))
-            ->will(
-                function () use ($streamProphecy) {
-                    return $streamProphecy->reveal();
-                }
-            );
-
-        /** @var RendererAdapterInterface $templateRenderer */
-        $templateRenderer = $templateRendererProphecy->reveal();
-
-        $middleware = new DispatcherMiddleware($templateRenderer);
+        $middleware = new DispatcherMiddleware();
         $responseBeforeMiddleware = $response;
         $this->assertTrue($response === $responseBeforeMiddleware);
 
@@ -83,10 +67,7 @@ class DispatcherMiddlewareTest extends TestCase
         $request = new ServerRequest('GET', '/');
         $response = new Response(Response::STATUS_PROCESSING);
 
-        $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
-        /** @var RendererAdapterInterface $templateRenderer */
-        $templateRenderer = $templateRendererProphecy->reveal();
-        $middleware = new DispatcherMiddleware($templateRenderer);
+        $middleware = new DispatcherMiddleware();
 
         $this->expectException(RuntimeException::class);
         $middleware($request, $response);
@@ -103,10 +84,7 @@ class DispatcherMiddlewareTest extends TestCase
         $request = $request->withAttribute(ServerRequest::REQUEST_ATTR_ACTION_MIDDLEWARE, $middlewareAction);
         $response = new Response(Response::STATUS_PROCESSING);
 
-        $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
-        /** @var RendererAdapterInterface $templateRenderer */
-        $templateRenderer = $templateRendererProphecy->reveal();
-        $middleware = new DispatcherMiddleware($templateRenderer);
+        $middleware = new DispatcherMiddleware();
 
         $this->expectException(RuntimeException::class);
         $middleware($request, $response);

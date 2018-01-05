@@ -35,17 +35,25 @@ class EmptyRouteProxy implements ProxyInterface
 
         switch ($parameters['basename']) {
             case 'actionok.html':
-                $middleware = 'ActionOK';
+                $routeResult->setMatchedMiddleware('ActionOK')
+                    ->setStatus(Result::CODE_FOUND);
                 break;
 
             case 'actionbad.html':
-                $middleware = 'ActionBad';
+                $routeResult->setMatchedMiddleware('ActionBad')
+                    ->setStatus(Result::CODE_FOUND);
+                break;
+
+            case 'directory':
+                $routeResult->setStatus(Result::CODE_FORBIDDEN)
+                    ->setMatchedMiddleware(null);
                 break;
 
             default:
-                $middleware = '';
+                $routeResult->setStatus(Result::CODE_NOT_FOUND)
+                    ->setMatchedMiddleware(null);
         }
 
-        $routeResult->setMatchedMiddleware($middleware);
+        $routeResult->setParameters($parameters);
     }
 }

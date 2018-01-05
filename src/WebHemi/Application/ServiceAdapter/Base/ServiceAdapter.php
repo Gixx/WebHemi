@@ -102,10 +102,10 @@ class ServiceAdapter extends AbstractAdapter
      */
     public function run() : ServiceInterface
     {
-        try {
-            /** @var PipelineInterface $pipelineManager */
-            $pipelineManager = $this->container->get(PipelineInterface::class);
+        /** @var PipelineInterface $pipelineManager */
+        $pipelineManager = $this->container->get(PipelineInterface::class);
 
+        try {
             /** @var string $middlewareClass */
             $middlewareClass = $pipelineManager->start();
 
@@ -120,12 +120,6 @@ class ServiceAdapter extends AbstractAdapter
             if ($this->response->getStatusCode() == ResponseInterface::STATUS_PROCESSING) {
                 $this->response = $this->response->withStatus(ResponseInterface::STATUS_OK);
             }
-
-            /** @var CommonMiddleware\FinalMiddleware $finalMiddleware */
-            $finalMiddleware = $this->container->get(CommonMiddleware\FinalMiddleware::class);
-
-            // Check response and log errors if necessary
-            $finalMiddleware($this->request, $this->response);
         } catch (Throwable $exception) {
             $code = ResponseInterface::STATUS_INTERNAL_SERVER_ERROR;
 
@@ -147,6 +141,11 @@ class ServiceAdapter extends AbstractAdapter
             $this->request = $this->request
                 ->withAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION, $exception);
         }
+
+        /** @var CommonMiddleware\FinalMiddleware $finalMiddleware */
+        $finalMiddleware = $this->container->get(CommonMiddleware\FinalMiddleware::class);
+        // Check response and log errors if necessary
+        $finalMiddleware($this->request, $this->response);
 
         return $this;
     }

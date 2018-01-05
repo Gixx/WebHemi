@@ -59,6 +59,9 @@ class TestActionMiddleware extends AbstractMiddlewareAction
             throw new Exception('Simulated error', $this->errorCode);
         }
 
+        // Make a small change in the response.
+        $this->response = $this->response->withHeader('SomeHeader', 'SomeValue');
+
         return [];
     }
 }

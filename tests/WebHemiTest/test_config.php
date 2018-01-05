@@ -283,8 +283,15 @@ return [
                 'middleware'      => 'actionForbidden',
                 'allowed_methods' => ['GET'],
             ],
-            'proxy-test' => [
-                'path' => '^/proxytest(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>[\w\-]+\.[a-z0-9]{2,5})$',
+            'proxy-view-test' => [
+                'path' => '^/proxytest'
+                    .'(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>(?!index\.html$)[\w\-\.]+\.[a-z0-9]{2,5})$',
+                'middleware'      => 'proxy',
+                'allowed_methods' => ['GET'],
+            ],
+            'proxy-list-test' => [
+                'path' => '^/proxytest'
+                    .'(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>(?!index\.html$)[\w\-\.]+)(?:\/|\/index\.html)?$',
                 'middleware'      => 'proxy',
                 'allowed_methods' => ['GET'],
             ],

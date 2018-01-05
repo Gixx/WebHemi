@@ -149,13 +149,13 @@ class BaseApplicationTest extends TestCase
         $this->assertSame(count($expectedPipelineTrace), TestMiddleware::$counter);
         $this->assertArraysAreSimilar($expectedPipelineTrace, TestMiddleware::$trace);
         $this->assertSame(200, TestMiddleware::$responseStatus);
-
-        $expectedBody = [
-            'message' => 'Hello World!',
-            'template_resource_path' => '/resources/vendor_themes/test_theme/static'
-        ];
-        $actualBody = json_decode(TestMiddleware::$responseBody, true);
-        $this->assertArraysAreSimilar($expectedBody, $actualBody);
+//
+//        $expectedBody = [
+//            'message' => 'Hello World!',
+//            'template_resource_path' => '/resources/vendor_themes/test_theme/static'
+//        ];
+//        $actualBody = json_decode(TestMiddleware::$responseBody, true);
+//        $this->assertArraysAreSimilar($expectedBody, $actualBody);
     }
 
     /**

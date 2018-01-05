@@ -221,14 +221,28 @@ class RouterAdapterTest extends TestCase
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
         $this->assertEquals('ActionOK', $result->getMatchedMiddleware());
+        $this->assertEquals('proxy-view-test', $result->getResource());
 
         $request = new ServerRequest('GET', '/proxytest/some/sub/directory/actionbad.html');
         $result = $adapterObj->match($request);
         $this->assertEquals(Result::CODE_FOUND, $result->getStatus());
         $this->assertEquals('ActionBad', $result->getMatchedMiddleware());
+        $this->assertEquals('proxy-view-test', $result->getResource());
+
+        $request = new ServerRequest('GET', '/proxytest/some/sub/directory/non_existing.html');
+        $result = $adapterObj->match($request);
+        $this->assertEquals(Result::CODE_NOT_FOUND, $result->getStatus());
+        $this->assertEquals('proxy-view-test', $result->getResource());
+
+        // Test if a directory listing is denied
+        $request = new ServerRequest('GET', '/proxytest/some/sub/directory');
+        $result = $adapterObj->match($request);
+        $this->assertEquals(Result::CODE_FORBIDDEN, $result->getStatus());
+        $this->assertEquals('proxy-list-test', $result->getResource());
 
         $request = new ServerRequest('GET', '/proxytest/some/sub/directory/index.html');
         $result = $adapterObj->match($request);
-        $this->assertEquals(Result::CODE_NOT_FOUND, $result->getStatus());
+        $this->assertEquals(Result::CODE_FORBIDDEN, $result->getStatus());
+        $this->assertEquals('proxy-list-test', $result->getResource());
     }
 }

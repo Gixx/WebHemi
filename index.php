@@ -57,6 +57,7 @@ $dependencyInjection->registerServiceInstance(ConfigurationInterface::class, $co
 /** @var Application $application */
 $application = new $applicationClass($dependencyInjection);
 $application
+    ->initInternationalization()
     ->initSession()
     ->run()
     ->renderOutput();

@@ -13,9 +13,9 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage;
 
-use WebHemi\DateTime;
 use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\ApplicationEntity;
+use WebHemi\DateTime;
 
 /**
  * Class ApplicationStorage.

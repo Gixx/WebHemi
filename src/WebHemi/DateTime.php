@@ -16,7 +16,6 @@ namespace WebHemi;
 use DateTime as PHPDateTime;
 use DateTimeZone;
 use WebHemi\I18n\TimeZoneInterface;
-use WebHemi\StringLib;
 
 /**
  * Class DateTime.
