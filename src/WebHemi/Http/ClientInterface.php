@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Http;
 
-use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Interface ClientInterface.

@@ -51,7 +51,7 @@ trait UserEntityTrait
             ->setActive((bool) $data['is_active'])
             ->setEnabled((bool) $data['is_enabled'])
             ->setDateCreated(new DateTime($data['date_created'] ?? 'now'))
-            ->setDateModified(new DateTime($data['date_modified'] ?? 'now'));
+            ->setDateModified(!empty($data['date_modified']) ? new DateTime($data['date_modified']) : null);
 
         return $entity;
     }

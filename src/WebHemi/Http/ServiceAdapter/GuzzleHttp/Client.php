@@ -14,8 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Http\ServiceAdapter\GuzzleHttp;
 
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Message\ResponseInterface;
 use WebHemi\Http\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class HttpClient

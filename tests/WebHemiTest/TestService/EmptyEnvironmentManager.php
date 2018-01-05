@@ -68,6 +68,7 @@ class EmptyEnvironmentManager extends EnvironmentManager
         $this->applicationRoot = __DIR__.'/../TestDocumentRoot';
         $this->documentRoot = realpath($this->applicationRoot.'/');
         $this->applicationDomain = 'www.unittest.dev';
+        $this->topDomain = 'unittest.dev';
         $this->selectedModule = 'Website';
         $this->selectedApplication = 'website';
         $this->selectedApplicationUri = '/';

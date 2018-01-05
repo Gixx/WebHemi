@@ -13,10 +13,10 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage\AccessManagement;
 
-use WebHemi\DateTime;
 use WebHemi\Data\EntityInterface;
 use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
 use WebHemi\Data\Storage\AbstractStorage;
+use WebHemi\DateTime;
 
 /**
  * Class ResourceStorage.

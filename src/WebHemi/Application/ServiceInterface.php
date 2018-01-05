@@ -35,6 +35,13 @@ interface ServiceInterface
     public function initSession() : ServiceInterface;
 
     /**
+     * Initializes the I18n Service.
+     *
+     * @return ServiceInterface
+     */
+    public function initInternationalization() : ServiceInterface;
+
+    /**
      * Runs the application. This is where the magic happens.
      * For example for a web application this initializes the Request and Response objects, builds the middleware
      * pipeline, applies the Router and the Dispatcher.

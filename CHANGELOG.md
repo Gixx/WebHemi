@@ -1,5 +1,14 @@
 # Change log #
 
+## Version 4.0.0-5.3 ##
+* Changes in rendering and output:
+  * Remove rendering from Dispatcher and Final Middleware. It's not their job.
+  * Add centralized rendering and output responsibility to the Application.
+  * Allow to send output without rendering.
+* Fix Router and RouterProxy: it gave false status code for non-autoindex directories.
+* Add initInternationalization() to Application to avoid translation errors when dealing with DateTime information before the rendering.
+* Adopt unit tests for the new codes.  
+
 ## Version 4.0.0-5.2 ##
 * Replace the Symfony Dependency Injection Container with a WebHemi solution with keep the performance (speed) but reduce
 the memory consumption

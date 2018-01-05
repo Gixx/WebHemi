@@ -52,7 +52,7 @@ trait PolicyEntityTrait
             ->setMethod($data['method'])
             ->setReadOnly((bool) $data['is_read_only'])
             ->setDateCreated(new DateTime($data['date_created'] ?? 'now'))
-            ->setDateModified(new DateTime($data['date_created'] ?? 'now'));
+            ->setDateModified(!empty($data['date_modified']) ? new DateTime($data['date_modified']) : null);
 
         return $entity;
     }

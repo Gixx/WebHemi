@@ -12,7 +12,6 @@
 namespace WebHemiTest\Middleware;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use WebHemi\Auth\ServiceInterface as AuthAdapterInterface;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Data\Entity\User\UserEntity;
@@ -23,7 +22,6 @@ use WebHemi\Http\ServiceAdapter\GuzzleHttp\ServerRequest;
 use WebHemi\Http\ServiceAdapter\GuzzleHttp\Response;
 use WebHemi\Logger\ServiceInterface as LogAdapterInterface;
 use WebHemi\Middleware\Common\FinalMiddleware;
-use WebHemi\Renderer\ServiceInterface as RendererAdapterInterface;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use WebHemiTest\TestService\EmptyLogger;
@@ -48,12 +46,9 @@ class FinalMiddlewareTest extends TestCase
         $response = new Response(Response::STATUS_OK);
         $response = $response->withBody($body);
 
-        $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
         $authAdapterProphecy = $this->prophesize(AuthAdapterInterface::class);
         $environmentProphecy = $this->prophesize(EnvironmentManager::class);
 
-        /** @var RendererAdapterInterface $templateRenderer */
-        $templateRenderer = $templateRendererProphecy->reveal();
         /** @var AuthAdapterInterface $authAdapter */
         $authAdapter = $authAdapterProphecy->reveal();
         /** @var EnvironmentManager $environmentManager */
@@ -61,7 +56,7 @@ class FinalMiddlewareTest extends TestCase
         /** @var LogAdapterInterface $logAdapter */
         $logAdapter = new EmptyLogger(new Config([]), '');
 
-        $middleware = new FinalMiddleware($templateRenderer, $authAdapter, $environmentManager, $logAdapter);
+        $middleware = new FinalMiddleware($authAdapter, $environmentManager, $logAdapter);
 
         /** @var ResponseInterface $result */
         $middleware($request, $response);
@@ -76,11 +71,7 @@ class FinalMiddlewareTest extends TestCase
     public function testMiddlewareErrorHandling()
     {
         $request = new ServerRequest('GET', '/');
-        $body = \GuzzleHttp\Psr7\stream_for('');
         $response = new Response(404);
-
-        $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
-        $templateRendererProphecy->render(Argument::type('string'), Argument::type('array'))->willReturn($body);
 
         $authAdapterProphecy = $this->prophesize(AuthAdapterInterface::class);
         $authAdapterProphecy->hasIdentity()->willReturn(true);
@@ -95,8 +86,6 @@ class FinalMiddlewareTest extends TestCase
         $environmentProphecy->getSelectedModule()->willReturn("admin");
         $environmentProphecy->getClientIp()->willReturn("127.0.0.1");
 
-        /** @var RendererAdapterInterface $templateRenderer */
-        $templateRenderer = $templateRendererProphecy->reveal();
         /** @var AuthAdapterInterface $authAdapter */
         $authAdapter = $authAdapterProphecy->reveal();
         /** @var EnvironmentManager $environmentManager */
@@ -104,7 +93,7 @@ class FinalMiddlewareTest extends TestCase
         /** @var LogAdapterInterface $logAdapter */
         $logAdapter = new EmptyLogger(new Config([]), '');
 
-        $middleware = new FinalMiddleware($templateRenderer, $authAdapter, $environmentManager, $logAdapter);
+        $middleware = new FinalMiddleware($authAdapter, $environmentManager, $logAdapter);
 
         /** @var ResponseInterface $result */
         $middleware($request, $response);
@@ -128,11 +117,7 @@ class FinalMiddlewareTest extends TestCase
         );
         $templateData = ['test' => 'data'];
         $request = $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
-        $body = \GuzzleHttp\Psr7\stream_for('');
         $response = new Response(404);
-
-        $templateRendererProphecy = $this->prophesize(RendererAdapterInterface::class);
-        $templateRendererProphecy->render(Argument::type('string'), Argument::type('array'))->willReturn($body);
 
         $authAdapterProphecy = $this->prophesize(AuthAdapterInterface::class);
         $authAdapterProphecy->hasIdentity()->willReturn(true);
@@ -147,8 +132,6 @@ class FinalMiddlewareTest extends TestCase
         $environmentProphecy->getSelectedModule()->willReturn("admin");
         $environmentProphecy->getClientIp()->willReturn("127.0.0.1");
 
-        /** @var RendererAdapterInterface $templateRenderer */
-        $templateRenderer = $templateRendererProphecy->reveal();
         /** @var AuthAdapterInterface $authAdapter */
         $authAdapter = $authAdapterProphecy->reveal();
         /** @var EnvironmentManager $environmentManager */
@@ -156,7 +139,7 @@ class FinalMiddlewareTest extends TestCase
         /** @var LogAdapterInterface $logAdapter */
         $logAdapter = new EmptyLogger(new Config([]), '');
 
-        $middleware = new FinalMiddleware($templateRenderer, $authAdapter, $environmentManager, $logAdapter);
+        $middleware = new FinalMiddleware($authAdapter, $environmentManager, $logAdapter);
 
         /** @var ResponseInterface $result */
         $middleware($request, $response);
