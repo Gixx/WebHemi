@@ -53,7 +53,7 @@ class MultiConnectorContainer implements MultiConnectorContainerInterface
     {
         if (!isset($this->connectors[$name])) {
             throw new InvalidArgumentException(
-                sprintf('% is not a registered connector name.', $name),
+                sprintf('%s is not a registered connector name.', $name),
                 1000
             );
         }
