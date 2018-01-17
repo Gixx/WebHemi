@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -25,7 +25,7 @@ interface ServiceInterface
      * ServiceInterface constructor.
      *
      * @param ConfigurationInterface $configuration
-     * @param EnvironmentInterface $environmentManager
+     * @param EnvironmentInterface   $environmentManager
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -63,7 +63,7 @@ interface ServiceInterface
     /**
      * Sets the locale.
      *
-     * @param string $locale
+     * @param  string $locale
      * @return ServiceInterface
      */
     public function setLocale(string $locale);
@@ -78,7 +78,7 @@ interface ServiceInterface
     /**
      * Sets the time zone.
      *
-     * @param string $timeZone
+     * @param  string $timeZone
      * @return ServiceInterface
      */
     public function setTimeZone(string $timeZone);

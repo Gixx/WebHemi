@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -29,19 +29,33 @@ use WebHemi\Middleware\MiddlewareInterface;
  */
 class AclMiddleware implements MiddlewareInterface
 {
-    /** @var AuthInterface */
+    /**
+     * @var AuthInterface
+     */
     private $authAdapter;
-    /** @var AclInterface */
+    /**
+     * @var AclInterface
+     */
     private $aclAdapter;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
-    /** @var Storage\ApplicationStorage */
+    /**
+     * @var Storage\ApplicationStorage
+     */
     private $applicationStorage;
-    /** @var Storage\AccessManagement\ResourceStorage */
+    /**
+     * @var Storage\AccessManagement\ResourceStorage
+     */
     private $resourceStorage;
-    /** @var Storage\User\UserMetaStorage */
+    /**
+     * @var Storage\User\UserMetaStorage
+     */
     private $userMetaStorage;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $middlewareWhiteList = [
         Action\Auth\LoginAction::class,
         Action\Auth\LogoutAction::class,
@@ -78,8 +92,8 @@ class AclMiddleware implements MiddlewareInterface
      * The only hard requirement is that a middleware MUST return an instance of \Psr\Http\Message\ResponseInterface.
      * Each middleware SHOULD invoke the next middleware and pass it Request and Response objects as arguments.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $response
      * @throws RuntimeException
      * @return void
      */
@@ -92,14 +106,20 @@ class AclMiddleware implements MiddlewareInterface
             return;
         }
 
-        /** @var Entity\User\UserEntity|null $identity */
+        /**
+         * @var Entity\User\UserEntity|null $identity
+         */
         $identity = $this->authAdapter->getIdentity();
 
         if ($identity instanceof Entity\User\UserEntity) {
             $selectedApplication = $this->environmentManager->getSelectedApplication();
-            /** @var Entity\ApplicationEntity $applicationEntity */
+            /**
+             * @var Entity\ApplicationEntity $applicationEntity
+             */
             $applicationEntity = $this->applicationStorage->getApplicationByName($selectedApplication);
-            /** @var Entity\AccessManagement\ResourceEntity $resourceEntity */
+            /**
+             * @var Entity\AccessManagement\ResourceEntity $resourceEntity
+             */
             $resourceEntity = $this->resourceStorage->getResourceByName($resourceName);
             // Check the user against the application and resource
             $hasAccess = $this->aclAdapter->isAllowed($identity, $resourceEntity, $applicationEntity);
@@ -121,8 +141,8 @@ class AclMiddleware implements MiddlewareInterface
     /**
      * Set identified user data for the templates
      *
-     * @param ServerRequestInterface $request
-     * @param Entity\User\UserEntity $identity
+     * @param  ServerRequestInterface $request
+     * @param  Entity\User\UserEntity $identity
      * @return ServerRequestInterface
      */
     private function setIdentityForTemplate(

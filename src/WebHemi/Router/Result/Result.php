@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -25,20 +25,30 @@ class Result
     public const CODE_NOT_FOUND = 404;
     public const CODE_BAD_METHOD = 405;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     private $status;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $matchedMiddleware;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $resource;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $statusReason = [
         self::CODE_FOUND      => 'Resource found.',
         self::CODE_FORBIDDEN  => 'The requested resource is not accessible.',
         self::CODE_NOT_FOUND  => 'The requested resource cannot be found.',
         self::CODE_BAD_METHOD => 'Bad request method was used by the client.'
     ];
-    /** @var array */
+    /**
+     * @var array
+     */
     private $parameters;
 
     /**
@@ -56,7 +66,7 @@ class Result
     /**
      * Sets resource.
      *
-     * @param string $resource
+     * @param  string $resource
      * @return Result
      */
     public function setResource(string $resource) : Result
@@ -79,7 +89,7 @@ class Result
     /**
      * Sets status code.
      *
-     * @param int $status
+     * @param  int $status
      * @throws InvalidArgumentException
      * @return Result
      */
@@ -117,7 +127,7 @@ class Result
     /**
      * Sets matched middleware.
      *
-     * @param null|string $matchedMiddleware
+     * @param  null|string $matchedMiddleware
      * @return Result
      */
     public function setMatchedMiddleware(? string $matchedMiddleware)
@@ -140,7 +150,7 @@ class Result
     /**
      * Sets the parameters.
      *
-     * @param array $parameters
+     * @param  array $parameters
      * @return Result
      */
     public function setParameters(array $parameters) : Result

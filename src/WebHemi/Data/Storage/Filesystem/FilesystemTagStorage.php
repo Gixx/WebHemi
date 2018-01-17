@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,33 +24,51 @@ use WebHemi\DateTime;
  */
 class FilesystemTagStorage extends AbstractStorage
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_filesystem_tag';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_filesystem_tag';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $idApplication = 'fk_application';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name = 'name';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $title = 'title';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description = 'description';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
 
     /**
      * Populates an entity with storage data.
      *
-     * @param EntityInterface $dataEntity
-     * @param array           $data
+     * @param  EntityInterface $dataEntity
+     * @param  array           $data
      * @return void
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var FilesystemTagEntity $dataEntity */
+        /**
+         * @var FilesystemTagEntity $dataEntity
+         */
         $dataEntity->setFilesystemTagId((int) $data[$this->idKey])
             ->setApplicationId((int) $data[$this->idApplication])
             ->setName($data[$this->name])
@@ -63,12 +81,14 @@ class FilesystemTagStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var FilesystemTagEntity $dataEntity */
+        /**
+         * @var FilesystemTagEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
 
@@ -86,12 +106,14 @@ class FilesystemTagStorage extends AbstractStorage
     /**
      * Gets the filesystem tag entity by the identifier.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|FilesystemTagEntity
      */
     public function getFilesystemTagById(int $identifier) : ? FilesystemTagEntity
     {
-        /** @var null|FilesystemTagEntity $dataEntity */
+        /**
+         * @var null|FilesystemTagEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -100,7 +122,7 @@ class FilesystemTagStorage extends AbstractStorage
     /**
      * Gets the filesystem tag entity list by the application identifier.
      *
-     * @param int $applicationId
+     * @param  int $applicationId
      * @return FilesystemTagEntity[]
      */
     public function getFilesystemTagsByApplication(int $applicationId) : array
@@ -111,15 +133,17 @@ class FilesystemTagStorage extends AbstractStorage
     /**
      * Gets the filesystem category entity by the application identifier and name.
      *
-     * @param int $applicationId
-     * @param string $name
+     * @param  int    $applicationId
+     * @param  string $name
      * @return null|FilesystemTagEntity
      */
     public function getFilesystemTagByApplicationAndName(
         int $applicationId,
         string $name
     ) : ? FilesystemTagEntity {
-        /** @var null|FilesystemTagEntity $dataEntity */
+        /**
+         * @var null|FilesystemTagEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity(
             [
                 $this->idApplication => $applicationId,
@@ -138,7 +162,9 @@ class FilesystemTagStorage extends AbstractStorage
     {
         $entitySet = [];
 
-        /** @var ConnectorInterface $connector */
+        /**
+         * @var ConnectorInterface $connector
+         */
         $connector = $this->getConnector();
 
         // Switch to another data group (DO NOT FORGET TO SET IT BACK!!)

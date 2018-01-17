@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,37 +24,59 @@ use WebHemi\Data\Storage\AbstractStorage;
  */
 class UserStorage extends AbstractStorage
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_user';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_user';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $userName = 'username';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $email = 'email';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $password = 'password';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $hash = 'hash';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isActive = 'is_active';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isEnabled = 'is_enabled';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
 
     /**
      * Populates an entity with storage data.
      *
-     * @param EntityInterface $dataEntity
-     * @param array           $data
+     * @param  EntityInterface $dataEntity
+     * @param  array           $data
      * @return void
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var UserEntity $dataEntity */
+        /**
+         * @var UserEntity $dataEntity
+         */
         $dataEntity->setUserId((int) $data[$this->idKey])
             ->setUserName($data[$this->userName])
             ->setEmail($data[$this->email])
@@ -69,12 +91,14 @@ class UserStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var UserEntity $dataEntity */
+        /**
+         * @var UserEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
 
@@ -104,12 +128,14 @@ class UserStorage extends AbstractStorage
     /**
      * Returns a User entity identified by (unique) ID.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|UserEntity
      */
     public function getUserById(int $identifier) : ? UserEntity
     {
-        /** @var null|UserEntity $dataEntity */
+        /**
+         * @var null|UserEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -118,12 +144,14 @@ class UserStorage extends AbstractStorage
     /**
      * Returns a User entity by user name.
      *
-     * @param string $name
+     * @param  string $name
      * @return null|UserEntity
      */
     public function getUserByUserName(string $name) : ? UserEntity
     {
-        /** @var null|UserEntity $dataEntity */
+        /**
+         * @var null|UserEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->userName => $name]);
 
         return $dataEntity;
@@ -132,12 +160,14 @@ class UserStorage extends AbstractStorage
     /**
      * Returns a User entity by email.
      *
-     * @param string $email
+     * @param  string $email
      * @return null|UserEntity
      */
     public function getUserByEmail(string $email) : ? UserEntity
     {
-        /** @var null|UserEntity $dataEntity */
+        /**
+         * @var null|UserEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->email => $email]);
 
         return $dataEntity;
@@ -146,13 +176,15 @@ class UserStorage extends AbstractStorage
     /**
      * Return a User entity by credentials.
      *
-     * @param string $username
-     * @param string $password
+     * @param  string $username
+     * @param  string $password
      * @return null|UserEntity
      */
     public function getUserByCredentials(string $username, string $password) : ? UserEntity
     {
-        /** @var null|UserEntity $dataEntity */
+        /**
+         * @var null|UserEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->userName => $username, $this->password => $password]);
 
         return $dataEntity;

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -33,57 +33,97 @@ class FilesystemStorage extends AbstractStorage
     public const TYPE_DIRECTORY = FilesystemEntity::TYPE_DIRECTORY;
     public const TYPE_SYMLINK = FilesystemEntity::TYPE_SYMLINK;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_filesystem';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_filesystem';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $idApplication = 'fk_application';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $idCategory = 'fk_category';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $idParent = 'fk_parent_node';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $idDocument = 'fk_filesystem_document';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $idFile = 'fk_filesystem_file';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $idDirectory = 'fk_filesystem_directory';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $idLink = 'fk_filesystem_link';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $path = 'path';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $baseName = 'basename';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $title = 'title';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description = 'description';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isHidden = 'is_hidden';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isReadOnly = 'is_read_only';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isDeleted = 'is_deleted';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $datePublished = 'date_published';
 
     /**
      * Populates an entity with storage data.
      *
-     * @param EntityInterface $dataEntity
-     * @param array           $data
+     * @param  EntityInterface $dataEntity
+     * @param  array           $data
      * @return void
      *
      * @SuppressWarnings(PHPMD.NPathComplexity) - sorry, this will remain like this. It's a complex object, period.
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var FilesystemEntity $dataEntity */
+        /**
+         * @var FilesystemEntity $dataEntity
+         */
         $dataEntity->setFilesystemId((int) $data[$this->idKey])
             ->setApplicationId((int) $data[$this->idApplication])
             ->setCategoryId(isset($data[$this->idCategory]) ? (int) $data[$this->idCategory] : null)
@@ -107,12 +147,14 @@ class FilesystemStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var FilesystemEntity $dataEntity */
+        /**
+         * @var FilesystemEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
         $datePublished = $dataEntity->getDatePublished();
@@ -142,12 +184,14 @@ class FilesystemStorage extends AbstractStorage
     /**
      * Gets the filesystem entity by the identifier.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|FilesystemEntity
      */
     public function getFilesystemById(int $identifier) : ? FilesystemEntity
     {
-        /** @var null|FilesystemEntity $dataEntity */
+        /**
+         * @var null|FilesystemEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -156,13 +200,15 @@ class FilesystemStorage extends AbstractStorage
     /**
      * Gets the filesystem entity set by application and directory.
      *
-     * @param int $applicationId
-     * @param int $directoryId
+     * @param  int $applicationId
+     * @param  int $directoryId
      * @return FilesystemEntity[]
      */
     public function getFilesystemSetByApplicationAndDirectory(int $applicationId, int $directoryId) : ? array
     {
-        /** @var FilesystemEntity[] $dataEntitySet */
+        /**
+         * @var FilesystemEntity[] $dataEntitySet
+         */
         $dataEntitySet = $this->getDataEntitySet(
             [$this->idApplication => $applicationId, $this->idDirectory => $directoryId]
         );
@@ -173,9 +219,9 @@ class FilesystemStorage extends AbstractStorage
     /**
      * Gets the filesystem entity by application and path.
      *
-     * @param int $applicationId
-     * @param string $path
-     * @param string $baseName
+     * @param  int    $applicationId
+     * @param  string $path
+     * @param  string $baseName
      * @return null|FilesystemEntity
      */
     public function getFilesystemByApplicationAndPath(
@@ -183,7 +229,9 @@ class FilesystemStorage extends AbstractStorage
         string $path,
         string $baseName
     ) : ? FilesystemEntity {
-        /** @var null|FilesystemEntity $dataEntity */
+        /**
+         * @var null|FilesystemEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity(
             [
                 $this->idApplication => $applicationId,
@@ -198,13 +246,13 @@ class FilesystemStorage extends AbstractStorage
     /**
      * Gets the published documents
      *
-     * @param int $applicationId
-     * @param array $additionalExpressions
-     * @param string|null $order
-     * @param int|null $limit
-     * @param int|null $offset
-     * @param string|null $groupBy
-     * @param string|null $having
+     * @param  int         $applicationId
+     * @param  array       $additionalExpressions
+     * @param  string|null $order
+     * @param  int|null    $limit
+     * @param  int|null    $offset
+     * @param  string|null $groupBy
+     * @param  string|null $having
      * @return FilesystemEntity[]
      */
     public function getPublishedDocuments(
@@ -247,7 +295,9 @@ class FilesystemStorage extends AbstractStorage
             }
         }
 
-        /** @var FilesystemEntity[] $dataEntitySet */
+        /**
+         * @var FilesystemEntity[] $dataEntitySet
+         */
         $dataEntitySet = $this->getDataEntitySet($expressions, $options);
 
         return $dataEntitySet;
@@ -256,11 +306,11 @@ class FilesystemStorage extends AbstractStorage
     /**
      * Gets the published documents by author id
      *
-     * @param int $applicationId
-     * @param int $userId
-     * @param string|null $order
-     * @param int|null $limit
-     * @param int|null $offset
+     * @param  int         $applicationId
+     * @param  int         $userId
+     * @param  string|null $order
+     * @param  int|null    $limit
+     * @param  int|null    $offset
      * @return array
      */
     public function getPublishedDocumentsByAuthor(
@@ -270,7 +320,9 @@ class FilesystemStorage extends AbstractStorage
         int $limit = null,
         int $offset = null
     ) : array {
-        /** @var PDO $adapter */
+        /**
+         * @var PDO $adapter
+         */
         $adapter = $this->getConnector()->getDataDriver();
 
         if (empty($order)) {
@@ -309,11 +361,11 @@ class FilesystemStorage extends AbstractStorage
     /**
      * Gets the published documents by tag id
      *
-     * @param int $applicationId
-     * @param int $filesystemTagId
-     * @param string|null $order
-     * @param int|null $limit
-     * @param int|null $offset
+     * @param  int         $applicationId
+     * @param  int         $filesystemTagId
+     * @param  string|null $order
+     * @param  int|null    $limit
+     * @param  int|null    $offset
      * @return array
      */
     public function getPublishedDocumentsByTag(
@@ -323,7 +375,9 @@ class FilesystemStorage extends AbstractStorage
         int $limit = null,
         int $offset = null
     ) : array {
-        /** @var PDO $adapter */
+        /**
+         * @var PDO $adapter
+         */
         $adapter = $this->getConnector()->getDataDriver();
 
         if (empty($order)) {
@@ -362,14 +416,16 @@ class FilesystemStorage extends AbstractStorage
     /**
      * Gets simple structured meta information for a filesystem record.
      *
-     * @param int $filesystemId
+     * @param  int $filesystemId
      * @return array
      */
     public function getPublicationMeta(int $filesystemId) : array
     {
         $filesystemMetaSet = [];
 
-        /** @var ConnectorInterface $connector */
+        /**
+         * @var ConnectorInterface $connector
+         */
         $connector = $this->getConnector();
 
         // Switch to another data group (DO NOT FORGET TO SET IT BACK!!)

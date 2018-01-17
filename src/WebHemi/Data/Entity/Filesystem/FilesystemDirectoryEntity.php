@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,25 +21,39 @@ use WebHemi\DateTime;
  */
 class FilesystemDirectoryEntity implements EntityInterface
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     private $filesystemDirectoryId;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $directoryType;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $proxy;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $isAutoIndex;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateCreated;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateModified;
 
     /**
      * Sets the value of the entity identifier.
      *
-     * @param int $entityId
+     * @param  int $entityId
      * @return FilesystemDirectoryEntity
      */
     public function setKeyData(int $entityId) : FilesystemDirectoryEntity

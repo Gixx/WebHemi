@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -25,21 +25,37 @@ use WebHemi\Http\ServiceInterface;
  */
 class ServiceAdapter implements ServiceInterface
 {
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
-    /** @var ServerRequest */
+    /**
+     * @var ServerRequest
+     */
     private $request;
-    /** @var Response */
+    /**
+     * @var Response
+     */
     private $response;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $get;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $post;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $server;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $cookie;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $files;
 
     /**
@@ -92,8 +108,8 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Gets the specific server data, or a default value if not present.
      *
-     * @param string $keyName
-     * @param string $defaultValue
+     * @param  string $keyName
+     * @param  string $defaultValue
      * @return string
      */
     private function getServerData(string $keyName, string $defaultValue = '') : string

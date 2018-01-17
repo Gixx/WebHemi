@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,7 +24,9 @@ use WebHemi\Ftp\ServiceAdapter\AbstractServiceAdapter;
  */
 class ServiceAdapter extends AbstractServiceAdapter
 {
-    /** @var resource */
+    /**
+     * @var resource
+     */
     private $connectionId = null;
 
     /**
@@ -80,7 +82,7 @@ class ServiceAdapter extends AbstractServiceAdapter
     /**
      * Toggles connection security level.
      *
-     * @param bool $state
+     * @param  bool $state
      * @return ServiceInterface
      */
     public function setSecureConnection(bool $state) : ServiceInterface
@@ -99,7 +101,7 @@ class ServiceAdapter extends AbstractServiceAdapter
     /**
      * Toggles connection passive mode.
      *
-     * @param bool $state
+     * @param  bool $state
      * @return ServiceInterface
      */
     public function setPassiveMode(bool $state) : ServiceInterface
@@ -111,7 +113,7 @@ class ServiceAdapter extends AbstractServiceAdapter
     /**
      * Sets remote path.
      *
-     * @param string $path
+     * @param  string $path
      * @return ServiceInterface
      */
     public function setRemotePath(string $path) : ServiceInterface
@@ -146,8 +148,8 @@ class ServiceAdapter extends AbstractServiceAdapter
     /**
      * Lists remote path.
      *
-     * @param null|string $path
-     * @param bool|null $changeToDirectory
+     * @param  null|string $path
+     * @param  bool|null   $changeToDirectory
      * @return array
      */
     public function getRemoteFileList(? string $path, ? bool $changeToDirectory) : array
@@ -239,9 +241,9 @@ class ServiceAdapter extends AbstractServiceAdapter
      * @see self::setRemotePath
      * @see self::setLocalPath
      *
-     * @param string $sourceFileName
-     * @param string $destinationFileName
-     * @param int $fileMode
+     * @param  string $sourceFileName
+     * @param  string $destinationFileName
+     * @param  int    $fileMode
      * @return mixed
      */
     public function upload(
@@ -276,9 +278,9 @@ class ServiceAdapter extends AbstractServiceAdapter
      * @see self::setRemotePath
      * @see self::setLocalPath
      *
-     * @param string $remoteFileName
-     * @param string $localFileName
-     * @param int $fileMode
+     * @param  string $remoteFileName
+     * @param  string $localFileName
+     * @param  int    $fileMode
      * @return mixed
      */
     public function download(
@@ -324,8 +326,8 @@ class ServiceAdapter extends AbstractServiceAdapter
     /**
      * Moves file on remote host.
      *
-     * @param string $currentPath
-     * @param string $newPath
+     * @param  string $currentPath
+     * @param  string $newPath
      * @return ServiceInterface
      */
     public function moveRemoteFile(string $currentPath, string $newPath) : ServiceInterface
@@ -345,7 +347,7 @@ class ServiceAdapter extends AbstractServiceAdapter
     /**
      * Deletes file on remote host.
      *
-     * @param string $path
+     * @param  string $path
      * @return ServiceInterface
      */
     public function deleteRemoteFile(string $path) : ServiceInterface

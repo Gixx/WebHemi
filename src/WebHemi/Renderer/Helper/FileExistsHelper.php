@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,13 +21,15 @@ use WebHemi\Renderer\HelperInterface;
  */
 class FileExistsHelper implements HelperInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     private $applicationRoot;
 
     /**
      * Should return the name of the helper.
      *
-     * @return string
+     * @return             string
      * @codeCoverageIgnore - plain text
      */
     public static function getName() : string
@@ -38,7 +40,7 @@ class FileExistsHelper implements HelperInterface
     /**
      * Should return the name of the helper.
      *
-     * @return string
+     * @return             string
      * @codeCoverageIgnore - plain text
      */
     public static function getDefinition() : string
@@ -49,7 +51,7 @@ class FileExistsHelper implements HelperInterface
     /**
      * Should return a description text.
      *
-     * @return string
+     * @return             string
      * @codeCoverageIgnore - plain text
      */
     public static function getDescription() : string
@@ -60,7 +62,7 @@ class FileExistsHelper implements HelperInterface
     /**
      * Gets helper options for the render.
      *
-     * @return array
+     * @return             array
      * @codeCoverageIgnore - empty array
      */
     public static function getOptions() : array
@@ -71,7 +73,7 @@ class FileExistsHelper implements HelperInterface
     /**
      * DefinedHelper constructor.
      *
-     * @param EnvironmentInterface   $environmentManager
+     * @param EnvironmentInterface $environmentManager
      */
     public function __construct(EnvironmentInterface $environmentManager)
     {

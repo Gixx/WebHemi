@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -22,7 +22,9 @@ use WebHemi\Middleware\Action\Website\IndexAction;
  */
 class CategoryAction extends IndexAction
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $templateName = 'website-post-list';
 
     /**
@@ -44,18 +46,24 @@ class CategoryAction extends IndexAction
     {
         $blogPosts = [];
         $parameters = $this->getRoutingParameters();
-        /** @var string $categoryName */
+        /**
+         * @var string $categoryName
+         */
         $categoryName = $parameters['basename'] ?? '';
 
         if ($parameters['path'] == '/' || empty($categoryName)) {
             throw new RuntimeException('Forbidden', 403);
         }
 
-        /** @var Entity\ApplicationEntity $applicationEntity */
+        /**
+         * @var Entity\ApplicationEntity $applicationEntity
+         */
         $applicationEntity = $this->getApplicationStorage()
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
-        /** @var Entity\Filesystem\FilesystemCategoryEntity $categoryEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemCategoryEntity $categoryEntity
+         */
         $categoryEntity = $this->getFilesystemCategoryStorage()
             ->getFilesystemCategoryByApplicationAndName(
                 $applicationEntity->getApplicationId(),
@@ -66,7 +74,9 @@ class CategoryAction extends IndexAction
             throw new RuntimeException('Not Found', 404);
         }
 
-        /** @var Entity\Filesystem\FilesystemEntity[] $publications */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity[] $publications
+         */
         $publications = $this->getFilesystemStorage()
             ->getPublishedDocuments(
                 $applicationEntity->getApplicationId(),
@@ -80,7 +90,9 @@ class CategoryAction extends IndexAction
             $this->templateName = 'website-post-list-empty';
         }
 
-        /** @var Entity\Filesystem\FilesystemEntity $filesystemEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity $filesystemEntity
+         */
         foreach ($publications as $filesystemEntity) {
             $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
         }

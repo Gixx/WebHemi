@@ -7,12 +7,13 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
 namespace WebHemi\Renderer\Helper;
 
+use WebHemi\GeneralLib;
 use WebHemi\Renderer\HelperInterface;
 
 /**
@@ -45,7 +46,7 @@ class GetStatHelper implements HelperInterface
     /**
      * Gets helper options for the render.
      *
-     * @return array
+     * @return             array
      * @codeCoverageIgnore - empty array
      */
     public static function getOptions() : array
@@ -74,6 +75,6 @@ class GetStatHelper implements HelperInterface
      */
     public function __invoke() : array
     {
-        return render_stat();
+        return GeneralLib::renderStat();
     }
 }

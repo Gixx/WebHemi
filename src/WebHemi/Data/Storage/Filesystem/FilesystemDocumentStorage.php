@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,35 +24,55 @@ use WebHemi\DateTime;
  */
 class FilesystemDocumentStorage extends AbstractStorage
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_filesystem_document';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_filesystem_document';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idParentRevision = 'fk_parent_revision';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idAuthor = 'fk_author';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $contentRevision = 'content_revision';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $contentLead = 'content_lead';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $contentBody = 'content_body';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
 
     /**
      * Populates an entity with storage data.
      *
-     * @param EntityInterface $dataEntity
-     * @param array           $data
+     * @param  EntityInterface $dataEntity
+     * @param  array           $data
      * @return void
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var FilesystemDocumentEntity $dataEntity */
+        /**
+         * @var FilesystemDocumentEntity $dataEntity
+         */
         $dataEntity->setFilesystemDocumentId((int) $data[$this->idKey])
             ->setParentRevisionId(isset($data[$this->idParentRevision]) ? (int) $data[$this->idParentRevision] : null)
             ->setAuthorId(isset($data[$this->idAuthor]) ? (int) $data[$this->idAuthor] : null)
@@ -66,12 +86,14 @@ class FilesystemDocumentStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var FilesystemDocumentEntity $dataEntity */
+        /**
+         * @var FilesystemDocumentEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
 
@@ -90,12 +112,14 @@ class FilesystemDocumentStorage extends AbstractStorage
     /**
      * Gets the filesystem document entity by the identifier.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|FilesystemDocumentEntity
      */
     public function getFilesystemDocumentById(int $identifier) : ? FilesystemDocumentEntity
     {
-        /** @var null|FilesystemDocumentEntity $dataEntity */
+        /**
+         * @var null|FilesystemDocumentEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -104,13 +128,13 @@ class FilesystemDocumentStorage extends AbstractStorage
     /**
      * Gets the published documents
      *
-     * @param array $filesystemDocumentIds
-     * @param array $additionalExpressions
-     * @param string|null $order
-     * @param int|null $limit
-     * @param int|null $offset
-     * @param string|null $groupBy
-     * @param string|null $having
+     * @param  array       $filesystemDocumentIds
+     * @param  array       $additionalExpressions
+     * @param  string|null $order
+     * @param  int|null    $limit
+     * @param  int|null    $offset
+     * @param  string|null $groupBy
+     * @param  string|null $having
      * @return FilesystemDocumentEntity[]
      */
     public function getFilesystemDocuments(
@@ -147,7 +171,9 @@ class FilesystemDocumentStorage extends AbstractStorage
             }
         }
 
-        /** @var FilesystemDocumentEntity[] $dataEntitySet */
+        /**
+         * @var FilesystemDocumentEntity[] $dataEntitySet
+         */
         $dataEntitySet = $this->getDataEntitySet($expressions, $options);
 
         return $dataEntitySet;

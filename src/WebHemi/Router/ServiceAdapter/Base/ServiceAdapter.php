@@ -24,17 +24,29 @@ use WebHemi\Router\ServiceInterface;
  */
 class ServiceAdapter implements ServiceInterface
 {
-    /** @var Result */
+    /**
+     * @var Result
+     */
     private $result;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $routes;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $module;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $application;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $applicationPath;
-    /** @var ProxyInterface */
+    /**
+     * @var ProxyInterface
+     */
     private $proxy;
 
     /**
@@ -63,7 +75,7 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Processes the Request and give a Result.
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return Result
      */
     public function match(ServerRequestInterface $request) : Result
@@ -97,7 +109,7 @@ class ServiceAdapter implements ServiceInterface
     /**
      * According to the application path, determines the route uri
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return string
      */
     private function getApplicationRouteUri(ServerRequestInterface $request) : string
@@ -114,7 +126,7 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Searches definition and returns data is found. First find, first served.
      *
-     * @param string $uri
+     * @param  string $uri
      * @return array|null
      */
     private function findRouteDefinition(string $uri) : ? array
@@ -146,7 +158,7 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Gets the paramters from the route pattern match result.
      *
-     * @param array $matches
+     * @param  array $matches
      * @return array
      */
     private function getMatchParameters(array $matches) : array

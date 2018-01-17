@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -22,9 +22,13 @@ use WebHemi\Data\Entity\User\UserEntity;
  */
 class Session implements StorageInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     private $sessionKey = '_auth_identity';
-    /** @var SessionInterface */
+    /**
+     * @var SessionInterface
+     */
     private $sessionManager;
 
     /**
@@ -40,7 +44,7 @@ class Session implements StorageInterface
     /**
      * Sets the authenticated user.
      *
-     * @param UserEntity $dataEntity
+     * @param  UserEntity $dataEntity
      * @return StorageInterface
      */
     public function setIdentity(UserEntity $dataEntity) : StorageInterface

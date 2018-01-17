@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,23 +23,41 @@ use WebHemi\Validator\ValidatorInterface;
  */
 abstract class AbstractElement implements ElementInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $identifier;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $label;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $type;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $values = [];
-    /** @var array */
+    /**
+     * @var array
+     */
     private $valueRange = [];
-    /** @var ValidatorInterface[] */
+    /**
+     * @var ValidatorInterface[]
+     */
     private $validators = [];
-    /** @var array */
+    /**
+     * @var array
+     */
     private $errors = [];
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $validTypes = [];
 
     /**
@@ -74,7 +92,7 @@ abstract class AbstractElement implements ElementInterface
     /**
      * Sets element's name.
      *
-     * @param string $name
+     * @param  string $name
      * @throws InvalidArgumentException
      * @return ElementInterface
      */
@@ -116,7 +134,7 @@ abstract class AbstractElement implements ElementInterface
     /**
      * Sets the element's type.
      *
-     * @param string $type
+     * @param  string $type
      * @return ElementInterface
      */
     public function setType(string $type) : ElementInterface
@@ -146,7 +164,7 @@ abstract class AbstractElement implements ElementInterface
     /**
      * Sets the element's label.
      *
-     * @param string $label
+     * @param  string $label
      * @return ElementInterface
      */
     public function setLabel(string $label) : ElementInterface
@@ -169,7 +187,7 @@ abstract class AbstractElement implements ElementInterface
     /**
      * Sets the values.
      *
-     * @param array $values
+     * @param  array $values
      * @return ElementInterface
      */
     public function setValues(array $values) : ElementInterface
@@ -192,7 +210,7 @@ abstract class AbstractElement implements ElementInterface
     /**
      * Sets the range of interpretation. Depends on the element type how it is used: exact element list or a min/max.
      *
-     * @param array $valueRange
+     * @param  array $valueRange
      * @return ElementInterface
      */
     public function setValueRange(array $valueRange) : ElementInterface
@@ -215,7 +233,7 @@ abstract class AbstractElement implements ElementInterface
     /**
      * Adds a validator to the element.
      *
-     * @param ValidatorInterface $validator
+     * @param  ValidatorInterface $validator
      * @return ElementInterface
      */
     public function addValidator(ValidatorInterface $validator) : ElementInterface
@@ -233,7 +251,9 @@ abstract class AbstractElement implements ElementInterface
      */
     public function validate() : ElementInterface
     {
-        /** @var ValidatorInterface $validator */
+        /**
+         * @var ValidatorInterface $validator
+         */
         foreach ($this->validators as $validatorClass => $validator) {
             $isValid = $validator->validate($this->values);
             if (!$isValid) {
@@ -249,8 +269,8 @@ abstract class AbstractElement implements ElementInterface
     /**
      * Set custom error.
      *
-     * @param string $validator
-     * @param string $error
+     * @param  string $validator
+     * @param  string $error
      * @return ElementInterface
      */
     public function setError(string $validator, string $error) : ElementInterface

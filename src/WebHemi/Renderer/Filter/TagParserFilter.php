@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,7 +21,9 @@ use WebHemi\Renderer\TagFilterInterface;
  */
 class TagParserFilter implements FilterInterface
 {
-    /** @var TagFilterInterface[] */
+    /**
+     * @var TagFilterInterface[]
+     */
     private $tagFilters;
 
     /**
@@ -91,7 +93,7 @@ class TagParserFilter implements FilterInterface
      *
      * @uses TagParserFilter::getCurrentUri()
      *
-     * @param string
+     * @param  string
      * @return string
      */
     public function __invoke() : string
@@ -105,7 +107,9 @@ class TagParserFilter implements FilterInterface
                 $className = __NAMESPACE__.'\\Tags\\'.$tagFilter;
 
                 if (isset($this->tagFilters[$className])) {
-                    /** @var TagFilterInterface $filter */
+                    /**
+                     * @var TagFilterInterface $filter
+                     */
                     $filter = $this->tagFilters[$className];
                     $text = $filter->filter($text);
                 }

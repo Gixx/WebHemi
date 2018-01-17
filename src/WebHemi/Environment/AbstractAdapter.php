@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -18,51 +18,82 @@ use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 
 /**
  * Class AbstractAdapter.
+ *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
 abstract class AbstractAdapter implements ServiceInterface
 {
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $url;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $subDomain;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $topDomain;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $applicationDomain;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $documentRoot;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $applicationRoot;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $selectedModule;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $selectedApplication;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $selectedApplicationUri;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $selectedTheme;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $selectedThemeResourcePath;
-    /** @var array  */
+    /**
+     * @var array
+     */
     protected $environmentData;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $isHttps;
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $options = [];
 
     /**
      * ServiceAdapter constructor.
      *
-     * @param ConfigurationInterface $configuration
-     * @param array                  $getData
-     * @param array                  $postData
-     * @param array                  $serverData
-     * @param array                  $cookieData
-     * @param array                  $filesData
-     * @param array                  $optionsData
+     * @param  ConfigurationInterface $configuration
+     * @param  array                  $getData
+     * @param  array                  $postData
+     * @param  array                  $serverData
+     * @param  array                  $cookieData
+     * @param  array                  $filesData
+     * @param  array                  $optionsData
      * @throws Exception
      */
     abstract public function __construct(
@@ -203,7 +234,7 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Gets environment data.
      *
-     * @param string $key
+     * @param  string $key
      * @return array
      */
     abstract public function getEnvironmentData(string $key) : array;

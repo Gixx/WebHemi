@@ -7,13 +7,12 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin\ControlPanel\Groups;
 
-use RuntimeException;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Data\Entity\User\UserGroupEntity;
 use WebHemi\Data\Storage\User\UserGroupStorage;
@@ -25,19 +24,25 @@ use WebHemi\Middleware\Action\AbstractMiddlewareAction;
  */
 class ListAction extends AbstractMiddlewareAction
 {
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     protected $environmentManager;
-    /** @var UserGroupStorage */
+    /**
+     * @var UserGroupStorage
+     */
     protected $userGroupStorage;
 
     /**
      * GroupManagementAction constructor.
      *
      * @param ConfigurationInterface $configuration
-     * @param EnvironmentInterface $environmentManager
-     * @param UserGroupStorage $userGroupStorage
+     * @param EnvironmentInterface   $environmentManager
+     * @param UserGroupStorage       $userGroupStorage
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -81,10 +86,14 @@ class ListAction extends AbstractMiddlewareAction
     protected function getUserGroupList() : array
     {
         $dataList = [];
-        /** @var array $entityList */
+        /**
+         * @var array $entityList
+         */
         $entityList = $this->userGroupStorage->getUserGroups();
 
-        /** @var UserGroupEntity $userGroupEntity */
+        /**
+         * @var UserGroupEntity $userGroupEntity
+         */
         foreach ($entityList as $userGroupEntity) {
             $dataList[] = [
                 'id' => $userGroupEntity->getUserGroupId(),

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -29,23 +29,35 @@ use WebHemi\Renderer\HelperInterface;
  */
 class IsAllowedHelper implements HelperInterface
 {
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     private $configuration;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
-    /** @var AclInterface */
+    /**
+     * @var AclInterface
+     */
     private $aclAdapter;
-    /** @var AuthInterface */
+    /**
+     * @var AuthInterface
+     */
     private $authAdapter;
-    /** @var ResourceStorage */
+    /**
+     * @var ResourceStorage
+     */
     private $resourceStorage;
-    /** @var ApplicationStorage */
+    /**
+     * @var ApplicationStorage
+     */
     private $applicationStorage;
 
     /**
      * Should return the name of the helper.
      *
-     * @return string
+     * @return             string
      * @codeCoverageIgnore - plain text
      */
     public static function getName() : string
@@ -56,7 +68,7 @@ class IsAllowedHelper implements HelperInterface
     /**
      * Should return the name of the helper.
      *
-     * @return string
+     * @return             string
      * @codeCoverageIgnore - plain text
      */
     public static function getDefinition() : string
@@ -67,7 +79,7 @@ class IsAllowedHelper implements HelperInterface
     /**
      * Should return a description text.
      *
-     * @return string
+     * @return             string
      * @codeCoverageIgnore - plain text
      */
     public static function getDescription() : string
@@ -78,7 +90,7 @@ class IsAllowedHelper implements HelperInterface
     /**
      * Gets helper options for the render.
      *
-     * @return array
+     * @return             array
      * @codeCoverageIgnore - empty array
      */
     public static function getOptions() : array
@@ -119,7 +131,9 @@ class IsAllowedHelper implements HelperInterface
      */
     public function __invoke() : bool
     {
-        /** @var UserEntity $userEntity */
+        /**
+         * @var UserEntity $userEntity
+         */
         $userEntity = $this->authAdapter->getIdentity();
         // Without user, access should be denied.
         if (!$userEntity) {
@@ -130,20 +144,26 @@ class IsAllowedHelper implements HelperInterface
 
         $method = $arguments[1] ?? null;
         $applicationName = $arguments[2] ?? $this->environmentManager->getSelectedApplication();
-        /** @var null|ApplicationEntity $applicationEntity */
+        /**
+         * @var null|ApplicationEntity $applicationEntity
+         */
         $applicationEntity = $this->applicationStorage->getApplicationByName($applicationName);
 
         // For invalid applications the path will be checked against the current (valid) application
         if (!$applicationEntity instanceof ApplicationEntity) {
             $applicationName = $this->environmentManager->getSelectedApplication();
-            /** @var null|ApplicationEntity $applicationEntity */
+            /**
+             * @var null|ApplicationEntity $applicationEntity
+             */
             $applicationEntity = $this->applicationStorage->getApplicationByName($applicationName);
         }
 
         $resourceName = $arguments[0] ?? '';
-        /** @var null|ResourceEntity $resourceEntity */
+        /**
+         * @var null|ResourceEntity $resourceEntity
+         */
         $resourceEntity = $this->resourceStorage->getResourceByName($resourceName);
 
-        return $this->aclAdapter->isAllowed($userEntity, $resourceEntity, $applicationEntity, $method);
+        return $this->aclAdapter->isAllowed($userEntity, $resourceEntity, $applicationEntity);
     }
 }

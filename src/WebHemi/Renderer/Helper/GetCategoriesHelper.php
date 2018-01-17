@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -30,7 +30,9 @@ use WebHemi\Router\ProxyInterface;
  */
 class GetCategoriesHelper implements HelperInterface
 {
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
 
     use StorageInjectorTrait;
@@ -39,7 +41,7 @@ class GetCategoriesHelper implements HelperInterface
      * GetCategoriesHelper constructor.
      *
      * @param EnvironmentInterface $environmentManager
-     * @param StorageInterface[] ...$dataStorages
+     * @param StorageInterface[]   ...$dataStorages
      */
     public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
     {
@@ -70,7 +72,7 @@ class GetCategoriesHelper implements HelperInterface
     /**
      * Gets helper options for the render.
      *
-     * @return array
+     * @return             array
      * @codeCoverageIgnore - empty array
      */
     public static function getOptions() : array
@@ -97,27 +99,39 @@ class GetCategoriesHelper implements HelperInterface
     {
         $categories = [];
 
-        /** @var Storage\ApplicationStorage $applicationStorage */
+        /**
+         * @var Storage\ApplicationStorage $applicationStorage
+         */
         $applicationStorage = $this->getApplicationStorage();
-        /** @var Storage\Filesystem\FilesystemCategoryStorage $categoryStorage */
+        /**
+         * @var Storage\Filesystem\FilesystemCategoryStorage $categoryStorage
+         */
         $categoryStorage = $this->getFilesystemCategoryStorage();
-        /** @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage */
+        /**
+         * @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage
+         */
         $directoryStorage = $this->getFilesystemDirectoryStorage();
 
         if (!$applicationStorage || !$categoryStorage || !$directoryStorage) {
             return [];
         }
 
-        /** @var Entity\ApplicationEntity $application */
+        /**
+         * @var Entity\ApplicationEntity $application
+         */
         $application = $applicationStorage
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
         $applicationId = $application->getKeyData();
 
-        /** @var array $categoryDirectoryData */
+        /**
+         * @var array $categoryDirectoryData
+         */
         $categoryDirectoryData = $directoryStorage
             ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
 
-        /** @var Entity\Filesystem\FilesystemCategoryEntity[] $categoryList */
+        /**
+         * @var Entity\Filesystem\FilesystemCategoryEntity[] $categoryList
+         */
         $categoryList = $categoryStorage
             ->getFilesystemCategoriesByApplication($applicationId);
 

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -25,7 +25,9 @@ use WebHemi\Router\Result;
  */
 class RoutingMiddleware implements MiddlewareInterface
 {
-    /** @var RouterInterface */
+    /**
+     * @var RouterInterface
+     */
     private $routerAdapter;
 
     /**
@@ -41,8 +43,8 @@ class RoutingMiddleware implements MiddlewareInterface
     /**
      * From the request the middleware determines whether the requested URI is valid or not.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $response
      * @throws Exception
      * @return void
      */

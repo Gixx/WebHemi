@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -28,13 +28,21 @@ use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
  */
 abstract class AbstractServiceAdapter implements Acl\ServiceInterface
 {
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     protected $environment;
-    /** @var UserToPolicyCoupler */
+    /**
+     * @var UserToPolicyCoupler
+     */
     protected $userToPolicyCoupler;
-    /** @var UserToGroupCoupler */
+    /**
+     * @var UserToGroupCoupler
+     */
     protected $userToGroupCoupler;
-    /** @var UserGroupToPolicyCoupler */
+    /**
+     * @var UserGroupToPolicyCoupler
+     */
     protected $userGroupToPolicyCoupler;
 
     /**
@@ -60,9 +68,9 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
     /**
      * Checks if a User can access to a Resource in an Application
      *
-     * @param UserEntity             $userEntity
-     * @param ResourceEntity|null    $resourceEntity
-     * @param ApplicationEntity|null $applicationEntity
+     * @param  UserEntity             $userEntity
+     * @param  ResourceEntity|null    $resourceEntity
+     * @param  ApplicationEntity|null $applicationEntity
      * @return bool
      */
     abstract public function isAllowed(
@@ -79,10 +87,10 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
      *  - is connected to the current application OR any application AND
      *  - allows the current request method.
      *
-     * @param PolicyEntity           $policyEntity
-     * @param null|ResourceEntity    $resourceEntity
-     * @param null|ApplicationEntity $applicationEntity
-     * @param null|string            $method
+     * @param  PolicyEntity           $policyEntity
+     * @param  null|ResourceEntity    $resourceEntity
+     * @param  null|ApplicationEntity $applicationEntity
+     * @param  null|string            $method
      * @return bool
      */
     protected function isPolicyAllowed(
@@ -99,8 +107,8 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
     /**
      * Checks whether the given resource is allowed for the given policy.
      *
-     * @param PolicyEntity        $policyEntity
-     * @param ResourceEntity|null $resourceEntity
+     * @param  PolicyEntity        $policyEntity
+     * @param  ResourceEntity|null $resourceEntity
      * @return bool
      */
     private function isResourceAllowed(
@@ -116,8 +124,8 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
     /**
      * Checks whether the given application is allowed for the given policy.
      *
-     * @param PolicyEntity                $policyEntity
-     * @param null|ApplicationEntity|null $applicationEntity
+     * @param  PolicyEntity                $policyEntity
+     * @param  null|ApplicationEntity|null $applicationEntity
      * @return bool
      */
     private function isApplicationAllowed(
@@ -133,8 +141,8 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
     /**
      * Checks whether the request method is allowed for the given policy.
      *
-     * @param PolicyEntity $policyEntity
-     * @param null|string  $method
+     * @param  PolicyEntity $policyEntity
+     * @param  null|string  $method
      * @return bool
      */
     private function isRequestMethodAllowed(PolicyEntity $policyEntity, ? string $method = null) : bool

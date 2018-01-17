@@ -7,17 +7,17 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
 namespace WebHemi\DependencyInjection\ServiceAdapter;
 
-use Exception;
 use RuntimeException;
 use InvalidArgumentException;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\DependencyInjection\ServiceInterface;
+use WebHemi\GeneralLib;
 
 /**
  * Class AbstractAdapter
@@ -33,13 +33,21 @@ abstract class AbstractAdapter implements ServiceInterface
     public const SERVICE_INHERIT = 'inherits';
     public const SERVICE_INITIALIZED = 'initialized';
 
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $registeredModules = [];
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $serviceLibrary = [];
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $serviceConfiguration = [];
 
     /**
@@ -55,7 +63,7 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Returns true if the given service is registered.
      *
-     * @param string $identifier
+     * @param  string $identifier
      * @return bool
      */
     abstract public function has(string $identifier) : bool;
@@ -63,7 +71,7 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Gets a service.
      *
-     * @param string $identifier
+     * @param  string $identifier
      * @return object
      */
     abstract public function get(string $identifier);
@@ -71,8 +79,8 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Register the service.
      *
-     * @param string $identifier
-     * @param string $moduleName
+     * @param  string $identifier
+     * @param  string $moduleName
      * @return ServiceInterface
      */
     public function registerService(string $identifier, string $moduleName = 'Global') : ServiceInterface
@@ -96,7 +104,7 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Checks if the service has been already initialized.
      *
-     * @param string $identifier
+     * @param  string $identifier
      * @return bool
      */
     protected function serviceIsInitialized(string $identifier) : bool
@@ -108,8 +116,8 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Retrieves configuration for a service.
      *
-     * @param string $identifier
-     * @param string $moduleName
+     * @param  string $identifier
+     * @param  string $moduleName
      * @return array
      */
     public function getServiceConfiguration(string $identifier, string $moduleName = null) : array
@@ -136,21 +144,21 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Get all registered module configurations and merge them together.
      *
-     * @param array $configuration
+     * @param array  $configuration
      * @param string $path
      */
     protected function getAllRegisteredModuleConfigurations(array &$configuration, string $path) : void
     {
         if ($this->configuration->has($path)) {
             $moduleConfig = $this->configuration->getData($path);
-            $configuration = merge_array_overwrite($configuration, $moduleConfig);
+            $configuration = GeneralLib::mergeArrayOverwrite($configuration, $moduleConfig);
         }
     }
 
     /**
      * Resolves the config inheritance.
      *
-     * @param array $configuration
+     * @param array  $configuration
      * @param string $identifier
      */
     protected function resolveInheritance(array &$configuration, string $identifier) : void
@@ -176,8 +184,8 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Retrieves real service class name.
      *
-     * @param string $identifier
-     * @param string $moduleName
+     * @param  string $identifier
+     * @param  string $moduleName
      * @return string
      */
     protected function resolveServiceClassName(string $identifier, string $moduleName) : string
@@ -198,8 +206,8 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Gets argument list and resolves alias references.
      *
-     * @param string $identifier
-     * @param string $moduleName
+     * @param  string $identifier
+     * @param  string $moduleName
      * @return array
      */
     protected function resolveServiceArguments(string $identifier, string $moduleName) : array
@@ -212,8 +220,8 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Returns the service post-init method calls.
      *
-     * @param string $identifier
-     * @param string $moduleName
+     * @param  string $identifier
+     * @param  string $moduleName
      * @return array
      */
     protected function resolveMethodCalls(string $identifier, string $moduleName) : array
@@ -226,8 +234,8 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Returns the service share status.
      *
-     * @param string $identifier
-     * @param string $moduleName
+     * @param  string $identifier
+     * @param  string $moduleName
      * @return bool
      */
     protected function resolveShares(string $identifier, string $moduleName) : bool
@@ -240,8 +248,8 @@ abstract class AbstractAdapter implements ServiceInterface
     /**
      * Register the service.
      *
-     * @param string  $identifier
-     * @param object  $serviceInstance
+     * @param  string $identifier
+     * @param  object $serviceInstance
      * @return ServiceInterface
      */
     abstract public function registerServiceInstance(string $identifier, $serviceInstance) : ServiceInterface;
@@ -250,7 +258,7 @@ abstract class AbstractAdapter implements ServiceInterface
      * Register module specific services.
      * If a service is already registered in the Global namespace, it will be skipped.
      *
-     * @param string $moduleName
+     * @param  string $moduleName
      * @return ServiceInterface
      */
     public function registerModuleServices(string $moduleName) : ServiceInterface

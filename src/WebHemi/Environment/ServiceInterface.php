@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -147,7 +147,7 @@ interface ServiceInterface
     /**
      * Gets environment data.
      *
-     * @param string $key
+     * @param  string $key
      * @return array
      */
     public function getEnvironmentData(string $key) : array;

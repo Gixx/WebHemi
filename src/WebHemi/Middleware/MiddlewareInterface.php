@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,8 +24,8 @@ interface MiddlewareInterface
     /**
      * A middleware is a callable. It can do whatever is appropriate with the Request and Response objects.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $response
      * @return void
      */
     public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void;

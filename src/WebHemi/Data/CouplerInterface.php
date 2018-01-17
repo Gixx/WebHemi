@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -43,7 +43,7 @@ interface CouplerInterface
     /**
      * Gets all the entities those are depending from the given entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return EntityInterface[]
      */
     public function getEntityDependencies(EntityInterface $dataEntity) : array;
@@ -51,8 +51,8 @@ interface CouplerInterface
     /**
      * Sets dependency for the entities
      *
-     * @param EntityInterface $dataEntityA
-     * @param EntityInterface $dataEntityB
+     * @param  EntityInterface $dataEntityA
+     * @param  EntityInterface $dataEntityB
      * @return int The ID of the saved entity in the storage
      */
     public function setDependency(EntityInterface $dataEntityA, EntityInterface $dataEntityB) : int;

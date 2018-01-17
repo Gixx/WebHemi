@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,9 +23,13 @@ class HtmlMultipleElement extends AbstractElement implements MultipleElementInte
     public const HTML_MULTIPLE_ELEMENT_INPUT_FILE = 'inputFile';
     public const HTML_MULTIPLE_ELEMENT_SELECT = 'select';
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $isMultiple = false;
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $validTypes = [
         self::HTML_MULTIPLE_ELEMENT_INPUT_FILE,
         self::HTML_MULTIPLE_ELEMENT_SELECT,
@@ -34,7 +38,7 @@ class HtmlMultipleElement extends AbstractElement implements MultipleElementInte
     /**
      * Sets element to be multiple
      *
-     * @param bool $isMultiple
+     * @param  bool $isMultiple
      * @return MultipleElementInterface
      */
     public function setMultiple(bool $isMultiple) : MultipleElementInterface

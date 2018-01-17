@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -32,7 +32,9 @@ class HtmlElement extends AbstractElement
     public const HTML_ELEMENT_SUBMIT = 'submit';
     public const HTML_ELEMENT_TEXTAREA = 'textarea';
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $validTypes = [
         self::HTML_ELEMENT_BUTTON,
         self::HTML_ELEMENT_FORM,

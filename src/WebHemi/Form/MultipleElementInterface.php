@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,7 +21,7 @@ interface MultipleElementInterface extends ElementInterface
     /**
      * Sets element to be multiple
      *
-     * @param bool $isMultiple
+     * @param  bool $isMultiple
      * @return MultipleElementInterface
      */
     public function setMultiple(bool $isMultiple) : MultipleElementInterface;

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -22,7 +22,9 @@ use WebHemi\Data\MultiConnectorContainerInterface;
  */
 class MultiConnectorContainer implements MultiConnectorContainerInterface
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     private $connectors = [];
 
     /**
@@ -33,7 +35,9 @@ class MultiConnectorContainer implements MultiConnectorContainerInterface
     public function __construct(ConnectorInterface ...$connectorInterfaces)
     {
         foreach ($connectorInterfaces as $connector) {
-            /** @var ConnectorInterface $connector */
+            /**
+             * @var ConnectorInterface $connector
+             */
             $this->connectors[$connector->getConnectorName()] = $connector;
         }
     }
@@ -41,7 +45,7 @@ class MultiConnectorContainer implements MultiConnectorContainerInterface
     /**
      * Returns a Connector instance by name.
      *
-     * @param string $name
+     * @param  string $name
      * @throws InvalidArgumentException
      * @return ConnectorInterface
      */

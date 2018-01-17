@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -28,11 +28,17 @@ use WebHemi\Middleware\MiddlewareInterface;
  */
 class FinalMiddleware implements MiddlewareInterface
 {
-    /** @var AuthInterface */
+    /**
+     * @var AuthInterface
+     */
     private $authAdapter;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $logAdapter;
 
     /**
@@ -55,8 +61,8 @@ class FinalMiddleware implements MiddlewareInterface
     /**
      * Sends out the headers and prints the response body to the output.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $response
      * @return void
      */
     public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
@@ -88,7 +94,9 @@ class FinalMiddleware implements MiddlewareInterface
         $identity = 'Unauthenticated user';
 
         if ($this->authAdapter->hasIdentity()) {
-            /** @var UserEntity $userEntity */
+            /**
+             * @var UserEntity $userEntity
+             */
             $userEntity = $this->authAdapter->getIdentity();
             $identity = $userEntity->getEmail();
         }
@@ -108,7 +116,7 @@ class FinalMiddleware implements MiddlewareInterface
     /**
      * Convert the exception into plain text instead of the fancy HTML output of the xdebug...
      *
-     * @param Throwable $exception
+     * @param  Throwable $exception
      * @return string
      */
     private function getExceptionAsString(Throwable $exception)

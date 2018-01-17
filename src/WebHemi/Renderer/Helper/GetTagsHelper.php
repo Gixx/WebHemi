@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -30,7 +30,9 @@ use WebHemi\Router\ProxyInterface;
  */
 class GetTagsHelper implements HelperInterface
 {
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
 
     use StorageInjectorTrait;
@@ -39,7 +41,7 @@ class GetTagsHelper implements HelperInterface
      * GetTagsHelper constructor.
      *
      * @param EnvironmentInterface $environmentManager
-     * @param StorageInterface[] ...$dataStorages
+     * @param StorageInterface[]   ...$dataStorages
      */
     public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
     {
@@ -70,7 +72,7 @@ class GetTagsHelper implements HelperInterface
     /**
      * Gets helper options for the render.
      *
-     * @return array
+     * @return             array
      * @codeCoverageIgnore - empty array
      */
     public static function getOptions() : array
@@ -97,26 +99,38 @@ class GetTagsHelper implements HelperInterface
     {
         $tags = [];
 
-        /** @var Storage\ApplicationStorage $applicationStorage */
+        /**
+         * @var Storage\ApplicationStorage $applicationStorage
+         */
         $applicationStorage = $this->getApplicationStorage();
-        /** @var Storage\Filesystem\FilesystemTagStorage $tagStorage */
+        /**
+         * @var Storage\Filesystem\FilesystemTagStorage $tagStorage
+         */
         $tagStorage = $this->getFilesystemTagStorage();
-        /** @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage */
+        /**
+         * @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage
+         */
         $directoryStorage = $this->getFilesystemDirectoryStorage();
 
         if (!$applicationStorage || !$tagStorage || !$directoryStorage) {
             return [];
         }
 
-        /** @var Entity\ApplicationEntity $application */
+        /**
+         * @var Entity\ApplicationEntity $application
+         */
         $application = $applicationStorage->getApplicationByName($this->environmentManager->getSelectedApplication());
         $applicationId = $application->getKeyData();
 
-        /** @var array $categoryDirectoryData */
+        /**
+         * @var array $categoryDirectoryData
+         */
         $categoryDirectoryData = $directoryStorage
             ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);
 
-        /** @var Entity\Filesystem\FilesystemTagEntity[] $tagList */
+        /**
+         * @var Entity\Filesystem\FilesystemTagEntity[] $tagList
+         */
         $tagList = $tagStorage->getFilesystemTagsByApplication($applicationId);
 
         foreach ($tagList as $tagEntity) {

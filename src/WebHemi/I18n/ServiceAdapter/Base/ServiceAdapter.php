@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,26 +23,40 @@ use WebHemi\I18n\ServiceInterface;
  */
 class ServiceAdapter implements ServiceInterface
 {
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     protected $environmentManager;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $language;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $territory;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $codeSet;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $locale;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $timeZone;
 
     /**
      * ServiceAdapter constructor.
      *
      * @param ConfigurationInterface $configuration
-     * @param EnvironmentInterface $environmentManager
+     * @param EnvironmentInterface   $environmentManager
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -116,7 +130,7 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Sets the locale.
      *
-     * @param string $locale
+     * @param  string $locale
      * @throws InvalidArgumentException
      * @return ServiceAdapter
      */
@@ -151,7 +165,7 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Sets the time zone.
      *
-     * @param string $timeZone
+     * @param  string $timeZone
      * @return ServiceAdapter
      */
     public function setTimeZone(string $timeZone) : ServiceAdapter

@@ -15,6 +15,12 @@
       "role": "Developer"
     }
   ],
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "7.1"
+    }
+  },
   "autoload": {
     "psr-4": {
       "WebHemi\\": "./src/WebHemi"
@@ -43,19 +49,26 @@
     "phpunit/phpunit": "6.5.5",
     "phpmd/phpmd": "2.6.0",
     "pdepend/pdepend": "2.5.2",
-    "squizlabs/php_codesniffer": "3.2.2"
+    "squizlabs/php_codesniffer": "3.2.2",
+    "phpstan/phpstan": "0.9.1"
+  },
+  "scripts-descriptions": {
+    "check": "Run all tests!"
   },
   "scripts": {
     "check": [
       "@md",
       "@cs",
       "@cs-fix",
-      "@test"
+      "@test-full",
+      "@phpstan"
     ],
-    "md": "vendor/bin/phpmd",
-    "cs": "vendor/bin/phpcs",
-    "cs-fix": "vendor/bin/phpcbf",
-    "server": "php -S 0.0.0.0:8080 -t public/ public/index.php",
-    "test": "vendor/bin/phpunit"
+    "md": "vendor/bin/phpmd src/ text phpmd.xml",
+    "cs": "vendor/bin/phpcs --standard=PSR2 src/",
+    "cs-fix": "vendor/bin/phpcbf src/",
+    "test-fast": "vendor/bin/phpunit -c phpunit-fast.xml",
+    "test-full": "vendor/bin/phpunit -c phpunit.xml",
+    "phpstan": "vendor/bin/phpstan analyse src --level=4",
+    "server": "php -S 0.0.0.0:8080 -t public/ public/index.php"
   }
 }

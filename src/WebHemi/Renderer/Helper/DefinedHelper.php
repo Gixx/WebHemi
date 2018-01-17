@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,9 +23,13 @@ use WebHemi\Renderer\Traits\GetSelectedThemeResourcePathTrait;
  */
 class DefinedHelper implements HelperInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     private $templateViewPath;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $defaultTemplateViewPath;
 
     use GetSelectedThemeResourcePathTrait;
@@ -33,7 +37,7 @@ class DefinedHelper implements HelperInterface
     /**
      * Should return the name of the helper.
      *
-     * @return string
+     * @return             string
      * @codeCoverageIgnore - plain text
      */
     public static function getName() : string
@@ -44,7 +48,7 @@ class DefinedHelper implements HelperInterface
     /**
      * Should return the name of the helper.
      *
-     * @return string
+     * @return             string
      * @codeCoverageIgnore - plain text
      */
     public static function getDefinition() : string
@@ -55,7 +59,7 @@ class DefinedHelper implements HelperInterface
     /**
      * Should return a description text.
      *
-     * @return string
+     * @return             string
      * @codeCoverageIgnore - plain text
      */
     public static function getDescription() : string
@@ -67,7 +71,7 @@ class DefinedHelper implements HelperInterface
     /**
      * Gets helper options for the render.
      *
-     * @return array
+     * @return             array
      * @codeCoverageIgnore - empty array
      */
     public static function getOptions() : array

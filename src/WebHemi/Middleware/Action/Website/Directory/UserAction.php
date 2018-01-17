@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -48,22 +48,32 @@ class UserAction extends IndexAction
             throw new RuntimeException('Forbidden', 403);
         }
 
-        /** @var Entity\User\UserEntity $userEntity */
+        /**
+         * @var Entity\User\UserEntity $userEntity
+         */
         $userEntity = $this->getUserStorage()
             ->getUserByUserName($userName);
-        /** @var array $userMeta */
+        /**
+         * @var array $userMeta
+         */
         $userMeta = $this->getUserMetaStorage()
             ->getUserMetaArrayForUserId((int) $userEntity->getUserId());
 
-        /** @var Entity\ApplicationEntity $applicationEntity */
+        /**
+         * @var Entity\ApplicationEntity $applicationEntity
+         */
         $applicationEntity = $this->getApplicationStorage()
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
-        /** @var Entity\Filesystem\FilesystemEntity[] $publications */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity[] $publications
+         */
         $publications = $this->getFilesystemStorage()
             ->getPublishedDocumentsByAuthor($applicationEntity->getApplicationId(), $userEntity->getUserId());
 
-        /** @var Entity\Filesystem\FilesystemEntity $filesystemEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity $filesystemEntity
+         */
         foreach ($publications as $filesystemEntity) {
             $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
         }

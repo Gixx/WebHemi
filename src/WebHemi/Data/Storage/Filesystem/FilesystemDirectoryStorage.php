@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -25,33 +25,51 @@ use WebHemi\DateTime;
  */
 class FilesystemDirectoryStorage extends AbstractStorage
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_filesystem_directory';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_filesystem_directory';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description = 'description';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $directoryType = 'directory_type';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $proxy = 'proxy';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isAutoIndex = 'is_autoindex';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
 
     /**
      * Populates an entity with storage data.
      *
-     * @param EntityInterface $dataEntity
-     * @param array           $data
+     * @param  EntityInterface $dataEntity
+     * @param  array           $data
      * @return void
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var FilesystemDirectoryEntity $dataEntity */
+        /**
+         * @var FilesystemDirectoryEntity $dataEntity
+         */
         $dataEntity->setFilesystemDirectoryId((int) $data[$this->idKey])
             ->setDescription($data[$this->description])
             ->setDirectoryType($data[$this->directoryType])
@@ -64,12 +82,14 @@ class FilesystemDirectoryStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var FilesystemDirectoryEntity $dataEntity */
+        /**
+         * @var FilesystemDirectoryEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
 
@@ -87,12 +107,14 @@ class FilesystemDirectoryStorage extends AbstractStorage
     /**
      * Gets the filesystem directory entity by the identifier.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|FilesystemDirectoryEntity
      */
     public function getFilesystemDirectoryById(int $identifier) : ? FilesystemDirectoryEntity
     {
-        /** @var null|FilesystemDirectoryEntity $dataEntity */
+        /**
+         * @var null|FilesystemDirectoryEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -102,12 +124,14 @@ class FilesystemDirectoryStorage extends AbstractStorage
      * Gets the filesystem directory entity by the proxy.
      * From named proxies only one exists form each type.
      *
-     * @param string $proxy
+     * @param  string $proxy
      * @return null|FilesystemDirectoryEntity
      */
     public function getFilesystemDirectoryByProxy(string $proxy) : ? FilesystemDirectoryEntity
     {
-        /** @var null|FilesystemDirectoryEntity $dataEntity */
+        /**
+         * @var null|FilesystemDirectoryEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->proxy => $proxy]);
 
         return $dataEntity;
@@ -116,14 +140,16 @@ class FilesystemDirectoryStorage extends AbstractStorage
     /**
      * Collects complex information about
      *
-     * @param int $applicationId
-     * @param string $proxy
+     * @param  int    $applicationId
+     * @param  string $proxy
      * @throws RuntimeException
      * @return array
      */
     public function getDirectoryDataByApplicationAndProxy(int $applicationId, string $proxy) : array
     {
-        /** @var FilesystemDirectoryEntity $directoryEntity */
+        /**
+         * @var FilesystemDirectoryEntity $directoryEntity
+         */
         $directoryEntity = $this->getFilesystemDirectoryByProxy($proxy);
 
         if (!$directoryEntity instanceof FilesystemDirectoryEntity) {
@@ -159,7 +185,9 @@ class FilesystemDirectoryStorage extends AbstractStorage
      */
     private function getFilesystemData(int $applicationId, int $directoryId) : array
     {
-        /** @var ConnectorInterface $connector */
+        /**
+         * @var ConnectorInterface $connector
+         */
         $connector = $this->getConnector();
 
         // Switch to another data group (DO NOT FORGET TO SET IT BACK!!)

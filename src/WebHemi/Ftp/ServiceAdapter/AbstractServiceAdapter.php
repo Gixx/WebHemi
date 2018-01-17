@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -22,9 +22,13 @@ use WebHemi\Ftp\ServiceInterface;
  */
 abstract class AbstractServiceAdapter implements ServiceInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $localPath = __DIR__;
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $options = [];
 
     /**
@@ -54,8 +58,8 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Sets an option data.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string $key
+     * @param  mixed  $value
      * @return ServiceInterface
      */
     public function setOption(string $key, $value) : ServiceInterface
@@ -67,7 +71,7 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Sets a group of options.
      *
-     * @param array $options
+     * @param  array $options
      * @return ServiceInterface
      */
     public function setOptions(array $options) : ServiceInterface
@@ -79,8 +83,8 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Gets a specific option data.
      *
-     * @param string $key
-     * @param mixed $default
+     * @param  string $key
+     * @param  mixed  $default
      * @return mixed
      */
     public function getOption(string $key, $default = null)
@@ -91,7 +95,7 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Toggles connection security level.
      *
-     * @param bool $state
+     * @param  bool $state
      * @return ServiceInterface
      */
     abstract public function setSecureConnection(bool $state) : ServiceInterface;
@@ -99,7 +103,7 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Toggles connection passive mode.
      *
-     * @param bool $state
+     * @param  bool $state
      * @return ServiceInterface
      */
     abstract public function setPassiveMode(bool $state) : ServiceInterface;
@@ -107,7 +111,7 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Sets remote path.
      *
-     * @param string $path
+     * @param  string $path
      * @return ServiceInterface
      */
     abstract public function setRemotePath(string $path) : ServiceInterface;
@@ -122,7 +126,7 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Sets local path.
      *
-     * @param string $path
+     * @param  string $path
      * @return ServiceInterface
      */
     public function setLocalPath(string $path) : ServiceInterface
@@ -158,8 +162,8 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Checks local file, and generates new unique name if necessary.
      *
-     * @param string $localFileName
-     * @param bool $forceUnique
+     * @param  string $localFileName
+     * @param  bool   $forceUnique
      * @throws RuntimeException
      */
     protected function checkLocalFile(string&$localFileName, bool $forceUnique = false) : void
@@ -197,7 +201,7 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Converts file rights string into octal value.
      *
-     * @param string $permissions The UNIX-style permission string, e.g.: 'drwxr-xr-x'
+     * @param  string $permissions The UNIX-style permission string, e.g.: 'drwxr-xr-x'
      * @return string
      */
     protected function getOctalChmod(string $permissions) : string
@@ -258,8 +262,8 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Lists remote path.
      *
-     * @param null|string $path
-     * @param bool|null $changeToDirectory
+     * @param  null|string $path
+     * @param  bool|null   $changeToDirectory
      * @return array
      */
     abstract public function getRemoteFileList(? string $path, ? bool $changeToDirectory) : array;
@@ -270,9 +274,9 @@ abstract class AbstractServiceAdapter implements ServiceInterface
      * @see self::setRemotePath
      * @see self::setLocalPath
      *
-     * @param string $sourceFileName
-     * @param string $destinationFileName
-     * @param int $fileMode
+     * @param  string $sourceFileName
+     * @param  string $destinationFileName
+     * @param  int    $fileMode
      * @return mixed
      */
     abstract public function upload(
@@ -287,9 +291,9 @@ abstract class AbstractServiceAdapter implements ServiceInterface
      * @see self::setRemotePath
      * @see self::setLocalPath
      *
-     * @param string $remoteFileName
-     * @param string $localFileName
-     * @param int $fileMode
+     * @param  string $remoteFileName
+     * @param  string $localFileName
+     * @param  int    $fileMode
      * @return mixed
      */
     abstract public function download(
@@ -301,8 +305,8 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Moves file on remote host.
      *
-     * @param string $currentPath
-     * @param string $newPath
+     * @param  string $currentPath
+     * @param  string $newPath
      * @return ServiceInterface
      */
     abstract public function moveRemoteFile(string $currentPath, string $newPath) : ServiceInterface;
@@ -310,7 +314,7 @@ abstract class AbstractServiceAdapter implements ServiceInterface
     /**
      * Deletes file on remote host.
      *
-     * @param string $path
+     * @param  string $path
      * @return ServiceInterface
      */
     abstract public function deleteRemoteFile(string $path) : ServiceInterface;

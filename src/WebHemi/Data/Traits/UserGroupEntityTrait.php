@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -26,7 +26,7 @@ trait UserGroupEntityTrait
     /**
      * Returns a new instance of the required entity.
      *
-     * @param string $entityClassName
+     * @param  string $entityClassName
      * @throws RuntimeException
      * @return EntityInterface
      */
@@ -35,12 +35,14 @@ trait UserGroupEntityTrait
     /**
      * Creates a new Policy Entity instance form the data.
      *
-     * @param array $data
+     * @param  array $data
      * @return UserGroupEntity
      */
     protected function createUserGroupEntity(array $data) : UserGroupEntity
     {
-        /** @var UserGroupEntity $entity */
+        /**
+         * @var UserGroupEntity $entity
+         */
         $entity = $this->getNewEntityInstance(UserGroupEntity::class);
 
         $entity->setUserGroupId((int) $data['id_user_group'])

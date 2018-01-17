@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -26,19 +26,25 @@ use WebHemi\Middleware\Action\AbstractMiddlewareAction;
  */
 class ViewAction extends AbstractMiddlewareAction
 {
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     protected $environmentManager;
-    /** @var UserGroupStorage */
+    /**
+     * @var UserGroupStorage
+     */
     protected $userGroupStorage;
 
     /**
      * GroupManagementAction constructor.
      *
      * @param ConfigurationInterface $configuration
-     * @param EnvironmentInterface $environmentManager
-     * @param UserGroupStorage $userGroupStorage
+     * @param EnvironmentInterface   $environmentManager
+     * @param UserGroupStorage       $userGroupStorage
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -76,14 +82,14 @@ class ViewAction extends AbstractMiddlewareAction
         }
 
         return [
-            'data' => $data
+            'data' => $data,
         ];
     }
 
     /**
      * Gets user group details.
      *
-     * @param int $userGroupId
+     * @param  int $userGroupId
      * @return array
      * @throws RuntimeException
      */

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -26,11 +26,17 @@ use WebHemi\Middleware\MiddlewareInterface;
  */
 class AccessLogMiddleware implements MiddlewareInterface
 {
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
-    /** @var AuthServiceInterface */
+    /**
+     * @var AuthServiceInterface
+     */
     private $authAdapter;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
 
     /**
@@ -55,8 +61,8 @@ class AccessLogMiddleware implements MiddlewareInterface
      * The only hard requirement is that a middleware MUST return an instance of \Psr\Http\Message\ResponseInterface.
      * Each middleware SHOULD invoke the next middleware and pass it Request and Response objects as arguments.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $response
      * @return void
      */
     public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
@@ -66,7 +72,9 @@ class AccessLogMiddleware implements MiddlewareInterface
         $actionMiddleware = $requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS] ?? 'N/A';
 
         if ($this->authAdapter->hasIdentity()) {
-            /** @var UserEntity $userEntity */
+            /**
+             * @var UserEntity $userEntity
+             */
             $userEntity = $this->authAdapter->getIdentity();
             $identity = $userEntity->getEmail();
         }

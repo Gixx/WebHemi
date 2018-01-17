@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,45 +23,79 @@ use WebHemi\DateTime;
  */
 class ApplicationEntity implements EntityInterface
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     private $applicationId;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $title;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $introduction;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $subject;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $keywords;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $copyright;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $path;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $theme;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $type;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $locale;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $timeZone;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $isReadOnly;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $isEnabled;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateCreated;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateModified;
 
     /**
      * Sets the value of the entity identifier.
      *
-     * @param int $entityId
+     * @param  int $entityId
      * @return ApplicationEntity
      */
     public function setKeyData(int $entityId) : ApplicationEntity

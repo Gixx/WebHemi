@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -27,16 +27,20 @@ class ServiceAdapter extends AbstractServiceAdapter
     /**
      * Authenticates the user.
      *
-     * @param CredentialInterface $credential
+     * @param  CredentialInterface $credential
      * @return ResultInterface
      */
     public function authenticate(CredentialInterface $credential) : ResultInterface
     {
-        /** @var ResultInterface $result */
+        /**
+         * @var ResultInterface $result
+         */
         $result = $this->getNewAuthResultInstance();
         $credentials = $credential->getCredentials();
 
-        /** @var UserStorage $dataStorage */
+        /**
+         * @var UserStorage $dataStorage
+         */
         $dataStorage = $this->getDataStorage();
         $user = $dataStorage->getUserByUserName($credentials['username']);
 
