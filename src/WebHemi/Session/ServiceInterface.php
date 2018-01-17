@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -36,12 +36,12 @@ interface ServiceInterface
     /**
      * Starts a session.
      *
-     * @param string $name
-     * @param int    $timeOut
-     * @param string $path
-     * @param string $domain
-     * @param bool   $secure
-     * @param bool   $httpOnly
+     * @param  string $name
+     * @param  int    $timeOut
+     * @param  string $path
+     * @param  string $domain
+     * @param  bool   $secure
+     * @param  bool   $httpOnly
      * @return ServiceInterface
      */
     public function start(
@@ -70,9 +70,9 @@ interface ServiceInterface
     /**
      * Sets session data.
      *
-     * @param string $name
-     * @param mixed  $value
-     * @param bool   $readOnly
+     * @param  string $name
+     * @param  mixed  $value
+     * @param  bool   $readOnly
      * @throws RuntimeException
      * @return ServiceInterface
      */
@@ -81,7 +81,7 @@ interface ServiceInterface
     /**
      * Checks whether a session data exists or not.
      *
-     * @param string $name
+     * @param  string $name
      * @throws RuntimeException
      * @return bool
      */
@@ -90,8 +90,8 @@ interface ServiceInterface
     /**
      * Gets session data.
      *
-     * @param string $name
-     * @param bool   $skipMissing
+     * @param  string $name
+     * @param  bool   $skipMissing
      * @throws RuntimeException
      * @return mixed
      */
@@ -100,8 +100,8 @@ interface ServiceInterface
     /**
      * Deletes session data.
      *
-     * @param string $name
-     * @param bool   $forceDelete
+     * @param  string $name
+     * @param  bool   $forceDelete
      * @throws RuntimeException
      * @return ServiceInterface
      */
@@ -110,7 +110,7 @@ interface ServiceInterface
     /**
      * Unlocks readOnly data.
      *
-     * @param string $name
+     * @param  string $name
      * @return ServiceInterface
      */
     public function unlock(string $name) : ServiceInterface;

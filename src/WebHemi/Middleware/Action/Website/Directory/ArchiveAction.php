@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -54,11 +54,15 @@ class ArchiveAction extends IndexAction
             throw new RuntimeException('Bad Request', 400);
         }
 
-        /** @var Entity\ApplicationEntity $applicationEntity */
+        /**
+         * @var Entity\ApplicationEntity $applicationEntity
+         */
         $applicationEntity = $this->getApplicationStorage()
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
-        /** @var Entity\Filesystem\FilesystemEntity[] $publications */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity[] $publications
+         */
         $publications = $this->getFilesystemStorage()
             ->getPublishedDocuments(
                 $applicationEntity->getApplicationId(),
@@ -72,10 +76,14 @@ class ArchiveAction extends IndexAction
             throw new RuntimeException('Not Found', 404);
         }
 
-        /** @var DateTime $titleDate */
+        /**
+         * @var DateTime $titleDate
+         */
         $titleDate = $publications[0]->getDatePublished();
 
-        /** @var Entity\Filesystem\FilesystemEntity $filesystemEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity $filesystemEntity
+         */
         foreach ($publications as $filesystemEntity) {
             $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
         }

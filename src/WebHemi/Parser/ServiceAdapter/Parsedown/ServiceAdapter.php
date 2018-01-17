@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,7 +23,9 @@ use WebHemi\Parser\ServiceInterface;
  */
 class ServiceAdapter implements ServiceInterface
 {
-    /** @var Parsedown */
+    /**
+     * @var Parsedown 
+     */
     private $adapter;
 
     /**
@@ -37,7 +39,7 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Parses the input.
      *
-     * @param string $text
+     * @param  string $text
      * @return string
      */
     public function parse(string $text) : string

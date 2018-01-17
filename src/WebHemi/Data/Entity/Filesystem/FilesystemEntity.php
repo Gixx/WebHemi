@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -28,47 +28,83 @@ class FilesystemEntity implements EntityInterface
     public const TYPE_DIRECTORY = 'directory';
     public const TYPE_SYMLINK = 'symlink';
 
-    /** @var int */
+    /**
+     * @var int
+     */
     private $filesystemId;
-    /** @var int */
+    /**
+     * @var int
+     */
     private $applicationId;
-    /** @var int */
+    /**
+     * @var int
+     */
     private $categoryId;
-    /** @var int */
+    /**
+     * @var int
+     */
     private $parentId;
-    /** @var int */
+    /**
+     * @var int
+     */
     private $documentId;
-    /** @var int */
+    /**
+     * @var int
+     */
     private $fileId;
-    /** @var int */
+    /**
+     * @var int
+     */
     private $directoryId;
-    /** @var int */
+    /**
+     * @var int
+     */
     private $linkId;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $path;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $baseName;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $title;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $isHidden;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $isReadOnly;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $isDeleted;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateCreated;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $datePublished;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateModified;
 
     /**
      * Sets the value of the entity identifier.
      *
-     * @param int $entityId
+     * @param  int $entityId
      * @return FilesystemEntity
      */
     public function setKeyData(int $entityId) : FilesystemEntity

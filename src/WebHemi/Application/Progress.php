@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -22,24 +22,36 @@ use WebHemi\Session\ServiceInterface as SessionManager;
  */
 class Progress
 {
-    /** @var EnvironmentManager */
+    /**
+     * @var EnvironmentManager 
+     */
     private $environmentManager;
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $sessionId;
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $callerName;
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $progressId;
-    /** @var int */
+    /**
+     * @var int 
+     */
     private $totalSteps;
-    /** @var int */
+    /**
+     * @var int 
+     */
     private $currentStep;
 
     /**
      * Progress constructor.
      *
      * @param EnvironmentManager $environmentManager
-     * @param SessionManager $sessionManager
+     * @param SessionManager     $sessionManager
      */
     public function __construct(EnvironmentManager $environmentManager, SessionManager $sessionManager)
     {

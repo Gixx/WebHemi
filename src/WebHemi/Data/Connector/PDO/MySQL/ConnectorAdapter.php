@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -25,29 +25,47 @@ use WebHemi\Data\DriverInterface;
  */
 class ConnectorAdapter implements ConnectorInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $name;
-    /** @var PDO */
+    /**
+     * @var PDO
+     */
     protected $dataDriver;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = null;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = null;
 
     /**
      * ConnectorAdapter constructor.
      *
-     * @param string          $name
-     * @param DriverInterface $dataDriver
+     * @param  string          $name
+     * @param  DriverInterface $dataDriver
      * @throws InvalidArgumentException
      */
     public function __construct(string $name, DriverInterface $dataDriver)
     {
-        if (!$dataDriver instanceof DriverAdapter) {
-            $type = gettype($dataDriver);
+        $this->name = $name;
+        $this->dataDriver = $dataDriver;
+        $this->init();
+    }
+
+    /**
+     * Runs initialization.
+     */
+    protected function init()
+    {
+        if (!$this->dataDriver instanceof DriverAdapter) {
+            $type = gettype($this->dataDriver);
 
             if ($type == 'object') {
-                $type = get_class($dataDriver);
+                $type = get_class($this->dataDriver);
             }
 
             $message = sprintf(
@@ -58,9 +76,6 @@ class ConnectorAdapter implements ConnectorInterface
 
             throw new InvalidArgumentException($message, 1001);
         }
-
-        $this->name = $name;
-        $this->dataDriver = $dataDriver;
     }
 
     /**
@@ -95,7 +110,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Set adapter data group. For Databases this can be the Tables.
      *
-     * @param string $dataGroup
+     * @param  string $dataGroup
      * @return ConnectorInterface
      */
     public function setDataGroup(string $dataGroup) : ConnectorInterface
@@ -108,7 +123,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Set adapter ID key. For Databases this can be the Primary key. Only simple key is allowed.
      *
-     * @param string $idKey
+     * @param  string $idKey
      * @return ConnectorInterface
      */
     public function setIdKey(string $idKey) : ConnectorInterface
@@ -121,7 +136,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Returns the CREATE TABLE statement.
      *
-     * @param string $tableName
+     * @param  string $tableName
      * @return string
      *
      * @codeCoverageIgnore Don't test external library.
@@ -129,7 +144,9 @@ class ConnectorAdapter implements ConnectorInterface
     public function getTableDefinition(string $tableName) : string
     {
         $createStatement = '';
-        /** @var PDO $driver */
+        /**
+         * @var PDO $driver
+         */
         $driver = $this->getDataDriver();
         $result = $driver->query('SHOW CREATE TABLE '.$tableName);
 
@@ -143,7 +160,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Get exactly one "row" of data according to the expression.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return array
      *
      * @codeCoverageIgnore Don't test external library.
@@ -169,8 +186,8 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Get a set of data according to the expression and the chunk.
      *
-     * @param array $expression
-     * @param array $options
+     * @param  array $expression
+     * @param  array $options
      * @return array
      *
      * @codeCoverageIgnore Don't test external library.
@@ -193,7 +210,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Get the number of matched data in the set according to the expression.
      *
-     * @param array $expression
+     * @param  array $expression
      * @return int
      *
      * @codeCoverageIgnore Don't test external library.
@@ -213,9 +230,9 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Builds SQL query from the expression.
      *
-     * @param array $expression
-     * @param array $queryBinds
-     * @param array $options
+     * @param  array $expression
+     * @param  array $queryBinds
+     * @param  array $options
      * @return string
      */
     protected function getSelectQueryForExpression(
@@ -256,7 +273,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Gets the GROUP BY expression.
      *
-     * @param array $options
+     * @param  array $options
      * @return string
      */
     protected function getQueryGroup(array $options) : string
@@ -267,7 +284,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Gets the HAVING expression only when the GROUP BY option exists.
      *
-     * @param array $options
+     * @param  array $options
      * @return string
      */
     protected function getQueryHaving(array $options) : string
@@ -278,7 +295,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Gets the ORDER BY expression. The default value is the primary key.
      *
-     * @param array $options
+     * @param  array $options
      * @return string
      */
     protected function getQueryOrder(array $options) : string
@@ -289,7 +306,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Gets the LIMIT expression.
      *
-     * @param array $options
+     * @param  array $options
      * @return int
      */
     protected function getQueryLimit(array $options) : int
@@ -300,7 +317,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Gets the OFFSET expression.
      *
-     * @param array $options
+     * @param  array $options
      * @return int
      */
     protected function getQueryOffset(array $options) : int
@@ -311,8 +328,8 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Creates a WHERE expression for the SQL query.
      *
-     * @param array $expression
-     * @param array $queryBinds
+     * @param  array $expression
+     * @param  array $queryBinds
      * @return string
      */
     protected function getWhereExpression(array $expression, array&$queryBinds) : string
@@ -360,7 +377,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Gets a simple condition for the column.
      *
-     * @param string $column
+     * @param  string $column
      * @return string 'my_column = ?'
      */
     protected function getSimpleColumnCondition(string $column) : string
@@ -372,11 +389,12 @@ class ConnectorAdapter implements ConnectorInterface
      * Gets a 'LIKE' condition for the column.
      *
      * Allows special cases:
-     * @example  ['my_column LIKE ?' => 'some value%']
-     * @example  ['my_column NOT' => 'some value%']
-     * @example  ['my_column' => 'some value%']
      *
-     * @param string $column
+     * @example ['my_column LIKE ?' => 'some value%']
+     * @example ['my_column NOT' => 'some value%']
+     * @example ['my_column' => 'some value%']
+     *
+     * @param  string $column
      * @return string 'my_column LIKE ?' or 'my_column NOT LIKE ?'
      */
     protected function getLikeColumnCondition(string $column) : string
@@ -392,13 +410,14 @@ class ConnectorAdapter implements ConnectorInterface
      * Gets an 'IN' condition for the column.
      *
      * Allows special cases:
-     * @example  ['my_column IN (?)' => [1,2,3]]
-     * @example  ['my_column IN ?' => [1,2,3]]
-     * @example  ['my_column IN' => [1,2,3]]
-     * @example  ['my_column' => [1,2,3]]
      *
-     * @param string $column
-     * @param int    $parameterCount
+     * @example ['my_column IN (?)' => [1,2,3]]
+     * @example ['my_column IN ?' => [1,2,3]]
+     * @example ['my_column IN' => [1,2,3]]
+     * @example ['my_column' => [1,2,3]]
+     *
+     * @param  string $column
+     * @param  int    $parameterCount
      * @return string 'my_column IN (?,?,?)'
      */
     protected function getInColumnCondition(string $column, int $parameterCount = 1) : string
@@ -413,8 +432,8 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Insert or update entity in the storage.
      *
-     * @param int   $identifier
-     * @param array $data
+     * @param  int   $identifier
+     * @param  array $data
      * @throws RuntimeException
      * @return int The ID of the saved entity in the storage
      *
@@ -456,8 +475,8 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Binds values to the statement.
      *
-     * @param PDOStatement $statement
-     * @param array        $queryBind
+     * @param  PDOStatement $statement
+     * @param  array        $queryBind
      * @return void
      *
      * @codeCoverageIgnore Don't test external library.
@@ -480,7 +499,7 @@ class ConnectorAdapter implements ConnectorInterface
     /**
      * Removes an entity from the storage.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return bool
      *
      * @codeCoverageIgnore Don't test external library.

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -47,8 +47,8 @@ interface ServiceInterface
     /**
      * Sets an option data.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string $key
+     * @param  mixed  $value
      * @return ServiceInterface
      */
     public function setOption(string $key, $value) : ServiceInterface;
@@ -56,7 +56,7 @@ interface ServiceInterface
     /**
      * Sets a group of options.
      *
-     * @param array $options
+     * @param  array $options
      * @return ServiceInterface
      */
     public function setOptions(array $options) : ServiceInterface;
@@ -64,8 +64,8 @@ interface ServiceInterface
     /**
      * Gets a specific option data.
      *
-     * @param string $key
-     * @param mixed $default
+     * @param  string $key
+     * @param  mixed  $default
      * @return mixed
      */
     public function getOption(string $key, $default = null);
@@ -73,7 +73,7 @@ interface ServiceInterface
     /**
      * Toggles connection security level.
      *
-     * @param bool $state
+     * @param  bool $state
      * @return ServiceInterface
      */
     public function setSecureConnection(bool $state) : ServiceInterface;
@@ -81,7 +81,7 @@ interface ServiceInterface
     /**
      * Toggles connection passive mode.
      *
-     * @param bool $state
+     * @param  bool $state
      * @return ServiceInterface
      */
     public function setPassiveMode(bool $state) : ServiceInterface;
@@ -89,7 +89,7 @@ interface ServiceInterface
     /**
      * Sets remote path.
      *
-     * @param string $path
+     * @param  string $path
      * @return ServiceInterface
      */
     public function setRemotePath(string $path) : ServiceInterface;
@@ -104,7 +104,7 @@ interface ServiceInterface
     /**
      * Sets local path.
      *
-     * @param string $path
+     * @param  string $path
      * @return ServiceInterface
      */
     public function setLocalPath(string $path) : ServiceInterface;
@@ -119,8 +119,8 @@ interface ServiceInterface
     /**
      * Lists remote path.
      *
-     * @param null|string $path
-     * @param bool|null $changeToDirectory
+     * @param  null|string $path
+     * @param  bool|null   $changeToDirectory
      * @return array
      */
     public function getRemoteFileList(? string $path, ? bool $changeToDirectory) : array;
@@ -131,9 +131,9 @@ interface ServiceInterface
      * @see self::setRemotePath
      * @see self::setLocalPath
      *
-     * @param string $sourceFileName
-     * @param string $destinationFileName
-     * @param int $fileMode
+     * @param  string $sourceFileName
+     * @param  string $destinationFileName
+     * @param  int    $fileMode
      * @return mixed
      */
     public function upload(
@@ -148,9 +148,9 @@ interface ServiceInterface
      * @see self::setRemotePath
      * @see self::setLocalPath
      *
-     * @param string $remoteFileName
-     * @param string $localFileName
-     * @param int $fileMode
+     * @param  string $remoteFileName
+     * @param  string $localFileName
+     * @param  int    $fileMode
      * @return mixed
      */
     public function download(
@@ -162,8 +162,8 @@ interface ServiceInterface
     /**
      * Moves file on remote host.
      *
-     * @param string $currentPath
-     * @param string $newPath
+     * @param  string $currentPath
+     * @param  string $newPath
      * @return ServiceInterface
      */
     public function moveRemoteFile(string $currentPath, string $newPath) : ServiceInterface;
@@ -171,7 +171,7 @@ interface ServiceInterface
     /**
      * Deletes file on remote host.
      *
-     * @param string $path
+     * @param  string $path
      * @return ServiceInterface
      */
     public function deleteRemoteFile(string $path) : ServiceInterface;

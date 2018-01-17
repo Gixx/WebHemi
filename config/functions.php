@@ -35,36 +35,7 @@ function set_environment()
  */
 function render_stat() : array
 {
-    static $stat;
-
-    // Set timer
-    if (!isset($stat)) {
-        $stat = [
-            'start_time' => microtime(true),
-            'end_time' => null,
-            'duration' => 0,
-            'memory' => 0,
-            'memory_bytes' => 0,
-        ];
-
-        return $stat;
-    }
-
-    // Get time
-    $stat['end_time'] = microtime(true);
-    $stat['duration'] = number_format(($stat['end_time'] - $stat['start_time']), '4', '.', '');
-
-    // Memory peak
-    $units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
-    $bytes = max(memory_get_peak_usage(true), 0);
-    $stat['memory_bytes'] = number_format($bytes).' bytes';
-
-    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-    $pow = min($pow, count($units) - 1);
-    $bytes /= (1 << (10 * $pow));
-    $stat['memory'] = round($bytes, 2).' '.$units[$pow];
-
-    return $stat;
+    return \WebHemi\GeneralLib::renderStat();
 }
 
 /**
@@ -78,33 +49,9 @@ function render_stat() : array
  */
 function merge_array_overwrite()
 {
-    if (func_num_args() < 2) {
-        throw new \InvalidArgumentException(__CLASS__ . '::' . __METHOD__ . ' needs two or more array arguments');
-    }
-    $arrays = func_get_args();
-    $merged = [];
+    $arguments = func_get_args();
 
-    while ($arrays) {
-        $array = array_shift($arrays);
-        if (!is_array($array)) {
-            throw new \InvalidArgumentException(__CLASS__ . '::' . __METHOD__ . ' encountered a non array argument');
-        }
-        if (!$array) {
-            continue;
-        }
-        foreach ($array as $key => $value) {
-            if (is_string($key)) {
-                if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                    $merged[$key] = merge_array_overwrite($merged[$key], $value);
-                } else {
-                    $merged[$key] = $value;
-                }
-            } else {
-                $merged[] = $value;
-            }
-        }
-    }
-    return $merged;
+    return forward_static_call_array([\WebHemi\GeneralLib::class, 'mergeArrayOverwrite'], $arguments);
 }
 
 /**

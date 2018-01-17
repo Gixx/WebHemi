@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -30,13 +30,21 @@ use WebHemi\Middleware\Action\AbstractMiddlewareAction;
  */
 class LoginAction extends AbstractMiddlewareAction
 {
-    /** @var AuthInterface */
+    /**
+     * @var AuthInterface
+     */
     private $authAdapter;
-    /** @var CredentialInterface */
+    /**
+     * @var CredentialInterface
+     */
     private $authCredential;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
-    /** @var PresetInterface */
+    /**
+     * @var PresetInterface
+     */
     private $loginFormPreset;
 
     /**
@@ -86,7 +94,9 @@ class LoginAction extends AbstractMiddlewareAction
             $this->authCredential->setCredential('username', $postData['login']['identification'] ?? '')
                 ->setCredential('password', $postData['login']['password'] ?? '');
 
-            /** @var Result $result */
+            /**
+             * @var Result $result
+             */
             $result = $this->authAdapter->authenticate($this->authCredential);
 
             if (!$result->isValid()) {
@@ -96,7 +106,9 @@ class LoginAction extends AbstractMiddlewareAction
                 unset($postData['login']['password']);
                 $form->loadData($postData);
             } else {
-                /** @var null|UserEntity $userEntity */
+                /**
+                 * @var null|UserEntity $userEntity
+                 */
                 $userEntity = $this->authAdapter->getIdentity();
 
                 if ($userEntity instanceof UserEntity) {
@@ -124,19 +136,25 @@ class LoginAction extends AbstractMiddlewareAction
     /**
      * Gets the login form.
      *
-     * @param string $customError
+     * @param  string $customError
      * @return HtmlForm
      */
     private function getLoginForm(string $customError = '') : HtmlForm
     {
-        /** @var HtmlForm $form */
+        /**
+         * @var HtmlForm $form
+         */
         $form = $this->loginFormPreset->getPreset();
 
         if (!empty($customError)) {
-            /** @var ElementInterface[] $elements */
+            /**
+             * @var ElementInterface[] $elements
+             */
             $elements = $form->getElements();
 
-            /** @var ElementInterface $element */
+            /**
+             * @var ElementInterface $element
+             */
             foreach ($elements as $element) {
                 if ($element->getType() == HtmlElement::HTML_ELEMENT_INPUT_PASSWORD) {
                     $element->setError(AuthInterface::class, $customError);

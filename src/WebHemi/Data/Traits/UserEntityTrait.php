@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -26,7 +26,7 @@ trait UserEntityTrait
     /**
      * Returns a new instance of the required entity.
      *
-     * @param string $entityClassName
+     * @param  string $entityClassName
      * @throws RuntimeException
      * @return EntityInterface
      */
@@ -35,12 +35,14 @@ trait UserEntityTrait
     /**
      * Creates a new User Entity instance form the data.
      *
-     * @param array $data
+     * @param  array $data
      * @return UserEntity
      */
     protected function createUserEntity(array $data) : UserEntity
     {
-        /** @var UserEntity $entity */
+        /**
+         * @var UserEntity $entity
+         */
         $entity = $this->getNewEntityInstance(UserEntity::class);
 
         $entity->setUserId((int) $data['id_user'])

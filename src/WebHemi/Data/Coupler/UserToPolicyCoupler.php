@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,11 +24,17 @@ use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
  */
 class UserToPolicyCoupler extends AbstractCoupler
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $connectorIdKey = 'id_user_to_am_policy';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $connectorDataGroup = 'webhemi_user_to_am_policy';
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $dependentDataGroups = [
         UserEntity::class => [
             'source_key' => 'fk_user',
@@ -41,7 +47,7 @@ class UserToPolicyCoupler extends AbstractCoupler
             'connector_key' => 'fk_user',
             'depending_group' => 'webhemi_user',
             'depending_id_key' => 'id_user',
-        ]
+        ],
     ];
 
     use UserEntityTrait;
@@ -50,8 +56,8 @@ class UserToPolicyCoupler extends AbstractCoupler
     /**
      * Gets an EntityInterface instance from the provided data according to the reference entity.
      *
-     * @param EntityInterface $referenceEntity
-     * @param array           $entityData
+     * @param  EntityInterface $referenceEntity
+     * @param  array           $entityData
      * @return EntityInterface
      */
     protected function getDependingEntity(EntityInterface $referenceEntity, array $entityData) : EntityInterface

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -30,7 +30,7 @@ interface ServiceInterface
     /**
      * Returns true if the given service is registered.
      *
-     * @param string $identifier
+     * @param  string $identifier
      * @return bool
      */
     public function has(string $identifier) : bool;
@@ -38,7 +38,7 @@ interface ServiceInterface
     /**
      * Gets a service.
      *
-     * @param string $identifier
+     * @param  string $identifier
      * @return object
      */
     public function get(string $identifier);
@@ -46,8 +46,8 @@ interface ServiceInterface
     /**
      * Retrieves configuration for a service.
      *
-     * @param string $identifier
-     * @param string $moduleName
+     * @param  string $identifier
+     * @param  string $moduleName
      * @return array
      */
     public function getServiceConfiguration(string $identifier, string $moduleName = null) : array;
@@ -55,8 +55,8 @@ interface ServiceInterface
     /**
      * Register the service.
      *
-     * @param string $identifier
-     * @param string $moduleName
+     * @param  string $identifier
+     * @param  string $moduleName
      * @return ServiceInterface
      */
     public function registerService(string $identifier, string $moduleName = 'Global') : ServiceInterface;
@@ -64,8 +64,8 @@ interface ServiceInterface
     /**
      * Register the service object instance.
      *
-     * @param string  $identifier
-     * @param object  $serviceInstance
+     * @param  string $identifier
+     * @param  object $serviceInstance
      * @return ServiceInterface
      */
     public function registerServiceInstance(string $identifier, $serviceInstance) : ServiceInterface;
@@ -75,7 +75,7 @@ interface ServiceInterface
      * Register module specific services.
      * If a service is already registered in the Global namespace, it will be skipped.
      *
-     * @param string $moduleName
+     * @param  string $moduleName
      * @return ServiceInterface
      */
     public function registerModuleServices(string $moduleName) : ServiceInterface;

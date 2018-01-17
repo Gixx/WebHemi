@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,9 +23,13 @@ use WebHemi\Middleware\Action\AbstractMiddlewareAction;
  */
 class LogoutAction extends AbstractMiddlewareAction
 {
-    /** @var AuthInterface */
+    /**
+     * @var AuthInterface
+     */
     private $authAdapter;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
 
     /**

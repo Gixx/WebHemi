@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,7 +24,9 @@ use WebHemi\Router\Result\Result;
  */
 class FilesystemProxy implements ProxyInterface
 {
-    /** @var StorageInterface[] */
+    /**
+     * @var StorageInterface[]
+     */
     private $dataStorages = [];
 
     /**
@@ -44,13 +46,15 @@ class FilesystemProxy implements ProxyInterface
     /**
      * Resolves the middleware class name for the application and URL.
      *
-     * @param string $application
-     * @param Result $routeResult
+     * @param  string $application
+     * @param  Result $routeResult
      * @return void
      */
     public function resolveMiddleware(string $application, Result&$routeResult) : void
     {
-        /** @var Entity\ApplicationEntity $applicationEntity */
+        /**
+         * @var Entity\ApplicationEntity $applicationEntity
+         */
         $applicationEntity = $this->getApplicationEntity($application);
 
         if (!$applicationEntity instanceof Entity\ApplicationEntity) {
@@ -59,7 +63,9 @@ class FilesystemProxy implements ProxyInterface
 
         $parameters = $routeResult->getParameters();
 
-        /** @var Entity\Filesystem\FilesystemEntity $fileSystemEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity $fileSystemEntity
+         */
         $fileSystemEntity = $this->getFilesystemEntityByRouteParams($applicationEntity, $routeResult);
 
         if (!$fileSystemEntity instanceof Entity\Filesystem\FilesystemEntity) {
@@ -80,7 +86,7 @@ class FilesystemProxy implements ProxyInterface
 
     /**
      * @param Entity\Filesystem\FilesystemEntity $fileSystemEntity
-     * @param Result $routeResult
+     * @param Result                             $routeResult
      * @return void
      */
     protected function validateDirectoryMiddleware(
@@ -88,7 +94,9 @@ class FilesystemProxy implements ProxyInterface
         Result&$routeResult
     ) : void {
         // DirectoryId must exists, as well as the relevant directory entity...
-        /** @var Entity\Filesystem\FilesystemDirectoryEntity $fileSystemDirectoryEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemDirectoryEntity $fileSystemDirectoryEntity
+         */
         $fileSystemDirectoryEntity = $this->getFilesystemDirectoryEntity($fileSystemEntity->getDirectoryId());
 
         if ($fileSystemDirectoryEntity->getAutoIndex() === false) {
@@ -105,12 +113,14 @@ class FilesystemProxy implements ProxyInterface
     /**
      * Gets the application entity.
      *
-     * @param string $application
+     * @param  string $application
      * @return Entity\ApplicationEntity
      */
     private function getApplicationEntity(string $application) : ? Entity\ApplicationEntity
     {
-        /** @var Storage\ApplicationStorage $applicationStorage */
+        /**
+         * @var Storage\ApplicationStorage $applicationStorage
+         */
         $applicationStorage = $this->dataStorages[Storage\ApplicationStorage::class] ?? null;
 
         if (!$applicationStorage) {
@@ -123,15 +133,17 @@ class FilesystemProxy implements ProxyInterface
     /**
      * Gets the filesystem entity.
      *
-     * @param Entity\ApplicationEntity $applicationEntity
-     * @param Result $routeResult
+     * @param  Entity\ApplicationEntity $applicationEntity
+     * @param  Result                   $routeResult
      * @return null|Entity\Filesystem\FilesystemEntity
      */
     private function getFilesystemEntityByRouteParams(
         Entity\ApplicationEntity $applicationEntity,
         Result&$routeResult
     ) : ? Entity\Filesystem\FilesystemEntity {
-        /** @var Storage\Filesystem\FilesystemStorage $fileSystemStorage */
+        /**
+         * @var Storage\Filesystem\FilesystemStorage $fileSystemStorage
+         */
         $fileSystemStorage = $this->dataStorages[Storage\Filesystem\FilesystemStorage::class] ?? null;
 
         if (!$fileSystemStorage) {
@@ -142,7 +154,9 @@ class FilesystemProxy implements ProxyInterface
         $path = $parameters['path'];
         $baseName = $parameters['basename'];
 
-        /** @var Entity\Filesystem\FilesystemEntity $fileSystemEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity $fileSystemEntity
+         */
         $fileSystemEntity = $fileSystemStorage->getFilesystemByApplicationAndPath(
             $applicationEntity->getApplicationId(),
             $path,
@@ -171,12 +185,14 @@ class FilesystemProxy implements ProxyInterface
     /**
      * Gets the directory entity.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|Entity\Filesystem\FilesystemDirectoryEntity
      */
     private function getFilesystemDirectoryEntity(int $identifier) : ? Entity\Filesystem\FilesystemDirectoryEntity
     {
-        /** @var Storage\Filesystem\FilesystemDirectoryStorage $fileSystemDirectoryStorage */
+        /**
+         * @var Storage\Filesystem\FilesystemDirectoryStorage $fileSystemDirectoryStorage
+         */
         $fileSystemDirectoryStorage = $this->dataStorages[Storage\Filesystem\FilesystemDirectoryStorage::class] ?? null;
 
         if (!$fileSystemDirectoryStorage) {

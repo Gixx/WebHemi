@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -22,23 +22,26 @@ use WebHemi\Environment\AbstractAdapter;
 
 /**
  * Class ServiceAdapter.
+ *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class ServiceAdapter extends AbstractAdapter
 {
-    /** @var Extract */
+    /**
+     * @var Extract
+     */
     private $domainAdapter;
 
     /**
      * ServiceAdapter constructor.
      *
-     * @param ConfigurationInterface $configuration
-     * @param array                  $getData
-     * @param array                  $postData
-     * @param array                  $serverData
-     * @param array                  $cookieData
-     * @param array                  $filesData
-     * @param array                  $optionsData
+     * @param  ConfigurationInterface $configuration
+     * @param  array                  $getData
+     * @param  array                  $postData
+     * @param  array                  $serverData
+     * @param  array                  $cookieData
+     * @param  array                  $filesData
+     * @param  array                  $optionsData
      * @throws Exception
      */
     public function __construct(
@@ -107,7 +110,7 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Gets environment data.
      *
-     * @param string $key
+     * @param  string $key
      * @return array
      */
     public function getEnvironmentData(string $key) : array
@@ -147,7 +150,9 @@ class ServiceAdapter extends AbstractAdapter
     {
         $this->setAdapterOptions();
 
-        /** @var Result $domainParts */
+        /**
+         * @var Result $domainParts
+         */
         $domainParts = $this->domainAdapter->parse($this->url);
 
         if (empty($domainParts->getSuffix())) {
@@ -243,15 +248,17 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Gets the selected application's name.
      *
-     * @param array $aplicationNames
-     * @param string $subDirectory
+     * @param  array  $aplicationNames
+     * @param  string $subDirectory
      * @return string
      */
     private function getSelectedApplicationName(array $aplicationNames, string $subDirectory) : string
     {
         $selectedApplication = self::DEFAULT_APPLICATION;
 
-        /** @var string $applicationName */
+        /**
+         * @var string $applicationName
+         */
         foreach ($aplicationNames as $applicationName) {
             if ($this->checkDirectoryIsValid($applicationName, $subDirectory)
                 || $this->checkDomainIsValid($applicationName)
@@ -267,8 +274,8 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Checks from type, path it the current URI segment is valid.
      *
-     * @param string $applicationName
-     * @param string $subDirectory
+     * @param  string $applicationName
+     * @param  string $subDirectory
      * @return bool
      */
     private function checkDirectoryIsValid(string $applicationName, string $subDirectory) : bool
@@ -286,7 +293,7 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Checks from type and path if the domain is valid. If so, it sets the $subDirectory to the default.
      *
-     * @param string $applicationName
+     * @param  string $applicationName
      * @return bool
      */
     private function checkDomainIsValid(string $applicationName) : bool

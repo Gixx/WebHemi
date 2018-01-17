@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,27 +21,43 @@ use WebHemi\DateTime;
  */
 class ResourceEntity implements EntityInterface
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     private $resourceId;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $title;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $type;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $isReadOnly;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateCreated;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateModified;
 
     /**
      * Sets the value of the entity identifier.
      *
-     * @param int $entityId
+     * @param  int $entityId
      * @return ResourceEntity
      */
     public function setKeyData(int $entityId) : ResourceEntity

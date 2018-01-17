@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,9 +23,13 @@ use WebHemi\Middleware\ActionMiddlewareInterface;
  */
 abstract class AbstractMiddlewareAction implements MiddlewareInterface, ActionMiddlewareInterface
 {
-    /** @var ServerRequestInterface */
+    /**
+     * @var ServerRequestInterface 
+     */
     protected $request;
-    /** @var ResponseInterface */
+    /**
+     * @var ResponseInterface 
+     */
     protected $response;
 
     /**
@@ -45,8 +49,8 @@ abstract class AbstractMiddlewareAction implements MiddlewareInterface, ActionMi
     /**
      * Invokes the middleware action.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $response
      * @return void
      */
     final public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void

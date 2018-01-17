@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -39,8 +39,8 @@ interface ServiceInterface
     /**
      * Renders the template for the output.
      *
-     * @param string $template
-     * @param array  $parameters
+     * @param  string $template
+     * @param  array  $parameters
      * @return StreamInterface
      */
     public function render(string $template, array $parameters = []) : StreamInterface;

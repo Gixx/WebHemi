@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,13 +23,21 @@ use WebHemi\Data\Storage\User\UserStorage;
  */
 abstract class AbstractServiceAdapter implements Auth\ServiceInterface
 {
-    /** @var Auth\ResultInterface */
+    /**
+     * @var Auth\ResultInterface
+     */
     private $authResult;
-    /** @var Auth\StorageInterface */
+    /**
+     * @var Auth\StorageInterface
+     */
     private $authStorage;
-    /** @var UserStorage */
+    /**
+     * @var UserStorage
+     */
     private $dataStorage;
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
 
     /**
@@ -85,7 +93,7 @@ abstract class AbstractServiceAdapter implements Auth\ServiceInterface
     /**
      * Authenticates the user.
      *
-     * @param Auth\CredentialInterface $credential
+     * @param  Auth\CredentialInterface $credential
      * @return Auth\ResultInterface
      */
     abstract public function authenticate(Auth\CredentialInterface $credential) : Auth\ResultInterface;
@@ -93,7 +101,7 @@ abstract class AbstractServiceAdapter implements Auth\ServiceInterface
     /**
      * Sets the authenticated user.
      *
-     * @param UserEntity $dataEntity
+     * @param  UserEntity $dataEntity
      * @return Auth\ServiceInterface
      */
     public function setIdentity(UserEntity $dataEntity) : Auth\ServiceInterface

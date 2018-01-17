@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -35,7 +35,9 @@ use WebHemi\Router\ProxyInterface;
  */
 class IndexAction extends AbstractMiddlewareAction
 {
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     protected $environmentManager;
 
     use StorageInjectorTrait;
@@ -44,7 +46,7 @@ class IndexAction extends AbstractMiddlewareAction
      * IndexAction constructor.
      *
      * @param EnvironmentInterface $environmentManager
-     * @param StorageInterface[] ...$dataStorages
+     * @param StorageInterface[]   ...$dataStorages
      */
     public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
     {
@@ -71,15 +73,21 @@ class IndexAction extends AbstractMiddlewareAction
     {
         $blogPosts = [];
 
-        /** @var Entity\ApplicationEntity $applicationEntity */
+        /**
+         * @var Entity\ApplicationEntity $applicationEntity
+         */
         $applicationEntity = $this->getApplicationStorage()
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
-        /** @var Entity\Filesystem\FilesystemEntity[] $publications */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity[] $publications
+         */
         $publications = $this->getFilesystemStorage()
             ->getPublishedDocuments($applicationEntity->getApplicationId());
 
-        /** @var Entity\Filesystem\FilesystemEntity $filesystemEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity $filesystemEntity
+         */
         foreach ($publications as $filesystemEntity) {
             $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
         }
@@ -95,7 +103,7 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * Gets application data to render.
      *
-     * @param Entity\ApplicationEntity $applicationEntity
+     * @param  Entity\ApplicationEntity $applicationEntity
      * @return array
      */
     protected function getApplicationData(Entity\ApplicationEntity $applicationEntity) : array
@@ -114,15 +122,17 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * Collets the blog post data
      *
-     * @param Entity\ApplicationEntity $applicationEntity
-     * @param Entity\Filesystem\FilesystemEntity $filesystemEntity
+     * @param  Entity\ApplicationEntity           $applicationEntity
+     * @param  Entity\Filesystem\FilesystemEntity $filesystemEntity
      * @return array
      */
     protected function getBlobPostData(
         Entity\ApplicationEntity $applicationEntity,
         Entity\Filesystem\FilesystemEntity $filesystemEntity
     ) : array {
-        /** @var Entity\Filesystem\FilesystemDocumentEntity $documentEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemDocumentEntity $documentEntity
+         */
         $documentEntity = $this->getFilesystemDocumentStorage()
             ->getFilesystemDocumentById($filesystemEntity->getDocumentId());
 
@@ -157,21 +167,27 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * Gets author information for a filesystem record.
      *
-     * @param int $userId
-     * @param int $applicationId
+     * @param  int $userId
+     * @param  int $applicationId
      * @return array
      */
     protected function getPublicationAuthor(int $userId, int $applicationId) : array
     {
-        /** @var Entity\User\UserEntity $user */
+        /**
+         * @var Entity\User\UserEntity $user
+         */
         $user = $this->getUserStorage()
             ->getUserById($userId);
 
-        /** @var array $userMeta */
+        /**
+         * @var array $userMeta
+         */
         $userMeta = $this->getUserMetaStorage()
             ->getUserMetaArrayForUserId($userId);
 
-        /** @var array $userDirectoryData */
+        /**
+         * @var array $userDirectoryData
+         */
         $userDirectoryData = $this->getFilesystemDirectoryStorage()
             ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_USER);
 
@@ -186,7 +202,7 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * Generates the content path.
      *
-     * @param Entity\Filesystem\FilesystemEntity $filesystemEntity
+     * @param  Entity\Filesystem\FilesystemEntity $filesystemEntity
      * @return string
      */
     protected function getPublicationPath(Entity\Filesystem\FilesystemEntity $filesystemEntity) : string
@@ -203,23 +219,29 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * Collects all the tags for a filesystem record.
      *
-     * @param int $applicationId
-     * @param int $filesystemId
+     * @param  int $applicationId
+     * @param  int $filesystemId
      * @return array
      */
     protected function getPublicationTags(int $applicationId, int $filesystemId) : array
     {
         $tags = [];
-        /** @var Entity\Filesystem\FilesystemTagEntity[] $tagEntities */
+        /**
+         * @var Entity\Filesystem\FilesystemTagEntity[] $tagEntities
+         */
         $tagEntities = $this->getFilesystemTagStorage()
             ->getFilesystemTagsByFilesystem($filesystemId);
 
         if (!empty($tagEntities)) {
-            /** @var array $categoryDirectoryData */
+            /**
+             * @var array $categoryDirectoryData
+             */
             $categoryDirectoryData = $this->getFilesystemDirectoryStorage()
                 ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);
 
-            /** @var Entity\Filesystem\FilesystemTagEntity $tagEntity */
+            /**
+             * @var Entity\Filesystem\FilesystemTagEntity $tagEntity
+             */
             foreach ($tagEntities as $tagEntity) {
                 $tags[] = [
                     'url' => $categoryDirectoryData['uri'].'/'.$tagEntity->getName(),
@@ -235,17 +257,21 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * Gets the category for a filesystem record.
      *
-     * @param int $applicationId
-     * @param int $categoryId
+     * @param  int $applicationId
+     * @param  int $categoryId
      * @return array
      */
     protected function getPublicationCategory(int $applicationId, int $categoryId) : array
     {
-        /** @var Entity\Filesystem\FilesystemCategoryEntity $categoryEntity */
+        /**
+         * @var Entity\Filesystem\FilesystemCategoryEntity $categoryEntity
+         */
         $categoryEntity = $this->getFilesystemCategoryStorage()
             ->getFilesystemCategoryById($categoryId);
 
-        /** @var array $categoryDirectoryData */
+        /**
+         * @var array $categoryDirectoryData
+         */
         $categoryDirectoryData = $this->getFilesystemDirectoryStorage()
             ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
 

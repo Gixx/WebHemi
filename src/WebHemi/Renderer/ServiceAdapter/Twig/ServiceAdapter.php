@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,6 +21,7 @@ use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\GeneralLib;
 use WebHemi\I18n\ServiceInterface as I18nService;
 use WebHemi\Renderer\ServiceInterface;
 use WebHemi\Renderer\Traits\GetSelectedThemeResourcePathTrait;
@@ -30,32 +31,48 @@ use WebHemi\Renderer\Traits\GetSelectedThemeResourcePathTrait;
  */
 class ServiceAdapter implements ServiceInterface
 {
-    /** @var Twig_Environment */
+    /**
+     * @var Twig_Environment
+     */
     private $adapter;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $defaultViewPath;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $templateViewPath;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $templateResourcePath;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $applicationBaseUri;
 
     use GetSelectedThemeResourcePathTrait;
 
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     protected $environmentManager;
-    /** @var I18nService */
+    /**
+     * @var I18nService
+     */
     protected $i18nService;
 
     /**
      * ServiceAdapter constructor.
      *
-     * @param ConfigurationInterface $configuration
-     * @param EnvironmentInterface   $environmentManager
-     * @param I18nService            $i18nService
+     * @param  ConfigurationInterface $configuration
+     * @param  EnvironmentInterface   $environmentManager
+     * @param  I18nService            $i18nService
      * @throws Throwable
      */
     public function __construct(
@@ -100,8 +117,8 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Renders the template for the output.
      *
-     * @param string $template
-     * @param array  $parameters
+     * @param  string $template
+     * @param  array  $parameters
      * @throws Throwable
      * @return StreamInterface
      */
@@ -137,7 +154,7 @@ class ServiceAdapter implements ServiceInterface
             'locale' => $this->i18nService->getLocale(),
         ];
 
-        $parameters = merge_array_overwrite($parameters, $applicationParams);
+        $parameters = GeneralLib::mergeArrayOverwrite($parameters, $applicationParams);
 
         $output = $this->adapter->render($template, $parameters);
 

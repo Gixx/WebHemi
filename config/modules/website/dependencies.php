@@ -23,7 +23,7 @@ return [
                 'class'     => Router\ServiceAdapter\Base\ServiceAdapter::class,
                 'arguments' => [
                     // This will be added to the Global definition
-                    Router\ProxyInterface::class
+                    3 => Router\ProxyInterface::class
                 ],
                 'shared'    => true,
             ],

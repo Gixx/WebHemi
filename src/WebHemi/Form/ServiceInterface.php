@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -30,9 +30,9 @@ interface ServiceInterface
     /**
      * Initializes the form if it didn't happen in the constructor. (Used mostly in presets).
      *
-     * @param string $name
-     * @param string $action
-     * @param string $method
+     * @param  string $name
+     * @param  string $action
+     * @param  string $method
      * @return ServiceInterface
      */
     public function initialize(string $name, string $action, string $method = 'POST') : ServiceInterface;
@@ -61,7 +61,7 @@ interface ServiceInterface
     /**
      * Adds an element to the form.
      *
-     * @param ElementInterface $formElement
+     * @param  ElementInterface $formElement
      * @return ServiceInterface
      */
     public function addElement(ElementInterface $formElement) : ServiceInterface;
@@ -69,7 +69,7 @@ interface ServiceInterface
     /**
      * Returns an element
      *
-     * @param string $elementName
+     * @param  string $elementName
      * @return ElementInterface
      */
     public function getElement(string $elementName) : ElementInterface;
@@ -84,7 +84,7 @@ interface ServiceInterface
     /**
      * Loads data into the form.
      *
-     * @param array $data
+     * @param  array $data
      * @return ServiceInterface
      */
     public function loadData(array $data) : ServiceInterface;

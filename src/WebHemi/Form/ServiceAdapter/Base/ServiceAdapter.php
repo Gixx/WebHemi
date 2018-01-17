@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -25,13 +25,21 @@ use WebHemi\StringLib;
  */
 class ServiceAdapter implements ServiceInterface, JsonSerializable
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $action;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $method;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $formElements = [];
 
     /**
@@ -51,9 +59,9 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     /**
      * Initializes the form if it didn't happen in the constructor. (Used mostly in presets).
      *
-     * @param string $name
-     * @param string $action
-     * @param string $method
+     * @param  string $name
+     * @param  string $action
+     * @param  string $method
      * @throws RuntimeException
      * @return ServiceInterface
      */
@@ -103,7 +111,7 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     /**
      * Adds an element to the form.
      *
-     * @param ElementInterface $formElement
+     * @param  ElementInterface $formElement
      * @throws InvalidArgumentException
      * @return ServiceInterface
      */
@@ -128,7 +136,7 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     /**
      * Returns an element
      *
-     * @param string $elementName
+     * @param  string $elementName
      * @throws InvalidArgumentException
      * @return ElementInterface
      */
@@ -161,7 +169,7 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     /**
      * Loads data into the form.
      *
-     * @param array $data
+     * @param  array $data
      * @return ServiceInterface
      */
     public function loadData(array $data) : ServiceInterface
@@ -170,7 +178,9 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
 
         foreach ($formData as $elementName => $elementValue) {
             $fullName = $this->name.'['.$elementName.']';
-            /** @var ElementInterface $formElement */
+            /**
+             * @var ElementInterface $formElement
+             */
             $formElement = $this->formElements[$fullName] ?? null;
 
             if ($formElement) {

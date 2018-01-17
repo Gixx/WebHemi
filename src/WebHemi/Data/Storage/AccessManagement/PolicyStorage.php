@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,27 +23,49 @@ use WebHemi\DateTime;
  */
 class PolicyStorage extends AbstractStorage
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_am_policy';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_am_policy';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $resourceId = 'fk_am_resource';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $applicationId = 'fk_application';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name = 'name';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $title = 'title';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description = 'description';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $method = 'method';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isReadOnly = 'is_read_only';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
 
     /**
@@ -55,7 +77,9 @@ class PolicyStorage extends AbstractStorage
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var PolicyEntity $dataEntity */
+        /**
+         * @var PolicyEntity $dataEntity
+         */
         $dataEntity->setPolicyId((int) $data[$this->idKey])
             ->setResourceId(!empty($data[$this->resourceId]) ? (int) $data[$this->resourceId] : null)
             ->setApplicationId(!empty($data[$this->applicationId]) ? (int) $data[$this->applicationId] : null)
@@ -71,12 +95,14 @@ class PolicyStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var PolicyEntity $dataEntity */
+        /**
+         * @var PolicyEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
 
@@ -107,12 +133,14 @@ class PolicyStorage extends AbstractStorage
     /**
      * Returns a Policy entity identified by (unique) ID.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|PolicyEntity
      */
     public function getPolicyById(int $identifier) : ? PolicyEntity
     {
-        /** @var null|PolicyEntity $dataEntity */
+        /**
+         * @var null|PolicyEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -121,12 +149,14 @@ class PolicyStorage extends AbstractStorage
     /**
      * Returns a Policy entity by name.
      *
-     * @param string $name
+     * @param  string $name
      * @return null|PolicyEntity
      */
     public function getPolicyByName(string $name) : ? PolicyEntity
     {
-        /** @var null|PolicyEntity $dataEntity */
+        /**
+         * @var null|PolicyEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->name => $name]);
 
         return $dataEntity;
@@ -135,7 +165,7 @@ class PolicyStorage extends AbstractStorage
     /**
      * Returns a set of Policy entities identified by Resource ID.
      *
-     * @param null|int $resourceId
+     * @param  null|int $resourceId
      * @return PolicyEntity[]
      */
     public function getPoliciesByResourceId(? int $resourceId) : array
@@ -146,7 +176,7 @@ class PolicyStorage extends AbstractStorage
     /**
      * Returns a set of Policy entities identified by Application ID.
      *
-     * @param null|int $applicationId
+     * @param  null|int $applicationId
      * @return PolicyEntity[]
      */
     public function getPoliciesByApplicationId(? int $applicationId) : array
@@ -157,8 +187,8 @@ class PolicyStorage extends AbstractStorage
     /**
      * Returns a set of Policy entities identified by both Resource and Application IDs.
      *
-     * @param null|int $resourceId
-     * @param null|int $applicationId
+     * @param  null|int $resourceId
+     * @param  null|int $applicationId
      * @return PolicyEntity[]
      */
     public function getPoliciesByResourceAndApplicationIds(? int $resourceId, ? int $applicationId) : array

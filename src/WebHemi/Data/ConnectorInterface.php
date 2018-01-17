@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -49,7 +49,7 @@ interface ConnectorInterface
     /**
      * Set adapter data group. For Databases this can be the Tables.
      *
-     * @param string $dataGroup
+     * @param  string $dataGroup
      * @return ConnectorInterface
      */
     public function setDataGroup(string $dataGroup) : ConnectorInterface;
@@ -57,7 +57,7 @@ interface ConnectorInterface
     /**
      * Set adapter ID key. For Databases this can be the Primary key. Only simple key is allowed.
      *
-     * @param string $idKey
+     * @param  string $idKey
      * @return ConnectorInterface
      */
     public function setIdKey(string $idKey) : ConnectorInterface;
@@ -65,7 +65,7 @@ interface ConnectorInterface
     /**
      * Returns the CREATE TABLE statement.
      *
-     * @param string $tableName
+     * @param  string $tableName
      * @return string
      */
     public function getTableDefinition(string $tableName) : string;
@@ -73,7 +73,7 @@ interface ConnectorInterface
     /**
      * Get exactly one "row" of data according to the identifier.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return array
      */
     public function getData(int $identifier) : array;
@@ -81,8 +81,8 @@ interface ConnectorInterface
     /**
      * Get a set of data according to the expression and the chunk.
      *
-     * @param array $expression
-     * @param array $options
+     * @param  array $expression
+     * @param  array $options
      * @return array
      */
     public function getDataSet(array $expression, array $options = []) : array;
@@ -90,7 +90,7 @@ interface ConnectorInterface
     /**
      * Get the number of matched data in the set according to the expression.
      *
-     * @param array $expression
+     * @param  array $expression
      * @return int
      */
     public function getDataCardinality(array $expression) : int;
@@ -98,8 +98,8 @@ interface ConnectorInterface
     /**
      * Insert or update entity in the storage.
      *
-     * @param null|int $identifier
-     * @param array $data
+     * @param  null|int $identifier
+     * @param  array    $data
      * @return int The ID of the saved entity in the storage
      */
     public function saveData(? int $identifier, array $data = []) : int;
@@ -107,7 +107,7 @@ interface ConnectorInterface
     /**
      * Removes an entity from the storage.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return bool
      */
     public function deleteData(int $identifier) : bool;

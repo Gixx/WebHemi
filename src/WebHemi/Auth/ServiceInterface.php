@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -40,7 +40,7 @@ interface ServiceInterface
     /**
      * Authenticates the user.
      *
-     * @param CredentialInterface $credential
+     * @param  CredentialInterface $credential
      * @return ResultInterface
      */
     public function authenticate(CredentialInterface $credential) : ResultInterface;
@@ -48,7 +48,7 @@ interface ServiceInterface
     /**
      * Sets the authenticated user.
      *
-     * @param UserEntity $dataEntity
+     * @param  UserEntity $dataEntity
      * @return ServiceInterface
      */
     public function setIdentity(UserEntity $dataEntity) : ServiceInterface;

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,31 +24,47 @@ use WebHemi\StringLib;
  */
 class UserMetaStorage extends AbstractStorage
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_user_meta';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_user_meta';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $userId = 'fk_user';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $metaKey = 'meta_key';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $metaData = 'meta_data';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
 
     /**
      * Populates an entity with storage data.
      *
-     * @param EntityInterface $dataEntity
-     * @param array           $data
+     * @param  EntityInterface $dataEntity
+     * @param  array           $data
      * @return void
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var UserMetaEntity $dataEntity */
+        /**
+         * @var UserMetaEntity $dataEntity
+         */
         $dataEntity->setUserMetaId((int) $data[$this->idKey])
             ->setUserId((int) $data[$this->userId])
             ->setMetaKey($data[$this->metaKey])
@@ -60,12 +76,14 @@ class UserMetaStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var UserMetaEntity $dataEntity */
+        /**
+         * @var UserMetaEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
 
@@ -82,12 +100,14 @@ class UserMetaStorage extends AbstractStorage
     /**
      * Returns a User Meta entity identified by (unique) ID.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|UserMetaEntity
      */
     public function getUserMetaById(int $identifier) : ? UserMetaEntity
     {
-        /** @var null|UserMetaEntity $dataEntity */
+        /**
+         * @var null|UserMetaEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -96,7 +116,7 @@ class UserMetaStorage extends AbstractStorage
     /**
      * Returns a User Meta data list identified by user ID.
      *
-     * @param int $userId
+     * @param  int $userId
      * @return array
      */
     public function getUserMetaArrayForUserId(int $userId) : array
@@ -104,7 +124,9 @@ class UserMetaStorage extends AbstractStorage
         $userMetaEntitySet = $this->getDataEntitySet([$this->userId => $userId]);
         $userMetaSet = [];
 
-        /** @var UserMetaEntity $metaEntity */
+        /**
+         * @var UserMetaEntity $metaEntity
+         */
         foreach ($userMetaEntitySet as $metaEntity) {
             $data = $this->processMetaEntity($metaEntity);
             $userMetaSet[$data['key']] = $data['value'];
@@ -116,7 +138,7 @@ class UserMetaStorage extends AbstractStorage
     /**
      * Processes a user meta entity.
      *
-     * @param UserMetaEntity $metaEntity
+     * @param  UserMetaEntity $metaEntity
      * @return array
      */
     private function processMetaEntity(UserMetaEntity $metaEntity) : array
@@ -147,8 +169,8 @@ class UserMetaStorage extends AbstractStorage
     /**
      * Returns a User Meta entity list identified by user ID.
      *
-     * @param int  $userId
-     * @param bool $keysAsKeys -  whether to use the meta keys for the returning array too
+     * @param  int  $userId
+     * @param  bool $keysAsKeys -  whether to use the meta keys for the returning array too
      * @return UserMetaEntity[]
      */
     public function getUserMetaEntitySetForUserId(int $userId, bool $keysAsKeys = false) : array
@@ -157,7 +179,9 @@ class UserMetaStorage extends AbstractStorage
 
         if ($keysAsKeys) {
             $tmp = [];
-            /** @var UserMetaEntity $userMetaEntity */
+            /**
+             * @var UserMetaEntity $userMetaEntity
+             */
             foreach ($metaSet as $userMetaEntity) {
                 $tmp[$userMetaEntity->getMetaKey()] = $userMetaEntity;
             }

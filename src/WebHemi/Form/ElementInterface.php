@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -40,7 +40,7 @@ interface ElementInterface
     /**
      * Sets element's name.
      *
-     * @param string $name
+     * @param  string $name
      * @return ElementInterface
      */
     public function setName(string $name) : ElementInterface;
@@ -62,7 +62,7 @@ interface ElementInterface
     /**
      * Sets the element's type.
      *
-     * @param string $type
+     * @param  string $type
      * @return ElementInterface
      */
     public function setType(string $type) : ElementInterface;
@@ -77,7 +77,7 @@ interface ElementInterface
     /**
      * Sets the element's label.
      *
-     * @param string $label
+     * @param  string $label
      * @return ElementInterface
      */
     public function setLabel(string $label) : ElementInterface;
@@ -92,7 +92,7 @@ interface ElementInterface
     /**
      * Sets the range of interpretation. Depends on the element type how it is used: exact element list or a min/max.
      *
-     * @param array $valueRange
+     * @param  array $valueRange
      * @return ElementInterface
      */
     public function setValueRange(array $valueRange) : ElementInterface;
@@ -107,7 +107,7 @@ interface ElementInterface
     /**
      * Sets the values.
      *
-     * @param array $values
+     * @param  array $values
      * @return ElementInterface
      */
     public function setValues(array $values) : ElementInterface;
@@ -122,7 +122,7 @@ interface ElementInterface
     /**
      * Adds a validator to the element.
      *
-     * @param ValidatorInterface $validator
+     * @param  ValidatorInterface $validator
      * @return ElementInterface
      */
     public function addValidator(ValidatorInterface $validator) : ElementInterface;
@@ -137,8 +137,8 @@ interface ElementInterface
     /**
      * Set custom error.
      *
-     * @param string $validator
-     * @param string $error
+     * @param  string $validator
+     * @param  string $error
      * @return ElementInterface
      */
     public function setError(string $validator, string $error) : ElementInterface;

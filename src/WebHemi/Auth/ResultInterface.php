@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -36,7 +36,7 @@ interface ResultInterface
     /**
      * Sets the result code.
      *
-     * @param int $code
+     * @param  int $code
      * @return ResultInterface
      */
     public function setCode(int $code) : ResultInterface;

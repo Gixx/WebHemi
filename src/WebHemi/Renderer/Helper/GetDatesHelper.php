@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -31,7 +31,9 @@ use WebHemi\Router\ProxyInterface;
  */
 class GetDatesHelper implements HelperInterface
 {
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
 
     use StorageInjectorTrait;
@@ -40,7 +42,7 @@ class GetDatesHelper implements HelperInterface
      * GetDatesHelper constructor.
      *
      * @param EnvironmentInterface $environmentManager
-     * @param StorageInterface[] ...$dataStorages
+     * @param StorageInterface[]   ...$dataStorages
      */
     public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
     {
@@ -71,7 +73,7 @@ class GetDatesHelper implements HelperInterface
     /**
      * Gets helper options for the render.
      *
-     * @return array
+     * @return             array
      * @codeCoverageIgnore - empty array
      */
     public static function getOptions() : array
@@ -98,28 +100,40 @@ class GetDatesHelper implements HelperInterface
     {
         $dates = [];
 
-        /** @var Storage\ApplicationStorage $applicationStorage */
+        /**
+         * @var Storage\ApplicationStorage $applicationStorage
+         */
         $applicationStorage = $this->getApplicationStorage();
-        /** @var Storage\Filesystem\FilesystemStorage $filesystemStorage */
+        /**
+         * @var Storage\Filesystem\FilesystemStorage $filesystemStorage
+         */
         $filesystemStorage = $this->getFilesystemStorage();
-        /** @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage */
+        /**
+         * @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage
+         */
         $directoryStorage = $this->getFilesystemDirectoryStorage();
 
         if (!$applicationStorage || !$filesystemStorage || !$directoryStorage) {
             return [];
         }
 
-        /** @var Entity\ApplicationEntity $application */
+        /**
+         * @var Entity\ApplicationEntity $application
+         */
         $application = $applicationStorage
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
         $applicationId = $application->getKeyData();
 
-        /** @var array $categoryDirectoryData */
+        /**
+         * @var array $categoryDirectoryData
+         */
         $categoryDirectoryData = $directoryStorage
             ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_ARCHIVE);
 
         // Basically we get publications here, but only one per month and that is what we need. The date...
-        /** @var Entity\Filesystem\FilesystemEntity[] $contents */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity[] $contents
+         */
         $contents = $filesystemStorage
             ->getPublishedDocuments(
                 $applicationId,
@@ -130,9 +144,13 @@ class GetDatesHelper implements HelperInterface
                 'YEAR(date_published), MONTH(date_published)'
             );
 
-        /** @var Entity\Filesystem\FilesystemEntity $content */
+        /**
+         * @var Entity\Filesystem\FilesystemEntity $content
+         */
         foreach ($contents as $content) {
-            /** @var DateTime $date */
+            /**
+             * @var DateTime $date
+             */
             $date = $content->getDatePublished();
 
             $dates[] = [

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -22,9 +22,13 @@ use WebHemi\Middleware\Action\AbstractMiddlewareAction;
  */
 class DashboardAction extends AbstractMiddlewareAction
 {
-    /** @var AuthInterface */
+    /**
+     * @var AuthInterface
+     */
     private $authAdapter;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
 
     /**
@@ -60,25 +64,31 @@ class DashboardAction extends AbstractMiddlewareAction
     {
         global $dependencyInjection;
 
-//      $userEntity = $this->authAdapter->getIdentity();
-//      /** @var \WebHemi\Data\Coupler\UserToGroupCoupler $userToGroupCoupler */
-//      $userToGroupCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToGroupCoupler::class);
-//      /** @var \WebHemi\Data\Coupler\UserToPolicyCoupler $userToPolicyCoupler */
-//      $userToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToPolicyCoupler::class);
-//      /** @var \WebHemi\Data\Coupler\UserGroupToPolicyCoupler $userToGroupToPolicyCoupler */
-//      $userToGroupToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserGroupToPolicyCoupler::class);
-//
-//      $userGroups = $userToGroupCoupler->getEntityDependencies($userEntity);
-//      $userPolicies = $userToPolicyCoupler->getEntityDependencies($userEntity);
-//
-//      $userGroupPolicies = [];
-//
-//      foreach ($userGroups as $userGroupEntity) {
-//          $userGroupPolicies = array_merge(
-//              $userGroupPolicies,
-//              $userToGroupToPolicyCoupler->getEntityDependencies($userGroupEntity)
-//          );
-//      }
+        $userEntity = $this->authAdapter->getIdentity();
+        /**
+         * @var \WebHemi\Data\Coupler\UserToGroupCoupler $userToGroupCoupler
+         */
+        $userToGroupCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToGroupCoupler::class);
+        /**
+         * @var \WebHemi\Data\Coupler\UserToPolicyCoupler $userToPolicyCoupler
+         */
+        $userToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToPolicyCoupler::class);
+        /**
+         * @var \WebHemi\Data\Coupler\UserGroupToPolicyCoupler $userToGroupToPolicyCoupler
+         */
+        $userToGroupToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserGroupToPolicyCoupler::class);
+
+        $userGroups = $userToGroupCoupler->getEntityDependencies($userEntity);
+        $userPolicies = $userToPolicyCoupler->getEntityDependencies($userEntity);
+
+        $userGroupPolicies = [];
+
+        foreach ($userGroups as $userGroupEntity) {
+            $userGroupPolicies = array_merge(
+                $userGroupPolicies,
+                $userToGroupToPolicyCoupler->getEntityDependencies($userGroupEntity)
+            );
+        }
 
         // @TODO TBD
         return [

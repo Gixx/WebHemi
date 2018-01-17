@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -31,11 +31,17 @@ use WebHemi\Renderer\HelperInterface;
  */
 class TwigExtension extends Twig_Extension
 {
-    /** @var DependencyInjectionInterface */
+    /**
+     * @var DependencyInjectionInterface
+     */
     private $dependencyInjectionAdapter;
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     private $configuration;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environmentManager;
 
     /**
@@ -73,7 +79,7 @@ class TwigExtension extends Twig_Extension
     /**
      * Gets the specific type of extension
      *
-     * @param string $type Must be `filter` or `helper`
+     * @param  string $type Must be `filter` or `helper`
      * @return array
      */
     private function getExtensions(string $type) : array
@@ -90,7 +96,9 @@ class TwigExtension extends Twig_Extension
                 continue;
             }
 
-            /** FilterInterface $callable */
+            /**
+             * FilterInterface $callable
+             */
             $extensions[] = new Twig_SimpleFilter($callable::getName(), $callable, $callable::getOptions());
         }
 
@@ -100,8 +108,8 @@ class TwigExtension extends Twig_Extension
     /**
      * Checks whether the extension has the valid type.
      *
-     * @param string $type
-     * @param object $callable
+     * @param  string $type
+     * @param  object $callable
      * @throws RuntimeException
      */
     private function checkExtensionType(string $type, $callable) : void
@@ -124,7 +132,7 @@ class TwigExtension extends Twig_Extension
     /**
      * Returns the renderer config by type.
      *
-     * @param string $type
+     * @param  string $type
      * @return array
      */
     private function getConfig(string $type) : array

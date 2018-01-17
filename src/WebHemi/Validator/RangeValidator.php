@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -18,13 +18,21 @@ namespace WebHemi\Validator;
  */
 class RangeValidator implements ValidatorInterface
 {
-    /** @var array  */
+    /**
+     * @var array
+     */
     private $availableValues;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $validateKeys;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $errors;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $validData;
 
     /**
@@ -42,7 +50,7 @@ class RangeValidator implements ValidatorInterface
     /**
      * Validates data.
      *
-     * @param array $values
+     * @param  array $values
      * @return bool
      */
     public function validate(array $values) : bool

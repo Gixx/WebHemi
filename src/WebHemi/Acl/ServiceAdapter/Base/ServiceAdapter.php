@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -28,10 +28,10 @@ class ServiceAdapter extends AbstractServiceAdapter
     /**
      * Checks if a User can access to a Resource in an Application
      *
-     * @param UserEntity             $userEntity
-     * @param ResourceEntity|null    $resourceEntity
-     * @param ApplicationEntity|null $applicationEntity
-     * @param string|null            $method
+     * @param  UserEntity             $userEntity
+     * @param  ResourceEntity|null    $resourceEntity
+     * @param  ApplicationEntity|null $applicationEntity
+     * @param  string|null            $method
      * @return bool
      */
     public function isAllowed(
@@ -43,7 +43,9 @@ class ServiceAdapter extends AbstractServiceAdapter
         // By default we block everything.
         $allowed = false;
 
-        /** @var PolicyEntity[] $policies */
+        /**
+         * @var PolicyEntity[] $policies
+         */
         $policies = array_merge($this->getUserPolicies($userEntity), $this->getUserGroupPolicies($userEntity));
 
         foreach ($policies as $policyEntity) {
@@ -59,30 +61,38 @@ class ServiceAdapter extends AbstractServiceAdapter
     /**
      * Gets the policies assigned to the user.
      *
-     * @param UserEntity $userEntity
+     * @param  UserEntity $userEntity
      * @return PolicyEntity[]
      */
     private function getUserPolicies(UserEntity $userEntity) : array
     {
-        /** @var PolicyEntity[] $userPolicies */
+        /**
+         * @var PolicyEntity[] $userPolicies
+         */
         return $this->userToPolicyCoupler->getEntityDependencies($userEntity);
     }
 
     /**
      * Gets the policies assigned to the group in which the user is.
      *
-     * @param UserEntity $userEntity
+     * @param  UserEntity $userEntity
      * @return PolicyEntity[]
      */
     private function getUserGroupPolicies(UserEntity $userEntity) : array
     {
-        /** @var PolicyEntity[] $userGroupPolicies */
+        /**
+         * @var PolicyEntity[] $userGroupPolicies
+         */
         $userGroupPolicies = [];
-        /** @var UserGroupEntity[] $userGroups */
+        /**
+         * @var UserGroupEntity[] $userGroups
+         */
         $userGroups = $this->userToGroupCoupler->getEntityDependencies($userEntity);
 
         foreach ($userGroups as $userGroupEntity) {
-            /** @var PolicyEntity[] $groupPolicies */
+            /**
+             * @var PolicyEntity[] $groupPolicies
+             */
             $groupPolicies = $this->userGroupToPolicyCoupler->getEntityDependencies($userGroupEntity);
             $userGroupPolicies = array_merge($userGroupPolicies, $groupPolicies);
         }

@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,13 +23,21 @@ use WebHemi\Logger\ServiceInterface;
  */
 class ServiceAdapter extends LogLevel implements ServiceInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $section;
-    /** @var Logger */
+    /**
+     * @var Logger
+     */
     private $adapter;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $configuration;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $logLevel = [
         0 => self::DEBUG,
         1 => self::INFO,
@@ -66,9 +74,9 @@ class ServiceAdapter extends LogLevel implements ServiceInterface
     /**
      * Logs with an arbitrary level.
      *
-     * @param mixed  $level
-     * @param string $message
-     * @param array  $context
+     * @param  mixed  $level
+     * @param  string $message
+     * @param  array  $context
      * @return void
      */
     public function log($level, string $message, array $context = []) : void

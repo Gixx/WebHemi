@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,15 +24,25 @@ use WebHemi\Data\ConnectorInterface;
  */
 abstract class AbstractCoupler implements CouplerInterface
 {
-    /** @var ConnectorInterface */
+    /**
+     * @var ConnectorInterface 
+     */
     private $connector;
-    /** @var EntityInterface[] */
+    /**
+     * @var EntityInterface[] 
+     */
     protected $dataEntityPrototypes = [];
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $connectorIdKey;
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $connectorDataGroup;
-    /** @var array */
+    /**
+     * @var array 
+     */
     protected $dependentDataGroups;
 
     /**
@@ -83,7 +93,7 @@ abstract class AbstractCoupler implements CouplerInterface
     /**
      * Gets all the entities those are depending from the given entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @throws RuntimeException
      * @return EntityInterface[]
      */
@@ -110,8 +120,8 @@ abstract class AbstractCoupler implements CouplerInterface
     /**
      * Sets dependency for the entities
      *
-     * @param EntityInterface $dataEntityA
-     * @param EntityInterface $dataEntityB
+     * @param  EntityInterface $dataEntityA
+     * @param  EntityInterface $dataEntityB
      * @return int The ID of the saved entity in the storage
      */
     public function setDependency(EntityInterface $dataEntityA, EntityInterface $dataEntityB) : int
@@ -148,8 +158,8 @@ abstract class AbstractCoupler implements CouplerInterface
     /**
      * Gets a DataEntityInterface instance from the provided data according to the reference entity.
      *
-     * @param EntityInterface $referenceEntity
-     * @param array           $entityData
+     * @param  EntityInterface $referenceEntity
+     * @param  array           $entityData
      * @return EntityInterface
      */
     abstract protected function getDependingEntity(
@@ -160,7 +170,7 @@ abstract class AbstractCoupler implements CouplerInterface
     /**
      * Returns a new instance of the required entity.
      *
-     * @param string $entityClassName
+     * @param  string $entityClassName
      * @throws RuntimeException
      * @return EntityInterface
      */
@@ -172,7 +182,7 @@ abstract class AbstractCoupler implements CouplerInterface
     /**
      * Gets raw depending entity data list for the given entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityDataSet(EntityInterface $dataEntity) : array
@@ -184,9 +194,11 @@ abstract class AbstractCoupler implements CouplerInterface
         $this->getConnector()->setDataGroup($this->connectorDataGroup)
             ->setIdKey($this->connectorIdKey);
 
-        $dataList = $this->getConnector()->getDataSet([
+        $dataList = $this->getConnector()->getDataSet(
+            [
             $this->dependentDataGroups[$entityClassName]['source_key'].' = ?' => $dataEntity->getKeyData()
-        ]);
+            ]
+        );
 
         foreach ($dataList as $rowData) {
             $identifiers[] = $rowData[$this->dependentDataGroups[$entityClassName]['connector_key']];
@@ -196,9 +208,11 @@ abstract class AbstractCoupler implements CouplerInterface
             $this->getConnector()->setDataGroup($this->dependentDataGroups[$entityClassName]['depending_group'])
                 ->setIdKey($this->dependentDataGroups[$entityClassName]['depending_id_key']);
 
-            $entityDataSet = $this->getConnector()->getDataSet([
+            $entityDataSet = $this->getConnector()->getDataSet(
+                [
                 $this->dependentDataGroups[$entityClassName]['depending_id_key'].' IN (?)' => $identifiers
-            ]);
+                ]
+            );
         }
 
         return $entityDataSet;

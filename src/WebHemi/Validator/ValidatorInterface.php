@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,7 +21,7 @@ interface ValidatorInterface
     /**
      * Validates data.
      *
-     * @param array $values
+     * @param  array $values
      * @return bool
      */
     public function validate(array $values) : bool;

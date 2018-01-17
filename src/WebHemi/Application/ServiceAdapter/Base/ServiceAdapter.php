@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -45,9 +45,13 @@ class ServiceAdapter extends AbstractAdapter
             return $this;
         }
 
-        /** @var SessionInterface $sessionManager */
+        /**
+         * @var SessionInterface $sessionManager
+         */
         $sessionManager = $this->container->get(SessionInterface::class);
-        /** @var EnvironmentInterface $environmentManager */
+        /**
+         * @var EnvironmentInterface $environmentManager
+         */
         $environmentManager = $this->container->get(EnvironmentInterface::class);
 
         $name = $environmentManager->getSelectedApplication();
@@ -102,11 +106,15 @@ class ServiceAdapter extends AbstractAdapter
      */
     public function run() : ServiceInterface
     {
-        /** @var PipelineInterface $pipelineManager */
+        /**
+         * @var PipelineInterface $pipelineManager
+         */
         $pipelineManager = $this->container->get(PipelineInterface::class);
 
         try {
-            /** @var string $middlewareClass */
+            /**
+             * @var string $middlewareClass
+             */
             $middlewareClass = $pipelineManager->start();
 
             while ($middlewareClass !== null
@@ -133,7 +141,8 @@ class ServiceAdapter extends AbstractAdapter
                     ResponseInterface::STATUS_BAD_METHOD,
                     ResponseInterface::STATUS_NOT_IMPLEMENTED,
                 ]
-            )) {
+            )
+            ) {
                 $code = $exception->getCode();
             }
 
@@ -142,7 +151,9 @@ class ServiceAdapter extends AbstractAdapter
                 ->withAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION, $exception);
         }
 
-        /** @var CommonMiddleware\FinalMiddleware $finalMiddleware */
+        /**
+         * @var CommonMiddleware\FinalMiddleware $finalMiddleware
+         */
         $finalMiddleware = $this->container->get(CommonMiddleware\FinalMiddleware::class);
         // Check response and log errors if necessary
         $finalMiddleware($this->request, $this->response);
@@ -163,13 +174,21 @@ class ServiceAdapter extends AbstractAdapter
         if (!$this->request->isXmlHttpRequest()
             && ResponseInterface::STATUS_REDIRECT != $this->response->getStatusCode()
         ) {
-            /** @var RendererInterface $templateRenderer */
+            /**
+             * @var RendererInterface $templateRenderer
+             */
             $templateRenderer = $this->container->get(RendererInterface::class);
-            /** @var string $template */
+            /**
+             * @var string $template
+             */
             $template = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_TEMPLATE);
-            /** @var array $data */
+            /**
+             * @var array $data
+             */
             $data = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
-            /** @var null|Throwable $exception */
+            /**
+             * @var null|Throwable $exception
+             */
             $exception = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
 
             // If there was any error, change the remplate
@@ -178,7 +197,9 @@ class ServiceAdapter extends AbstractAdapter
                 $data['exception'] = $exception;
             }
 
-            /** @var StreamInterface $body */
+            /**
+             * @var StreamInterface $body
+             */
             $body = $templateRenderer->render($template, $data);
             $this->response = $this->response->withBody($body);
         }
@@ -205,10 +226,14 @@ class ServiceAdapter extends AbstractAdapter
         $contentLength = $this->response->getBody()->getSize();
 
         if ($this->request->isXmlHttpRequest()) {
-            /** @var array $templateData */
+            /**
+             * @var array $templateData
+             */
             $templateData = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA);
             $templateData['output'] = (string) $output;
-            /** @var null|Throwable $exception */
+            /**
+             * @var null|Throwable $exception
+             */
             $exception = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
 
             if (!empty($exception)) {
@@ -229,12 +254,14 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Instantiates and invokes a middleware
      *
-     * @param string $middlewareClass
+     * @param  string $middlewareClass
      * @return void
      */
     protected function invokeMiddleware(string $middlewareClass) : void
     {
-        /** @var MiddlewareInterface $middleware */
+        /**
+         * @var MiddlewareInterface $middleware
+         */
         $middleware = $this->container->get($middlewareClass);
         $requestAttributes = $this->request->getAttributes();
 
@@ -242,7 +269,9 @@ class ServiceAdapter extends AbstractAdapter
         if (isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
             && $middleware instanceof CommonMiddleware\DispatcherMiddleware
         ) {
-            /** @var MiddlewareInterface $actionMiddleware */
+            /**
+             * @var MiddlewareInterface $actionMiddleware
+             */
             $actionMiddleware = $this->container
                 ->get($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS]);
             $this->request = $this->request->withAttribute(
@@ -259,7 +288,7 @@ class ServiceAdapter extends AbstractAdapter
      *
      * NOTE: if there will be chunk content displayed, check if the response getSize counts the real size correctly
      *
-     * @param null|int $contentLength
+     * @param  null|int $contentLength
      * @return void
      *
      * @codeCoverageIgnore - no putput for tests.
@@ -276,7 +305,7 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Filter a header name to word case.
      *
-     * @param string $headerName
+     * @param  string $headerName
      * @return string
      */
     protected function filterHeaderName(string $headerName) : string
@@ -296,18 +325,20 @@ class ServiceAdapter extends AbstractAdapter
     protected function sendHttpHeader() : void
     {
         $reasonPhrase = $this->response->getReasonPhrase();
-        header(sprintf(
-            'HTTP/%s %d%s',
-            $this->response->getProtocolVersion(),
-            $this->response->getStatusCode(),
-            ($reasonPhrase ? ' '.$reasonPhrase : '')
-        ));
+        header(
+            sprintf(
+                'HTTP/%s %d%s',
+                $this->response->getProtocolVersion(),
+                $this->response->getStatusCode(),
+                ($reasonPhrase ? ' '.$reasonPhrase : '')
+            )
+        );
     }
 
     /**
      * Sends out output headers.
      *
-     * @param array $headers
+     * @param  array $headers
      * @return void
      *
      * @codeCoverageIgnore - vendor and core function calls in loop

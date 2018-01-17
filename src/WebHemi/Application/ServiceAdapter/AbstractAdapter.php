@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -26,15 +26,25 @@ use WebHemi\I18n\ServiceInterface as I18nInterface;
  */
 abstract class AbstractAdapter implements ServiceInterface
 {
-    /** @var Throwable */
+    /**
+     * @var Throwable
+     */
     public $error;
-    /** @var DependencyInjectionInterface */
+    /**
+     * @var DependencyInjectionInterface
+     */
     protected $container;
-    /** @var ServerRequestInterface */
+    /**
+     * @var ServerRequestInterface
+     */
     protected $request;
-    /** @var ResponseInterface */
+    /**
+     * @var ResponseInterface
+     */
     protected $response;
-    /** @var I18nInterface */
+    /**
+     * @var I18nInterface
+     */
     protected $i18n;
 
     /**
@@ -45,11 +55,17 @@ abstract class AbstractAdapter implements ServiceInterface
     public function __construct(DependencyInjectionInterface $container)
     {
         $this->container = $container;
-        /** @var HttpInterface $httpAdapter */
+        /**
+         * @var HttpInterface $httpAdapter
+         */
         $httpAdapter = $this->container->get(HttpInterface::class);
-        /** @var ServerRequestInterface $request */
+        /**
+         * @var ServerRequestInterface $request
+         */
         $this->request = $httpAdapter->getRequest();
-        /** @var ResponseInterface $response */
+        /**
+         * @var ResponseInterface $response
+         */
         $this->response = $httpAdapter->getResponse();
     }
 

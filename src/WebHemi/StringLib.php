@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,7 +21,7 @@ class StringLib
     /**
      * Converts CamelCase text to under_score equivalent.
      *
-     * @param string $input
+     * @param  string $input
      * @return string
      */
     public static function convertCamelCaseToUnderscore(string $input) : string
@@ -33,7 +33,7 @@ class StringLib
     /**
      * Converts under_score to CamelCase equivalent.
      *
-     * @param string $input
+     * @param  string $input
      * @return string
      */
     public static function convertUnderscoreToCamelCase(string $input) : string
@@ -52,8 +52,8 @@ class StringLib
     /**
      * Converts all non-alphanumeric and additional extra characters to underscore.
      *
-     * @param string $input
-     * @param string $extraCharacters
+     * @param  string $input
+     * @param  string $extraCharacters
      * @return string
      */
     public static function convertNonAlphanumericToUnderscore(string $input, string $extraCharacters = '') : string
@@ -77,8 +77,8 @@ class StringLib
     /**
      * Splits text into array of lines and also trims and skips empty lines.
      *
-     * @param string $input
-     * @param int $flags
+     * @param  string $input
+     * @param  int    $flags
      * @return array
      */
     public static function convertTextToLines(string $input, int $flags = PREG_SPLIT_NO_EMPTY) : array
@@ -89,7 +89,7 @@ class StringLib
     /**
      * Joins array of lines into text.
      *
-     * @param array $input
+     * @param  array $input
      * @return string
      */
     public static function convertLinesToText(array $input) : string

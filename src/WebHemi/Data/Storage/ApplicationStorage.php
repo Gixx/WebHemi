@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,53 +24,91 @@ use WebHemi\DateTime;
  */
 class ApplicationStorage extends AbstractStorage
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_application';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_application';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name = 'name';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $title = 'title';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $introduction = 'introduction';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $subject = 'subject';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description = 'description';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $keywords = 'keywords';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $copyright = 'copyright';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $path = 'path';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $theme = 'theme';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $type = 'type';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $locale = 'locale';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $timeZone = 'timezone';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isReadOnly = 'is_read_only';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isEnabled = 'is_enabled';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
 
     /**
      * Populates an entity with storage data.
      *
-     * @param EntityInterface $dataEntity
-     * @param array           $data
+     * @param  EntityInterface $dataEntity
+     * @param  array           $data
      * @return void
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var ApplicationEntity $dataEntity */
+        /**
+         * @var ApplicationEntity $dataEntity
+         */
         $dataEntity->setApplicationId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
@@ -93,12 +131,14 @@ class ApplicationStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var ApplicationEntity $dataEntity */
+        /**
+         * @var ApplicationEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
 
@@ -130,7 +170,9 @@ class ApplicationStorage extends AbstractStorage
      */
     public function getApplications()
     {
-        /** @var ApplicationEntity[] $entityList */
+        /**
+         * @var ApplicationEntity[] $entityList
+         */
         $entityList = $this->getDataEntitySet([]);
 
         return $entityList;
@@ -139,12 +181,14 @@ class ApplicationStorage extends AbstractStorage
     /**
      * Returns a Application entity identified by (unique) ID.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|ApplicationEntity
      */
     public function getApplicationById($identifier) : ? ApplicationEntity
     {
-        /** @var null|ApplicationEntity $dataEntity */
+        /**
+         * @var null|ApplicationEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -153,12 +197,14 @@ class ApplicationStorage extends AbstractStorage
     /**
      * Returns an Application entity by name.
      *
-     * @param string $name
+     * @param  string $name
      * @return null|ApplicationEntity
      */
     public function getApplicationByName($name) : ? ApplicationEntity
     {
-        /** @var null|ApplicationEntity $dataEntity */
+        /**
+         * @var null|ApplicationEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->name => $name]);
 
         return $dataEntity;

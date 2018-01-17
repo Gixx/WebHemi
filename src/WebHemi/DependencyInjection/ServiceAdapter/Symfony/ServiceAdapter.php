@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -29,9 +29,13 @@ use WebHemi\DependencyInjection\ServiceAdapter\AbstractAdapter;
  */
 class ServiceAdapter extends AbstractAdapter
 {
-    /** @var ContainerBuilder */
+    /**
+     * @var ContainerBuilder
+     */
     private $container;
-    /** @var int */
+    /**
+     * @var int
+     */
     private static $parameterIndex = 0;
 
     /**
@@ -49,7 +53,7 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Returns true if the given service is registered.
      *
-     * @param string $identifier
+     * @param  string $identifier
      * @return bool
      */
     public function has(string $identifier) : bool
@@ -62,7 +66,7 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Gets a service.
      *
-     * @param null|string $identifier
+     * @param  null|string $identifier
      * @throws RuntimeException
      * @return object
      */
@@ -99,7 +103,7 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Registers the service into the container.
      *
-     * @param string $identifier
+     * @param  string $identifier
      * @return ServiceAdapter
      */
     private function registerServiceToContainer(string $identifier) : ServiceAdapter
@@ -142,7 +146,7 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Tries to identify referce services in the argument list.
      *
-     * @param array $argumentList
+     * @param  array $argumentList
      * @return array
      */
     private function setArgumentListReferences(array $argumentList) : array
@@ -169,8 +173,8 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Creates a safe normalized name.
      *
-     * @param string $className
-     * @param mixed $parameter
+     * @param  string $className
+     * @param  mixed  $parameter
      * @return string
      */
     private function getNormalizedName(string $className, $parameter) : string
@@ -186,8 +190,8 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Register the service object instance.
      *
-     * @param string  $identifier
-     * @param object  $serviceInstance
+     * @param  string $identifier
+     * @param  object $serviceInstance
      * @return ServiceInterface
      */
     public function registerServiceInstance(string $identifier, $serviceInstance) : ServiceInterface

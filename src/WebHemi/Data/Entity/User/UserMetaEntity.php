@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,23 +21,35 @@ use WebHemi\DateTime;
  */
 class UserMetaEntity implements EntityInterface
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     private $userMetaId;
-    /** @var int */
+    /**
+     * @var int
+     */
     private $userId;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $metaKey;
-    /** @var string */
+    /**
+     * @var string
+     */
     private $metaData;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateCreated;
-    /** @var DateTime */
+    /**
+     * @var DateTime
+     */
     private $dateModified;
 
     /**
      * Sets the value of the entity identifier.
      *
-     * @param int $entityId
+     * @param  int $entityId
      * @return UserMetaEntity
      */
     public function setKeyData(int $entityId) : UserMetaEntity

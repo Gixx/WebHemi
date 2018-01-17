@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -26,15 +26,19 @@ use WebHemi\I18n\TimeZoneInterface;
  */
 class DateTime extends PHPDateTime implements TimeZoneInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     private $timeZoneDataPath;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $dateFormat = [];
 
     /**
      * DateTime constructor.
      *
-     * @param string $time
+     * @param string            $time
      * @param DateTimeZone|null $timeZone
      */
     public function __construct($time = 'now', DateTimeZone $timeZone = null)
@@ -71,9 +75,10 @@ class DateTime extends PHPDateTime implements TimeZoneInterface
 
     /**
      * Returns date formatted according to given format.
-     * @param string $format
+     *
+     * @param  string $format
      * @return string
-     * @link http://php.net/manual/en/datetime.format.php
+     * @link   http://php.net/manual/en/datetime.format.php
      */
     public function format($format)
     {

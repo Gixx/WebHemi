@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,35 +23,55 @@ use WebHemi\Data\Entity\Filesystem\FilesystemCategoryEntity;
  */
 class FilesystemCategoryStorage extends AbstractStorage
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_filesystem_category';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_filesystem_category';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $idApplication = 'fk_application';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name = 'name';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $title = 'title';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description = 'description';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $itemOrder = 'item_order';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
 
     /**
      * Populates an entity with storage data.
      *
-     * @param EntityInterface $dataEntity
-     * @param array           $data
+     * @param  EntityInterface $dataEntity
+     * @param  array           $data
      * @return void
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var FilesystemCategoryEntity $dataEntity */
+        /**
+         * @var FilesystemCategoryEntity $dataEntity
+         */
         $dataEntity->setFilesystemCategoryId((int) $data[$this->idKey])
             ->setApplicationId((int) $data[$this->idApplication])
             ->setName($data[$this->name])
@@ -65,12 +85,14 @@ class FilesystemCategoryStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var FilesystemCategoryEntity $dataEntity */
+        /**
+         * @var FilesystemCategoryEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
 
@@ -89,12 +111,14 @@ class FilesystemCategoryStorage extends AbstractStorage
     /**
      * Gets the filesystem category entity by the identifier.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|FilesystemCategoryEntity
      */
     public function getFilesystemCategoryById(int $identifier) : ? FilesystemCategoryEntity
     {
-        /** @var null|FilesystemCategoryEntity $dataEntity */
+        /**
+         * @var null|FilesystemCategoryEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -103,15 +127,17 @@ class FilesystemCategoryStorage extends AbstractStorage
     /**
      * Gets the filesystem category entity by the application identifier and name.
      *
-     * @param int $applicationId
-     * @param string $name
+     * @param  int    $applicationId
+     * @param  string $name
      * @return null|FilesystemCategoryEntity
      */
     public function getFilesystemCategoryByApplicationAndName(
         int $applicationId,
         string $name
     ) : ? FilesystemCategoryEntity {
-        /** @var null|FilesystemCategoryEntity $dataEntity */
+        /**
+         * @var null|FilesystemCategoryEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity(
             [
                 $this->idApplication => $applicationId,
@@ -125,7 +151,7 @@ class FilesystemCategoryStorage extends AbstractStorage
     /**
      * Gets the filesystem category entity list by the application identifier.
      *
-     * @param int $applicationId
+     * @param  int $applicationId
      * @return FilesystemCategoryEntity[]
      */
     public function getFilesystemCategoriesByApplication(int $applicationId) : ? array

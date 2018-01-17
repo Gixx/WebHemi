@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -30,8 +30,8 @@ interface ServiceInterface
     /**
      * Sets the sender.
      *
-     * @param string $name
-     * @param string $email
+     * @param  string $name
+     * @param  string $email
      * @return ServiceInterface
      */
     public function setFrom(string $name, string $email) : ServiceInterface;
@@ -39,8 +39,8 @@ interface ServiceInterface
     /**
      * Sets a recipient.
      *
-     * @param string $name
-     * @param string $email
+     * @param  string $name
+     * @param  string $email
      * @return ServiceInterface
      */
     public function addTo(string $name, string $email) : ServiceInterface;
@@ -48,8 +48,8 @@ interface ServiceInterface
     /**
      * Sets a Carbon Copy recipient.
      *
-     * @param string $name
-     * @param string $email
+     * @param  string $name
+     * @param  string $email
      * @return ServiceInterface
      */
     public function addCc(string $name, string $email) : ServiceInterface;
@@ -57,8 +57,8 @@ interface ServiceInterface
     /**
      * Sets a Blind Carbon Copy recipient.
      *
-     * @param string $name
-     * @param string $email
+     * @param  string $name
+     * @param  string $email
      * @return ServiceInterface
      */
     public function addBcc(string $name, string $email) : ServiceInterface;
@@ -66,7 +66,7 @@ interface ServiceInterface
     /**
      * Sets the subject.
      *
-     * @param string $subject
+     * @param  string $subject
      * @return ServiceInterface
      */
     public function setSubject(string $subject) : ServiceInterface;
@@ -74,7 +74,7 @@ interface ServiceInterface
     /**
      * Sets the body.
      *
-     * @param string $body
+     * @param  string $body
      * @return ServiceInterface
      */
     public function setBody(string $body) : ServiceInterface;
@@ -82,8 +82,8 @@ interface ServiceInterface
     /**
      * Adds an attachment to the mail.
      *
-     * @param string $name
-     * @param string $path
+     * @param  string $name
+     * @param  string $path
      * @return ServiceInterface
      */
     public function addAttachment(string $name, string $path) : ServiceInterface;

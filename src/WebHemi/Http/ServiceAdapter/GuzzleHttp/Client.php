@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,7 +24,9 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Client implements ClientInterface
 {
-    /** @var GuzzleClient */
+    /**
+     * @var GuzzleClient
+     */
     private $guzzleClient;
 
     /**
@@ -38,8 +40,8 @@ class Client implements ClientInterface
     /**
      * Posts data.
      *
-     * @param string $url
-     * @param array $data
+     * @param  string $url
+     * @param  array  $data
      * @return ResponseInterface
      */
     public function post(string $url, array $data) : ResponseInterface

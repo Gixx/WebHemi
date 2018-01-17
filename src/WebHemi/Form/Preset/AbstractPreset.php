@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,15 +23,19 @@ use WebHemi\Form\ServiceInterface;
  */
 abstract class AbstractPreset implements PresetInterface
 {
-    /** @var ServiceInterface */
+    /**
+     * @var ServiceInterface
+     */
     protected $formAdapter;
-    /** @var ElementInterface[] */
+    /**
+     * @var ElementInterface[]
+     */
     private $elementPrototypes;
 
     /**
      * LogSelector constructor.
      *
-     * @param ServiceInterface $formAdapter
+     * @param ServiceInterface   $formAdapter
      * @param ElementInterface[] ...$elementPrototypes
      */
     public function __construct(ServiceInterface $formAdapter, ElementInterface ...$elementPrototypes)
@@ -55,10 +59,10 @@ abstract class AbstractPreset implements PresetInterface
     /**
      * Create a certain type of element.
      *
-     * @param string $class
-     * @param string $type
-     * @param string $name
-     * @param string $label
+     * @param  string $class
+     * @param  string $type
+     * @param  string $name
+     * @param  string $label
      * @return ElementInterface
      */
     protected function createElement(string $class, string $type, string $name, string $label) : ElementInterface
@@ -70,7 +74,9 @@ abstract class AbstractPreset implements PresetInterface
             );
         }
 
-        /** @var ElementInterface $element */
+        /**
+         * @var ElementInterface $element
+         */
         $element = clone $this->elementPrototypes[$class];
 
         $element->setType($type)

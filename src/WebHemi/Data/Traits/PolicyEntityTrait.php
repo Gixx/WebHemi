@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -26,7 +26,7 @@ trait PolicyEntityTrait
     /**
      * Returns a new instance of the required entity.
      *
-     * @param string $entityClassName
+     * @param  string $entityClassName
      * @throws RuntimeException
      * @return EntityInterface
      */
@@ -35,12 +35,14 @@ trait PolicyEntityTrait
     /**
      * Creates a new Policy Entity instance form the data.
      *
-     * @param array $data
+     * @param  array $data
      * @return PolicyEntity
      */
     protected function createPolicyEntity(array $data) : PolicyEntity
     {
-        /** @var PolicyEntity $entity */
+        /**
+         * @var PolicyEntity $entity
+         */
         $entity = $this->getNewEntityInstance(PolicyEntity::class);
 
         $entity->setPolicyId((int) $data['id_am_policy'])

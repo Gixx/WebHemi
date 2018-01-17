@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -20,9 +20,13 @@ use WebHemi\Auth\ResultInterface;
  */
 class Result implements ResultInterface
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     private $code;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $messages = [
         self::FAILURE => 'Authentication failed.',
         self::FAILURE_IDENTITY_NOT_FOUND => 'User is not found.',
@@ -30,7 +34,7 @@ class Result implements ResultInterface
         self::FAILURE_IDENTITY_INACTIVE => 'The given user is in inactive state.',
         self::FAILURE_CREDENTIAL_INVALID => 'The provided credentials are not valid.',
         self::FAILURE_OTHER => 'Authentication failed because of unknown reason.',
-        self::SUCCESS => 'Authenticated.',
+        self::SUCCESS => 'Authenticated.'
     ];
 
     /**
@@ -46,7 +50,7 @@ class Result implements ResultInterface
     /**
      * Sets the result code.
      *
-     * @param int $code
+     * @param  int $code
      * @return ResultInterface
      */
     public function setCode(int $code) : ResultInterface

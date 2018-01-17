@@ -7,13 +7,12 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin\ControlPanel\Themes;
 
-use RuntimeException;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
@@ -23,11 +22,17 @@ use WebHemi\Middleware\Action\AbstractMiddlewareAction;
  */
 class IndexAction extends AbstractMiddlewareAction
 {
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     private $configuration;
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environment;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $defaultData = [
         'name' => null,
         'title' => null,

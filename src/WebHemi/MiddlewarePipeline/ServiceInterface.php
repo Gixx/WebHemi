@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -31,7 +31,7 @@ interface ServiceInterface
     /**
      * Adds module specific pipeline.
      *
-     * @param string $moduleName
+     * @param  string $moduleName
      * @return ServiceInterface
      */
     public function addModulePipeLine(string $moduleName) : ServiceInterface;
@@ -39,8 +39,8 @@ interface ServiceInterface
     /**
      * Adds a new middleware to the pipeline queue.
      *
-     * @param string $middleWareClass
-     * @param int    $priority
+     * @param  string $middleWareClass
+     * @param  int    $priority
      * @throws RuntimeException
      * @return ServiceInterface
      */

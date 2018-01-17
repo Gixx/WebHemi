@@ -7,21 +7,22 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
 namespace WebHemi\Data\Traits;
 
 use WebHemi\Data\StorageInterface;
-use WebHemi\Data\Storage;
 
 /**
  * Trait StorageTrait
  */
 trait StorageInjectorTrait
 {
-    /** @var StorageInterface[] */
+    /**
+     * @var StorageInterface[]
+     */
     protected $dataStorages = [];
 
     /**
@@ -46,8 +47,8 @@ trait StorageInjectorTrait
     /**
      * Retrieves
      *
-     * @param string $name
-     * @param array $arguments
+     * @param  string $name
+     * @param  array  $arguments
      * @return null|StorageInterface
      */
     public function __call(string $name, array $arguments) : ? StorageInterface

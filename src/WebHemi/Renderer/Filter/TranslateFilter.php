@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,7 +21,9 @@ use WebHemi\Renderer\FilterInterface;
  */
 class TranslateFilter implements FilterInterface
 {
-    /** @var DriverInterface */
+    /**
+     * @var DriverInterface 
+     */
     private $driver;
 
     /**
@@ -87,7 +89,7 @@ class TranslateFilter implements FilterInterface
      *
      * @uses TagParserFilter::getCurrentUri()
      *
-     * @param string
+     * @param  string
      * @return string
      */
     public function __invoke() : string

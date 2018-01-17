@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -28,17 +28,25 @@ class ConnectorAdapter extends MySQLAdapter
     /**
      * ConnectorAdapter constructor.
      *
-     * @param string          $name
-     * @param DriverInterface $dataDriver
+     * @param  string          $name
+     * @param  DriverInterface $dataDriver
      * @throws InvalidArgumentException
      */
     public function __construct(string $name, DriverInterface $dataDriver)
     {
-        if (!$dataDriver instanceof DriverAdapter) {
-            $type = gettype($dataDriver);
+        parent::__construct($name, $dataDriver);
+    }
+
+    /**
+     * Runs initialization.
+     */
+    protected function init()
+    {
+        if (!$this->dataDriver instanceof DriverAdapter) {
+            $type = gettype($this->dataDriver);
 
             if ($type == 'object') {
-                $type = get_class($dataDriver);
+                $type = get_class($this->dataDriver);
             }
 
             $message = sprintf(
@@ -49,16 +57,13 @@ class ConnectorAdapter extends MySQLAdapter
 
             throw new InvalidArgumentException($message, 1001);
         }
-
-        $this->name = $name;
-        $this->dataDriver = $dataDriver;
     }
 
     /**
      * Insert or update entity in the storage.
      *
-     * @param int   $identifier
-     * @param array $data
+     * @param  int   $identifier
+     * @param  array $data
      * @throws RuntimeException
      * @return int The ID of the saved entity in the storage
      */
@@ -70,7 +75,7 @@ class ConnectorAdapter extends MySQLAdapter
     /**
      * Insert data.
      *
-     * @param array $data
+     * @param  array $data
      * @return int
      */
     protected function insertData(array $data) : int
@@ -103,8 +108,8 @@ class ConnectorAdapter extends MySQLAdapter
     /**
      * Update data.
      *
-     * @param int   $identifier
-     * @param array $data
+     * @param  int   $identifier
+     * @param  array $data
      * @return int
      */
     protected function updateData(int $identifier, array $data) : int

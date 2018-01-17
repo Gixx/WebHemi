@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -21,17 +21,21 @@ use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
  */
 trait GetSelectedThemeResourcePathTrait
 {
-    /** @var EnvironmentInterface */
+    /**
+     * @var EnvironmentInterface
+     */
     private $environment;
-    /** @var ConfigurationInterface */
+    /**
+     * @var ConfigurationInterface
+     */
     private $themeConfig;
 
     /**
      * Checks if the selected theme supports the current state and returns the correct resource path.
      *
-     * @param string                 $selectedTheme
-     * @param ConfigurationInterface $configuration
-     * @param EnvironmentInterface   $environmentManager
+     * @param  string                 $selectedTheme
+     * @param  ConfigurationInterface $configuration
+     * @param  EnvironmentInterface   $environmentManager
      * @return string
      */
     protected function getSelectedThemeResourcePath(
@@ -73,12 +77,9 @@ trait GetSelectedThemeResourcePathTrait
 
         // check the theme settings
         // If no theme support for the application, then use the default theme
-        if (($this->isAdminApplication() && !$this->isFeatureSupported('admin')
-            ) || (// check if admin login page but no admin login support
-                $this->isAdminLoginPage() && !$this->isFeatureSupported('admin_login')
-            ) || (// check if not admin page but no website support
-                $this->isWebsiteApplication() && !$this->isFeatureSupported('website')
-            )
+        if (($this->isAdminApplication() && !$this->isFeatureSupported('admin'))
+            || ($this->isAdminLoginPage() && !$this->isFeatureSupported('admin_login'))
+            || ($this->isWebsiteApplication() && !$this->isFeatureSupported('website'))
         ) {
             $canUseThisTheme = false;
         }
@@ -119,7 +120,7 @@ trait GetSelectedThemeResourcePathTrait
     /**
      * Checks the config for feature settings.
      *
-     * @param string $feature
+     * @param  string $feature
      * @return bool
      */
     private function isFeatureSupported(string $feature) : bool

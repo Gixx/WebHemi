@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -24,23 +24,33 @@ use WebHemi\Data\StorageInterface;
  */
 abstract class AbstractStorage implements StorageInterface
 {
-    /** @var ConnectorInterface */
+    /**
+     * @var ConnectorInterface
+     */
     protected $connector;
-    /** @var DataEntityInterface */
+    /**
+     * @var DataEntityInterface
+     */
     private $dataEntityPrototype;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $initialized = false;
 
     /**
      * AbstractStorage constructor. The DataEntity SHOULD not be used directly unless it is required to represent
      * the same instance all the time.
      *
-     * @param ConnectorInterface $connector
-     * @param DataEntityInterface  $dataEntityPrototype
+     * @param ConnectorInterface  $connector
+     * @param DataEntityInterface $dataEntityPrototype
      */
     public function __construct(ConnectorInterface $connector, DataEntityInterface $dataEntityPrototype)
     {
@@ -101,7 +111,7 @@ abstract class AbstractStorage implements StorageInterface
     /**
      * Saves data.
      *
-     * @param DataEntityInterface &$dataEntity
+     * @param  DataEntityInterface &$dataEntity
      * @return StorageInterface
      */
     public function saveEntity(DataEntityInterface&$dataEntity) : StorageInterface
@@ -134,7 +144,7 @@ abstract class AbstractStorage implements StorageInterface
     /**
      * Gets one Entity from the data adapter by expression.
      *
-     * @param array $expression
+     * @param  array $expression
      * @return null|DataEntityInterface
      */
     protected function getDataEntity(array $expression) : ? DataEntityInterface
@@ -152,8 +162,8 @@ abstract class AbstractStorage implements StorageInterface
     /**
      * Gets a set of Entities from the data adapter by expression.
      *
-     * @param array $expression
-     * @param array $options
+     * @param  array $expression
+     * @param  array $options
      * @return DataEntityInterface[]
      */
     protected function getDataEntitySet(array $expression, array $options = []) : array
@@ -166,7 +176,7 @@ abstract class AbstractStorage implements StorageInterface
     /**
      * Gets entity list from data storage set.
      *
-     * @param array $dataList
+     * @param  array $dataList
      * @return DataEntityInterface[]
      */
     protected function getEntitySetFromDataSet(array $dataList) : array
@@ -174,7 +184,9 @@ abstract class AbstractStorage implements StorageInterface
         $entityList = [];
 
         foreach ($dataList as $entityData) {
-            /** @var DataEntityInterface $entity */
+            /**
+             * @var DataEntityInterface $entity
+             */
             $entity = $this->createEntity();
             $this->populateEntity($entity, $entityData);
             $entityList[] = $entity;
@@ -186,7 +198,7 @@ abstract class AbstractStorage implements StorageInterface
     /**
      * Get data from an entity.
      *
-     * @param DataEntityInterface $dataEntity
+     * @param  DataEntityInterface $dataEntity
      * @return array
      */
     abstract protected function getEntityData(DataEntityInterface $dataEntity) : array;
@@ -194,8 +206,8 @@ abstract class AbstractStorage implements StorageInterface
     /**
      * Populates an entity with storage data.
      *
-     * @param DataEntityInterface $dataEntity
-     * @param array               $data
+     * @param  DataEntityInterface $dataEntity
+     * @param  array               $data
      * @return void
      */
     abstract protected function populateEntity(DataEntityInterface&$dataEntity, array $data) : void;

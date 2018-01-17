@@ -7,7 +7,7 @@
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
- * @link      http://www.gixx-web.com
+ * @link http://www.gixx-web.com
  */
 declare(strict_types = 1);
 
@@ -23,33 +23,51 @@ use WebHemi\DateTime;
  */
 class UserGroupStorage extends AbstractStorage
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $dataGroup = 'webhemi_user_group';
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $idKey = 'id_user_group';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name = 'name';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $title = 'title';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $description = 'description';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $isReadOnly = 'is_read_only';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateCreated = 'date_created';
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dateModified = 'date_modified';
 
     /**
      * Populates an entity with storage data.
      *
-     * @param EntityInterface $dataEntity
-     * @param array           $data
+     * @param  EntityInterface $dataEntity
+     * @param  array           $data
      * @return void
      */
     protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
     {
-        /* @var UserGroupEntity $dataEntity */
+        /**
+         * @var UserGroupEntity $dataEntity
+         */
         $dataEntity->setUserGroupId((int) $data[$this->idKey])
             ->setName($data[$this->name])
             ->setTitle($data[$this->title])
@@ -62,12 +80,14 @@ class UserGroupStorage extends AbstractStorage
     /**
      * Get data from an entity.
      *
-     * @param EntityInterface $dataEntity
+     * @param  EntityInterface $dataEntity
      * @return array
      */
     protected function getEntityData(EntityInterface $dataEntity) : array
     {
-        /** @var UserGroupEntity $dataEntity */
+        /**
+         * @var UserGroupEntity $dataEntity
+         */
         $dateCreated = $dataEntity->getDateCreated();
         $dateModified = $dataEntity->getDateModified();
 
@@ -95,12 +115,14 @@ class UserGroupStorage extends AbstractStorage
     /**
      * Returns a User Group entity identified by (unique) ID.
      *
-     * @param int $identifier
+     * @param  int $identifier
      * @return null|UserGroupEntity
      */
     public function getUserGroupById(int $identifier) : ? UserGroupEntity
     {
-        /** @var null|UserGroupEntity $dataEntity */
+        /**
+         * @var null|UserGroupEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
 
         return $dataEntity;
@@ -109,12 +131,14 @@ class UserGroupStorage extends AbstractStorage
     /**
      * Returns a User Group entity by name.
      *
-     * @param string $name
+     * @param  string $name
      * @return null|UserGroupEntity
      */
     public function getUserGroupByName(string $name) : ? UserGroupEntity
     {
-        /** @var null|UserGroupEntity $dataEntity */
+        /**
+         * @var null|UserGroupEntity $dataEntity
+         */
         $dataEntity = $this->getDataEntity([$this->name => $name]);
 
         return $dataEntity;
