@@ -59,7 +59,6 @@
     "check": [
       "@md",
       "@cs",
-      "@cs-fix",
       "@test-full",
       "@phpstan"
     ],

@@ -24,11 +24,11 @@ use WebHemi\Middleware\ActionMiddlewareInterface;
 abstract class AbstractMiddlewareAction implements MiddlewareInterface, ActionMiddlewareInterface
 {
     /**
-     * @var ServerRequestInterface 
+     * @var ServerRequestInterface
      */
     protected $request;
     /**
-     * @var ResponseInterface 
+     * @var ResponseInterface
      */
     protected $response;
 

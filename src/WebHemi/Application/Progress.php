@@ -23,27 +23,27 @@ use WebHemi\Session\ServiceInterface as SessionManager;
 class Progress
 {
     /**
-     * @var EnvironmentManager 
+     * @var EnvironmentManager
      */
     private $environmentManager;
     /**
-     * @var string 
+     * @var string
      */
     private $sessionId;
     /**
-     * @var string 
+     * @var string
      */
     private $callerName;
     /**
-     * @var string 
+     * @var string
      */
     private $progressId;
     /**
-     * @var int 
+     * @var int
      */
     private $totalSteps;
     /**
-     * @var int 
+     * @var int
      */
     private $currentStep;
 
