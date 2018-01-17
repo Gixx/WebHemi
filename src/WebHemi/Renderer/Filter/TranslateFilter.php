@@ -22,7 +22,7 @@ use WebHemi\Renderer\FilterInterface;
 class TranslateFilter implements FilterInterface
 {
     /**
-     * @var DriverInterface 
+     * @var DriverInterface
      */
     private $driver;
 

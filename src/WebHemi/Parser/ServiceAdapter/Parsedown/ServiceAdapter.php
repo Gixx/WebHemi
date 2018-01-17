@@ -24,7 +24,7 @@ use WebHemi\Parser\ServiceInterface;
 class ServiceAdapter implements ServiceInterface
 {
     /**
-     * @var Parsedown 
+     * @var Parsedown
      */
     private $adapter;
 

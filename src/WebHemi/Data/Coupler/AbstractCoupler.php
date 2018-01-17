@@ -25,23 +25,23 @@ use WebHemi\Data\ConnectorInterface;
 abstract class AbstractCoupler implements CouplerInterface
 {
     /**
-     * @var ConnectorInterface 
+     * @var ConnectorInterface
      */
     private $connector;
     /**
-     * @var EntityInterface[] 
+     * @var EntityInterface[]
      */
     protected $dataEntityPrototypes = [];
     /**
-     * @var string 
+     * @var string
      */
     protected $connectorIdKey;
     /**
-     * @var string 
+     * @var string
      */
     protected $connectorDataGroup;
     /**
-     * @var array 
+     * @var array
      */
     protected $dependentDataGroups;
 

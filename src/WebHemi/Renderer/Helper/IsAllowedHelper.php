@@ -142,7 +142,6 @@ class IsAllowedHelper implements HelperInterface
 
         $arguments = func_get_args();
 
-        $method = $arguments[1] ?? null;
         $applicationName = $arguments[2] ?? $this->environmentManager->getSelectedApplication();
         /**
          * @var null|ApplicationEntity $applicationEntity
