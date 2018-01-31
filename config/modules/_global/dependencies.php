@@ -58,9 +58,7 @@ return [
                 'class'     => Acl\ServiceAdapter\Base\ServiceAdapter::class,
                 'arguments' => [
                     Environment\ServiceInterface::class,
-                    Data\Coupler\UserToPolicyCoupler::class,
-                    Data\Coupler\UserToGroupCoupler::class,
-                    Data\Coupler\UserGroupToPolicyCoupler::class,
+                    Data\Storage\UserStorage::class,
                 ],
                 'shared'    => true,
             ],
@@ -166,103 +164,55 @@ return [
             // DataStorage
             Data\Storage\ApplicationStorage::class => [
                 'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\ApplicationEntity::class
+                    Data\Query\QueryInterface::class,
                 ],
                 'shared'    => true,
             ],
-            Data\Storage\User\UserStorage::class => [
+            Data\Storage\UserStorage::class => [
                 'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\User\UserEntity::class
-                ],
-                'shared'    => true,
-            ],
-            Data\Storage\User\UserMetaStorage::class => [
-                'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\User\UserMetaEntity::class
-                ],
-                'shared'    => true,
-            ],
-            Data\Storage\User\UserGroupStorage::class => [
-                'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\User\UserGroupEntity::class
+                    Data\Query\QueryInterface::class,
                 ],
                 'shared'    => true,
             ],
             Data\Storage\AccessManagement\PolicyStorage::class => [
                 'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\AccessManagement\PolicyEntity::class
+                    Data\Query\QueryInterface::class,
                 ],
                 'shared'    => true,
             ],
             Data\Storage\AccessManagement\ResourceStorage::class => [
                 'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\AccessManagement\ResourceEntity::class
+                    Data\Query\QueryInterface::class,
                 ],
                 'shared'    => true,
             ],
             Data\Storage\Filesystem\FilesystemStorage::class => [
                 'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\Filesystem\FilesystemEntity::class
+                    Data\Query\QueryInterface::class,
                 ],
                 'shared'    => true,
             ],
             Data\Storage\Filesystem\FilesystemDirectoryStorage::class => [
                 'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\Filesystem\FilesystemDirectoryEntity::class
+                    Data\Query\QueryInterface::class,
                 ],
                 'shared'    => true,
             ],
             Data\Storage\Filesystem\FilesystemDocumentStorage::class => [
                 'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\Filesystem\FilesystemDocumentEntity::class
+                    Data\Query\QueryInterface::class,
                 ],
                 'shared'    => true,
             ],
             Data\Storage\Filesystem\FilesystemTagStorage::class => [
                 'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\Filesystem\FilesystemTagEntity::class
+                    Data\Query\QueryInterface::class,
                 ],
                 'shared'    => true,
             ],
             Data\Storage\Filesystem\FilesystemCategoryStorage::class => [
                 'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\Filesystem\FilesystemCategoryEntity::class
-                ],
-                'shared'    => true,
-            ],
-            // Data Couplers
-            Data\Coupler\UserToPolicyCoupler::class => [
-                'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\User\UserEntity::class,
-                    Data\Entity\AccessManagement\PolicyEntity::class
-                ],
-                'shared'    => true,
-            ],
-            Data\Coupler\UserToGroupCoupler::class => [
-                'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\User\UserEntity::class,
-                    Data\Entity\User\UserGroupEntity::class
-                ],
-                'shared'    => true,
-            ],
-            Data\Coupler\UserGroupToPolicyCoupler::class => [
-                'arguments' => [
-                    Data\ConnectorInterface::class,
-                    Data\Entity\AccessManagement\PolicyEntity::class,
-                    Data\Entity\User\UserGroupEntity::class
+                    Data\Query\QueryInterface::class,
                 ],
                 'shared'    => true,
             ],

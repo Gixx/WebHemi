@@ -16,26 +16,26 @@ namespace WebHemi\Data\Storage;
 use WebHemi\Data\Query\QueryInterface;
 
 /**
- * Class ApplicationStorage.
+ * Class ResourceStorage.
  */
-class ApplicationStorage extends AbstractStorage
+class ResourceStorage extends AbstractStorage
 {
-     /**
-     * Returns every Application entity.
+    /**
+     * Returns a full set of resources data.
      *
      * @param int $limit
      * @param int $offset
      * @return null|array
      */
-    public function getApplicationList(
+    public function getResourceList(
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
     ) : ? array {
-        $applications = null;
+        $resources = null;
         $this->normalizeLimitAndOffset($limit, $offset);
 
         $data = $this->queryAdapter->fetchData(
-            'getApplicationList',
+            'getResourceList',
             [
                 ':limit' => $limit,
                 ':offset' => $offset
@@ -43,34 +43,34 @@ class ApplicationStorage extends AbstractStorage
         );
 
         foreach ($data as $row) {
-            $applications[$row['name']] = $row;
+            $resources[$row['name']] = $row;
         }
 
-        return $applications;
+        return $resources;
     }
 
     /**
-     * Returns a Application entity identified by (unique) ID.
+     * Returns resource information identified by (unique) ID.
      *
      * @param  int $identifier
      * @return null|array
      */
-    public function getApplicationById($identifier) : ? array
+    public function getResourceById(int $identifier) : ? array
     {
-        $data = $this->queryAdapter->fetchData('getApplicationById', [':idApplication' => $identifier]);
+        $data = $this->queryAdapter->fetchData('getResourceById', [':idResource' => $identifier]);
 
         return $data[0] ?? null;
     }
 
     /**
-     * Returns an Application entity by name.
+     * Returns resource information by name.
      *
      * @param  string $name
      * @return null|array
      */
-    public function getApplicationByName(string $name) : ? array
+    public function getResourceByName(string $name) : ? array
     {
-        $data = $this->queryAdapter->fetchData('getApplicationById', [':name' => $name]);
+        $data = $this->queryAdapter->fetchData('getResourceByName', [':name' => $name]);
 
         return $data[0] ?? null;
     }
