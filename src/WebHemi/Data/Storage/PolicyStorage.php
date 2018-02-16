@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage;
 
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\PolicyEntity;
 use WebHemi\Data\Query\QueryInterface;
 
 /**
@@ -25,16 +27,15 @@ class PolicyStorage extends AbstractStorage
      *
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
     public function getPolicyList(
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $policies = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getPolicyList',
             [
                 ':limit' => $limit,
@@ -42,37 +43,18 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $policies[$row['name']] = $row;
+            /** @var PolicyEntity $entity */
+            $entity = $this->createEntity(PolicyEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $policies;
-    }
-
-    /**
-     * Returns policy data identified by (unique) ID.
-     *
-     * @param  int $identifier
-     * @return null|array
-     */
-    public function getPolicyById(int $identifier) : ? array
-    {
-        $data = $this->queryAdapter->fetchData('getPolicyById', [':idPolicy' => $identifier]);
-
-        return $data[0] ?? null;
-    }
-
-    /**
-     * Returns policy data by name.
-     *
-     * @param  string $name
-     * @return null|array
-     */
-    public function getPolicyByName(string $name) : ? array
-    {
-        $data = $this->queryAdapter->fetchData('getPolicyByName', [':name' => $name]);
-
-        return $data[0] ?? null;
+        return $entitySet;
     }
 
     /**
@@ -81,17 +63,16 @@ class PolicyStorage extends AbstractStorage
      * @param  int $resourceId
      * @param int $limit
      * @param int $offset
-     * @return array
+     * @return EntitySet
      */
     public function getPolicyListByResource(
         int $resourceId,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : array {
-        $policies = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getPolicyListByResource',
             [
                 ':idResource' => $resourceId,
@@ -100,11 +81,18 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $policies[$row['name']] = $row;
+            /** @var PolicyEntity $entity */
+            $entity = $this->createEntity(PolicyEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $policies;
+        return $entitySet;
     }
 
     /**
@@ -113,17 +101,16 @@ class PolicyStorage extends AbstractStorage
      * @param int $applicationId
      * @param int $limit
      * @param int $offset
-     * @return array
+     * @return EntitySet
      */
     public function getPolicyListByApplication(
         int $applicationId,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : array {
-        $policies = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getPolicyListByApplication',
             [
                 ':idApplication' => $applicationId,
@@ -132,11 +119,94 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $policies[$row['name']] = $row;
+            /** @var PolicyEntity $entity */
+            $entity = $this->createEntity(PolicyEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $policies;
+        return $entitySet;
+    }
+
+    /**
+     * Returns a set of policy data identified by user ID.
+     *
+     * @param int $userId
+     * @param int $limit
+     * @param int $offset
+     * @return EntitySet
+     */
+    public function getPolicyListByUser(
+        int $userId,
+        int $limit = QueryInterface::MAX_ROW_LIMIT,
+        int $offset = 0
+    ) : EntitySet {
+        $this->normalizeLimitAndOffset($limit, $offset);
+
+        $data = $this->getQueryAdapter()->fetchData(
+            'getPolicyListByUser',
+            [
+                ':idUser' => $userId,
+                ':limit' => $limit,
+                ':offset' => $offset
+            ]
+        );
+
+        $entitySet = $this->createEntitySet();
+
+        foreach ($data as $row) {
+            /** @var PolicyEntity $entity */
+            $entity = $this->createEntity(PolicyEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
+        }
+
+        return $entitySet;
+    }
+
+    /**
+     * Returns a set of policy data identified by user group ID.
+     *
+     * @param int $userGroupId
+     * @param int $limit
+     * @param int $offset
+     * @return EntitySet
+     */
+    public function getPolicyListByUserGroup(
+        int $userGroupId,
+        int $limit = QueryInterface::MAX_ROW_LIMIT,
+        int $offset = 0
+    ) : EntitySet {
+        $this->normalizeLimitAndOffset($limit, $offset);
+
+        $data = $this->getQueryAdapter()->fetchData(
+            'getPolicyListByUserGroup',
+            [
+                ':idUserGroup' => $userGroupId,
+                ':limit' => $limit,
+                ':offset' => $offset
+            ]
+        );
+
+        $entitySet = $this->createEntitySet();
+
+        foreach ($data as $row) {
+            /** @var PolicyEntity $entity */
+            $entity = $this->createEntity(PolicyEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
+        }
+
+        return $entitySet;
     }
 
     /**
@@ -146,18 +216,17 @@ class PolicyStorage extends AbstractStorage
      * @param int $applicationId
      * @param int $limit
      * @param int $offset
-     * @return array
+     * @return EntitySet
      */
     public function getPolicyListByResourceAndApplication(
         int $resourceId,
         int $applicationId,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : array {
-        $policies = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getPolicyListByResourceAndApplication',
             [
                 ':idResource' => $resourceId,
@@ -167,10 +236,49 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $policies[$row['name']] = $row;
+            /** @var PolicyEntity $entity */
+            $entity = $this->createEntity(PolicyEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $policies;
+        return $entitySet;
+    }
+
+    /**
+     * Returns policy data identified by (unique) ID.
+     *
+     * @param  int $identifier
+     * @return null|PolicyEntity
+     */
+    public function getPolicyById(int $identifier) : ? PolicyEntity
+    {
+        $data = $this->getQueryAdapter()->fetchData('getPolicyById', [':idPolicy' => $identifier]);
+
+        /** @var null|PolicyEntity $entity */
+        $entity = $this->createEntity(PolicyEntity::class, $data[0] ?? []);
+
+        return $entity;
+    }
+
+    /**
+     * Returns policy data by name.
+     *
+     * @param  string $name
+     * @return null|PolicyEntity
+     */
+    public function getPolicyByName(string $name) : ? PolicyEntity
+    {
+        $data = $this->getQueryAdapter()->fetchData('getPolicyByName', [':name' => $name]);
+
+        /** @var null|PolicyEntity $entity */
+        $entity = $this->createEntity(PolicyEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 }

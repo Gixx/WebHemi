@@ -14,8 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Auth;
 
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Data\Entity\UserEntity;
+use WebHemi\Data\Storage\UserStorage;
 
 /**
  * Interface ServiceInterface.

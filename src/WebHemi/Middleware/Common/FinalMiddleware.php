@@ -16,7 +16,7 @@ namespace WebHemi\Middleware\Common;
 use RuntimeException;
 use Throwable;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Http\ResponseInterface;
 use WebHemi\Http\ServerRequestInterface;

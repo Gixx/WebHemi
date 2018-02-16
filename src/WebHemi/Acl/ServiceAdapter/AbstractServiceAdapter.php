@@ -14,13 +14,12 @@ declare(strict_types = 1);
 namespace WebHemi\Acl\ServiceAdapter;
 
 use WebHemi\Acl;
-use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
-use WebHemi\Data\Coupler\UserToGroupCoupler;
-use WebHemi\Data\Coupler\UserToPolicyCoupler;
-use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
-use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
+use WebHemi\Data\Entity\PolicyEntity;
+use WebHemi\Data\Entity\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
+use WebHemi\Data\Storage\PolicyStorage;
+use WebHemi\Data\Storage\UserStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 
 /**
@@ -32,37 +31,32 @@ abstract class AbstractServiceAdapter implements Acl\ServiceInterface
      * @var EnvironmentInterface
      */
     protected $environment;
+
     /**
-     * @var UserToPolicyCoupler
+     * @var UserStorage
      */
-    protected $userToPolicyCoupler;
+    protected $userStorage;
+
     /**
-     * @var UserToGroupCoupler
+     * @var PolicyStorage
      */
-    protected $userToGroupCoupler;
-    /**
-     * @var UserGroupToPolicyCoupler
-     */
-    protected $userGroupToPolicyCoupler;
+    protected $policyStorage;
 
     /**
      * ServiceAdapter constructor.
      *
-     * @param EnvironmentInterface     $environment
-     * @param UserToPolicyCoupler      $userToPolicyCoupler
-     * @param UserToGroupCoupler       $userToGroupCoupler
-     * @param UserGroupToPolicyCoupler $userGroupToPolicyCoupler
+     * @param EnvironmentInterface  $environment
+     * @param UserStorage           $userStorage
+     * @param PolicyStorage         $policyStorage
      */
     public function __construct(
         EnvironmentInterface $environment,
-        UserToPolicyCoupler $userToPolicyCoupler,
-        UserToGroupCoupler $userToGroupCoupler,
-        UserGroupToPolicyCoupler $userGroupToPolicyCoupler
+        UserStorage $userStorage,
+        PolicyStorage $policyStorage
     ) {
         $this->environment = $environment;
-        $this->userToPolicyCoupler = $userToPolicyCoupler;
-        $this->userToGroupCoupler = $userToGroupCoupler;
-        $this->userGroupToPolicyCoupler = $userGroupToPolicyCoupler;
+        $this->userStorage = $userStorage;
+        $this->policyStorage = $policyStorage;
     }
 
     /**

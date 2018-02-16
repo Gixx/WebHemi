@@ -16,8 +16,8 @@ namespace WebHemi\Auth\ServiceAdapter\Base;
 use WebHemi\Auth\CredentialInterface;
 use WebHemi\Auth\ResultInterface;
 use WebHemi\Auth\ServiceAdapter\AbstractServiceAdapter;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Data\Entity\UserEntity;
+use WebHemi\Data\Storage\UserStorage;
 
 /**
  * Class ServiceAdapter.
@@ -46,9 +46,9 @@ class ServiceAdapter extends AbstractServiceAdapter
 
         if (!$user instanceof UserEntity) {
             $result->setCode(ResultInterface::FAILURE_IDENTITY_NOT_FOUND);
-        } elseif (!$user->getEnabled()) {
+        } elseif (!$user->getIsEnabled()) {
             $result->setCode(ResultInterface::FAILURE_IDENTITY_DISABLED);
-        } elseif (!$user->getActive()) {
+        } elseif (!$user->getIsActive()) {
             $result->setCode(ResultInterface::FAILURE_IDENTITY_INACTIVE);
         } elseif (!password_verify($credentials['password'], $user->getPassword())) {
             $result->setCode(ResultInterface::FAILURE_CREDENTIAL_INVALID);

@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin;
 
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\UserGroupEntity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
@@ -66,28 +68,28 @@ class DashboardAction extends AbstractMiddlewareAction
 
         $userEntity = $this->authAdapter->getIdentity();
         /**
-         * @var \WebHemi\Data\Coupler\UserToGroupCoupler $userToGroupCoupler
+         * @var \WebHemi\Data\Storage\UserStorage $userStorage
          */
-        $userToGroupCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToGroupCoupler::class);
+        $userStorage = $dependencyInjection->get(\WebHemi\Data\Storage\UserStorage::class);
         /**
-         * @var \WebHemi\Data\Coupler\UserToPolicyCoupler $userToPolicyCoupler
+         * @var \WebHemi\Data\Storage\PolicyStorage $policyStorage
          */
-        $userToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserToPolicyCoupler::class);
-        /**
-         * @var \WebHemi\Data\Coupler\UserGroupToPolicyCoupler $userToGroupToPolicyCoupler
-         */
-        $userToGroupToPolicyCoupler = $dependencyInjection->get(\WebHemi\Data\Coupler\UserGroupToPolicyCoupler::class);
+        $policyStorage = $dependencyInjection->get(\WebHemi\Data\Storage\PolicyStorage::class);
 
-        $userGroups = $userToGroupCoupler->getEntityDependencies($userEntity);
-        $userPolicies = $userToPolicyCoupler->getEntityDependencies($userEntity);
+        $userGroups = $userStorage->getUserGroupListByUser($userEntity->getUserId());
+        $userPolicies = $policyStorage->getPolicyListByUser($userEntity->getUserId());
+        /** @var EntitySet $userGroupPolicies */
+        $userGroupPolicies = null;
 
-        $userGroupPolicies = [];
-
+        /** @var UserGroupEntity $userGroupEntity */
         foreach ($userGroups as $userGroupEntity) {
-            $userGroupPolicies = array_merge(
-                $userGroupPolicies,
-                $userToGroupToPolicyCoupler->getEntityDependencies($userGroupEntity)
-            );
+            $policyList = $policyStorage->getPolicyListByUserGroup($userGroupEntity->getUserGroupId());
+
+            if (empty($userGroupPolicies)) {
+                $userGroupPolicies = $policyList;
+            } else {
+                $userGroupPolicies->merge($policyList);
+            }
         }
 
         // @TODO TBD

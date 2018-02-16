@@ -13,25 +13,16 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Website;
 
+use InvalidArgumentException;
 use WebHemi\Data\Entity;
 use WebHemi\Data\Storage;
-use WebHemi\Data\StorageInterface;
-use WebHemi\Data\Traits\StorageInjectorTrait;
+use WebHemi\Data\Storage\StorageInterface;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 use WebHemi\Router\ProxyInterface;
 
 /**
  * Class IndexAction.
- *
- * @method Storage\ApplicationStorage getApplicationStorage()
- * @method Storage\Filesystem\FilesystemCategoryStorage getFilesystemCategoryStorage()
- * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
- * @method Storage\Filesystem\FilesystemDocumentStorage getFilesystemDocumentStorage()
- * @method Storage\Filesystem\FilesystemStorage getFilesystemStorage()
- * @method Storage\Filesystem\FilesystemTagStorage getFilesystemTagStorage()
- * @method Storage\User\UserStorage getUserStorage()
- * @method Storage\User\UserMetaStorage getUserMetaStorage()
  */
 class IndexAction extends AbstractMiddlewareAction
 {
@@ -40,7 +31,10 @@ class IndexAction extends AbstractMiddlewareAction
      */
     protected $environmentManager;
 
-    use StorageInjectorTrait;
+    /**
+     * @var StorageInterface[]
+     */
+    private $dataStorages;
 
     /**
      * IndexAction constructor.
@@ -51,7 +45,67 @@ class IndexAction extends AbstractMiddlewareAction
     public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
     {
         $this->environmentManager = $environmentManager;
-        $this->addStorageInstances($dataStorages);
+
+        foreach ($dataStorages as $storage) {
+            $this->dataStorages[get_class($storage)] = $storage;
+        }
+    }
+
+    /**
+     * Returns a stored storage instance.
+     *
+     * @param string $storageClass
+     * @return StorageInterface
+     */
+    private function getStorage(string $storageClass) : StorageInterface
+    {
+        if (!isset($this->dataStorages[$storageClass])) {
+            throw new InvalidArgumentException(
+                sprintf('Storage class reference "%s" is not defined in this class.', $storageClass),
+                1000
+            );
+        }
+
+        return $this->dataStorages[$storageClass];
+    }
+
+    /**
+     * Gets the application storage instance.
+     *
+     * @return Storage\ApplicationStorage
+     */
+    protected function getApplicationStorage() : Storage\ApplicationStorage
+    {
+        /** @var Storage\ApplicationStorage $storage */
+        $storage = $this->getStorage(Storage\ApplicationStorage::class);
+
+        return $storage;
+    }
+
+    /**
+     * Gets the filesystem storage instance.
+     *
+     * @return Storage\FilesystemStorage
+     */
+    protected function getFilesystemStorage() : Storage\FilesystemStorage
+    {
+        /** @var Storage\FilesystemStorage $storage */
+        $storage = $this->getStorage(Storage\FilesystemStorage::class);
+
+        return $storage;
+    }
+
+    /**
+     * Gets the user storage instance.
+     *
+     * @return Storage\UserStorage
+     */
+    protected function getUserStorage() : Storage\UserStorage
+    {
+        /** @var Storage\UserStorage $storage */
+        $storage = $this->getStorage(Storage\UserStorage::class);
+
+        return $storage;
     }
 
     /**
@@ -80,16 +134,16 @@ class IndexAction extends AbstractMiddlewareAction
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity[] $publications
+         * @var Entity\EntitySet $publications
          */
         $publications = $this->getFilesystemStorage()
-            ->getPublishedDocuments($applicationEntity->getApplicationId());
+            ->getFilesystemPublishedDocumentList($applicationEntity->getApplicationId());
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity $filesystemEntity
+         * @var Entity\FilesystemPublishedDocumentEntity $publishedDocumentEntity
          */
-        foreach ($publications as $filesystemEntity) {
-            $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
+        foreach ($publications as $publishedDocumentEntity) {
+            $blogPosts[] = $this->getBlobPostData($applicationEntity, $publishedDocumentEntity);
         }
 
         return [
@@ -122,44 +176,39 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * Collets the blog post data
      *
-     * @param  Entity\ApplicationEntity           $applicationEntity
-     * @param  Entity\Filesystem\FilesystemEntity $filesystemEntity
+     * @param  Entity\ApplicationEntity                 $applicationEntity
+     * @param  Entity\FilesystemPublishedDocumentEntity $publishedDocumentEntity
      * @return array
      */
     protected function getBlobPostData(
         Entity\ApplicationEntity $applicationEntity,
-        Entity\Filesystem\FilesystemEntity $filesystemEntity
+        Entity\FilesystemPublishedDocumentEntity $publishedDocumentEntity
     ) : array {
         /**
-         * @var Entity\Filesystem\FilesystemDocumentEntity $documentEntity
+         * @var array $documentMeta
          */
-        $documentEntity = $this->getFilesystemDocumentStorage()
-            ->getFilesystemDocumentById($filesystemEntity->getDocumentId());
-
         $documentMeta = $this->getFilesystemStorage()
-            ->getPublicationMeta($filesystemEntity->getFilesystemId());
-
-        $author = $this->getPublicationAuthor(
-            $documentEntity->getAuthorId(),
-            $applicationEntity->getApplicationId()
-        );
+            ->getSimpleFilesystemMetaListByFilesystem($publishedDocumentEntity->getFilesystemId());
 
         return [
-            'author' => $author,
+            'author' => $this->getPublicationAuthor(
+                $applicationEntity->getApplicationId(),
+                $publishedDocumentEntity->getAuthorId()
+            ),
             'tags' => $this->getPublicationTags(
                 $applicationEntity->getApplicationId(),
-                $filesystemEntity->getFilesystemId()
+                $publishedDocumentEntity->getFilesystemId()
             ),
             'category' => $this->getPublicationCategory(
                 $applicationEntity->getApplicationId(),
-                $filesystemEntity->getCategoryId()
+                $publishedDocumentEntity->getCategoryId()
             ),
-            'path' => $this->getPublicationPath($filesystemEntity),
-            'title' => $filesystemEntity->getTitle(),
-            'summary' => $filesystemEntity->getDescription(),
-            'contentLead' => $documentEntity->getContentLead(),
-            'contentBody' => $documentEntity->getContentBody(),
-            'publishedAt' => $filesystemEntity->getDatePublished(),
+            'path' => $publishedDocumentEntity->getUri(),
+            'title' => $publishedDocumentEntity->getTitle(),
+            'summary' => $publishedDocumentEntity->getDescription(),
+            'contentLead' => $publishedDocumentEntity->getContentLead(),
+            'contentBody' => $publishedDocumentEntity->getContentBody(),
+            'publishedAt' => $publishedDocumentEntity->getDatePublished(),
             'meta' => $documentMeta,
         ];
     }
@@ -167,14 +216,14 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * Gets author information for a filesystem record.
      *
-     * @param  int $userId
      * @param  int $applicationId
+     * @param  int $userId
      * @return array
      */
-    protected function getPublicationAuthor(int $userId, int $applicationId) : array
+    protected function getPublicationAuthor(int $applicationId, int $userId) : array
     {
         /**
-         * @var Entity\User\UserEntity $user
+         * @var Entity\UserEntity $user
          */
         $user = $this->getUserStorage()
             ->getUserById($userId);
@@ -182,38 +231,21 @@ class IndexAction extends AbstractMiddlewareAction
         /**
          * @var array $userMeta
          */
-        $userMeta = $this->getUserMetaStorage()
-            ->getUserMetaArrayForUserId($userId);
+        $userMeta = $this->getUserStorage()
+            ->getSimpleUserMetaListByUser($userId);
 
         /**
-         * @var array $userDirectoryData
+         * @var Entity\FilesystemDirectoryDataEntity $userDirectoryData
          */
-        $userDirectoryData = $this->getFilesystemDirectoryStorage()
-            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_USER);
+        $userDirectoryData = $this->getFilesystemStorage()
+            ->getFilesystemDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_USER);
 
         return [
             'userId' => $userId,
             'userName' => $user->getUserName(),
-            'url' => $userDirectoryData['uri'].'/'.$user->getUserName(),
+            'url' => $userDirectoryData->getUri().'/'.$user->getUserName(),
             'meta' => $userMeta,
         ];
-    }
-
-    /**
-     * Generates the content path.
-     *
-     * @param  Entity\Filesystem\FilesystemEntity $filesystemEntity
-     * @return string
-     */
-    protected function getPublicationPath(Entity\Filesystem\FilesystemEntity $filesystemEntity) : string
-    {
-        $path = $filesystemEntity->getPath().'/'.$filesystemEntity->getBaseName();
-
-        while (strpos($path, '//') !== false) {
-            $path = str_replace('//', '/', $path);
-        }
-
-        return ltrim($path, '/');
     }
 
     /**
@@ -227,28 +259,26 @@ class IndexAction extends AbstractMiddlewareAction
     {
         $tags = [];
         /**
-         * @var Entity\Filesystem\FilesystemTagEntity[] $tagEntities
+         * @var Entity\EntitySet $tagEntities
          */
-        $tagEntities = $this->getFilesystemTagStorage()
-            ->getFilesystemTagsByFilesystem($filesystemId);
+        $tagEntities = $this->getFilesystemStorage()
+            ->getFilesystemTagListByFilesystem($filesystemId);
 
-        if (!empty($tagEntities)) {
-            /**
-             * @var array $categoryDirectoryData
-             */
-            $categoryDirectoryData = $this->getFilesystemDirectoryStorage()
-                ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);
+        /**
+         * @var Entity\FilesystemDirectoryDataEntity $categoryDirectoryData
+         */
+        $categoryDirectoryData = $this->getFilesystemStorage()
+            ->getFilesystemDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);
 
-            /**
-             * @var Entity\Filesystem\FilesystemTagEntity $tagEntity
-             */
-            foreach ($tagEntities as $tagEntity) {
-                $tags[] = [
-                    'url' => $categoryDirectoryData['uri'].'/'.$tagEntity->getName(),
-                    'name' => $tagEntity->getName(),
-                    'title' => $tagEntity->getTitle()
-                ];
-            }
+        /**
+         * @var Entity\FilesystemTagEntity $tagEntity
+         */
+        foreach ($tagEntities as $tagEntity) {
+            $tags[] = [
+                'url' => $categoryDirectoryData->getUri().'/'.$tagEntity->getName(),
+                'name' => $tagEntity->getName(),
+                'title' => $tagEntity->getTitle()
+            ];
         }
 
         return $tags;
@@ -264,19 +294,19 @@ class IndexAction extends AbstractMiddlewareAction
     protected function getPublicationCategory(int $applicationId, int $categoryId) : array
     {
         /**
-         * @var Entity\Filesystem\FilesystemCategoryEntity $categoryEntity
+         * @var Entity\FilesystemCategoryEntity $categoryEntity
          */
-        $categoryEntity = $this->getFilesystemCategoryStorage()
+        $categoryEntity = $this->getFilesystemStorage()
             ->getFilesystemCategoryById($categoryId);
 
         /**
-         * @var array $categoryDirectoryData
+         * @var Entity\FilesystemDirectoryDataEntity $categoryDirectoryData
          */
-        $categoryDirectoryData = $this->getFilesystemDirectoryStorage()
-            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
+        $categoryDirectoryData = $this->getFilesystemStorage()
+            ->getFilesystemDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
 
         $category = [
-            'url' => $categoryDirectoryData['uri'].'/'.$categoryEntity->getName(),
+            'url' => $categoryDirectoryData->getUri().'/'.$categoryEntity->getName(),
             'name' => $categoryEntity->getName(),
             'title' => $categoryEntity->getTitle()
         ];

@@ -62,33 +62,36 @@ class TagAction extends IndexAction
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
         /**
-         * @var Entity\Filesystem\FilesystemTagEntity $tagEntity
+         * @var Entity\FilesystemTagEntity $tagEntity
          */
-        $tagEntity = $this->getFilesystemTagStorage()
+        $tagEntity = $this->getFilesystemStorage()
             ->getFilesystemTagByApplicationAndName(
                 $applicationEntity->getApplicationId(),
                 $tagName
             );
 
-        if (!$tagEntity instanceof Entity\Filesystem\FilesystemTagEntity) {
+        if (!$tagEntity instanceof Entity\FilesystemTagEntity) {
             throw new RuntimeException('Not Found', 404);
         }
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity[] $publications
+         * @var Entity\EntitySet $publications
          */
         $publications = $this->getFilesystemStorage()
-            ->getPublishedDocumentsByTag($applicationEntity->getApplicationId(), $tagEntity->getFilesystemTagId());
+            ->getFilesystemPublishedDocumentListByTag(
+                $applicationEntity->getApplicationId(),
+                $tagEntity->getFilesystemTagId()
+            );
 
         if (empty($publications)) {
             $this->templateName = 'website-post-list-empty';
         }
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity $filesystemEntity
+         * @var Entity\FilesystemPublishedDocumentEntity $publishedDocumentEntity
          */
-        foreach ($publications as $filesystemEntity) {
-            $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
+        foreach ($publications as $publishedDocumentEntity) {
+            $blogPosts[] = $this->getBlobPostData($applicationEntity, $publishedDocumentEntity);
         }
 
         return [

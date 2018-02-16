@@ -1,5 +1,5 @@
 SELECT
-    r.`id_am_resource`,
+    r.`id_resource`,
     r.`name`,
     r.`title`,
     r.`description`,
@@ -8,7 +8,7 @@ SELECT
     r.`date_created`,
     r.`date_modified`
 FROM
-    `webhemi_am_resource` AS r
+    `webhemi_resource` AS r
 WHERE
     r.`name` = :name
 ORDER BY

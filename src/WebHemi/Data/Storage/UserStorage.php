@@ -13,6 +13,10 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage;
 
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\UserEntity;
+use WebHemi\Data\Entity\UserGroupEntity;
+use WebHemi\Data\Entity\UserMetaEntity;
 use WebHemi\Data\Query\QueryInterface;
 use WebHemi\StringLib;
 
@@ -26,17 +30,15 @@ class UserStorage extends AbstractStorage
      *
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
     public function getUserList(
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $users = null;
-
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getUserList',
             [
                 ':limit' => $limit,
@@ -44,50 +46,66 @@ class UserStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $users[$row['email']] = $row;
+            /** @var UserEntity $entity */
+            $entity = $this->createEntity(UserEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $users;
+        return $entitySet;
     }
 
     /**
      * Returns user information identified by (unique) ID.
      *
      * @param  int $identifier
-     * @return null|array
+     * @return null|UserEntity
      */
-    public function getUserById(int $identifier) : ? array
+    public function getUserById(int $identifier) : ? UserEntity
     {
-        $data = $this->queryAdapter->fetchData('getUserById', [':idUser' => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData('getUserById', [':idUser' => $identifier]);
 
-        return $data[0] ?? null;
+        /** @var null|UserEntity $entity */
+        $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
      * Returns user information by user name.
      *
      * @param  string $username
-     * @return null|array
+     * @return null|UserEntity
      */
-    public function getUserByUsername(string $username) : ? array
+    public function getUserByUsername(string $username) : ? UserEntity
     {
-        $data = $this->queryAdapter->fetchData('getUserByUsername', [':username' => $username]);
+        $data = $this->getQueryAdapter()->fetchData('getUserByUsername', [':username' => $username]);
 
-        return $data[0] ?? null;
+        /** @var null|UserEntity $entity */
+        $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
      * Returns user information by email.
      *
      * @param  string $email
-     * @return null|array
+     * @return null|UserEntity
      */
-    public function getUserByEmail(string $email) : ? array
+    public function getUserByEmail(string $email) : ? UserEntity
     {
-        $data = $this->queryAdapter->fetchData('getUserByEmail', [':email' => $email]);
+        $data = $this->getQueryAdapter()->fetchData('getUserByEmail', [':email' => $email]);
 
-        return $data[0] ?? null;
+        /** @var null|UserEntity $entity */
+        $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
@@ -95,11 +113,11 @@ class UserStorage extends AbstractStorage
      *
      * @param  string $username
      * @param  string $password
-     * @return null|array
+     * @return null|UserEntity
      */
-    public function getUserByCredentials(string $username, string $password) : ? array
+    public function getUserByCredentials(string $username, string $password) : ? UserEntity
     {
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getUserByCredentials',
             [
                 ':username' => $username,
@@ -107,7 +125,10 @@ class UserStorage extends AbstractStorage
             ]
         );
 
-        return $data[0] ?? null;
+        /** @var null|UserEntity $entity */
+        $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
@@ -116,17 +137,16 @@ class UserStorage extends AbstractStorage
      * @param int $identifier
      * @param int $limit
      * @param int $offset
-     * @return array
+     * @return EntitySet
      */
     public function getUserMetaListByUser(
         int $identifier,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : array {
-        $list = [];
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $metaDataList = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getUserMetaListByUser',
             [
                 ':userId' => $identifier,
@@ -135,23 +155,55 @@ class UserStorage extends AbstractStorage
             ]
         );
 
-        foreach ($metaDataList as $metaData) {
-            $data = $this->processMetaData($metaData['meta_key'], $metaData['meta_data']);
-            $list[$data['key']] = $data['value'];
+        $entitySet = $this->createEntitySet();
+
+        foreach ($data as $row) {
+            /** @var UserEntity $entity */
+            $entity = $this->createEntity(UserMetaEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $list;
+        return $entitySet;
+    }
+
+    /**
+     * Returns a parsed/simplified form of the user meta list.
+     *
+     * @param int $identifier
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getSimpleUserMetaListByUser(
+        int $identifier,
+        int $limit = QueryInterface::MAX_ROW_LIMIT,
+        int $offset = 0
+    ) : array {
+        $metaInfo = [];
+        $entitySet = $this->getUserMetaListByUser($identifier, $limit, $offset);
+
+        foreach ($entitySet as $userMetaEntity) {
+            $data = $this->processMetaData($userMetaEntity);
+            $metaInfo[$data['key']] = $data['value'];
+        }
+
+        return $metaInfo;
     }
 
     /**
      * Processes a user meta information.
      *
-     * @param string $key
-     * @param string $value
+     * @param UserMetaEntity $userMetaEntity
      * @return array
      */
-    private function processMetaData(string $key, string $value) : array
+    private function processMetaData(UserMetaEntity $userMetaEntity) : array
     {
+        $key = $userMetaEntity->getMetaKey();
+        $value = $userMetaEntity->getMetaData();
+
         if ($key == 'avatar' && strpos($value, 'gravatar://') === 0) {
             $value = str_replace('gravatar://', '', $value);
             $value = 'http://www.gravatar.com/avatar/'.md5(strtolower($value)).'?s=256&r=g';
@@ -176,16 +228,15 @@ class UserStorage extends AbstractStorage
      *
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
     public function getUserGroupList(
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $userGroups = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getUserGroupList',
             [
                 ':limit' => $limit,
@@ -193,11 +244,18 @@ class UserStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $userGroups[$row['name']] = $row;
+            /** @var UserGroupEntity $entity */
+            $entity = $this->createEntity(UserGroupEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $userGroups;
+        return $entitySet;
     }
 
     /**
@@ -206,17 +264,16 @@ class UserStorage extends AbstractStorage
      * @param int $identifier
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
     public function getUserGroupListByUser(
         int $identifier,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $userGroups = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getUserGroupListByUser',
             [
                 ':userId' => $identifier,
@@ -225,36 +282,49 @@ class UserStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $userGroups[$row['name']] = $row;
+            /** @var UserGroupEntity $entity */
+            $entity = $this->createEntity(UserGroupEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $userGroups;
+        return $entitySet;
     }
 
     /**
      * Returns user group information identified by (unique) ID.
      *
      * @param  int $identifier
-     * @return null|array
+     * @return null|UserGroupEntity
      */
-    public function getUserGroupById(int $identifier) : ? array
+    public function getUserGroupById(int $identifier) : ? UserGroupEntity
     {
-        $data = $this->queryAdapter->fetchData('getUserGroupById', [':idUserGroup' => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData('getUserGroupById', [':idUserGroup' => $identifier]);
 
-        return $data[0] ?? null;
+        /** @var null|UserGroupEntity $entity */
+        $entity = $this->createEntity(UserGroupEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
      * Returns a user group information by name.
      *
      * @param  string $name
-     * @return null|array
+     * @return null|UserGroupEntity
      */
-    public function getUserGroupByName(string $name) : ? array
+    public function getUserGroupByName(string $name) : ? UserGroupEntity
     {
-        $data = $this->queryAdapter->fetchData('getUserGroupByName', [':name' => $name]);
+        $data = $this->getQueryAdapter()->fetchData('getUserGroupByName', [':name' => $name]);
 
-        return $data[0] ?? null;
+        /** @var null|UserGroupEntity $entity */
+        $entity = $this->createEntity(UserGroupEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 }

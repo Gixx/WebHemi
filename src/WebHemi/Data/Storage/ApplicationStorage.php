@@ -14,6 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Data\Storage;
 
 use WebHemi\Data\Query\QueryInterface;
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\ApplicationEntity;
 
 /**
  * Class ApplicationStorage.
@@ -25,16 +27,15 @@ class ApplicationStorage extends AbstractStorage
      *
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
     public function getApplicationList(
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $applications = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getApplicationList',
             [
                 ':limit' => $limit,
@@ -42,36 +43,49 @@ class ApplicationStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $applications[$row['name']] = $row;
+            /** @var ApplicationEntity $entity */
+            $entity = $this->createEntity(ApplicationEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $applications;
+        return $entitySet;
     }
 
     /**
      * Returns a Application entity identified by (unique) ID.
      *
      * @param  int $identifier
-     * @return null|array
+     * @return null|ApplicationEntity
      */
-    public function getApplicationById($identifier) : ? array
+    public function getApplicationById(int $identifier) : ? ApplicationEntity
     {
-        $data = $this->queryAdapter->fetchData('getApplicationById', [':idApplication' => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData('getApplicationById', [':idApplication' => $identifier]);
 
-        return $data[0] ?? null;
+        /** @var null|ApplicationEntity $entity */
+        $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
      * Returns an Application entity by name.
      *
      * @param  string $name
-     * @return null|array
+     * @return null|ApplicationEntity
      */
-    public function getApplicationByName(string $name) : ? array
+    public function getApplicationByName(string $name) : ? ApplicationEntity
     {
-        $data = $this->queryAdapter->fetchData('getApplicationById', [':name' => $name]);
+        $data = $this->getQueryAdapter()->fetchData('getApplicationByName', [':name' => $name]);
 
-        return $data[0] ?? null;
+        /** @var null|ApplicationEntity $entity */
+        $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 }

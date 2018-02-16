@@ -76,7 +76,7 @@ return [
                     Configuration\ServiceInterface::class,
                     Auth\ResultInterface::class,
                     Auth\StorageInterface::class,
-                    Data\Storage\User\UserStorage::class,
+                    Data\Storage\UserStorage::class,
                 ],
                 'shared'    => true,
             ],
@@ -165,54 +165,49 @@ return [
             Data\Storage\ApplicationStorage::class => [
                 'arguments' => [
                     Data\Query\QueryInterface::class,
+                    Data\Entity\EntitySet::class,
+                    Data\Entity\ApplicationEntity::class
                 ],
                 'shared'    => true,
             ],
             Data\Storage\UserStorage::class => [
                 'arguments' => [
                     Data\Query\QueryInterface::class,
+                    Data\Entity\EntitySet::class,
+                    Data\Entity\UserEntity::class,
+                    Data\Entity\UserGroupEntity::class,
+                    Data\Entity\UserMetaEntity::class
                 ],
                 'shared'    => true,
             ],
-            Data\Storage\AccessManagement\PolicyStorage::class => [
+            Data\Storage\PolicyStorage::class => [
                 'arguments' => [
                     Data\Query\QueryInterface::class,
+                    Data\Entity\EntitySet::class,
+                    Data\Entity\PolicyEntity::class,
                 ],
                 'shared'    => true,
             ],
-            Data\Storage\AccessManagement\ResourceStorage::class => [
+            Data\Storage\ResourceStorage::class => [
                 'arguments' => [
                     Data\Query\QueryInterface::class,
+                    Data\Entity\EntitySet::class,
+                    Data\Entity\ResourceEntity::class,
                 ],
                 'shared'    => true,
             ],
-            Data\Storage\Filesystem\FilesystemStorage::class => [
+            Data\Storage\FilesystemStorage::class => [
                 'arguments' => [
                     Data\Query\QueryInterface::class,
-                ],
-                'shared'    => true,
-            ],
-            Data\Storage\Filesystem\FilesystemDirectoryStorage::class => [
-                'arguments' => [
-                    Data\Query\QueryInterface::class,
-                ],
-                'shared'    => true,
-            ],
-            Data\Storage\Filesystem\FilesystemDocumentStorage::class => [
-                'arguments' => [
-                    Data\Query\QueryInterface::class,
-                ],
-                'shared'    => true,
-            ],
-            Data\Storage\Filesystem\FilesystemTagStorage::class => [
-                'arguments' => [
-                    Data\Query\QueryInterface::class,
-                ],
-                'shared'    => true,
-            ],
-            Data\Storage\Filesystem\FilesystemCategoryStorage::class => [
-                'arguments' => [
-                    Data\Query\QueryInterface::class,
+                    Data\Entity\EntitySet::class,
+                    Data\Entity\FilesystemCategoryEntity::class,
+                    Data\Entity\FilesystemDirectoryEntity::class,
+                    Data\Entity\FilesystemDirectoryDataEntity::class,
+                    Data\Entity\FilesystemDocumentEntity::class,
+                    Data\Entity\FilesystemEntity::class,
+                    Data\Entity\FilesystemMetaEntity::class,
+                    Data\Entity\FilesystemPublishedDocumentEntity::class,
+                    Data\Entity\FilesystemTagEntity::class,
                 ],
                 'shared'    => true,
             ],
@@ -264,7 +259,7 @@ return [
                     Environment\ServiceInterface::class,
                     Acl\ServiceInterface::class,
                     Auth\ServiceInterface::class,
-                    Data\Storage\AccessManagement\ResourceStorage::class,
+                    Data\Storage\ResourceStorage::class,
                     Data\Storage\ApplicationStorage::class
                 ],
                 'shared'    => true,

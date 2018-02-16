@@ -11,14 +11,46 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Data\Storage;
+namespace WebHemi\Data\Entity;
 
-use Iterator;
+use InvalidArgumentException;
 
 /**
  * Class AbstractEntity
  */
-abstract class AbstractEntity implements Iterator
+abstract class AbstractEntity implements EntityInterface
 {
+    /**
+     * @var array
+     */
+    protected $container = [];
 
+    /**
+     * Returns entity data as an array.
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->container;
+    }
+
+    /**
+     * Fills entity from an arrray.
+     *
+     * @param array $arrayData
+     */
+    public function fromArray(array $arrayData): void
+    {
+        foreach ($arrayData as $key => $value) {
+            if (!array_key_exists($key, $this->container)) {
+                throw new InvalidArgumentException(
+                    sprintf('"%s" is not defined in ' . get_called_class(), $key),
+                    1000
+                );
+            }
+
+            $this->container[$key] = $value;
+        }
+    }
 }

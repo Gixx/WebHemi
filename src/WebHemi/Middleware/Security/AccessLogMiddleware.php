@@ -14,7 +14,7 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Security;
 
 use WebHemi\Auth\ServiceInterface as AuthServiceInterface;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Http\ResponseInterface;
 use WebHemi\Http\ServerRequestInterface;

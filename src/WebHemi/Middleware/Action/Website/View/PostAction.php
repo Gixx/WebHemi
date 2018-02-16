@@ -48,16 +48,16 @@ class PostAction extends IndexAction
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
         /**
-         * @var null|Entity\Filesystem\FilesystemEntity $filesystemEntity
+         * @var null|Entity\FilesystemPublishedDocumentEntity $filesystemEntity
          */
         $filesystemEntity = $this->getFilesystemStorage()
-            ->getFilesystemByApplicationAndPath(
+            ->getFilesystemPublishedDocumentByApplicationAndPath(
                 $applicationEntity->getApplicationId(),
                 $routingParams['path'],
                 $routingParams['basename']
             );
 
-        if (!$filesystemEntity instanceof Entity\Filesystem\FilesystemEntity) {
+        if (!$filesystemEntity instanceof Entity\FilesystemPublishedDocumentEntity) {
             throw new RuntimeException('Page not found', 404);
         }
 

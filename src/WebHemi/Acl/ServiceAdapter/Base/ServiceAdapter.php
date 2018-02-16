@@ -14,11 +14,12 @@ declare(strict_types = 1);
 namespace WebHemi\Acl\ServiceAdapter\Base;
 
 use WebHemi\Acl\ServiceAdapter\AbstractServiceAdapter;
-use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
-use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\PolicyEntity;
+use WebHemi\Data\Entity\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Entity\User\UserGroupEntity;
+use WebHemi\Data\Entity\UserEntity;
+use WebHemi\Data\Entity\UserGroupEntity;
 
 /**
  * Class ServiceAdapter.
@@ -43,11 +44,10 @@ class ServiceAdapter extends AbstractServiceAdapter
         // By default we block everything.
         $allowed = false;
 
-        /**
-         * @var PolicyEntity[] $policies
-         */
-        $policies = array_merge($this->getUserPolicies($userEntity), $this->getUserGroupPolicies($userEntity));
+        $policies = $this->getUserPolicies($userEntity);
+        $policies->merge($this->getUserGroupPolicies($userEntity));
 
+        /** @var PolicyEntity $policyEntity */
         foreach ($policies as $policyEntity) {
             if ($this->isPolicyAllowed($policyEntity, $resourceEntity, $applicationEntity, $method)) {
                 $allowed = true;
@@ -62,41 +62,35 @@ class ServiceAdapter extends AbstractServiceAdapter
      * Gets the policies assigned to the user.
      *
      * @param  UserEntity $userEntity
-     * @return PolicyEntity[]
+     * @return EntitySet
      */
-    private function getUserPolicies(UserEntity $userEntity) : array
+    private function getUserPolicies(UserEntity $userEntity) : EntitySet
     {
-        /**
-         * @var PolicyEntity[] $userPolicies
-         */
-        return $this->userToPolicyCoupler->getEntityDependencies($userEntity);
+        return $this->policyStorage->getPolicyListByUser($userEntity->getUserId());
     }
 
     /**
      * Gets the policies assigned to the group in which the user is.
      *
      * @param  UserEntity $userEntity
-     * @return PolicyEntity[]
+     * @return EntitySet
      */
-    private function getUserGroupPolicies(UserEntity $userEntity) : array
+    private function getUserGroupPolicies(UserEntity $userEntity) : EntitySet
     {
-        /**
-         * @var PolicyEntity[] $userGroupPolicies
-         */
-        $userGroupPolicies = [];
-        /**
-         * @var UserGroupEntity[] $userGroups
-         */
-        $userGroups = $this->userToGroupCoupler->getEntityDependencies($userEntity);
+        $userGroups = $this->userStorage->getUserGroupListByUser($userEntity->getUserId());
+        /** @var null|EntitySet $groupPolicies */
+        $groupPolicies = null;
 
+        /** @var UserGroupEntity $userGroupEntity */
         foreach ($userGroups as $userGroupEntity) {
-            /**
-             * @var PolicyEntity[] $groupPolicies
-             */
-            $groupPolicies = $this->userGroupToPolicyCoupler->getEntityDependencies($userGroupEntity);
-            $userGroupPolicies = array_merge($userGroupPolicies, $groupPolicies);
-        }
+            $policyList = $this->policyStorage->getPolicyListByUserGroup($userGroupEntity->getUserGroupId());
 
-        return $userGroupPolicies;
+            if (empty($groupPolicies)) {
+                $groupPolicies = $policyList;
+            } else {
+                $groupPolicies->merge($policyList);
+            }
+        }
+        return $groupPolicies;
     }
 }

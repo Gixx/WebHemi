@@ -1,6 +1,6 @@
 SELECT
-    p.`id_am_policy`,
-    p.`fk_am_resource`,
+    p.`id_policy`,
+    p.`fk_resource`,
     p.`fk_application`,
     p.`name`,
     p.`title`,
@@ -10,9 +10,9 @@ SELECT
     p.`date_created`,
     p.`date_modified`
 FROM
-    `webhemi_am_policy` AS p
+    `webhemi_policy` AS p
 WHERE
-    p.`fk_am_resource` = :idResource AND
+    p.`fk_resource` = :idResource AND
     p.`fk_application` = :idApplication
 ORDER BY
     p.`name`

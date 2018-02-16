@@ -14,19 +14,14 @@ declare(strict_types = 1);
 namespace WebHemi\Renderer\Helper;
 
 use WebHemi\Data\Entity;
-use WebHemi\Data\Storage;
-use WebHemi\Data\StorageInterface;
-use WebHemi\Data\Traits\StorageInjectorTrait;
+use WebHemi\Data\Storage\FilesystemStorage;
+use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
 use WebHemi\Router\ProxyInterface;
 
 /**
  * Class GetCategoriesHelper
- *
- * @method Storage\ApplicationStorage getApplicationStorage()
- * @method Storage\Filesystem\FilesystemCategoryStorage getFilesystemCategoryStorage()
- * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
  */
 class GetCategoriesHelper implements HelperInterface
 {
@@ -35,18 +30,31 @@ class GetCategoriesHelper implements HelperInterface
      */
     private $environmentManager;
 
-    use StorageInjectorTrait;
+    /**
+     * @var ApplicationStorage
+     */
+    private $applicationStorage;
+
+    /**
+     * @var FilesystemStorage
+     */
+    private $filesystemStorage;
 
     /**
      * GetCategoriesHelper constructor.
      *
      * @param EnvironmentInterface $environmentManager
-     * @param StorageInterface[]   ...$dataStorages
+     * @param ApplicationStorage $applicationStorage
+     * @param FilesystemStorage $filesystemStorage
      */
-    public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
-    {
+    public function __construct(
+        EnvironmentInterface $environmentManager,
+        ApplicationStorage $applicationStorage,
+        FilesystemStorage $filesystemStorage
+    ) {
         $this->environmentManager = $environmentManager;
-        $this->addStorageInstances($dataStorages);
+        $this->applicationStorage = $applicationStorage;
+        $this->filesystemStorage = $filesystemStorage;
     }
 
     /**
@@ -100,44 +108,28 @@ class GetCategoriesHelper implements HelperInterface
         $categories = [];
 
         /**
-         * @var Storage\ApplicationStorage $applicationStorage
-         */
-        $applicationStorage = $this->getApplicationStorage();
-        /**
-         * @var Storage\Filesystem\FilesystemCategoryStorage $categoryStorage
-         */
-        $categoryStorage = $this->getFilesystemCategoryStorage();
-        /**
-         * @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage
-         */
-        $directoryStorage = $this->getFilesystemDirectoryStorage();
-
-        if (!$applicationStorage || !$categoryStorage || !$directoryStorage) {
-            return [];
-        }
-
-        /**
          * @var Entity\ApplicationEntity $application
          */
-        $application = $applicationStorage
+        $application = $this->applicationStorage
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
-        $applicationId = $application->getKeyData();
+        $applicationId = $application->getApplicationId();
 
         /**
-         * @var array $categoryDirectoryData
+         * @var Entity\FilesystemDirectoryDataEntity $categoryDirectoryData
          */
-        $categoryDirectoryData = $directoryStorage
-            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
+        $categoryDirectoryData = $this->filesystemStorage
+            ->getFilesystemDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
 
         /**
-         * @var Entity\Filesystem\FilesystemCategoryEntity[] $categoryList
+         * @var Entity\EntitySet $categoryList
          */
-        $categoryList = $categoryStorage
-            ->getFilesystemCategoriesByApplication($applicationId);
+        $categoryList = $this->filesystemStorage
+            ->getFilesystemCategoryListByApplication($applicationId);
 
+        /** @var Entity\FilesystemCategoryEntity $categoryEntity */
         foreach ($categoryList as $categoryEntity) {
             $categories[] = [
-                'path' => $categoryDirectoryData['uri'],
+                'path' => $categoryDirectoryData->getUri(),
                 'name' => $categoryEntity->getName(),
                 'title' => $categoryEntity->getTitle()
             ];
