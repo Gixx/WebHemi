@@ -260,10 +260,12 @@ class PolicyStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getPolicyById', [':idPolicy' => $identifier]);
 
-        /** @var null|PolicyEntity $entity */
-        $entity = $this->createEntity(PolicyEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|PolicyEntity $entity */
+            $entity = $this->createEntity(PolicyEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -276,9 +278,11 @@ class PolicyStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getPolicyByName', [':name' => $name]);
 
-        /** @var null|PolicyEntity $entity */
-        $entity = $this->createEntity(PolicyEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|PolicyEntity $entity */
+            $entity = $this->createEntity(PolicyEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 }

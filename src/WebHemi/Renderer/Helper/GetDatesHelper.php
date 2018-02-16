@@ -124,10 +124,10 @@ class GetDatesHelper implements HelperInterface
         /**
          * @var array $contents
          */
-        $dates = $this->filesystemStorage
+        $contents = $this->filesystemStorage
             ->getFilesystemPublishedDocumentDateList($applicationId);
 
-        foreach ($dates as $publications) {
+        foreach ($contents as $publications) {
             /**
              * @var DateTime $date
              */

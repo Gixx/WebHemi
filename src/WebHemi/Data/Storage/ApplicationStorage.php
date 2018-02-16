@@ -67,10 +67,12 @@ class ApplicationStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getApplicationById', [':idApplication' => $identifier]);
 
-        /** @var null|ApplicationEntity $entity */
-        $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|ApplicationEntity $entity */
+            $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -83,9 +85,11 @@ class ApplicationStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getApplicationByName', [':name' => $name]);
 
-        /** @var null|ApplicationEntity $entity */
-        $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|ApplicationEntity $entity */
+            $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 }

@@ -48,16 +48,16 @@ class PostAction extends IndexAction
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
         /**
-         * @var null|Entity\FilesystemPublishedDocumentEntity $filesystemEntity
+         * @var null|Entity\FilesystemPublishedDocumentEntity $publishedDocumentEntity
          */
-        $filesystemEntity = $this->getFilesystemStorage()
+        $publishedDocumentEntity = $this->getFilesystemStorage()
             ->getFilesystemPublishedDocumentByApplicationAndPath(
                 $applicationEntity->getApplicationId(),
                 $routingParams['path'],
                 $routingParams['basename']
             );
 
-        if (!$filesystemEntity instanceof Entity\FilesystemPublishedDocumentEntity) {
+        if (!$publishedDocumentEntity instanceof Entity\FilesystemPublishedDocumentEntity) {
             throw new RuntimeException('Page not found', 404);
         }
 
@@ -67,7 +67,7 @@ class PostAction extends IndexAction
                 'type' => 'Categories',
             ],
             'application' => $this->getApplicationData($applicationEntity),
-            'blogPost' => $this->getBlobPostData($applicationEntity, $filesystemEntity),
+            'blogPost' => $this->getBlobPostData($applicationEntity, $publishedDocumentEntity),
         ];
     }
 }

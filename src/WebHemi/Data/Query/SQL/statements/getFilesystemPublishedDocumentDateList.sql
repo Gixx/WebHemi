@@ -13,7 +13,7 @@ GROUP BY
     YEAR(fs.`date_published`),
     MONTH(fs.`date_published`)
 ORDER BY
-    fs.`date_published`
+    fs.`date_published` DESC
 LIMIT
     :limit
 OFFSET
