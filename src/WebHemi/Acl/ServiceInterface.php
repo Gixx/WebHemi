@@ -13,9 +13,9 @@ declare(strict_types = 1);
 
 namespace WebHemi\Acl;
 
-use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
+use WebHemi\Data\Entity\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 
 /**
  * Interface ServiceInterface.

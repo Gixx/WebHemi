@@ -1,10 +1,10 @@
 SELECT
+    fs.`id_filesystem`,
+    fs.`fk_application` AS id_application,
     fsd.`id_filesystem_directory`,
     fsd.`description`,
     fsd.`directory_type` AS type,
     fsd.`is_autoindex`,
-    fs.`fk_application` AS id_application,
-    fs.`id_filesystem`,
     fs.`path`,
     fs.`basename`,
     REPLACE(CONCAT(fs.`path`,'/',fs.`basename`), '//', '/') AS uri,

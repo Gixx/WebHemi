@@ -9,6 +9,7 @@ SELECT
     fs.`fk_filesystem_link`,
     fs.`path`,
     fs.`basename`,
+    REPLACE(CONCAT(fs.`path`,'/',fs.`basename`), '//', '/') AS uri,
     fs.`title`,
     fs.`description`,
     fs.`is_hidden`,

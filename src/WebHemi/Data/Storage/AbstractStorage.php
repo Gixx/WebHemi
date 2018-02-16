@@ -13,18 +13,32 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage;
 
+use InvalidArgumentException;
 use WebHemi\Data\Query\QueryInterface;
+use WebHemi\Data\Entity\EntityInterface;
+use WebHemi\Data\Entity\EntitySet;
 
 /**
  * Class AbstractStorage.
  * Suppose to hide Data Service Adapter and Data Entity instances from children Storage objects.
  */
-abstract class AbstractStorage
+abstract class AbstractStorage implements StorageInterface
 {
     /**
      * @var QueryInterface
      */
-    protected $queryAdapter;
+    private $queryAdapter;
+
+    /**
+     * @var EntitySet
+     */
+    private $entitySetPrototype;
+
+    /**
+     * @var EntityInterface[]
+     */
+    private $entityPrototypes;
+
     /**
      * @var bool
      */
@@ -34,10 +48,20 @@ abstract class AbstractStorage
      * AbstractStorage constructor.
      *
      * @param QueryInterface $queryAdapter
+     * @param EntitySet $entitySetPrototype
+     * @param EntityInterface[] ...$entityPrototypes
      */
-    public function __construct(QueryInterface $queryAdapter)
-    {
+    public function __construct(
+        QueryInterface $queryAdapter,
+        EntitySet $entitySetPrototype,
+        EntityInterface ...$entityPrototypes
+    ) {
         $this->queryAdapter = $queryAdapter;
+        $this->entitySetPrototype = $entitySetPrototype;
+
+        foreach ($entityPrototypes as $entity) {
+            $this->entityPrototypes[get_class($entity)] = $entity;
+        }
     }
 
     /**
@@ -46,6 +70,42 @@ abstract class AbstractStorage
     public function getQueryAdapter() : QueryInterface
     {
         return $this->queryAdapter;
+    }
+
+    /**
+     * Creates a clean instance of the EntitySet
+     *
+     * @return EntitySet
+     */
+    public function createEntitySet() : EntitySet
+    {
+        return clone $this->entitySetPrototype;
+    }
+
+    /**
+     * Creates a clean instance of the Entity.
+     *
+     * @param string $entityClass
+     * @param array  $data
+     * @throws InvalidArgumentException
+     * @return EntityInterface
+     */
+    public function createEntity(string $entityClass, array $data = []) : EntityInterface
+    {
+        if (!isset($this->entityPrototypes[$entityClass])) {
+            throw new InvalidArgumentException(
+                sprintf('Entity class reference "%s" is not defined in this class.', $entityClass),
+                1000
+            );
+        }
+
+        $entity = clone $this->entityPrototypes[$entityClass];
+
+        if (!empty($data)) {
+            $entity->fromArray($data);
+        }
+
+        return $entity;
     }
 
     /**

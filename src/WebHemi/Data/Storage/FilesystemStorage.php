@@ -13,6 +13,15 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage;
 
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\FilesystemCategoryEntity;
+use WebHemi\Data\Entity\FilesystemDirectoryEntity;
+use WebHemi\Data\Entity\FilesystemDirectoryDataEntity;
+use WebHemi\Data\Entity\FilesystemDocumentEntity;
+use WebHemi\Data\Entity\FilesystemEntity;
+use WebHemi\Data\Entity\FilesystemMetaEntity;
+use WebHemi\Data\Entity\FilesystemPublishedDocumentEntity;
+use WebHemi\Data\Entity\FilesystemTagEntity;
 use WebHemi\Data\Query\QueryInterface;
 
 /**
@@ -23,72 +32,23 @@ use WebHemi\Data\Query\QueryInterface;
 class FilesystemStorage extends AbstractStorage
 {
     /**
-     * Returns filesystem information identified by (unique) ID.
-     *
-     * @param  int $identifier
-     * @return null|array
-     */
-    public function getFilesystemById(int $identifier) : ? array
-    {
-        $data = $this->queryAdapter->fetchData(
-            'getFilesystemById',
-            [':idFilesystem' => $identifier]
-        );
-
-        return $data[0] ?? null;
-    }
-
-    /**
-     * Returns filesystem information identified by (unique) ID.
-     *
-     * @param  int $identifier
-     * @param int $limit
-     * @param int $offset
-     * @return null|array
-     */
-    public function getFilesystemMetaListByFilesystem(
-        int $identifier,
-        int $limit = QueryInterface::MAX_ROW_LIMIT,
-        int $offset = 0
-    ) : ? array {
-        $list = [];
-        $this->normalizeLimitAndOffset($limit, $offset);
-
-        $metaDataList = $this->queryAdapter->fetchData(
-            'getFilesystemMetaListByFilesystem',
-            [
-                ':idFilesystem' => $identifier,
-                ':limit' => $limit,
-                ':offset' => $offset
-            ]
-        );
-
-        foreach ($metaDataList as $metaData) {
-            $list[$metaData['meta_key']] = $metaData['meta_data'];
-        }
-
-        return $list;
-    }
-
-    /**
      * Returns a set of filesystem data accroding to the application and directory ID.
      *
      * @param int $applicationId
      * @param int $directoryId
      * @param int $limit
      * @param int $offset
-     * @return array|null
+     * @return EntitySet
      */
     public function getFilesystemListByApplicationAndDirectory(
         int $applicationId,
         int $directoryId,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $filesystemList = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemListByApplicationAndDirectory',
             [
                 ':idApplication' => $applicationId,
@@ -98,11 +58,37 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $filesystemList[trim($row['path'], '/').'/'.$row['basename']] = $row;
+            /** @var FilesystemEntity $entity */
+            $entity = $this->createEntity(FilesystemEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $filesystemList;
+        return $entitySet;
+    }
+
+    /**
+     * Returns filesystem information identified by (unique) ID.
+     *
+     * @param  int $identifier
+     * @return null|FilesystemEntity
+     */
+    public function getFilesystemById(int $identifier) : ? FilesystemEntity
+    {
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemById',
+            [':idFilesystem' => $identifier]
+        );
+
+        /** @var null|FilesystemEntity $entity */
+        $entity = $this->createEntity(FilesystemEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
@@ -111,11 +97,14 @@ class FilesystemStorage extends AbstractStorage
      * @param  int    $applicationId
      * @param  string $path
      * @param  string $baseName
-     * @return null|array
+     * @return null|FilesystemEntity
      */
-    public function getFilesystemByApplicationAndPath(int $applicationId, string $path, string $baseName) : ? array
-    {
-        $data = $this->queryAdapter->fetchData(
+    public function getFilesystemByApplicationAndPath(
+        int $applicationId,
+        string $path,
+        string $baseName
+    ) : ? FilesystemEntity {
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemByApplicationAndPath',
             [
                 ':idApplication' => $applicationId,
@@ -124,23 +113,72 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        return $data[0] ?? null;
+        /** @var null|FilesystemEntity $entity */
+        $entity = $this->createEntity(FilesystemEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
-     * Returns filesystem document information identified by (unique) ID.
+     * Returns filesystem meta list identified by filesystem ID.
      *
      * @param  int $identifier
-     * @return null|array
+     * @param int $limit
+     * @param int $offset
+     * @return EntitySet
      */
-    public function getFilesystemDocumentById(int $identifier) : ? array
-    {
-        $data = $this->queryAdapter->fetchData(
-            'getFilesystemDocumentById',
-            [':idDocument' => $identifier]
+    public function getFilesystemMetaListByFilesystem(
+        int $identifier,
+        int $limit = QueryInterface::MAX_ROW_LIMIT,
+        int $offset = 0
+    ) : EntitySet {
+        $this->normalizeLimitAndOffset($limit, $offset);
+
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemMetaListByFilesystem',
+            [
+                ':idFilesystem' => $identifier,
+                ':limit' => $limit,
+                ':offset' => $offset
+            ]
         );
 
-        return $data[0] ?? null;
+        $entitySet = $this->createEntitySet();
+
+        foreach ($data as $row) {
+            /** @var FilesystemMetaEntity $entity */
+            $entity = $this->createEntity(FilesystemMetaEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
+        }
+
+        return $entitySet;
+    }
+
+    /**
+     * Returns a simplified form of the filesystem meta list.
+     *
+     * @param  int $identifier
+     * @param int $limit
+     * @param int $offset
+     * @return null|array
+     */
+    public function getSimpleFilesystemMetaListByFilesystem(
+        int $identifier,
+        int $limit = QueryInterface::MAX_ROW_LIMIT,
+        int $offset = 0
+    ) : ? array {
+        $metaInfo = [];
+        $entitySet = $this->getFilesystemMetaListByFilesystem($identifier, $limit, $offset);
+
+        /** @var FilesystemMetaEntity $filesystemMetaEntity */
+        foreach ($entitySet as $filesystemMetaEntity) {
+            $metaInfo[$filesystemMetaEntity->getMetaKey()] = $filesystemMetaEntity->getMetaData();
+        }
+
+        return $metaInfo;
     }
 
     /**
@@ -148,16 +186,15 @@ class FilesystemStorage extends AbstractStorage
      *
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
     public function getFilesystemDocumentList(
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $documentList = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemDocumentList',
             [
                 ':limit' => $limit,
@@ -165,11 +202,37 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $documentList[$row['id_filesystem_document']] = $row;
+            /** @var FilesystemDocumentEntity $entity */
+            $entity = $this->createEntity(FilesystemDocumentEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $documentList;
+        return $entitySet;
+    }
+
+    /**
+     * Returns filesystem document information identified by (unique) ID.
+     *
+     * @param  int $identifier
+     * @return null|FilesystemDocumentEntity
+     */
+    public function getFilesystemDocumentById(int $identifier) : ? FilesystemDocumentEntity
+    {
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemDocumentById',
+            [':idDocument' => $identifier]
+        );
+
+        /** @var null|FilesystemDocumentEntity $entity */
+        $entity = $this->createEntity(FilesystemDocumentEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
@@ -179,22 +242,21 @@ class FilesystemStorage extends AbstractStorage
      * @param string|null $order
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
     public function getFilesystemPublishedDocumentList(
         int $applicationId,
         string $order = null,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $filesystemList = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
         if (empty($order)) {
             $order = 'fs.`date_published` DESC';
         }
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemPublishedDocumentList',
             [
                 ':idApplication' => $applicationId,
@@ -204,11 +266,117 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $filesystemList[trim($row['path'], '/').'/'.$row['basename']] = $row;
+            /** @var FilesystemPublishedDocumentEntity $entity */
+            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $filesystemList;
+        return $entitySet;
+    }
+
+    /**
+     * Returns published filesystem data along with the document data.
+     *
+     * @param int $applicationId
+     * @param int $year
+     * @param int $month
+     * @param string|null $order
+     * @param int $limit
+     * @param int $offset
+     * @return EntitySet
+     */
+    public function getFilesystemPublishedDocumentListByDate(
+        int $applicationId,
+        int $year,
+        int $month,
+        string $order = null,
+        int $limit = QueryInterface::MAX_ROW_LIMIT,
+        int $offset = 0
+    ) : EntitySet {
+        $this->normalizeLimitAndOffset($limit, $offset);
+
+        if (empty($order)) {
+            $order = 'fs.`date_published` DESC';
+        }
+
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemPublishedDocumentListByDate',
+            [
+                ':idApplication' => $applicationId,
+                ':year' => $year,
+                ':month' => $month,
+                ':orderBy' => $order,
+                ':limit' => $limit,
+                ':offset' => $offset
+            ]
+        );
+
+        $entitySet = $this->createEntitySet();
+
+        foreach ($data as $row) {
+            /** @var FilesystemPublishedDocumentEntity $entity */
+            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
+        }
+
+        return $entitySet;
+    }
+
+    /**
+     * Returns published filesystem data along with the document data.
+     *
+     * @param int $applicationId
+     * @param int $categoryId
+     * @param string|null $order
+     * @param int $limit
+     * @param int $offset
+     * @return EntitySet
+     */
+    public function getFilesystemPublishedDocumentListByCategory(
+        int $applicationId,
+        int $categoryId,
+        string $order = null,
+        int $limit = QueryInterface::MAX_ROW_LIMIT,
+        int $offset = 0
+    ) : EntitySet {
+        $this->normalizeLimitAndOffset($limit, $offset);
+
+        if (empty($order)) {
+            $order = 'fs.`date_published` DESC';
+        }
+
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemPublishedDocumentListByCategory',
+            [
+                ':idApplication' => $applicationId,
+                ':idCategory' => $categoryId,
+                ':orderBy' => $order,
+                ':limit' => $limit,
+                ':offset' => $offset
+            ]
+        );
+
+        $entitySet = $this->createEntitySet();
+
+        foreach ($data as $row) {
+            /** @var FilesystemPublishedDocumentEntity $entity */
+            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
+        }
+
+        return $entitySet;
     }
 
     /**
@@ -219,23 +387,22 @@ class FilesystemStorage extends AbstractStorage
      * @param string|null $order
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
-    public function getFilesystemPublishedDocumentsByAuthor(
+    public function getFilesystemPublishedDocumentListByAuthor(
         int $applicationId,
         int $userId,
         string $order = null,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $filesystemList = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
         if (empty($order)) {
             $order = 'fs.`date_published` DESC';
         }
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemPublishedDocumentListByAuthor',
             [
                 ':idApplication' => $applicationId,
@@ -246,11 +413,18 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $filesystemList[trim($row['path'], '/').'/'.$row['basename']] = $row;
+            /** @var FilesystemPublishedDocumentEntity $entity */
+            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $filesystemList;
+        return $entitySet;
     }
 
     /**
@@ -261,7 +435,7 @@ class FilesystemStorage extends AbstractStorage
      * @param string|null $order
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
     public function getFilesystemPublishedDocumentListByTag(
         int $applicationId,
@@ -269,15 +443,14 @@ class FilesystemStorage extends AbstractStorage
         string $order = null,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $filesystemList = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
         if (empty($order)) {
             $order = 'fs.`date_published` DESC';
         }
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemPublishedDocumentListByTag',
             [
                 ':idApplication' => $applicationId,
@@ -288,29 +461,71 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $filesystemList[trim($row['path'], '/').'/'.$row['basename']] = $row;
+            /** @var FilesystemPublishedDocumentEntity $entity */
+            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $filesystemList;
+        return $entitySet;
     }
 
     /**
-     * Returns filesystem tag information identified by (unique) ID.
+     * Returns filesystem information by application, basename and path.
      *
-     * @param int $identifier
-     * @return array|null
+     * @param  int    $applicationId
+     * @param  string $path
+     * @param  string $baseName
+     * @return null|FilesystemPublishedDocumentEntity
      */
-    public function getFilesystemTagById(int $identifier) : ? array
-    {
-        $data = $this->queryAdapter->fetchData(
-            'getFilesystemTagById',
+    public function getFilesystemPublishedDocumentByApplicationAndPath(
+        int $applicationId,
+        string $path,
+        string $baseName
+    ) : ? FilesystemPublishedDocumentEntity {
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemPublishedDocumentByApplicationAndPath',
             [
-                ':idTag' => $identifier
+                ':idApplication' => $applicationId,
+                ':path' => $path,
+                ':baseName' => $baseName
             ]
         );
 
-        return $data[0] ?? null;
+        /** @var null|FilesystemPublishedDocumentEntity $entity */
+        $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $data[0] ?? []);
+
+        return $entity;
+    }
+
+    /**
+     * Returns a simplified list of publication dates.
+     *
+     * @param int $applicationId
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getFilesystemPublishedDocumentDateList(
+        int $applicationId,
+        int $limit = QueryInterface::MAX_ROW_LIMIT,
+        int $offset = 0
+    ) : array {
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemPublishedDocumentDateList',
+            [
+                ':idApplication' => $applicationId,
+                ':limit' => $limit,
+                ':offset' => $offset
+            ]
+        );
+
+        return $data ?? [];
     }
 
     /**
@@ -319,17 +534,16 @@ class FilesystemStorage extends AbstractStorage
      * @param int $filesystemId
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return EntitySet
      */
     public function getFilesystemTagListByFilesystem(
         int $filesystemId,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $tagList = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemTagListByFilesystem',
             [
                 ':idFilesystem' => $filesystemId,
@@ -338,11 +552,18 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $tagList[$row['name']] = $row;
+            /** @var FilesystemTagEntity $entity */
+            $entity = $this->createEntity(FilesystemTagEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $tagList;
+        return $entitySet;
     }
 
     /**
@@ -351,17 +572,16 @@ class FilesystemStorage extends AbstractStorage
      * @param int $applicationId
      * @param int $limit
      * @param int $offset
-     * @return array|null
+     * @return EntitySet
      */
     public function getFilesystemTagListByApplication(
         int $applicationId,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $tagList = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemTagListByApplication',
             [
                 ':idApplication' => $applicationId,
@@ -370,49 +590,64 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $tagList[$row['name']] = $row;
+            /** @var FilesystemTagEntity $entity */
+            $entity = $this->createEntity(FilesystemTagEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $tagList;
+        return $entitySet;
     }
 
     /**
-     * Returns filesystem category information identified by (unique) ID.
+     * Returns filesystem tag information identified by (unique) ID.
      *
      * @param int $identifier
-     * @return array|null
+     * @return null|FilesystemTagEntity
      */
-    public function getFilesystemCategoryById(int $identifier) : ? array
+    public function getFilesystemTagById(int $identifier) : ? FilesystemTagEntity
     {
-        $data = $this->queryAdapter->fetchData(
-            'getFilesystemCategoryById',
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemTagById',
             [
-                ':idCategory' => $identifier
+                ':idTag' => $identifier
             ]
         );
 
-        return $data[0] ?? null;
+        /** @var null|FilesystemTagEntity $entity */
+        $entity = $this->createEntity(FilesystemTagEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
-     * Returns filesystem category information identified by application ID and category name.
+     * Returns filesystem tag information identified by (unique) ID.
      *
      * @param int $applicationId
-     * @param string $categoryName
-     * @return array|null
+     * @param string $name
+     * @return null|FilesystemTagEntity
      */
-    public function getFilesystemCategoryByApplicationAndName(int $applicationId, string $categoryName) : ? array
-    {
-        $data = $this->queryAdapter->fetchData(
-            'getFilesystemCategoryByApplicationAndName',
+    public function getFilesystemTagByApplicationAndName(
+        int $applicationId,
+        string $name
+    ) : ? FilesystemTagEntity {
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemTagByApplicationAndName',
             [
                 ':idApplication' => $applicationId,
-                ':categoryName' => $categoryName
+                ':name' => $name
             ]
         );
 
-        return $data[0] ?? null;
+        /** @var null|FilesystemTagEntity $entity */
+        $entity = $this->createEntity(FilesystemTagEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
@@ -421,17 +656,16 @@ class FilesystemStorage extends AbstractStorage
      * @param int $applicationId
      * @param int $limit
      * @param int $offset
-     * @return array|null
+     * @return EntitySet
      */
     public function getFilesystemCategoryListByApplication(
         int $applicationId,
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    )  : ? array {
-        $categoryList = null;
+    )  : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemCategoryListByApplication',
             [
                 ':idApplication' => $applicationId,
@@ -440,47 +674,106 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $categoryList[$row['name']] = $row;
+            /** @var FilesystemCategoryEntity $entity */
+            $entity = $this->createEntity(FilesystemCategoryEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $categoryList;
+        return $entitySet;
+    }
+
+    /**
+     * Returns filesystem category information identified by (unique) ID.
+     *
+     * @param int $identifier
+     * @return null|FilesystemCategoryEntity
+     */
+    public function getFilesystemCategoryById(int $identifier) : ? FilesystemCategoryEntity
+    {
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemCategoryById',
+            [
+                ':idCategory' => $identifier
+            ]
+        );
+
+        /** @var null|FilesystemCategoryEntity $entity */
+        $entity = $this->createEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
+
+        return $entity;
+    }
+
+    /**
+     * Returns filesystem category information identified by application ID and category name.
+     *
+     * @param int $applicationId
+     * @param string $categoryName
+     * @return null|FilesystemCategoryEntity
+     */
+    public function getFilesystemCategoryByApplicationAndName(
+        int $applicationId,
+        string $categoryName
+    ) : ? FilesystemCategoryEntity {
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemCategoryByApplicationAndName',
+            [
+                ':idApplication' => $applicationId,
+                ':categoryName' => $categoryName
+            ]
+        );
+
+        /** @var null|FilesystemCategoryEntity $entity */
+        $entity = $this->createEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
      * Returns filesystem directory information identified by (unique) ID.
      *
      * @param int $identifier
-     * @return array|null
+     * @return null|FilesystemDirectoryEntity
      */
-    public function getFilesystemDirectoryById(int $identifier) : ? array
+    public function getFilesystemDirectoryById(int $identifier) : ? FilesystemDirectoryEntity
     {
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemDirectoryById',
             [
                 ':idDirectory' => $identifier
             ]
         );
 
-        return $data[0] ?? null;
+        /** @var null|FilesystemDirectoryEntity $entity */
+        $entity = $this->createEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
-     * Returns filesystem directory information identified by it's proxy.
+     * Returns filesystem directory information identified by its proxy.
      *
      * @param string $proxy
-     * @return array|null
+     * @return null|FilesystemDirectoryEntity
      */
-    public function getFilesystemDirectoryByProxy(string $proxy) : ? array
+    public function getFilesystemDirectoryByProxy(string $proxy) : ? FilesystemDirectoryEntity
     {
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemDirectoryByProxy',
             [
                 ':proxy' => $proxy
             ]
         );
 
-        return $data[0] ?? null;
+        /** @var null|FilesystemDirectoryEntity $entity */
+        $entity = $this->createEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
@@ -488,18 +781,23 @@ class FilesystemStorage extends AbstractStorage
      *
      * @param int $applicationId
      * @param string $proxy
-     * @return array|null
+     * @return null|FilesystemDirectoryDataEntity
      */
-    public function getFilesystemDataByApplicationAndProxy(int $applicationId, string $proxy) : ? array
-    {
-        $data = $this->queryAdapter->fetchData(
-            'getFilesystemDataByApplicationAndProxy',
+    public function getFilesystemDirectoryDataByApplicationAndProxy(
+        int $applicationId,
+        string $proxy
+    ) : ? FilesystemDirectoryDataEntity {
+        $data = $this->getQueryAdapter()->fetchData(
+            'getFilesystemDirectoryDataByApplicationAndProxy',
             [
                 ':idApplication' => $applicationId,
                 ':proxy' => $proxy
             ]
         );
 
-        return $data[0] ?? null;
+        /** @var null|FilesystemDirectoryDataEntity $entity */
+        $entity = $this->createEntity(FilesystemDirectoryDataEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 }

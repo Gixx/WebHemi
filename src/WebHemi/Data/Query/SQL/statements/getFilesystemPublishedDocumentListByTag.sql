@@ -1,9 +1,11 @@
 SELECT
     fs.`id_filesystem`,
+    fsd.`id_filesystem_document`,
     fs.`fk_application`,
     fs.`fk_category`,
     fs.`path`,
     fs.`basename`,
+    REPLACE(CONCAT(fs.`path`,'/',fs.`basename`), '//', '/') AS uri,
     fs.`title`,
     fs.`description`,
     fsd.`fk_author`,

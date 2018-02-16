@@ -31,8 +31,7 @@ return [
                 'class' => Router\Proxy\FilesystemProxy::class,
                 'arguments' => [
                     Data\Storage\ApplicationStorage::class,
-                    Data\Storage\Filesystem\FilesystemStorage::class,
-                    Data\Storage\Filesystem\FilesystemDirectoryStorage::class
+                    Data\Storage\FilesystemStorage::class
                 ],
                 'shared'    => true,
             ],
@@ -41,13 +40,8 @@ return [
                 'arguments' => [
                     Environment\ServiceInterface::class,
                     Data\Storage\ApplicationStorage::class,
-                    Data\Storage\User\UserStorage::class,
-                    Data\Storage\User\UserMetaStorage::class,
-                    Data\Storage\Filesystem\FilesystemStorage::class,
-                    Data\Storage\Filesystem\FilesystemTagStorage::class,
-                    Data\Storage\Filesystem\FilesystemCategoryStorage::class,
-                    Data\Storage\Filesystem\FilesystemDirectoryStorage::class,
-                    Data\Storage\Filesystem\FilesystemDocumentStorage::class,
+                    Data\Storage\UserStorage::class,
+                    Data\Storage\FilesystemStorage::class,
                 ]
             ],
             // Proxies
@@ -88,24 +82,21 @@ return [
                 'arguments' => [
                     Environment\ServiceInterface::class,
                     Data\Storage\ApplicationStorage::class,
-                    Data\Storage\Filesystem\FilesystemTagStorage::class,
-                    Data\Storage\Filesystem\FilesystemDirectoryStorage::class,
+                    Data\Storage\FilesystemStorage::class,
                 ]
             ],
             Renderer\Helper\GetCategoriesHelper::class => [
                 'arguments' => [
                     Environment\ServiceInterface::class,
                     Data\Storage\ApplicationStorage::class,
-                    Data\Storage\Filesystem\FilesystemCategoryStorage::class,
-                    Data\Storage\Filesystem\FilesystemDirectoryStorage::class,
+                    Data\Storage\FilesystemStorage::class,
                 ]
             ],
             Renderer\Helper\GetDatesHelper::class => [
                 'arguments' => [
                     Environment\ServiceInterface::class,
                     Data\Storage\ApplicationStorage::class,
-                    Data\Storage\Filesystem\FilesystemStorage::class,
-                    Data\Storage\Filesystem\FilesystemDirectoryStorage::class,
+                    Data\Storage\FilesystemStorage::class,
                 ]
             ]
         ],

@@ -46,15 +46,14 @@ class SqlQueryAdapter implements QueryInterface
     }
 
     /**
-     * Initializes
+     * Collects all the valid statements.
      */
     private function init() : void
     {
-        $statementFiles = glob(__DIR__.'/statements/*.sql');
+        $statementFiles = glob(__DIR__.'/statements/*.sql', GLOB_BRACE);
 
-        if (!empty($statementFiles)) {
-            var_dump($statementFiles);
-            exit;
+        foreach ($statementFiles as $file) {
+            $this->identifierList[basename($file, '.sql')] = $file;
         }
     }
 
@@ -106,10 +105,19 @@ class SqlQueryAdapter implements QueryInterface
             $statement->bindValue($parameter, $value, $this->getValueType($value));
         }
 
-        if (!$statement->execute()) {
+        try {
+            $executedSuccessful = $statement->execute();
+        } catch (\Throwable $exception) {
+            throw new RuntimeException(
+                sprintf('Error executing query for "%s". %s', $queryIdentifier, $exception->getMessage()),
+                1000
+            );
+        }
+
+        if (!$executedSuccessful) {
             throw new RuntimeException(
                 sprintf('Error running query: "%s"', $queryIdentifier),
-                1000
+                1001
             );
         }
 

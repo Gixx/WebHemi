@@ -14,9 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Renderer\Helper;
 
 use WebHemi\Data\Entity;
-use WebHemi\Data\Storage;
-use WebHemi\Data\StorageInterface;
-use WebHemi\Data\Traits\StorageInjectorTrait;
+use WebHemi\Data\Storage\FilesystemStorage;
+use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\DateTime;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
@@ -24,10 +23,6 @@ use WebHemi\Router\ProxyInterface;
 
 /**
  * Class GetDatesHelper
- *
- * @method Storage\ApplicationStorage getApplicationStorage()
- * @method Storage\Filesystem\FilesystemStorage getFilesystemStorage()
- * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
  */
 class GetDatesHelper implements HelperInterface
 {
@@ -36,18 +31,31 @@ class GetDatesHelper implements HelperInterface
      */
     private $environmentManager;
 
-    use StorageInjectorTrait;
+    /**
+     * @var ApplicationStorage
+     */
+    private $applicationStorage;
+
+    /**
+     * @var FilesystemStorage
+     */
+    private $filesystemStorage;
 
     /**
      * GetDatesHelper constructor.
      *
      * @param EnvironmentInterface $environmentManager
-     * @param StorageInterface[]   ...$dataStorages
+     * @param ApplicationStorage $applicationStorage
+     * @param FilesystemStorage $filesystemStorage
      */
-    public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
-    {
+    public function __construct(
+        EnvironmentInterface $environmentManager,
+        ApplicationStorage $applicationStorage,
+        FilesystemStorage $filesystemStorage
+    ) {
         $this->environmentManager = $environmentManager;
-        $this->addStorageInstances($dataStorages);
+        $this->applicationStorage = $applicationStorage;
+        $this->filesystemStorage = $filesystemStorage;
     }
 
     /**
@@ -101,62 +109,35 @@ class GetDatesHelper implements HelperInterface
         $dates = [];
 
         /**
-         * @var Storage\ApplicationStorage $applicationStorage
-         */
-        $applicationStorage = $this->getApplicationStorage();
-        /**
-         * @var Storage\Filesystem\FilesystemStorage $filesystemStorage
-         */
-        $filesystemStorage = $this->getFilesystemStorage();
-        /**
-         * @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage
-         */
-        $directoryStorage = $this->getFilesystemDirectoryStorage();
-
-        if (!$applicationStorage || !$filesystemStorage || !$directoryStorage) {
-            return [];
-        }
-
-        /**
          * @var Entity\ApplicationEntity $application
          */
-        $application = $applicationStorage
+        $application = $this->applicationStorage
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
-        $applicationId = $application->getKeyData();
+        $applicationId = $application->getApplicationId();
 
         /**
-         * @var array $categoryDirectoryData
+         * @var Entity\FilesystemDirectoryDataEntity $categoryDirectoryData
          */
-        $categoryDirectoryData = $directoryStorage
-            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_ARCHIVE);
-
-        // Basically we get publications here, but only one per month and that is what we need. The date...
-        /**
-         * @var Entity\Filesystem\FilesystemEntity[] $contents
-         */
-        $contents = $filesystemStorage
-            ->getPublishedDocuments(
-                $applicationId,
-                [],
-                'date_published ASC',
-                null,
-                null,
-                'YEAR(date_published), MONTH(date_published)'
-            );
+        $categoryDirectoryData = $this->filesystemStorage
+            ->getFilesystemDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_ARCHIVE);
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity $content
+         * @var array $contents
          */
-        foreach ($contents as $content) {
+        $dates = $this->filesystemStorage
+            ->getFilesystemPublishedDocumentDateList($applicationId);
+
+        foreach ($dates as $publications) {
             /**
              * @var DateTime $date
              */
-            $date = $content->getDatePublished();
+            $date = new DateTime($publications['date_published']);
 
             $dates[] = [
                 'name' => $date->format('Y-m'),
-                'path' => $categoryDirectoryData['uri'],
-                'dateTime' => $date
+                'path' => $categoryDirectoryData->getUri(),
+                'dateTime' => $date,
+                'numberOfPublications' => $publications['number_of_publications']
             ];
         }
 

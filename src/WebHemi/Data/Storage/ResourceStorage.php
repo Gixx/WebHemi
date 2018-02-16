@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage;
 
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\ResourceEntity;
 use WebHemi\Data\Query\QueryInterface;
 
 /**
@@ -25,16 +27,15 @@ class ResourceStorage extends AbstractStorage
      *
      * @param int $limit
      * @param int $offset
-     * @return null|array
+     * @return null|EntitySet
      */
     public function getResourceList(
         int $limit = QueryInterface::MAX_ROW_LIMIT,
         int $offset = 0
-    ) : ? array {
-        $resources = null;
+    ) : EntitySet {
         $this->normalizeLimitAndOffset($limit, $offset);
 
-        $data = $this->queryAdapter->fetchData(
+        $data = $this->getQueryAdapter()->fetchData(
             'getResourceList',
             [
                 ':limit' => $limit,
@@ -42,36 +43,49 @@ class ResourceStorage extends AbstractStorage
             ]
         );
 
+        $entitySet = $this->createEntitySet();
+
         foreach ($data as $row) {
-            $resources[$row['name']] = $row;
+            /** @var ResourceEntity $entity */
+            $entity = $this->createEntity(ResourceEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
         }
 
-        return $resources;
+        return $entitySet;
     }
 
     /**
      * Returns resource information identified by (unique) ID.
      *
      * @param  int $identifier
-     * @return null|array
+     * @return null|ResourceEntity
      */
-    public function getResourceById(int $identifier) : ? array
+    public function getResourceById(int $identifier) : ? ResourceEntity
     {
-        $data = $this->queryAdapter->fetchData('getResourceById', [':idResource' => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData('getResourceById', [':idResource' => $identifier]);
 
-        return $data[0] ?? null;
+        /** @var null|ResourceEntity $entity */
+        $entity = $this->createEntity(ResourceEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 
     /**
      * Returns resource information by name.
      *
      * @param  string $name
-     * @return null|array
+     * @return null|ResourceEntity
      */
-    public function getResourceByName(string $name) : ? array
+    public function getResourceByName(string $name) : ? ResourceEntity
     {
-        $data = $this->queryAdapter->fetchData('getResourceByName', [':name' => $name]);
+        $data = $this->getQueryAdapter()->fetchData('getResourceByName', [':name' => $name]);
 
-        return $data[0] ?? null;
+        /** @var null|ResourceEntity $entity */
+        $entity = $this->createEntity(ResourceEntity::class, $data[0] ?? []);
+
+        return $entity;
     }
 }

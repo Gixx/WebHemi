@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Auth;
 
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 
 /**
  * Interface StorageInterface.
