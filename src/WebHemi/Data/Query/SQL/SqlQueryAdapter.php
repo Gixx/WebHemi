@@ -99,6 +99,14 @@ class SqlQueryAdapter implements QueryInterface
 
         $query = file_get_contents($this->identifierList[$queryIdentifier]);
 
+        // This nasty trick helps us to be able to parameterize the ORDER BY statement.
+        if (isset($parameters[':orderBy'])) {
+            $orderBy = $parameters[':orderBy'];
+            unset($parameters[':orderBy']);
+
+            $query = str_replace(':orderBy', $orderBy, $query);
+        }
+
         $statement = $this->driverAdapter->prepare($query);
 
         foreach ($parameters as $parameter => $value) {
@@ -120,7 +128,6 @@ class SqlQueryAdapter implements QueryInterface
                 1001
             );
         }
-
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         if (is_array($result)) {

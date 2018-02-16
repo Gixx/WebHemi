@@ -85,10 +85,12 @@ class FilesystemStorage extends AbstractStorage
             [':idFilesystem' => $identifier]
         );
 
-        /** @var null|FilesystemEntity $entity */
-        $entity = $this->createEntity(FilesystemEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemEntity $entity */
+            $entity = $this->createEntity(FilesystemEntity::class, $data[0]);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -113,10 +115,12 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|FilesystemEntity $entity */
-        $entity = $this->createEntity(FilesystemEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemEntity $entity */
+            $entity = $this->createEntity(FilesystemEntity::class, $data[0]);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -229,10 +233,12 @@ class FilesystemStorage extends AbstractStorage
             [':idDocument' => $identifier]
         );
 
-        /** @var null|FilesystemDocumentEntity $entity */
-        $entity = $this->createEntity(FilesystemDocumentEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemDocumentEntity $entity */
+            $entity = $this->createEntity(FilesystemDocumentEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -497,10 +503,12 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|FilesystemPublishedDocumentEntity $entity */
-        $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemPublishedDocumentEntity $entity */
+            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -619,10 +627,12 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|FilesystemTagEntity $entity */
-        $entity = $this->createEntity(FilesystemTagEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemTagEntity $entity */
+            $entity = $this->createEntity(FilesystemTagEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -644,10 +654,12 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|FilesystemTagEntity $entity */
-        $entity = $this->createEntity(FilesystemTagEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemTagEntity $entity */
+            $entity = $this->createEntity(FilesystemTagEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -703,10 +715,12 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|FilesystemCategoryEntity $entity */
-        $entity = $this->createEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemCategoryEntity $entity */
+            $entity = $this->createEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -728,10 +742,12 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|FilesystemCategoryEntity $entity */
-        $entity = $this->createEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemCategoryEntity $entity */
+            $entity = $this->createEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -749,10 +765,12 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|FilesystemDirectoryEntity $entity */
-        $entity = $this->createEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemDirectoryEntity $entity */
+            $entity = $this->createEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -770,10 +788,12 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|FilesystemDirectoryEntity $entity */
-        $entity = $this->createEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemDirectoryEntity $entity */
+            $entity = $this->createEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -795,9 +815,11 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|FilesystemDirectoryDataEntity $entity */
-        $entity = $this->createEntity(FilesystemDirectoryDataEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|FilesystemDirectoryDataEntity $entity */
+            $entity = $this->createEntity(FilesystemDirectoryDataEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 }

@@ -70,10 +70,12 @@ class UserStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getUserById', [':idUser' => $identifier]);
 
-        /** @var null|UserEntity $entity */
-        $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|UserEntity $entity */
+            $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -86,10 +88,12 @@ class UserStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getUserByUsername', [':username' => $username]);
 
-        /** @var null|UserEntity $entity */
-        $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|UserEntity $entity */
+            $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -102,10 +106,12 @@ class UserStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getUserByEmail', [':email' => $email]);
 
-        /** @var null|UserEntity $entity */
-        $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|UserEntity $entity */
+            $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -125,10 +131,12 @@ class UserStorage extends AbstractStorage
             ]
         );
 
-        /** @var null|UserEntity $entity */
-        $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|UserEntity $entity */
+            $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -306,10 +314,12 @@ class UserStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getUserGroupById', [':idUserGroup' => $identifier]);
 
-        /** @var null|UserGroupEntity $entity */
-        $entity = $this->createEntity(UserGroupEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|UserGroupEntity $entity */
+            $entity = $this->createEntity(UserGroupEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -322,9 +332,11 @@ class UserStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getUserGroupByName', [':name' => $name]);
 
-        /** @var null|UserGroupEntity $entity */
-        $entity = $this->createEntity(UserGroupEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|UserGroupEntity $entity */
+            $entity = $this->createEntity(UserGroupEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 }

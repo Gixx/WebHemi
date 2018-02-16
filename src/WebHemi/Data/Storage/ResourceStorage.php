@@ -67,10 +67,12 @@ class ResourceStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getResourceById', [':idResource' => $identifier]);
 
-        /** @var null|ResourceEntity $entity */
-        $entity = $this->createEntity(ResourceEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|ResourceEntity $entity */
+            $entity = $this->createEntity(ResourceEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 
     /**
@@ -83,9 +85,11 @@ class ResourceStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData('getResourceByName', [':name' => $name]);
 
-        /** @var null|ResourceEntity $entity */
-        $entity = $this->createEntity(ResourceEntity::class, $data[0] ?? []);
+        if (isset($data[0])) {
+            /** @var null|ResourceEntity $entity */
+            $entity = $this->createEntity(ResourceEntity::class, $data[0] ?? []);
+        }
 
-        return $entity;
+        return $entity ?? null;
     }
 }

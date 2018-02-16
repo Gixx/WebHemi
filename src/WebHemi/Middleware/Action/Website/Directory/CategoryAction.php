@@ -81,7 +81,7 @@ class CategoryAction extends IndexAction
             ->getFilesystemPublishedDocumentListByCategory(
                 $applicationEntity->getApplicationId(),
                 $categoryEntity->getFilesystemCategoryId(),
-                'date_published '.($categoryEntity->getItemOrder() ?? 'DESC')
+                'fs.`date_published` '.($categoryEntity->getItemOrder() ?? 'DESC')
             );
 
         if (empty($publications)) {
