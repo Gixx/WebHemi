@@ -27,7 +27,7 @@ class ResourceStorage extends AbstractStorage
      *
      * @param int $limit
      * @param int $offset
-     * @return null|EntitySet
+     * @return EntitySet
      */
     public function getResourceList(
         int $limit = QueryInterface::MAX_ROW_LIMIT,

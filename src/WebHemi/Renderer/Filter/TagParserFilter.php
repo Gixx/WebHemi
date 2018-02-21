@@ -93,7 +93,6 @@ class TagParserFilter implements FilterInterface
      *
      * @uses TagParserFilter::getCurrentUri()
      *
-     * @param  string
      * @return string
      */
     public function __invoke() : string
