@@ -84,7 +84,7 @@ class UserStorage extends AbstractStorage
      * @param  string $username
      * @return null|UserEntity
      */
-    public function getUserByUsername(string $username) : ? UserEntity
+    public function getUserByUserName(string $username) : ? UserEntity
     {
         $data = $this->getQueryAdapter()->fetchData('getUserByUsername', [':username' => $username]);
 

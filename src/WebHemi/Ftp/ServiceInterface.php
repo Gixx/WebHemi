@@ -134,7 +134,7 @@ interface ServiceInterface
      * @param  string $sourceFileName
      * @param  string $destinationFileName
      * @param  int    $fileMode
-     * @return mixed
+     * @return ServiceInterface
      */
     public function upload(
         string $sourceFileName,
@@ -151,7 +151,7 @@ interface ServiceInterface
      * @param  string $remoteFileName
      * @param  string $localFileName
      * @param  int    $fileMode
-     * @return mixed
+     * @return ServiceInterface
      */
     public function download(
         string $remoteFileName,

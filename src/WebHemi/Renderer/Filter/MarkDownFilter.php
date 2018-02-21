@@ -81,7 +81,6 @@ class MarkDownFilter implements FilterInterface
     /**
      * Parses the input text as a markdown script and outputs the HTML.
      *
-     * @param  string
      * @return string
      */
     public function __invoke() : string

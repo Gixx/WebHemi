@@ -60,7 +60,7 @@ class UserEntity extends AbstractEntity
      * @param string $userName
      * @return UserEntity
      */
-    public function setUsername(string $userName) : UserEntity
+    public function setUserName(string $userName) : UserEntity
     {
         $this->container['username'] = $userName;
 
@@ -70,7 +70,7 @@ class UserEntity extends AbstractEntity
     /**
      * @return null|string
      */
-    public function getUsername() : ? string
+    public function getUserName() : ? string
     {
         return $this->container['username'];
     }
