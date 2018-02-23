@@ -11,7 +11,7 @@
  */
 namespace WebHemiTest\TestService;
 
-use WebHemi\Data\EntityInterface;
+use WebHemi\Data\Entity\EntityInterface;
 
 /**
  * Class EmptyEntity.
@@ -36,26 +36,23 @@ class EmptyEntity implements EntityInterface
     }
 
     /**
-     * Sets the value of the entity identifier.
+     * Returns entity data as an array.
      *
-     * @param int $entityId
-     * @return EntityInterface
+     * @return array
      */
-    public function setKeyData(int $entityId) : EntityInterface
+    public function toArray() : array
     {
-        $this->storage[$this->key] = $entityId;
-
-        return $this;
+        return $this->storage;
     }
 
     /**
-     * Gets the value of the entity identifier.
+     * Fills entity from an arrray.
      *
-     * @return int
+     * @param array $arrayData
      */
-    public function getKeyData() : int
+    public function fromArray(array $arrayData) : void
     {
-        return isset($this->key) ? $this->storage[$this->key] : null;
+        $this->storage = $arrayData;
     }
 
     /**

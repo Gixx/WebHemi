@@ -13,10 +13,11 @@
 namespace WebHemiTest\Auth;
 
 use Prophecy\Argument;
-use WebHemi\Data\ConnectorInterface as DataAdapterInterface;
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Query\QueryInterface as DataAdapterInterface;
 use WebHemi\Auth\Result\Result;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 use WebHemiTest\TestService\EmptyAuthAdapter;
 use WebHemiTest\TestService\EmptyAuthStorage;
 use WebHemiTest\TestService\EmptyCredential;
@@ -55,8 +56,6 @@ class ResultTest extends TestCase
     public function testResult()
     {
         $defaultAdapter = $this->prophesize(DataAdapterInterface::class);
-        $defaultAdapter->setDataGroup(Argument::type('string'))->willReturn($defaultAdapter->reveal());
-        $defaultAdapter->setIdKey(Argument::type('string'))->willReturn($defaultAdapter->reveal());
         /** @var DataAdapterInterface $defaultAdapterInstance */
         $defaultAdapterInstance = $defaultAdapter->reveal();
 
@@ -64,7 +63,8 @@ class ResultTest extends TestCase
         $result = new Result();
         $authStorage = new EmptyAuthStorage();
         $dataEntity = new UserEntity();
-        $dataStorage = new EmptyUserStorage($defaultAdapterInstance, $dataEntity);
+        $entitySet = new EntitySet();
+        $dataStorage = new EmptyUserStorage($defaultAdapterInstance, $entitySet, $dataEntity);
 
         $adapter = new EmptyAuthAdapter(
             $config,

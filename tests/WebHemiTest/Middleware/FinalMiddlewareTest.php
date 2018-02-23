@@ -14,7 +14,7 @@ namespace WebHemiTest\Middleware;
 use PHPUnit\Framework\TestCase;
 use WebHemi\Auth\ServiceInterface as AuthAdapterInterface;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 use WebHemi\Environment\ServiceAdapter\Base\ServiceAdapter as EnvironmentManager;
 use WebHemi\Http\ResponseInterface;
 use WebHemi\Http\ServerRequestInterface;
