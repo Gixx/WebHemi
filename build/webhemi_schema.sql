@@ -24,6 +24,10 @@ DROP TABLE IF EXISTS `webhemi_lock`;
 DROP TABLE IF EXISTS `webhemi_filesystem_content`;
 DROP TABLE IF EXISTS `webhemi_filesystem_content_attachment`;
 DROP TABLE IF EXISTS `webhemi_filesystem_folder`;
+DROP TABLE IF EXISTS `webhemi_am_policy`;
+DROP TABLE IF EXISTS `webhemi_am_resource`;
+DROP TABLE IF EXISTS `webhemi_user_to_am_policy`;
+DROP TABLE IF EXISTS `webhemi_user_group_to_am_policy`;
 
 --
 -- Table structure for table `webhemi_application`
@@ -76,14 +80,14 @@ UNLOCK TABLES;
 -- AM - Access Management
 
 --
--- Table structure for table `webhemi_am_resource`
+-- Table structure for table `webhemi_resource`
 --
 
-DROP TABLE IF EXISTS `webhemi_am_resource`;
+DROP TABLE IF EXISTS `webhemi_resource`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `webhemi_am_resource` (
-    `id_am_resource` INT(10) UNSIGNED         NOT NULL AUTO_INCREMENT,
+CREATE TABLE `webhemi_resource` (
+    `id_resource` INT(10) UNSIGNED         NOT NULL AUTO_INCREMENT,
     `name`           VARCHAR(255)             NOT NULL,
     `title`          VARCHAR(255)             NOT NULL,
     `description`    TEXT                     NOT NULL,
@@ -91,22 +95,22 @@ CREATE TABLE `webhemi_am_resource` (
     `is_read_only`   TINYINT(1)               NOT NULL DEFAULT 0,
     `date_created`   DATETIME                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_modified`  DATETIME                          DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id_am_resource`),
-    UNIQUE KEY `unq_am_resource_name` (`name`),
-    UNIQUE KEY `unq_am_resource_title` (`title`)
+    PRIMARY KEY (`id_resource`),
+    UNIQUE KEY `unq_resource_name` (`name`),
+    UNIQUE KEY `unq_resource_title` (`title`)
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `webhemi_am_resource`
+-- Dumping data for table `webhemi_resource`
 --
 
-LOCK TABLES `webhemi_am_resource` WRITE;
-/*!40000 ALTER TABLE `webhemi_am_resource`
+LOCK TABLES `webhemi_resource` WRITE;
+/*!40000 ALTER TABLE `webhemi_resource`
     DISABLE KEYS */;
-INSERT INTO `webhemi_am_resource` VALUES
+INSERT INTO `webhemi_resource` VALUES
     (1, 'admin-dashboard', 'Dashboard', '', 'route', 1, NOW(), NULL),
 
     (2, 'admin-applications-list', 'List applications', '', 'route', 1, NOW(), NULL),
@@ -124,21 +128,21 @@ INSERT INTO `webhemi_am_resource` VALUES
     (12, 'admin-control-panel-themes-add', 'Add theme', '', 'route', 1, NOW(), NULL),
     (13, 'admin-control-panel-themes-view', 'View theme', '', 'route', 1, NOW(), NULL),
     (14, 'admin-control-panel-themes-delete', 'Delete theme', '', 'route', 1, NOW(), NULL);
-/*!40000 ALTER TABLE `webhemi_am_resource`
+/*!40000 ALTER TABLE `webhemi_resource`
     ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `webhemi_am_policy`
+-- Table structure for table `webhemi_policy`
 --
 
-DROP TABLE IF EXISTS `webhemi_am_policy`;
+DROP TABLE IF EXISTS `webhemi_policy`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `webhemi_am_policy` (
-    `id_am_policy`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `webhemi_policy` (
+    `id_policy`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     -- If key is NULL, then the policy is applied to all resources
-    `fk_am_resource` INT(10) UNSIGNED          DEFAULT NULL,
+    `fk_resource` INT(10) UNSIGNED          DEFAULT NULL,
     -- If key is NULL, then the policy is applied to all applications
     `fk_application` INT(10) UNSIGNED          DEFAULT NULL,
     `name`           VARCHAR(255)     NOT NULL,
@@ -148,15 +152,15 @@ CREATE TABLE `webhemi_am_policy` (
     `is_read_only`   TINYINT(1)       NOT NULL DEFAULT 0,
     `date_created`   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_modified`  DATETIME                  DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id_am_policy`),
-    UNIQUE KEY `unq_am_policy` (`fk_am_resource`, `fk_application`, `method`),
-    UNIQUE KEY `unq_am_policy_title` (`title`),
-    KEY `idx_am_policy_fk_am_resource` (`fk_am_resource`),
-    KEY `idx_am_policy_fk_application` (`fk_application`),
-    CONSTRAINT `fkx_am_policy_fk_am_resource` FOREIGN KEY (`fk_am_resource`) REFERENCES `webhemi_am_resource` (`id_am_resource`)
+    PRIMARY KEY (`id_policy`),
+    UNIQUE KEY `unq_policy` (`fk_resource`, `fk_application`, `method`),
+    UNIQUE KEY `unq_policy_title` (`title`),
+    KEY `idx_policy_fk_resource` (`fk_resource`),
+    KEY `idx_policy_fk_application` (`fk_application`),
+    CONSTRAINT `fkx_policy_fk_resource` FOREIGN KEY (`fk_resource`) REFERENCES `webhemi_resource` (`id_resource`)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    CONSTRAINT `fkx_am_policy_fk_application` FOREIGN KEY (`fk_application`) REFERENCES `webhemi_application` (`id_application`)
+    CONSTRAINT `fkx_policy_fk_application` FOREIGN KEY (`fk_application`) REFERENCES `webhemi_application` (`id_application`)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 )
@@ -165,13 +169,13 @@ CREATE TABLE `webhemi_am_policy` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `webhemi_am_policy`
+-- Dumping data for table `webhemi_policy`
 --
 
-LOCK TABLES `webhemi_am_policy` WRITE;
-/*!40000 ALTER TABLE `webhemi_am_policy`
+LOCK TABLES `webhemi_policy` WRITE;
+/*!40000 ALTER TABLE `webhemi_policy`
     DISABLE KEYS */;
-INSERT INTO `webhemi_am_policy` VALUES
+INSERT INTO `webhemi_policy` VALUES
     (1, NULL, NULL, 'supervisor', 'Supervisor access',
      'Allow access to all resources in every application with any request method.', NULL, 1, NOW(), NULL),
     (2, 1, 1, 'dashboard', 'Dashborad access', 'Allow to view the dashboard.', NULL, 1, NOW(), NULL),
@@ -195,7 +199,7 @@ INSERT INTO `webhemi_am_policy` VALUES
     (16, 13, 1, 'themes-view', 'Theme viewer', 'Allow to view theme properties.', NULL, 1, NOW(), NULL),
     (17, 14, 1, 'themes-delete-review', 'Theme remover (review)', 'Allow to review the theme that is about to be deleted. Doesn\'t include "confirm".', 'GET', 1, NOW(), NULL),
     (18, 14, 1, 'themes-delete-confirm', 'Theme remover (confirm)', 'Allow to delete theme permanently.', 'POST', 1, NOW(), NULL);
-/*!40000 ALTER TABLE `webhemi_am_policy`
+/*!40000 ALTER TABLE `webhemi_policy`
     ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,21 +312,21 @@ UNLOCK TABLES;
 -- Table structure for table `webhemi_user_policy`
 --
 
-DROP TABLE IF EXISTS `webhemi_user_to_am_policy`;
+DROP TABLE IF EXISTS `webhemi_user_to_policy`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `webhemi_user_to_am_policy` (
-    `id_user_to_am_policy` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `webhemi_user_to_policy` (
+    `id_user_to_policy` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `fk_user`              INT(10) UNSIGNED NOT NULL,
-    `fk_am_policy`         INT(10) UNSIGNED NOT NULL,
-    PRIMARY KEY (`id_user_to_am_policy`),
-    UNIQUE KEY `unq_user_to_am_policy` (`fk_user`, `fk_am_policy`),
-    KEY `idx_user_to_am_policy_fk_user` (`fk_user`),
-    KEY `idx_user_to_am_policy_fk_am_policy` (`fk_am_policy`),
-    CONSTRAINT `fkx_user_to_am_policy_fk_user` FOREIGN KEY (`fk_user`) REFERENCES `webhemi_user` (`id_user`)
+    `fk_policy`         INT(10) UNSIGNED NOT NULL,
+    PRIMARY KEY (`id_user_to_policy`),
+    UNIQUE KEY `unq_user_to_policy` (`fk_user`, `fk_policy`),
+    KEY `idx_user_to_policy_fk_user` (`fk_user`),
+    KEY `idx_user_to_policy_fk_policy` (`fk_policy`),
+    CONSTRAINT `fkx_user_to_policy_fk_user` FOREIGN KEY (`fk_user`) REFERENCES `webhemi_user` (`id_user`)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    CONSTRAINT `fkx_user_to_am_policy_fk_am_policy` FOREIGN KEY (`fk_am_policy`) REFERENCES `webhemi_am_policy` (`id_am_policy`)
+    CONSTRAINT `fkx_user_to_policy_fk_policy` FOREIGN KEY (`fk_policy`) REFERENCES `webhemi_policy` (`id_policy`)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 )
@@ -336,10 +340,10 @@ CREATE TABLE `webhemi_user_to_am_policy` (
 -- Dumping data for table `webhemi_user_policy`
 --
 
-LOCK TABLES `webhemi_user_to_am_policy` WRITE;
-/*!40000 ALTER TABLE `webhemi_user_to_am_policy`
+LOCK TABLES `webhemi_user_to_policy` WRITE;
+/*!40000 ALTER TABLE `webhemi_user_to_policy`
     DISABLE KEYS */;
-/*!40000 ALTER TABLE `webhemi_user_to_am_policy`
+/*!40000 ALTER TABLE `webhemi_user_to_policy`
     ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -420,24 +424,24 @@ INSERT INTO `webhemi_user_to_user_group` VALUES
 UNLOCK TABLES;
 
 --
--- Table structure for table `webhemi_user_group_to_am_policy`
+-- Table structure for table `webhemi_user_group_to_policy`
 --
 
-DROP TABLE IF EXISTS `webhemi_user_group_to_am_policy`;
+DROP TABLE IF EXISTS `webhemi_user_group_to_policy`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `webhemi_user_group_to_am_policy` (
-    `id_user_group_to_am_policy` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `webhemi_user_group_to_policy` (
+    `id_user_group_to_policy` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `fk_user_group`              INT(10) UNSIGNED NOT NULL,
-    `fk_am_policy`               INT(10) UNSIGNED NOT NULL,
-    PRIMARY KEY (`id_user_group_to_am_policy`),
-    UNIQUE KEY `unq_user_group_to_am_policy` (`fk_user_group`, `fk_am_policy`),
-    KEY `idx_user_group_to_am_policy_fk_user_group` (`fk_user_group`),
-    KEY `idx_user_group_to_am_policy_fk_am_policy` (`fk_am_policy`),
-    CONSTRAINT `fkx_user_group_to_am_policy_fk_user_group` FOREIGN KEY (`fk_user_group`) REFERENCES `webhemi_user_group` (`id_user_group`)
+    `fk_policy`               INT(10) UNSIGNED NOT NULL,
+    PRIMARY KEY (`id_user_group_to_policy`),
+    UNIQUE KEY `unq_user_group_to_policy` (`fk_user_group`, `fk_policy`),
+    KEY `idx_user_group_to_policy_fk_user_group` (`fk_user_group`),
+    KEY `idx_user_group_to_policy_fk_policy` (`fk_policy`),
+    CONSTRAINT `fkx_user_group_to_policy_fk_user_group` FOREIGN KEY (`fk_user_group`) REFERENCES `webhemi_user_group` (`id_user_group`)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    CONSTRAINT `fkx_user_group_to_am_policy_fk_am_policy` FOREIGN KEY (`fk_am_policy`) REFERENCES `webhemi_am_policy` (`id_am_policy`)
+    CONSTRAINT `fkx_user_group_to_policy_fk_policy` FOREIGN KEY (`fk_policy`) REFERENCES `webhemi_policy` (`id_policy`)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 )
@@ -446,19 +450,19 @@ CREATE TABLE `webhemi_user_group_to_am_policy` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `webhemi_user_group_to_am_policy`
+-- Dumping data for table `webhemi_user_group_to_policy`
 --
 
-LOCK TABLES `webhemi_user_group_to_am_policy` WRITE;
-/*!40000 ALTER TABLE `webhemi_user_group_to_am_policy`
+LOCK TABLES `webhemi_user_group_to_policy` WRITE;
+/*!40000 ALTER TABLE `webhemi_user_group_to_policy`
     DISABLE KEYS */;
-INSERT INTO `webhemi_user_group_to_am_policy` VALUES
+INSERT INTO `webhemi_user_group_to_policy` VALUES
     (NULL, 1, 1),
     (NULL, 2, 2),
     (NULL, 2, 3),
     (NULL, 2, 5),
     (NULL, 2, 11);
-/*!40000 ALTER TABLE `webhemi_user_group_to_am_policy`
+/*!40000 ALTER TABLE `webhemi_user_group_to_policy`
     ENABLE KEYS */;
 UNLOCK TABLES;
 

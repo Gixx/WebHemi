@@ -17,7 +17,7 @@ use Exception;
 use WebHemi\Auth\CredentialInterface;
 use WebHemi\Auth\Result\Result;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Form\Element\Html\HtmlElement;
 use WebHemi\Form\ElementInterface;

@@ -14,9 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Renderer\Helper;
 
 use WebHemi\Data\Entity;
-use WebHemi\Data\Storage;
-use WebHemi\Data\StorageInterface;
-use WebHemi\Data\Traits\StorageInjectorTrait;
+use WebHemi\Data\Storage\FilesystemStorage;
+use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
 use WebHemi\Router\ProxyInterface;
@@ -35,18 +34,31 @@ class GetTagsHelper implements HelperInterface
      */
     private $environmentManager;
 
-    use StorageInjectorTrait;
+    /**
+     * @var ApplicationStorage
+     */
+    private $applicationStorage;
+
+    /**
+     * @var FilesystemStorage
+     */
+    private $filesystemStorage;
 
     /**
      * GetTagsHelper constructor.
      *
      * @param EnvironmentInterface $environmentManager
-     * @param StorageInterface[]   ...$dataStorages
+     * @param ApplicationStorage $applicationStorage
+     * @param FilesystemStorage $filesystemStorage
      */
-    public function __construct(EnvironmentInterface $environmentManager, StorageInterface ...$dataStorages)
-    {
+    public function __construct(
+        EnvironmentInterface $environmentManager,
+        ApplicationStorage $applicationStorage,
+        FilesystemStorage $filesystemStorage
+    ) {
         $this->environmentManager = $environmentManager;
-        $this->addStorageInstances($dataStorages);
+        $this->applicationStorage = $applicationStorage;
+        $this->filesystemStorage = $filesystemStorage;
     }
 
     /**
@@ -100,42 +112,27 @@ class GetTagsHelper implements HelperInterface
         $tags = [];
 
         /**
-         * @var Storage\ApplicationStorage $applicationStorage
-         */
-        $applicationStorage = $this->getApplicationStorage();
-        /**
-         * @var Storage\Filesystem\FilesystemTagStorage $tagStorage
-         */
-        $tagStorage = $this->getFilesystemTagStorage();
-        /**
-         * @var Storage\Filesystem\FilesystemDirectoryStorage $directoryStorage
-         */
-        $directoryStorage = $this->getFilesystemDirectoryStorage();
-
-        if (!$applicationStorage || !$tagStorage || !$directoryStorage) {
-            return [];
-        }
-
-        /**
          * @var Entity\ApplicationEntity $application
          */
-        $application = $applicationStorage->getApplicationByName($this->environmentManager->getSelectedApplication());
-        $applicationId = $application->getKeyData();
+        $application = $this->applicationStorage
+            ->getApplicationByName($this->environmentManager->getSelectedApplication());
+        $applicationId = $application->getApplicationId();
 
         /**
-         * @var array $categoryDirectoryData
+         * @var Entity\FilesystemDirectoryDataEntity $categoryDirectoryData
          */
-        $categoryDirectoryData = $directoryStorage
-            ->getDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);
+        $categoryDirectoryData = $this->filesystemStorage
+            ->getFilesystemDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);
 
         /**
-         * @var Entity\Filesystem\FilesystemTagEntity[] $tagList
+         * @var Entity\EntitySet $tagList
          */
-        $tagList = $tagStorage->getFilesystemTagsByApplication($applicationId);
+        $tagList = $this->filesystemStorage
+            ->getFilesystemTagListByApplication($applicationId);
 
         foreach ($tagList as $tagEntity) {
             $tags[] = [
-                'path' => $categoryDirectoryData['uri'],
+                'path' => $categoryDirectoryData->getUri(),
                 'name' => $tagEntity->getName(),
                 'title' => $tagEntity->getTitle()
             ];

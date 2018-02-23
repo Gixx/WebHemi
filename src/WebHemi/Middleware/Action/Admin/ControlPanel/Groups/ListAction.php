@@ -14,8 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Action\Admin\ControlPanel\Groups;
 
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
-use WebHemi\Data\Entity\User\UserGroupEntity;
-use WebHemi\Data\Storage\User\UserGroupStorage;
+use WebHemi\Data\Entity\UserGroupEntity;
+use WebHemi\Data\Storage\UserStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
@@ -33,25 +33,25 @@ class ListAction extends AbstractMiddlewareAction
      */
     protected $environmentManager;
     /**
-     * @var UserGroupStorage
+     * @var UserStorage
      */
-    protected $userGroupStorage;
+    protected $userStorage;
 
     /**
      * GroupManagementAction constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param EnvironmentInterface   $environmentManager
-     * @param UserGroupStorage       $userGroupStorage
+     * @param UserStorage            $userStorage
      */
     public function __construct(
         ConfigurationInterface $configuration,
         EnvironmentInterface $environmentManager,
-        UserGroupStorage $userGroupStorage
+        UserStorage $userStorage
     ) {
         $this->configuration = $configuration;
         $this->environmentManager = $environmentManager;
-        $this->userGroupStorage = $userGroupStorage;
+        $this->userStorage = $userStorage;
     }
 
     /**
@@ -89,7 +89,7 @@ class ListAction extends AbstractMiddlewareAction
         /**
          * @var array $entityList
          */
-        $entityList = $this->userGroupStorage->getUserGroups();
+        $entityList = $this->userStorage->getUserGroupList();
 
         /**
          * @var UserGroupEntity $userGroupEntity

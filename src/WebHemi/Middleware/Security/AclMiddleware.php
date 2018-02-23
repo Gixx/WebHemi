@@ -46,13 +46,13 @@ class AclMiddleware implements MiddlewareInterface
      */
     private $applicationStorage;
     /**
-     * @var Storage\AccessManagement\ResourceStorage
+     * @var Storage\ResourceStorage
      */
     private $resourceStorage;
     /**
-     * @var Storage\User\UserMetaStorage
+     * @var Storage\UserStorage
      */
-    private $userMetaStorage;
+    private $userStorage;
     /**
      * @var array
      */
@@ -64,27 +64,27 @@ class AclMiddleware implements MiddlewareInterface
     /**
      * AclMiddleware constructor.
      *
-     * @param AuthInterface                            $authAdapter
-     * @param AclInterface                             $aclAdapter
-     * @param EnvironmentInterface                     $environmentManager
-     * @param Storage\ApplicationStorage               $applicationStorage
-     * @param Storage\AccessManagement\ResourceStorage $resourceStorage
-     * @param Storage\User\UserMetaStorage             $userMetaStorage
+     * @param AuthInterface               $authAdapter
+     * @param AclInterface                $aclAdapter
+     * @param EnvironmentInterface        $environmentManager
+     * @param Storage\ApplicationStorage  $applicationStorage
+     * @param Storage\ResourceStorage     $resourceStorage
+     * @param Storage\UserStorage         $userStorage
      */
     public function __construct(
         AuthInterface $authAdapter,
         AclInterface $aclAdapter,
         EnvironmentInterface $environmentManager,
         Storage\ApplicationStorage $applicationStorage,
-        Storage\AccessManagement\ResourceStorage $resourceStorage,
-        Storage\User\UserMetaStorage $userMetaStorage
+        Storage\ResourceStorage $resourceStorage,
+        Storage\UserStorage $userStorage
     ) {
         $this->authAdapter = $authAdapter;
         $this->aclAdapter = $aclAdapter;
         $this->environmentManager = $environmentManager;
         $this->applicationStorage = $applicationStorage;
         $this->resourceStorage = $resourceStorage;
-        $this->userMetaStorage = $userMetaStorage;
+        $this->userStorage = $userStorage;
     }
 
     /**
@@ -107,18 +107,18 @@ class AclMiddleware implements MiddlewareInterface
         }
 
         /**
-         * @var Entity\User\UserEntity|null $identity
+         * @var Entity\UserEntity|null $identity
          */
         $identity = $this->authAdapter->getIdentity();
 
-        if ($identity instanceof Entity\User\UserEntity) {
-            $selectedApplication = $this->environmentManager->getSelectedApplication();
+        if ($identity instanceof Entity\UserEntity) {
             /**
              * @var Entity\ApplicationEntity $applicationEntity
              */
-            $applicationEntity = $this->applicationStorage->getApplicationByName($selectedApplication);
+            $applicationEntity = $this->applicationStorage
+                ->getApplicationByName($this->environmentManager->getSelectedApplication());
             /**
-             * @var Entity\AccessManagement\ResourceEntity $resourceEntity
+             * @var Entity\ResourceEntity $resourceEntity
              */
             $resourceEntity = $this->resourceStorage->getResourceByName($resourceName);
             // Check the user against the application and resource
@@ -142,18 +142,18 @@ class AclMiddleware implements MiddlewareInterface
      * Set identified user data for the templates
      *
      * @param  ServerRequestInterface $request
-     * @param  Entity\User\UserEntity $identity
+     * @param  Entity\UserEntity $identity
      * @return ServerRequestInterface
      */
     private function setIdentityForTemplate(
         ServerRequestInterface $request,
-        Entity\User\UserEntity $identity
+        Entity\UserEntity $identity
     ) : ServerRequestInterface {
         // Set authenticated user for the templates
         $templateData = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, []);
         $templateData[ServerRequestInterface::REQUEST_ATTR_AUTHENTICATED_USER] = $identity;
-        $templateData[ServerRequestInterface::REQUEST_ATTR_AUTHENTICATED_USER_META] = $this->userMetaStorage
-            ->getUserMetaEntitySetForUserId($identity->getUserId(), true);
+        $templateData[ServerRequestInterface::REQUEST_ATTR_AUTHENTICATED_USER_META] = $this->userStorage
+            ->getUserMetaListByUser($identity->getUserId());
 
         return $request->withAttribute(ServerRequestInterface::REQUEST_ATTR_DISPATCH_DATA, $templateData);
     }

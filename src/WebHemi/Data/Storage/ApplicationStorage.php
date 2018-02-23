@@ -13,169 +13,48 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage;
 
-use WebHemi\Data\EntityInterface;
+use WebHemi\Data\Query\QueryInterface;
+use WebHemi\Data\Entity\EntitySet;
 use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemi\DateTime;
 
 /**
  * Class ApplicationStorage.
- *
- * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class ApplicationStorage extends AbstractStorage
 {
-    /**
-     * @var string
-     */
-    protected $dataGroup = 'webhemi_application';
-    /**
-     * @var string
-     */
-    protected $idKey = 'id_application';
-    /**
-     * @var string
-     */
-    private $name = 'name';
-    /**
-     * @var string
-     */
-    private $title = 'title';
-    /**
-     * @var string
-     */
-    private $introduction = 'introduction';
-    /**
-     * @var string
-     */
-    private $subject = 'subject';
-    /**
-     * @var string
-     */
-    private $description = 'description';
-    /**
-     * @var string
-     */
-    private $keywords = 'keywords';
-    /**
-     * @var string
-     */
-    private $copyright = 'copyright';
-    /**
-     * @var string
-     */
-    private $path = 'path';
-    /**
-     * @var string
-     */
-    private $theme = 'theme';
-    /**
-     * @var string
-     */
-    private $type = 'type';
-    /**
-     * @var string
-     */
-    private $locale = 'locale';
-    /**
-     * @var string
-     */
-    private $timeZone = 'timezone';
-    /**
-     * @var string
-     */
-    private $isReadOnly = 'is_read_only';
-    /**
-     * @var string
-     */
-    private $isEnabled = 'is_enabled';
-    /**
-     * @var string
-     */
-    private $dateCreated = 'date_created';
-    /**
-     * @var string
-     */
-    private $dateModified = 'date_modified';
-
-    /**
-     * Populates an entity with storage data.
-     *
-     * @param  EntityInterface $dataEntity
-     * @param  array           $data
-     * @return void
-     */
-    protected function populateEntity(EntityInterface&$dataEntity, array $data) : void
-    {
-        /**
-         * @var ApplicationEntity $dataEntity
-         */
-        $dataEntity->setApplicationId((int) $data[$this->idKey])
-            ->setName($data[$this->name])
-            ->setTitle($data[$this->title])
-            ->setIntroduction($data[$this->introduction] ?? null)
-            ->setSubject($data[$this->subject] ?? null)
-            ->setDescription($data[$this->description] ?? null)
-            ->setKeywords($data[$this->keywords] ?? null)
-            ->setCopyright($data[$this->copyright] ?? null)
-            ->setPath($data[$this->path] ?? null)
-            ->setTheme($data[$this->theme] ?? null)
-            ->setType($data[$this->type] ?? null)
-            ->setLocale($data[$this->locale] ?? null)
-            ->setTimeZone($data[$this->timeZone] ?? null)
-            ->setReadOnly((bool) $data[$this->isReadOnly])
-            ->setEnabled((bool) $data[$this->isEnabled])
-            ->setDateCreated(new DateTime($data[$this->dateCreated] ?? 'now'))
-            ->setDateModified(!empty($data[$this->dateModified]) ? new DateTime($data[$this->dateModified]) : null);
-    }
-
-    /**
-     * Get data from an entity.
-     *
-     * @param  EntityInterface $dataEntity
-     * @return array
-     */
-    protected function getEntityData(EntityInterface $dataEntity) : array
-    {
-        /**
-         * @var ApplicationEntity $dataEntity
-         */
-        $dateCreated = $dataEntity->getDateCreated();
-        $dateModified = $dataEntity->getDateModified();
-
-        return [
-            $this->idKey => $dataEntity->getKeyData(),
-            $this->name => $dataEntity->getName(),
-            $this->title => $dataEntity->getTitle(),
-            $this->introduction => $dataEntity->getIntroduction(),
-            $this->subject => $dataEntity->getSubject(),
-            $this->description => $dataEntity->getDescription(),
-            $this->keywords => $dataEntity->getKeywords(),
-            $this->copyright => $dataEntity->getCopyright(),
-            $this->path => $dataEntity->getPath(),
-            $this->theme => $dataEntity->getTheme(),
-            $this->type => $dataEntity->getType(),
-            $this->locale => $dataEntity->getLocale(),
-            $this->timeZone => $dataEntity->getTimeZone(),
-            $this->isReadOnly => (int) $dataEntity->getReadOnly(),
-            $this->isEnabled => (int) $dataEntity->getEnabled(),
-            $this->dateCreated => $dateCreated instanceof DateTime ? $dateCreated->format('Y-m-d H:i:s') : null,
-            $this->dateModified => $dateModified instanceof DateTime ? $dateModified->format('Y-m-d H:i:s') : null
-        ];
-    }
-
-    /**
+     /**
      * Returns every Application entity.
      *
-     * @return array|ApplicationEntity[]
+     * @param int $limit
+     * @param int $offset
+     * @return EntitySet
      */
-    public function getApplications()
-    {
-        /**
-         * @var ApplicationEntity[] $entityList
-         */
-        $entityList = $this->getDataEntitySet([]);
+    public function getApplicationList(
+        int $limit = QueryInterface::MAX_ROW_LIMIT,
+        int $offset = 0
+    ) : EntitySet {
+        $this->normalizeLimitAndOffset($limit, $offset);
 
-        return $entityList;
+        $data = $this->getQueryAdapter()->fetchData(
+            'getApplicationList',
+            [
+                ':limit' => $limit,
+                ':offset' => $offset
+            ]
+        );
+
+        $entitySet = $this->createEntitySet();
+
+        foreach ($data as $row) {
+            /** @var ApplicationEntity $entity */
+            $entity = $this->createEntity(ApplicationEntity::class, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
+        }
+
+        return $entitySet;
     }
 
     /**
@@ -184,14 +63,16 @@ class ApplicationStorage extends AbstractStorage
      * @param  int $identifier
      * @return null|ApplicationEntity
      */
-    public function getApplicationById($identifier) : ? ApplicationEntity
+    public function getApplicationById(int $identifier) : ? ApplicationEntity
     {
-        /**
-         * @var null|ApplicationEntity $dataEntity
-         */
-        $dataEntity = $this->getDataEntity([$this->idKey => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData('getApplicationById', [':idApplication' => $identifier]);
 
-        return $dataEntity;
+        if (isset($data[0])) {
+            /** @var null|ApplicationEntity $entity */
+            $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
+        }
+
+        return $entity ?? null;
     }
 
     /**
@@ -200,13 +81,15 @@ class ApplicationStorage extends AbstractStorage
      * @param  string $name
      * @return null|ApplicationEntity
      */
-    public function getApplicationByName($name) : ? ApplicationEntity
+    public function getApplicationByName(string $name) : ? ApplicationEntity
     {
-        /**
-         * @var null|ApplicationEntity $dataEntity
-         */
-        $dataEntity = $this->getDataEntity([$this->name => $name]);
+        $data = $this->getQueryAdapter()->fetchData('getApplicationByName', [':name' => $name]);
 
-        return $dataEntity;
+        if (isset($data[0])) {
+            /** @var null|ApplicationEntity $entity */
+            $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
+        }
+
+        return $entity ?? null;
     }
 }

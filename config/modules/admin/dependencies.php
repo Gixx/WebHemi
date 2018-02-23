@@ -37,8 +37,8 @@ return [
                     Acl\ServiceInterface::class,
                     Environment\ServiceInterface::class,
                     Data\Storage\ApplicationStorage::class,
-                    Data\Storage\AccessManagement\ResourceStorage::class,
-                    Data\Storage\User\UserMetaStorage::class
+                    Data\Storage\ResourceStorage::class,
+                    Data\Storage\UserStorage::class
                 ]
             ],
             Middleware\Security\AccessLogMiddleware::class => [
@@ -103,7 +103,7 @@ return [
                 'arguments' => [
                     Configuration\ServiceInterface::class,
                     Environment\ServiceInterface::class,
-                    Data\Storage\User\UserGroupStorage::class
+                    Data\Storage\UserStorage::class
                 ]
             ],
             Middleware\Action\Admin\ControlPanel\Groups\ViewAction::class => [

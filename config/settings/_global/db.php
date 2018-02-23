@@ -14,27 +14,19 @@ use WebHemi\Data;
 return [
     'dependencies' => [
         'Global' => [
-            Data\ConnectorInterface::class => [
-                'class'     => Data\Connector\PDO\SQLite\ConnectorAdapter::class,
-                'arguments' => [
-                    'name' => 'Test-SQLite',
-                    Data\DriverInterface::class
-                ],
-            ],
-            Data\DriverInterface::class => [
-                'class' => Data\Connector\PDO\SQLite\DriverAdapter::class,
+            Data\Driver\DriverInterface::class => [
+                'class' => Data\Driver\PDO\SQLite\DriverAdapter::class,
                 'arguments' => [
                     'dsn'      => 'sqlite:'.realpath(__DIR__ . '/../../../build/webhemi_schema.sqlite3'),
                 ],
                 'shared' => true
             ],
-            Data\MultiConnectorContainerInterface::class => [
-                'class' => Data\Connector\MultiConnectorContainer::class,
+            Data\Query\QueryInterface::class => [
+                'class' => Data\Query\SQL\SqlQueryAdapter::class,
                 'arguments' => [
-                    Data\ConnectorInterface::class
-                ],
-                'shared' => true
-            ],
+                    Data\Driver\DriverInterface::class
+                ]
+            ]
         ],
     ],
 ];

@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Action\Website\Directory;
 
 use RuntimeException;
+use WebHemi\Data\Entity\EntitySet;
 use WebHemi\Data\Entity;
 use WebHemi\DateTime;
 use WebHemi\Middleware\Action\Website\IndexAction;
@@ -61,15 +62,13 @@ class ArchiveAction extends IndexAction
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity[] $publications
+         * @var Entity\EntitySet $publications
          */
         $publications = $this->getFilesystemStorage()
-            ->getPublishedDocuments(
+            ->getFilesystemPublishedDocumentListByDate(
                 $applicationEntity->getApplicationId(),
-                [
-                    'YEAR(date_published) = ?' => (int) $dateParts[0],
-                    'MONTH(date_published) = ?' => (int) $dateParts[1]
-                ]
+                (int) $dateParts[0],
+                (int) $dateParts[1]
             );
 
         if (empty($publications)) {
@@ -82,10 +81,10 @@ class ArchiveAction extends IndexAction
         $titleDate = $publications[0]->getDatePublished();
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity $filesystemEntity
+         * @var Entity\FilesystemPublishedDocumentEntity $publishedDocumentEntity
          */
-        foreach ($publications as $filesystemEntity) {
-            $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
+        foreach ($publications as $publishedDocumentEntity) {
+            $blogPosts[] = $this->getBlobPostData($applicationEntity, $publishedDocumentEntity);
         }
 
         return [

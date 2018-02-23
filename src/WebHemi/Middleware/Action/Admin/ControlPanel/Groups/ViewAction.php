@@ -15,8 +15,8 @@ namespace WebHemi\Middleware\Action\Admin\ControlPanel\Groups;
 
 use RuntimeException;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
-use WebHemi\Data\Entity\User\UserGroupEntity;
-use WebHemi\Data\Storage\User\UserGroupStorage;
+use WebHemi\Data\Entity\UserGroupEntity;
+use WebHemi\Data\Storage\UserStorage;
 use WebHemi\DateTime;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
@@ -35,25 +35,25 @@ class ViewAction extends AbstractMiddlewareAction
      */
     protected $environmentManager;
     /**
-     * @var UserGroupStorage
+     * @var UserStorage
      */
-    protected $userGroupStorage;
+    protected $userStorage;
 
     /**
      * GroupManagementAction constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param EnvironmentInterface   $environmentManager
-     * @param UserGroupStorage       $userGroupStorage
+     * @param UserStorage            $userStorage
      */
     public function __construct(
         ConfigurationInterface $configuration,
         EnvironmentInterface $environmentManager,
-        UserGroupStorage $userGroupStorage
+        UserStorage $userStorage
     ) {
         $this->configuration = $configuration;
         $this->environmentManager = $environmentManager;
-        $this->userGroupStorage = $userGroupStorage;
+        $this->userStorage = $userStorage;
     }
 
     /**
@@ -95,7 +95,7 @@ class ViewAction extends AbstractMiddlewareAction
      */
     protected function getUserGroupDetails(int $userGroupId) : array
     {
-        $userGroupEntity = $this->userGroupStorage->getUserGroupById($userGroupId);
+        $userGroupEntity = $this->userStorage->getUserGroupById($userGroupId);
 
         if (!$userGroupEntity instanceof UserGroupEntity) {
             throw new RuntimeException(
@@ -108,20 +108,20 @@ class ViewAction extends AbstractMiddlewareAction
         }
 
         $data = [
-            'readonly' => $userGroupEntity->getReadOnly(),
+            'readonly' => $userGroupEntity->getIsReadOnly(),
             'group' => [
                 'Id' => $userGroupEntity->getUserGroupId(),
                 'Name' => $userGroupEntity->getName(),
                 'Title' => $userGroupEntity->getTitle(),
                 'Description' => $userGroupEntity->getDescription(),
-                'Is read-only?' => $userGroupEntity->getReadOnly() ? 'Yes' : 'No',
+                'Is read-only?' => $userGroupEntity->getIsReadOnly() ? 'Yes' : 'No',
                 'Date created' => $userGroupEntity->getDateCreated()->format('Y-m-d H:i:s'),
             ],
         ];
 
         $dateModified = $userGroupEntity->getDateModified();
 
-        if (!$userGroupEntity->getReadOnly() && $dateModified instanceof DateTime) {
+        if (!$userGroupEntity->getIsReadOnly() && $dateModified instanceof DateTime) {
             $data['group']['Date modified'] = $dateModified->format('Y-m-d H:i:s');
         }
 

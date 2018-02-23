@@ -13,125 +13,56 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Entity;
 
-use WebHemi\Data\EntityInterface;
+use DateTimeZone;
 use WebHemi\DateTime;
 
 /**
- * Class ApplicationEntity.
- *
- * @SuppressWarnings(PHPMD.TooManyFields)
+ * Class AbstractEntity
  */
-class ApplicationEntity implements EntityInterface
+class ApplicationEntity extends AbstractEntity
 {
     /**
-     * @var int
+     * @var array
      */
-    private $applicationId;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $title;
-    /**
-     * @var string
-     */
-    private $introduction;
-    /**
-     * @var string
-     */
-    private $subject;
-    /**
-     * @var string
-     */
-    private $description;
-    /**
-     * @var string
-     */
-    private $keywords;
-    /**
-     * @var string
-     */
-    private $copyright;
-    /**
-     * @var string
-     */
-    private $path;
-    /**
-     * @var string
-     */
-    private $theme;
-    /**
-     * @var string
-     */
-    private $type;
-    /**
-     * @var string
-     */
-    private $locale;
-    /**
-     * @var string
-     */
-    private $timeZone;
-    /**
-     * @var bool
-     */
-    private $isReadOnly;
-    /**
-     * @var bool
-     */
-    private $isEnabled;
-    /**
-     * @var DateTime
-     */
-    private $dateCreated;
-    /**
-     * @var DateTime
-     */
-    private $dateModified;
+    protected $container = [
+        'id_application' => null,
+        'name' => null,
+        'title' => null,
+        'introduction' => null,
+        'subject' => null,
+        'description' => null,
+        'keywords' => null,
+        'copyright' => null,
+        'path' => null,
+        'theme' => null,
+        'type' => null,
+        'locale' => null,
+        'timezone' => null,
+        'is_read_only' => null,
+        'is_enabled' => null,
+        'date_created' => null,
+        'date_modified' => null,
+    ];
 
     /**
-     * Sets the value of the entity identifier.
-     *
-     * @param  int $entityId
+     * @param int $identifier
      * @return ApplicationEntity
      */
-    public function setKeyData(int $entityId) : ApplicationEntity
+    public function setApplicationId(int $identifier) : ApplicationEntity
     {
-        $this->applicationId = $entityId;
+        $this->container['id_application'] = $identifier;
 
         return $this;
     }
 
     /**
-     * Gets the value of the entity identifier.
-     *
-     * @return null|int
-     */
-    public function getKeyData() : ? int
-    {
-        return $this->applicationId;
-    }
-
-    /**
-     * @param int $applicationId
-     * @return ApplicationEntity
-     */
-    public function setApplicationId(int $applicationId) : ApplicationEntity
-    {
-        $this->applicationId = $applicationId;
-
-        return $this;
-    }
-
-    /**
-     * @return null|int
+     * @return int|null
      */
     public function getApplicationId() : ? int
     {
-        return $this->applicationId;
+        return !is_null($this->container['id_application'])
+            ? (int) $this->container['id_application']
+            : null;
     }
 
     /**
@@ -140,7 +71,7 @@ class ApplicationEntity implements EntityInterface
      */
     public function setName(string $name) : ApplicationEntity
     {
-        $this->name = $name;
+        $this->container['name'] = $name;
 
         return $this;
     }
@@ -150,7 +81,7 @@ class ApplicationEntity implements EntityInterface
      */
     public function getName() : ? string
     {
-        return $this->name;
+        return $this->container['name'];
     }
 
     /**
@@ -159,7 +90,7 @@ class ApplicationEntity implements EntityInterface
      */
     public function setTitle(string $title) : ApplicationEntity
     {
-        $this->title = $title;
+        $this->container['title'] = $title;
 
         return $this;
     }
@@ -169,187 +100,16 @@ class ApplicationEntity implements EntityInterface
      */
     public function getTitle() : ? string
     {
-        return $this->title;
+        return $this->container['title'];
     }
 
     /**
-     * @param null|string $description
+     * @param string $introduction
      * @return ApplicationEntity
      */
-    public function setDescription(? string $description) : ApplicationEntity
+    public function setIntroduction(string $introduction) : ApplicationEntity
     {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getDescription() : ? string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param null|string $subject
-     * @return ApplicationEntity
-     */
-    public function setSubject(? string $subject) : ApplicationEntity
-    {
-        $this->subject = $subject;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getSubject() : ? string
-    {
-        return $this->subject;
-    }
-
-    /**
-     * @param null|string $keywords
-     * @return ApplicationEntity
-     */
-    public function setKeywords(? string $keywords) : ApplicationEntity
-    {
-        $this->keywords = $keywords;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getKeywords() : ? string
-    {
-        return $this->keywords;
-    }
-
-    /**
-     * @param null|string $copyright
-     * @return ApplicationEntity
-     */
-    public function setCopyright(? string $copyright) : ApplicationEntity
-    {
-        $this->copyright = $copyright;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getCopyright() : ? string
-    {
-        return $this->copyright;
-    }
-
-    /**
-     * @param null|string $path
-     * @return ApplicationEntity
-     */
-    public function setPath(? string $path) : ApplicationEntity
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getPath() : ? string
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param null|string $theme
-     * @return ApplicationEntity
-     */
-    public function setTheme(? string $theme) : ApplicationEntity
-    {
-        $this->theme = $theme;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getTheme() : ? string
-    {
-        return $this->theme;
-    }
-
-    /**
-     * @param null|string $type
-     * @return ApplicationEntity
-     */
-    public function setType(? string $type) : ApplicationEntity
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getType() : ? string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param null|string $locale
-     * @return ApplicationEntity
-     */
-    public function setLocale(? string $locale) : ApplicationEntity
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getLocale() : ? string
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param null|string $timeZone
-     * @return ApplicationEntity
-     */
-    public function setTimeZone(? string $timeZone) : ApplicationEntity
-    {
-        $this->timeZone = $timeZone;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getTimeZone() : ? string
-    {
-        return $this->timeZone;
-    }
-
-    /**
-     * @param null|string $introduction
-     * @return ApplicationEntity
-     */
-    public function setIntroduction(? string $introduction) : ApplicationEntity
-    {
-        $this->introduction = $introduction;
+        $this->container['introduction'] = $introduction;
 
         return $this;
     }
@@ -359,16 +119,189 @@ class ApplicationEntity implements EntityInterface
      */
     public function getIntroduction() : ? string
     {
-        return $this->introduction;
+        return $this->container['introduction'];
     }
 
     /**
-     * @param bool $state
+     * @param string $subject
      * @return ApplicationEntity
      */
-    public function setReadOnly(bool $state) : ApplicationEntity
+    public function setSubject(string $subject) : ApplicationEntity
     {
-        $this->isReadOnly = $state;
+        $this->container['subject'] = $subject;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSubject() : ? string
+    {
+        return $this->container['subject'];
+    }
+
+    /**
+     * @param string $description
+     * @return ApplicationEntity
+     */
+    public function setDescription(string $description) : ApplicationEntity
+    {
+        $this->container['description'] = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getDescription() : ? string
+    {
+        return $this->container['description'];
+    }
+
+    /**
+     * @param string $keywords
+     * @return ApplicationEntity
+     */
+    public function setKeywords(string $keywords) : ApplicationEntity
+    {
+        $this->container['keywords'] = $keywords;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getKeywords() : ? string
+    {
+        return $this->container['keywords'];
+    }
+
+    /**
+     * @param string $copyright
+     * @return ApplicationEntity
+     */
+    public function setCopyright(string $copyright) : ApplicationEntity
+    {
+        $this->container['copyright'] = $copyright;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getCopyright() : ? string
+    {
+        return $this->container['copyright'];
+    }
+
+    /**
+     * @param string $path
+     * @return ApplicationEntity
+     */
+    public function setPath(string $path) : ApplicationEntity
+    {
+        $this->container['path'] = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getPath() : ? string
+    {
+        return $this->container['path'];
+    }
+
+    /**
+     * @param string $theme
+     * @return ApplicationEntity
+     */
+    public function setTheme(string $theme) : ApplicationEntity
+    {
+        $this->container['theme'] = $theme;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getTheme() : ? string
+    {
+        return $this->container['theme'];
+    }
+
+    /**
+     * @param string $type
+     * @return ApplicationEntity
+     */
+    public function setType(string $type) : ApplicationEntity
+    {
+        $this->container['type'] = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getType() : ? string
+    {
+        return $this->container['type'];
+    }
+
+    /**
+     * @param string $locale
+     * @return ApplicationEntity
+     */
+    public function setLocale(string $locale) : ApplicationEntity
+    {
+        $this->container['locale'] = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getLocale() : ? string
+    {
+        return $this->container['locale'];
+    }
+
+    /**
+     * @param DateTimeZone $timeZone
+     * @return ApplicationEntity
+     */
+    public function setTimeZone(DateTimeZone $timeZone) : ApplicationEntity
+    {
+        $this->container['timezone'] = $timeZone->getName();
+
+        return $this;
+    }
+
+    /**
+     * @return DateTimeZone|null
+     */
+    public function getTimeZone() : ? DateTimeZone
+    {
+        return !empty($this->container['timezone'])
+            ? new DateTimeZone($this->container['timezone'])
+            : null;
+    }
+
+    /**
+     * @param bool $isReadonly
+     * @return ApplicationEntity
+     */
+    public function setIsReadOnly(bool $isReadonly) : ApplicationEntity
+    {
+        $this->container['is_read_only'] = $isReadonly ? 1 : 0;
 
         return $this;
     }
@@ -376,18 +309,18 @@ class ApplicationEntity implements EntityInterface
     /**
      * @return bool
      */
-    public function getReadOnly() : bool
+    public function getIsReadOnly() : bool
     {
-        return $this->isReadOnly ?? false;
+        return !empty($this->container['is_read_only']);
     }
 
     /**
-     * @param bool $state
+     * @param bool $isEnabled
      * @return ApplicationEntity
      */
-    public function setEnabled(bool $state) : ApplicationEntity
+    public function setIsEnabled(bool $isEnabled) : ApplicationEntity
     {
-        $this->isEnabled = $state;
+        $this->container['is_enabled'] = $isEnabled ? 1 : 0;
 
         return $this;
     }
@@ -395,18 +328,18 @@ class ApplicationEntity implements EntityInterface
     /**
      * @return bool
      */
-    public function getEnabled() : bool
+    public function getIsEnabled() : bool
     {
-        return $this->isEnabled ?? false;
+        return !empty($this->container['is_enabled']);
     }
 
     /**
-     * @param DateTime $dateCreated
+     * @param DateTime $dateTime
      * @return ApplicationEntity
      */
-    public function setDateCreated(DateTime $dateCreated) : ApplicationEntity
+    public function setDateCreated(DateTime $dateTime) : ApplicationEntity
     {
-        $this->dateCreated = $dateCreated;
+        $this->container['date_created'] = $dateTime->format('Y-m-d H:i:s');
 
         return $this;
     }
@@ -416,16 +349,18 @@ class ApplicationEntity implements EntityInterface
      */
     public function getDateCreated() : ? DateTime
     {
-        return $this->dateCreated;
+        return !empty($this->container['date_created'])
+            ? new DateTime($this->container['date_created'])
+            : null;
     }
 
     /**
-     * @param null|DateTime $dateModified
+     * @param DateTime $dateTime
      * @return ApplicationEntity
      */
-    public function setDateModified(? DateTime $dateModified) : ApplicationEntity
+    public function setDateModified(DateTime $dateTime) : ApplicationEntity
     {
-        $this->dateModified = $dateModified;
+        $this->container['date_modified'] = $dateTime->format('Y-m-d H:i:s');
 
         return $this;
     }
@@ -435,6 +370,8 @@ class ApplicationEntity implements EntityInterface
      */
     public function getDateModified() : ? DateTime
     {
-        return $this->dateModified;
+        return !empty($this->container['date_modified'])
+            ? new DateTime($this->container['date_modified'])
+            : null;
     }
 }

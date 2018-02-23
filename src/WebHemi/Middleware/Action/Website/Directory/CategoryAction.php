@@ -62,28 +62,26 @@ class CategoryAction extends IndexAction
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
         /**
-         * @var Entity\Filesystem\FilesystemCategoryEntity $categoryEntity
+         * @var Entity\FilesystemCategoryEntity $categoryEntity
          */
-        $categoryEntity = $this->getFilesystemCategoryStorage()
+        $categoryEntity = $this->getFilesystemStorage()
             ->getFilesystemCategoryByApplicationAndName(
                 $applicationEntity->getApplicationId(),
                 $categoryName
             );
 
-        if (!$categoryEntity instanceof Entity\Filesystem\FilesystemCategoryEntity) {
+        if (!$categoryEntity instanceof Entity\FilesystemCategoryEntity) {
             throw new RuntimeException('Not Found', 404);
         }
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity[] $publications
+         * @var Entity\EntitySet $publications
          */
         $publications = $this->getFilesystemStorage()
-            ->getPublishedDocuments(
+            ->getFilesystemPublishedDocumentListByCategory(
                 $applicationEntity->getApplicationId(),
-                [
-                    'fk_category = ?' => (int) $categoryEntity->getFilesystemCategoryId(),
-                ],
-                'date_published '.($categoryEntity->getItemOrder() ?? 'DESC')
+                $categoryEntity->getFilesystemCategoryId(),
+                'fs.`date_published` '.($categoryEntity->getItemOrder() ?? 'DESC')
             );
 
         if (empty($publications)) {
@@ -91,10 +89,10 @@ class CategoryAction extends IndexAction
         }
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity $filesystemEntity
+         * @var Entity\FilesystemPublishedDocumentEntity $publishedDocumentEntity
          */
-        foreach ($publications as $filesystemEntity) {
-            $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
+        foreach ($publications as $publishedDocumentEntity) {
+            $blogPosts[] = $this->getBlobPostData($applicationEntity, $publishedDocumentEntity);
         }
 
         return [
