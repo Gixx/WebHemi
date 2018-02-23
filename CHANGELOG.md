@@ -1,5 +1,16 @@
 # Change log #
 
+## Version 4.0.0-6.0 ##
+* Refactor the data module: rethink the way the PHP works in the end, and realize that it's absolutely no need for special
+  abstraction to build SQL queries, when I can build and test and use them by their own. 
+  * No more database table representation: reduce complexity, improve readability,
+  * Easier configuration,
+  * Introduce query representation: each query is in their own `.sql` file, which can be executed by the IDE (like PHPStorm),
+  * Entities now reflects the results of the queries,
+  * Introduce EntitySet as a replace of a normal array of Entities.
+* Improve code quality: PHPStan now passes level 2 (previous version passed only level 0).
+* TODO: add unit tests for the new Data module. 
+
 ## Version 4.0.0-5.3 ##
 * Changes in rendering and output:
   * Remove rendering from Dispatcher and Final Middleware. It's not their job.
