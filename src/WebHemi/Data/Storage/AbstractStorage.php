@@ -73,24 +73,14 @@ abstract class AbstractStorage implements StorageInterface
     }
 
     /**
-     * Creates a clean instance of the EntitySet
-     *
-     * @return EntitySet
-     */
-    public function createEntitySet() : EntitySet
-    {
-        return clone $this->entitySetPrototype;
-    }
-
-    /**
      * Creates a clean instance of the Entity.
      *
      * @param string $entityClass
      * @param array  $data
      * @throws InvalidArgumentException
-     * @return EntityInterface
+     * @return null|EntityInterface
      */
-    public function createEntity(string $entityClass, array $data = []) : EntityInterface
+    protected function getEntity(string $entityClass, array $data = []) : ? EntityInterface
     {
         if (!isset($this->entityPrototypes[$entityClass])) {
             throw new InvalidArgumentException(
@@ -99,13 +89,36 @@ abstract class AbstractStorage implements StorageInterface
             );
         }
 
-        $entity = clone $this->entityPrototypes[$entityClass];
-
         if (!empty($data)) {
+            $entity = clone $this->entityPrototypes[$entityClass];
             $entity->fromArray($data);
+            return $entity;
         }
 
-        return $entity;
+        return null;
+    }
+
+    /**
+     * Creates and fills and EntitySet
+     *
+     * @param string $entityClass
+     * @param array $data
+     * @throws InvalidArgumentException
+     * @return EntitySet
+     */
+    protected function getEntitySet(string $entityClass, array $data) : EntitySet
+    {
+        $entitySet = clone $this->entitySetPrototype;
+
+        foreach ($data as $row) {
+            $entity = $this->getEntity($entityClass, $row);
+
+            if (!empty($entity)) {
+                $entitySet[] = $entity;
+            }
+        }
+
+        return $entitySet;
     }
 
     /**
@@ -114,7 +127,7 @@ abstract class AbstractStorage implements StorageInterface
      * @param int $limit
      * @param int $offset
      */
-    protected function normalizeLimitAndOffset(int&$limit, int&$offset)
+    protected function normalizeLimitAndOffset(int&$limit, int&$offset) : void
     {
         $limit = min(QueryInterface::MAX_ROW_LIMIT, abs($limit));
         $offset = abs($offset);

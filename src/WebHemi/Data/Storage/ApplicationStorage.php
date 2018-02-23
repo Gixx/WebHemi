@@ -13,16 +13,16 @@ declare(strict_types = 1);
 
 namespace WebHemi\Data\Storage;
 
-use WebHemi\Data\Query\QueryInterface;
-use WebHemi\Data\Entity\EntitySet;
 use WebHemi\Data\Entity\ApplicationEntity;
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Query\QueryInterface;
 
 /**
  * Class ApplicationStorage.
  */
 class ApplicationStorage extends AbstractStorage
 {
-     /**
+    /**
      * Returns every Application entity.
      *
      * @param int $limit
@@ -43,18 +43,7 @@ class ApplicationStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var ApplicationEntity $entity */
-            $entity = $this->createEntity(ApplicationEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(ApplicationEntity::class, $data);
     }
 
     /**
@@ -65,14 +54,17 @@ class ApplicationStorage extends AbstractStorage
      */
     public function getApplicationById(int $identifier) : ? ApplicationEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getApplicationById', [':idApplication' => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getApplicationById',
+            [
+                ':idApplication' => $identifier
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|ApplicationEntity $entity */
-            $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
-        }
+        /** @var null|ApplicationEntity $entity */
+        $entity = $this->getEntity(ApplicationEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -83,13 +75,16 @@ class ApplicationStorage extends AbstractStorage
      */
     public function getApplicationByName(string $name) : ? ApplicationEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getApplicationByName', [':name' => $name]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getApplicationByName',
+            [
+                ':name' => $name
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|ApplicationEntity $entity */
-            $entity = $this->createEntity(ApplicationEntity::class, $data[0] ?? []);
-        }
+        /** @var null|ApplicationEntity $entity */
+        $entity = $this->getEntity(ApplicationEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 }

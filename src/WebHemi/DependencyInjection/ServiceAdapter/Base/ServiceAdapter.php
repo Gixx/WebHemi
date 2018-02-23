@@ -105,7 +105,7 @@ class ServiceAdapter extends AbstractAdapter
         // Create new instance.
         $className = $this->serviceLibrary[$identifier][self::SERVICE_CLASS];
         $reflectionClass = new ReflectionClass($className);
-        $serviceInstance =  $reflectionClass->newInstanceArgs($argumentList);
+        $serviceInstance = $reflectionClass->newInstanceArgs($argumentList);
 
         // Perform post init method calls.
         foreach ($this->serviceLibrary[$identifier][self::SERVICE_METHOD_CALL] as $methodCallList) {

@@ -46,18 +46,7 @@ class UserStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var UserEntity $entity */
-            $entity = $this->createEntity(UserEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(UserEntity::class, $data);
     }
 
     /**
@@ -68,14 +57,17 @@ class UserStorage extends AbstractStorage
      */
     public function getUserById(int $identifier) : ? UserEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getUserById', [':idUser' => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getUserById',
+            [
+                ':idUser' => $identifier
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|UserEntity $entity */
-            $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
-        }
+        /** @var null|UserEntity $entity */
+        $entity = $this->getEntity(UserEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -86,14 +78,17 @@ class UserStorage extends AbstractStorage
      */
     public function getUserByUserName(string $username) : ? UserEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getUserByUsername', [':username' => $username]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getUserByUsername',
+            [
+                ':username' => $username
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|UserEntity $entity */
-            $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
-        }
+        /** @var null|UserEntity $entity */
+        $entity = $this->getEntity(UserEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -104,14 +99,17 @@ class UserStorage extends AbstractStorage
      */
     public function getUserByEmail(string $email) : ? UserEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getUserByEmail', [':email' => $email]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getUserByEmail',
+            [
+                ':email' => $email
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|UserEntity $entity */
-            $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
-        }
+        /** @var null|UserEntity $entity */
+        $entity = $this->getEntity(UserEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -131,12 +129,10 @@ class UserStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|UserEntity $entity */
-            $entity = $this->createEntity(UserEntity::class, $data[0] ?? []);
-        }
+        /** @var null|UserEntity $entity */
+        $entity = $this->getEntity(UserEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -163,18 +159,7 @@ class UserStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var UserEntity $entity */
-            $entity = $this->createEntity(UserMetaEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(UserMetaEntity::class, $data);
     }
 
     /**
@@ -252,18 +237,7 @@ class UserStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var UserGroupEntity $entity */
-            $entity = $this->createEntity(UserGroupEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(UserGroupEntity::class, $data);
     }
 
     /**
@@ -290,18 +264,7 @@ class UserStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var UserGroupEntity $entity */
-            $entity = $this->createEntity(UserGroupEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(UserGroupEntity::class, $data);
     }
 
     /**
@@ -312,14 +275,17 @@ class UserStorage extends AbstractStorage
      */
     public function getUserGroupById(int $identifier) : ? UserGroupEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getUserGroupById', [':idUserGroup' => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getUserGroupById',
+            [
+                ':idUserGroup' => $identifier
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|UserGroupEntity $entity */
-            $entity = $this->createEntity(UserGroupEntity::class, $data[0] ?? []);
-        }
+        /** @var null|UserGroupEntity $entity */
+        $entity = $this->getEntity(UserGroupEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -330,13 +296,16 @@ class UserStorage extends AbstractStorage
      */
     public function getUserGroupByName(string $name) : ? UserGroupEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getUserGroupByName', [':name' => $name]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getUserGroupByName',
+            [
+                ':name' => $name
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|UserGroupEntity $entity */
-            $entity = $this->createEntity(UserGroupEntity::class, $data[0] ?? []);
-        }
+        /** @var null|UserGroupEntity $entity */
+        $entity = $this->getEntity(UserGroupEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 }
