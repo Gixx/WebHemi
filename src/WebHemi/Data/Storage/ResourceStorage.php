@@ -43,18 +43,7 @@ class ResourceStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var ResourceEntity $entity */
-            $entity = $this->createEntity(ResourceEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(ResourceEntity::class, $data);
     }
 
     /**
@@ -65,14 +54,17 @@ class ResourceStorage extends AbstractStorage
      */
     public function getResourceById(int $identifier) : ? ResourceEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getResourceById', [':idResource' => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getResourceById',
+            [
+                ':idResource' => $identifier
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|ResourceEntity $entity */
-            $entity = $this->createEntity(ResourceEntity::class, $data[0] ?? []);
-        }
+        /** @var null|ResourceEntity $entity */
+        $entity = $this->getEntity(ResourceEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -83,13 +75,16 @@ class ResourceStorage extends AbstractStorage
      */
     public function getResourceByName(string $name) : ? ResourceEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getResourceByName', [':name' => $name]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getResourceByName',
+            [
+                ':name' => $name
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|ResourceEntity $entity */
-            $entity = $this->createEntity(ResourceEntity::class, $data[0] ?? []);
-        }
+        /** @var null|ResourceEntity $entity */
+        $entity = $this->getEntity(ResourceEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 }

@@ -43,18 +43,7 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var PolicyEntity $entity */
-            $entity = $this->createEntity(PolicyEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(PolicyEntity::class, $data);
     }
 
     /**
@@ -81,18 +70,7 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var PolicyEntity $entity */
-            $entity = $this->createEntity(PolicyEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(PolicyEntity::class, $data);
     }
 
     /**
@@ -119,18 +97,7 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var PolicyEntity $entity */
-            $entity = $this->createEntity(PolicyEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(PolicyEntity::class, $data);
     }
 
     /**
@@ -157,18 +124,7 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var PolicyEntity $entity */
-            $entity = $this->createEntity(PolicyEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(PolicyEntity::class, $data);
     }
 
     /**
@@ -195,18 +151,7 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var PolicyEntity $entity */
-            $entity = $this->createEntity(PolicyEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(PolicyEntity::class, $data);
     }
 
     /**
@@ -236,18 +181,7 @@ class PolicyStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var PolicyEntity $entity */
-            $entity = $this->createEntity(PolicyEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(PolicyEntity::class, $data);
     }
 
     /**
@@ -258,14 +192,17 @@ class PolicyStorage extends AbstractStorage
      */
     public function getPolicyById(int $identifier) : ? PolicyEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getPolicyById', [':idPolicy' => $identifier]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getPolicyById',
+            [
+                ':idPolicy' => $identifier
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|PolicyEntity $entity */
-            $entity = $this->createEntity(PolicyEntity::class, $data[0] ?? []);
-        }
+        /** @var null|PolicyEntity $entity */
+        $entity = $this->getEntity(PolicyEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -276,13 +213,16 @@ class PolicyStorage extends AbstractStorage
      */
     public function getPolicyByName(string $name) : ? PolicyEntity
     {
-        $data = $this->getQueryAdapter()->fetchData('getPolicyByName', [':name' => $name]);
+        $data = $this->getQueryAdapter()->fetchData(
+            'getPolicyByName',
+            [
+                ':name' => $name
+            ]
+        );
 
-        if (isset($data[0])) {
-            /** @var null|PolicyEntity $entity */
-            $entity = $this->createEntity(PolicyEntity::class, $data[0] ?? []);
-        }
+        /** @var null|PolicyEntity $entity */
+        $entity = $this->getEntity(PolicyEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 }

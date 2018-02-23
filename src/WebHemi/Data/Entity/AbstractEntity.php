@@ -45,7 +45,7 @@ abstract class AbstractEntity implements EntityInterface
         foreach ($arrayData as $key => $value) {
             if (!array_key_exists($key, $this->container)) {
                 throw new InvalidArgumentException(
-                    sprintf('"%s" is not defined in ' . get_called_class(), $key),
+                    sprintf('"%s" is not defined in '.get_called_class(), $key),
                     1000
                 );
             }

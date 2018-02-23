@@ -15,8 +15,8 @@ namespace WebHemi\Data\Storage;
 
 use WebHemi\Data\Entity\EntitySet;
 use WebHemi\Data\Entity\FilesystemCategoryEntity;
-use WebHemi\Data\Entity\FilesystemDirectoryEntity;
 use WebHemi\Data\Entity\FilesystemDirectoryDataEntity;
+use WebHemi\Data\Entity\FilesystemDirectoryEntity;
 use WebHemi\Data\Entity\FilesystemDocumentEntity;
 use WebHemi\Data\Entity\FilesystemEntity;
 use WebHemi\Data\Entity\FilesystemMetaEntity;
@@ -58,18 +58,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemEntity $entity */
-            $entity = $this->createEntity(FilesystemEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemEntity::class, $data);
     }
 
     /**
@@ -82,15 +71,15 @@ class FilesystemStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemById',
-            [':idFilesystem' => $identifier]
+            [
+                ':idFilesystem' => $identifier
+            ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemEntity $entity */
-            $entity = $this->createEntity(FilesystemEntity::class, $data[0]);
-        }
+        /** @var null|FilesystemEntity $entity */
+        $entity = $this->getEntity(FilesystemEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -115,12 +104,10 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemEntity $entity */
-            $entity = $this->createEntity(FilesystemEntity::class, $data[0]);
-        }
+        /** @var null|FilesystemEntity $entity */
+        $entity = $this->getEntity(FilesystemEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -147,18 +134,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemMetaEntity $entity */
-            $entity = $this->createEntity(FilesystemMetaEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemMetaEntity::class, $data);
     }
 
     /**
@@ -206,18 +182,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemDocumentEntity $entity */
-            $entity = $this->createEntity(FilesystemDocumentEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemDocumentEntity::class, $data);
     }
 
     /**
@@ -230,15 +195,15 @@ class FilesystemStorage extends AbstractStorage
     {
         $data = $this->getQueryAdapter()->fetchData(
             'getFilesystemDocumentById',
-            [':idDocument' => $identifier]
+            [
+                ':idDocument' => $identifier
+            ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemDocumentEntity $entity */
-            $entity = $this->createEntity(FilesystemDocumentEntity::class, $data[0] ?? []);
-        }
+        /** @var null|FilesystemDocumentEntity $entity */
+        $entity = $this->getEntity(FilesystemDocumentEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -272,18 +237,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemPublishedDocumentEntity $entity */
-            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemPublishedDocumentEntity::class, $data);
     }
 
     /**
@@ -323,18 +277,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemPublishedDocumentEntity $entity */
-            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemPublishedDocumentEntity::class, $data);
     }
 
     /**
@@ -371,18 +314,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemPublishedDocumentEntity $entity */
-            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemPublishedDocumentEntity::class, $data);
     }
 
     /**
@@ -419,18 +351,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemPublishedDocumentEntity $entity */
-            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemPublishedDocumentEntity::class, $data);
     }
 
     /**
@@ -467,18 +388,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemPublishedDocumentEntity $entity */
-            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemPublishedDocumentEntity::class, $data);
     }
 
     /**
@@ -503,12 +413,10 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemPublishedDocumentEntity $entity */
-            $entity = $this->createEntity(FilesystemPublishedDocumentEntity::class, $data[0] ?? []);
-        }
+        /** @var null|FilesystemPublishedDocumentEntity $entity */
+        $entity = $this->getEntity(FilesystemPublishedDocumentEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -560,18 +468,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemTagEntity $entity */
-            $entity = $this->createEntity(FilesystemTagEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemTagEntity::class, $data);
     }
 
     /**
@@ -598,18 +495,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemTagEntity $entity */
-            $entity = $this->createEntity(FilesystemTagEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemTagEntity::class, $data);
     }
 
     /**
@@ -627,12 +513,10 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemTagEntity $entity */
-            $entity = $this->createEntity(FilesystemTagEntity::class, $data[0] ?? []);
-        }
+        /** @var null|FilesystemTagEntity $entity */
+        $entity = $this->getEntity(FilesystemTagEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -654,12 +538,10 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemTagEntity $entity */
-            $entity = $this->createEntity(FilesystemTagEntity::class, $data[0] ?? []);
-        }
+        /** @var null|FilesystemTagEntity $entity */
+        $entity = $this->getEntity(FilesystemTagEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -686,18 +568,7 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        $entitySet = $this->createEntitySet();
-
-        foreach ($data as $row) {
-            /** @var FilesystemCategoryEntity $entity */
-            $entity = $this->createEntity(FilesystemCategoryEntity::class, $row);
-
-            if (!empty($entity)) {
-                $entitySet[] = $entity;
-            }
-        }
-
-        return $entitySet;
+        return $this->getEntitySet(FilesystemCategoryEntity::class, $data);
     }
 
     /**
@@ -715,12 +586,10 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemCategoryEntity $entity */
-            $entity = $this->createEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
-        }
+        /** @var null|FilesystemCategoryEntity $entity */
+        $entity = $this->getEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -742,12 +611,10 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemCategoryEntity $entity */
-            $entity = $this->createEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
-        }
+        /** @var null|FilesystemCategoryEntity $entity */
+        $entity = $this->getEntity(FilesystemCategoryEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -765,12 +632,10 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemDirectoryEntity $entity */
-            $entity = $this->createEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
-        }
+        /** @var null|FilesystemDirectoryEntity $entity */
+        $entity = $this->getEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -788,12 +653,10 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemDirectoryEntity $entity */
-            $entity = $this->createEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
-        }
+        /** @var null|FilesystemDirectoryEntity $entity */
+        $entity = $this->getEntity(FilesystemDirectoryEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 
     /**
@@ -815,11 +678,9 @@ class FilesystemStorage extends AbstractStorage
             ]
         );
 
-        if (isset($data[0])) {
-            /** @var null|FilesystemDirectoryDataEntity $entity */
-            $entity = $this->createEntity(FilesystemDirectoryDataEntity::class, $data[0] ?? []);
-        }
+        /** @var null|FilesystemDirectoryDataEntity $entity */
+        $entity = $this->getEntity(FilesystemDirectoryDataEntity::class, $data[0] ?? []);
 
-        return $entity ?? null;
+        return $entity;
     }
 }
