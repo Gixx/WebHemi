@@ -93,9 +93,9 @@ abstract class AbstractMiddlewareAction implements MiddlewareInterface, ActionMi
     /**
      * Returns the post paramters. This is the processed and filtered _POST data.
      *
-     * @return array
+     * @return null|array|object
      */
-    protected function getPostParameters() : array
+    protected function getPostParameters()
     {
         return $this->request->getParsedBody();
     }

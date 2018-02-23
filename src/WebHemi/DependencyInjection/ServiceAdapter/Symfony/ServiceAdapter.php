@@ -68,7 +68,7 @@ class ServiceAdapter extends AbstractAdapter
      *
      * @param  null|string $identifier
      * @throws RuntimeException
-     * @return object
+     * @return null|object
      */
     public function get(? string $identifier)
     {

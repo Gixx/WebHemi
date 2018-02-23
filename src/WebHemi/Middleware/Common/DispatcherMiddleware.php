@@ -40,7 +40,7 @@ class DispatcherMiddleware implements MiddlewareInterface
         $actionMiddleware = $request->getAttribute(ServerRequestInterface::REQUEST_ATTR_ACTION_MIDDLEWARE);
 
         // If there is a valid action Middleware, then dispatch it.
-        if (!is_null($actionMiddleware) && $actionMiddleware instanceof ActionMiddlewareInterface) {
+        if ($actionMiddleware instanceof ActionMiddlewareInterface) {
             /**
              * @var ResponseInterface $response
              */

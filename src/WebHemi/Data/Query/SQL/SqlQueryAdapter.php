@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use PDO;
 use RuntimeException;
 use WebHemi\Data\Driver\DriverInterface;
+use WebHemi\Data\Driver\PDO\MySQL\DriverAdapter as SQLDriverAdapter;
 use WebHemi\Data\Query\QueryInterface;
 
 /**
@@ -25,7 +26,7 @@ use WebHemi\Data\Query\QueryInterface;
 class SqlQueryAdapter implements QueryInterface
 {
     /**
-     * @var PDO
+     * @var DriverInterface
      */
     private $driverAdapter;
 
@@ -107,7 +108,9 @@ class SqlQueryAdapter implements QueryInterface
             $query = str_replace(':orderBy', $orderBy, $query);
         }
 
-        $statement = $this->driverAdapter->prepare($query);
+        /** @var SQLDriverAdapter $driver */
+        $driver = $this->getDriver();
+        $statement = $driver->prepare($query);
 
         foreach ($parameters as $parameter => $value) {
             $statement->bindValue($parameter, $value, $this->getValueType($value));

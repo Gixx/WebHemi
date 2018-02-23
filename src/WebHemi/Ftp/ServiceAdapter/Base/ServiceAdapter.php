@@ -25,7 +25,7 @@ use WebHemi\Ftp\ServiceAdapter\AbstractServiceAdapter;
 class ServiceAdapter extends AbstractServiceAdapter
 {
     /**
-     * @var resource
+     * @var null|resource
      */
     private $connectionId = null;
 
@@ -87,7 +87,7 @@ class ServiceAdapter extends AbstractServiceAdapter
      */
     public function setSecureConnection(bool $state) : ServiceInterface
     {
-        $this->setOption('secure', (bool) $state);
+        $this->setOption('secure', $state);
 
         if (!empty($this->connectionId)) {
             ftp_close($this->connectionId);
@@ -106,7 +106,7 @@ class ServiceAdapter extends AbstractServiceAdapter
      */
     public function setPassiveMode(bool $state) : ServiceInterface
     {
-        ftp_pasv($this->connectionId, (bool) $state);
+        ftp_pasv($this->connectionId, $state);
         return $this;
     }
 

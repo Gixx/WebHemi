@@ -263,7 +263,7 @@ class ServiceAdapter extends AbstractAdapter
             if ($this->checkDirectoryIsValid($applicationName, $subDirectory)
                 || $this->checkDomainIsValid($applicationName)
             ) {
-                $selectedApplication = (string) $applicationName;
+                $selectedApplication = $applicationName;
                 break;
             }
         }
