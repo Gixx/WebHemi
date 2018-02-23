@@ -83,7 +83,9 @@ abstract class AbstractAdapter implements ServiceInterface
      */
     public function initInternationalization() : ServiceInterface
     {
-        $this->i18n = $this->container->get(I18nInterface::class);
+        /** @var I18nInterface $instance */
+        $instance = $this->container->get(I18nInterface::class);
+        $this->i18n = $instance;
 
         return $this;
     }

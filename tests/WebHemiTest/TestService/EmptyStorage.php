@@ -11,7 +11,7 @@
  */
 namespace WebHemiTest\TestService;
 
-use WebHemi\Data\EntityInterface as DataEntityInterface;
+use WebHemi\Data\Entity\EntityInterface as DataEntityInterface;
 use WebHemi\Data\Storage\AbstractStorage as AbstractDataStorage;
 
 /**

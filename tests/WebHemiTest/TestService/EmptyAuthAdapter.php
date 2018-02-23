@@ -15,7 +15,7 @@ namespace WebHemiTest\TestService;
 use WebHemi\Auth\ServiceAdapter\AbstractServiceAdapter;
 use WebHemi\Auth\CredentialInterface as AuthCredentialInterface;
 use WebHemi\Auth\ResultInterface as AuthResultInterface;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 
 /**
  * Class EmptyAuthAdapter
