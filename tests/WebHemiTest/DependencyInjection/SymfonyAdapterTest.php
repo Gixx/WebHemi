@@ -86,9 +86,6 @@ class SymfonyAdapterTest extends TestCase
         $this->assertFalse($adapter->has('someSuperName'));
         $adapter->registerServiceInstance('someSuperName', new EmptyService());
         $this->assertTrue($adapter->has('someSuperName'));
-
-        $this->expectException(InvalidArgumentException::class);
-        $adapter->registerServiceInstance('ooops', 'thisIsNotAnInstance');
     }
 
     /**

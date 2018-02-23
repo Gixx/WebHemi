@@ -39,8 +39,8 @@ class EmptyAuthAdapter extends AbstractServiceAdapter
         }
 
         /** @var UserEntity $userEntity */
-        $userEntity = $this->getDataStorage()->createEntity();
-        $userEntity->setKeyData(123)
+        $userEntity = $this->getDataStorage()->createEntity(UserEntity::class);
+        $userEntity->setUserId(123)
             ->setUserName('test');
 
         $this->setIdentity($userEntity);

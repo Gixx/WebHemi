@@ -76,11 +76,10 @@ abstract class AbstractStorage implements StorageInterface
      * Creates a clean instance of the Entity.
      *
      * @param string $entityClass
-     * @param array  $data
      * @throws InvalidArgumentException
-     * @return null|EntityInterface
+     * @return EntityInterface
      */
-    protected function getEntity(string $entityClass, array $data = []) : ? EntityInterface
+    public function createEntity(string $entityClass) : EntityInterface
     {
         if (!isset($this->entityPrototypes[$entityClass])) {
             throw new InvalidArgumentException(
@@ -89,8 +88,21 @@ abstract class AbstractStorage implements StorageInterface
             );
         }
 
+        return clone $this->entityPrototypes[$entityClass];
+    }
+
+    /**
+     * Get an entity instance with data.
+     *
+     * @param string $entityClass
+     * @param array  $data
+     * @throws InvalidArgumentException
+     * @return null|EntityInterface
+     */
+    protected function getEntity(string $entityClass, array $data = []) : ? EntityInterface
+    {
         if (!empty($data)) {
-            $entity = clone $this->entityPrototypes[$entityClass];
+            $entity = $this->createEntity($entityClass);
             $entity->fromArray($data);
             return $entity;
         }

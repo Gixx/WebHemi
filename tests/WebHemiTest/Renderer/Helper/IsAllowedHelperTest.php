@@ -20,10 +20,10 @@ use WebHemi\Auth\ServiceInterface as AuthAdapterInterface;
 use WebHemi\Environment\ServiceAdapter\Base\ServiceAdapter as EnvironmentManager;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Configuration\ServiceInterface as ConfigInterface;
-use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
+use WebHemi\Data\Entity\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Storage\AccessManagement\ResourceStorage;
+use WebHemi\Data\Entity\UserEntity;
+use WebHemi\Data\Storage\ResourceStorage;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Renderer\Helper\IsAllowedHelper;
 
@@ -98,7 +98,7 @@ class IsAllowedHelperTest extends TestCase
         $this->config = new Config($configData);
 
         $this->userEntity = new UserEntity();
-        $this->userEntity->setKeyData(1);
+        $this->userEntity->setUserId(1);
     }
 
     /**
@@ -127,8 +127,8 @@ class IsAllowedHelperTest extends TestCase
                     return false;
                 }
 
-                return ($userEntity->getKeyData() === 1
-                    && $resourceEntity->getKeyData() === $applicationEntity->getKeyData()
+                return ($userEntity->getUserId() === 1
+                    && $resourceEntity->getResourceId() === $applicationEntity->getApplicationId()
                 );
             }
         );
@@ -199,13 +199,13 @@ class IsAllowedHelperTest extends TestCase
     {
         if ($applicationName == 'website') {
             $applicationEntity = new ApplicationEntity();
-            $applicationEntity->setKeyData(1)
+            $applicationEntity->setApplicationId(1)
                 ->setName('website');
 
             return $applicationEntity;
         } elseif ($applicationName == 'admin') {
             $applicationEntity = new ApplicationEntity();
-            $applicationEntity->setKeyData(2)
+            $applicationEntity->setApplicationId(2)
                 ->setName('admin');
 
             return $applicationEntity;
@@ -223,13 +223,13 @@ class IsAllowedHelperTest extends TestCase
     {
         if ($resourceName == 'SomeMiddleware') {
             $resourceEntity = new ResourceEntity();
-            $resourceEntity->setKeyData(1)
+            $resourceEntity->setResourceId(1)
                 ->setName('SomeMiddleware');
 
             return $resourceEntity;
         } elseif ($resourceName == 'SomeOtherMiddleware') {
             $resourceEntity = new ResourceEntity();
-            $resourceEntity->setKeyData(2)
+            $resourceEntity->setResourceId(2)
                 ->setName('SomeOtherMiddleware');
 
             return $resourceEntity;

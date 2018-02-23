@@ -16,17 +16,16 @@ use PDO;
 use WebHemi\Acl\ServiceAdapter\Base\ServiceAdapter as Acl;
 use WebHemi\Acl\ServiceInterface as AclAdapterInterface;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
-use WebHemi\Data\Coupler\UserGroupToPolicyCoupler;
-use WebHemi\Data\Coupler\UserToGroupCoupler;
-use WebHemi\Data\Coupler\UserToPolicyCoupler;
-use WebHemi\Data\Entity\AccessManagement\PolicyEntity;
-use WebHemi\Data\Entity\AccessManagement\ResourceEntity;
+use WebHemi\Data\Driver\PDO\SQLite\DriverAdapter as SQLiteDriver;
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\PolicyEntity;
+use WebHemi\Data\Entity\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Connector\PDO\SQLite\ConnectorAdapter as SQLiteAdapter;
-use WebHemi\Data\Connector\PDO\SQLite\DriverAdapter as SQLiteDriver;
-use WebHemi\Data\DriverInterface as DataDriverInterface;
-use WebHemi\Data\Entity\User\UserGroupEntity;
+use WebHemi\Data\Entity\UserEntity;
+use WebHemi\Data\Entity\UserGroupEntity;
+use WebHemi\Data\Query\SQL\SqlQueryAdapter as SQLiteAdapter;
+use WebHemi\Data\Storage\UserStorage;
+use WebHemi\Data\Storage\PolicyStorage;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
@@ -55,7 +54,7 @@ class AclTest extends TestCase
     use AssertTrait;
     use InvokePrivateMethodTrait;
 
-    /** @var DataDriverInterface */
+    /** @var PDO */
     protected static $dataDriver;
     /** @var SQLiteAdapter */
     protected static $adapter;
@@ -82,6 +81,7 @@ class AclTest extends TestCase
 
         $databaseFile = realpath(__DIR__ . '/../../../build/webhemi_schema.sqlite3');
 
+        /** @var PDO dataDriver */
         self::$dataDriver = new SQLiteDriver('sqlite:' . $databaseFile);
 
         $fixture = realpath(__DIR__ . '/../TestData/sql/acl_test.sql');
@@ -99,7 +99,7 @@ class AclTest extends TestCase
             }
         }
 
-        self::$adapter = new SQLiteAdapter('unit-test', self::$dataDriver);
+        self::$adapter = new SQLiteAdapter(self::$dataDriver);
     }
 
 
@@ -136,25 +136,23 @@ class AclTest extends TestCase
             $this->files
         );
 
-        $userToPolicyProphecy = $this->prophesize(UserToPolicyCoupler::class);
-        $userToPolicyCoupler = $userToPolicyProphecy->reveal();
+        $userStorage = new UserStorage(
+            self::$adapter,
+            new EntitySet(),
+            new UserEntity(),
+            new UserGroupEntity()
+        );
 
-        $userToGroupProphecy = $this->prophesize(UserToGroupCoupler::class);
-        $userToGroupCoupler = $userToGroupProphecy->reveal();
+        $policyStorage = new PolicyStorage(
+            self::$adapter,
+            new EntitySet(),
+            new PolicyEntity()
+        );
 
-        $userGroupToPolicyProphecy = $this->prophesize(UserGroupToPolicyCoupler::class);
-        $userGroupToPolicyCoupler = $userGroupToPolicyProphecy->reveal();
-
-        /**
-         * @var UserToPolicyCoupler $userToPolicyCoupler
-         * @var UserToGroupCoupler $userToGroupCoupler
-         * @var UserGroupToPolicyCoupler $userGroupToPolicyCoupler
-         */
         $aclAdapter = new Acl(
             $environmentManager,
-            $userToPolicyCoupler,
-            $userToGroupCoupler,
-            $userGroupToPolicyCoupler
+            $userStorage,
+            $policyStorage
         );
 
         $this->assertInstanceOf(AclAdapterInterface::class, $aclAdapter);
@@ -207,32 +205,39 @@ class AclTest extends TestCase
             $this->files
         );
 
-        $userEntity = new UserEntity();
-        $userGroupEntity = new UserGroupEntity();
-        $policyEntity = new PolicyEntity();
+        $userStorage = new UserStorage(
+            self::$adapter,
+            new EntitySet(),
+            new UserEntity(),
+            new UserGroupEntity()
+        );
 
-        $resourceEntity = new ResourceEntity();
-        $resourceEntity->setKeyData(90000);
-
-        $applicationEntity = new ApplicationEntity();
-        $applicationEntity->setKeyData(90000);
-
-        $userA = clone $userEntity;
-        $userA->setKeyData(90000);
-
-        $userB = clone $userEntity;
-        $userB->setKeyData(90001);
-
-        $userToPolicyCoupler = new UserToPolicyCoupler(self::$adapter, $userEntity, $policyEntity);
-        $userToGroupCoupler = new UserToGroupCoupler(self::$adapter, $userEntity, $userGroupEntity);
-        $userGroupToPolicyCoupler = new UserGroupToPolicyCoupler(self::$adapter, $userGroupEntity, $policyEntity);
+        $policyStorage = new PolicyStorage(
+            self::$adapter,
+            new EntitySet(),
+            new PolicyEntity()
+        );
 
         $aclAdapter = new Acl(
             $environmentManager,
-            $userToPolicyCoupler,
-            $userToGroupCoupler,
-            $userGroupToPolicyCoupler
+            $userStorage,
+            $policyStorage
         );
+
+        $userEntity = new UserEntity();
+
+        $resourceEntity = new ResourceEntity();
+        $resourceEntity->setResourceId(90000);
+
+        $applicationEntity = new ApplicationEntity();
+        $applicationEntity->setApplicationId(90000);
+
+        $userA = clone $userEntity;
+        $userA->setUserId(90000);
+
+        $userB = clone $userEntity;
+        $userB->setUserId(90001);
+
 
         // POLICY 90000
         // always TRUE because User A is assigned to Policy 90000 which is admin

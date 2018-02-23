@@ -13,7 +13,7 @@
 namespace WebHemiTest\TestService;
 
 use WebHemi\Auth\StorageInterface as AuthStorageInterface;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 
 /**
  * Class EmptyAuthStorage

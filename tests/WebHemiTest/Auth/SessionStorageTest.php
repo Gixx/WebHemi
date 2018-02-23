@@ -15,7 +15,7 @@ namespace WebHemiTest\Auth;
 use WebHemi\Session\ServiceAdapter\Base\ServiceAdapter as SessionManager;
 use WebHemi\Auth\Storage\Session as SessionStorage;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -40,4 +40,13 @@ interface StorageInterface
      * @return QueryInterface
      */
     public function getQueryAdapter() : QueryInterface;
+
+    /**
+     * Creates a clean instance of the Entity.
+     *
+     * @param string $entityClass
+     * @throws InvalidArgumentException
+     * @return EntityInterface
+     */
+    public function createEntity(string $entityClass) : EntityInterface;
 }

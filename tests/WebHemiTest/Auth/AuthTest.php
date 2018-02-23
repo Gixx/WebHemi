@@ -17,11 +17,11 @@ use WebHemi\Auth\ServiceAdapter\Base\ServiceAdapter as Auth;
 use WebHemi\Auth\Result\Result;
 use WebHemi\Auth\Credential\NameAndPasswordCredential;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Connector\PDO\SQLite\ConnectorAdapter as SQLiteAdapter;
-use WebHemi\Data\Connector\PDO\SQLite\DriverAdapter as SQLiteDriver;
-use WebHemi\Data\DriverInterface as DataDriverInterface;
-use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\UserEntity;
+use WebHemi\Data\Query\SQL\SqlQueryAdapter as SQLiteAdapter;
+use WebHemi\Data\Driver\PDO\SQLite\DriverAdapter as SQLiteDriver;
+use WebHemi\Data\Storage\UserStorage;
 use WebHemiTest\TestService\EmptyAuthStorage;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
@@ -40,7 +40,7 @@ class AuthTest extends TestCase
     use AssertTrait;
     use InvokePrivateMethodTrait;
 
-    /** @var DataDriverInterface */
+    /** @var PDO */
     protected static $dataDriver;
     /** @var SQLiteAdapter */
     protected static $adapter;
@@ -99,7 +99,7 @@ class AuthTest extends TestCase
             );
         }
 
-        self::$adapter = new SQLiteAdapter('unit-test', self::$dataDriver);
+        self::$adapter = new SQLiteAdapter(self::$dataDriver);
     }
 
     /**
@@ -124,7 +124,8 @@ class AuthTest extends TestCase
         $result = new Result();
         $authStorage = new EmptyAuthStorage();
         $dataEntity = new UserEntity();
-        $dataStorage = new UserStorage(self::$adapter, $dataEntity);
+        $entitySet = new EntitySet();
+        $dataStorage = new UserStorage(self::$adapter, $entitySet, $dataEntity);
 
         $adapter = new Auth(
             $config,
