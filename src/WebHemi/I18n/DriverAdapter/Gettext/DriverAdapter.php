@@ -33,7 +33,7 @@ class DriverAdapter implements DriverInterface
      */
     private $i18nService;
     /**
-     * @var
+     * @var string
      */
     private $textDomain;
 

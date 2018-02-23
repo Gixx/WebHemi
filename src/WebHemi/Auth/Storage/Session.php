@@ -15,7 +15,7 @@ namespace WebHemi\Auth\Storage;
 
 use WebHemi\Auth\StorageInterface;
 use WebHemi\Session\ServiceInterface as SessionInterface;
-use WebHemi\Data\Entity\User\UserEntity;
+use WebHemi\Data\Entity\UserEntity;
 
 /**
  * Class Session

@@ -15,8 +15,8 @@ namespace WebHemi\Auth\ServiceAdapter;
 
 use WebHemi\Auth;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
-use WebHemi\Data\Entity\User\UserEntity;
-use WebHemi\Data\Storage\User\UserStorage;
+use WebHemi\Data\Entity\UserEntity;
+use WebHemi\Data\Storage\UserStorage;
 
 /**
  * Class AbstractServiceAdapter

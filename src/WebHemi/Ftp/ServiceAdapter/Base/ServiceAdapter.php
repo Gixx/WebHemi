@@ -244,7 +244,7 @@ class ServiceAdapter extends AbstractServiceAdapter
      * @param  string $sourceFileName
      * @param  string $destinationFileName
      * @param  int    $fileMode
-     * @return mixed
+     * @return ServiceInterface
      */
     public function upload(
         string $sourceFileName,
@@ -281,7 +281,7 @@ class ServiceAdapter extends AbstractServiceAdapter
      * @param  string $remoteFileName
      * @param  string $localFileName
      * @param  int    $fileMode
-     * @return mixed
+     * @return ServiceInterface
      */
     public function download(
         string $remoteFileName,

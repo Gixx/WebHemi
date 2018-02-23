@@ -91,15 +91,14 @@ class TwigExtension extends Twig_Extension
             $callable = $this->dependencyInjectionAdapter->get($className);
             $this->checkExtensionType($type, $callable);
 
-            if ($type == 'helper') {
+            if ($callable instanceof HelperInterface) {
                 $extensions[] = new Twig_SimpleFunction($callable::getName(), $callable, $callable::getOptions());
                 continue;
             }
 
-            /**
-             * FilterInterface $callable
-             */
-            $extensions[] = new Twig_SimpleFilter($callable::getName(), $callable, $callable::getOptions());
+            if ($callable instanceof FilterInterface) {
+                $extensions[] = new Twig_SimpleFilter($callable::getName(), $callable, $callable::getOptions());
+            }
         }
 
         return $extensions;

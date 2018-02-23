@@ -277,7 +277,7 @@ abstract class AbstractServiceAdapter implements ServiceInterface
      * @param  string $sourceFileName
      * @param  string $destinationFileName
      * @param  int    $fileMode
-     * @return mixed
+     * @return ServiceInterface
      */
     abstract public function upload(
         string $sourceFileName,
@@ -294,7 +294,7 @@ abstract class AbstractServiceAdapter implements ServiceInterface
      * @param  string $remoteFileName
      * @param  string $localFileName
      * @param  int    $fileMode
-     * @return mixed
+     * @return ServiceInterface
      */
     abstract public function download(
         string $remoteFileName,

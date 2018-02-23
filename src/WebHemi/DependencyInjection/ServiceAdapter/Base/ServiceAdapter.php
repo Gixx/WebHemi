@@ -13,9 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\DependencyInjection\ServiceAdapter\Base;
 
-use Exception;
 use ReflectionClass;
-use Throwable;
+use ReflectionException;
 use InvalidArgumentException;
 use RuntimeException;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
@@ -60,6 +59,7 @@ class ServiceAdapter extends AbstractAdapter
      *
      * @param  string $identifier
      * @throws RuntimeException
+     * @throws ReflectionException
      * @return object
      */
     public function get(string $identifier)
@@ -74,17 +74,9 @@ class ServiceAdapter extends AbstractAdapter
             $this->registerServiceToContainer($identifier);
         }
 
-        try {
-            $service = $this->serviceLibrary[$identifier][self::SERVICE_SHARE]
-                ? $this->container[$identifier]
-                : clone $this->container[$identifier];
-        } catch (Throwable $exception) {
-            throw new RuntimeException(
-                sprintf('There was an issue during creating the object: %s', $exception->getMessage()),
-                1000,
-                $exception
-            );
-        }
+        $service = $this->serviceLibrary[$identifier][self::SERVICE_SHARE]
+            ? $this->container[$identifier]
+            : clone $this->container[$identifier];
 
         return $service;
     }
@@ -93,6 +85,7 @@ class ServiceAdapter extends AbstractAdapter
      * Registers the service into the container AKA create the instance.
      *
      * @param  string $identifier
+     * @throws ReflectionException
      * @return ServiceAdapter
      */
     private function registerServiceToContainer(string $identifier) : ServiceAdapter
@@ -105,36 +98,28 @@ class ServiceAdapter extends AbstractAdapter
             );
         }
 
-        try {
-            // Check arguments.
-            $argumentList = $this
-                ->setArgumentListReferences($this->serviceLibrary[$identifier][self::SERVICE_ARGUMENTS]);
+        // Check arguments.
+        $argumentList = $this
+            ->setArgumentListReferences($this->serviceLibrary[$identifier][self::SERVICE_ARGUMENTS]);
 
-            // Create new instance.
-            $className = $this->serviceLibrary[$identifier][self::SERVICE_CLASS];
-            $reflectionClass = new ReflectionClass($className);
-            $serviceInstance =  $reflectionClass->newInstanceArgs($argumentList);
+        // Create new instance.
+        $className = $this->serviceLibrary[$identifier][self::SERVICE_CLASS];
+        $reflectionClass = new ReflectionClass($className);
+        $serviceInstance =  $reflectionClass->newInstanceArgs($argumentList);
 
-            // Perform post init method calls.
-            foreach ($this->serviceLibrary[$identifier][self::SERVICE_METHOD_CALL] as $methodCallList) {
-                $method = $methodCallList[0];
-                $argumentList = $this->setArgumentListReferences($methodCallList[1] ?? []);
+        // Perform post init method calls.
+        foreach ($this->serviceLibrary[$identifier][self::SERVICE_METHOD_CALL] as $methodCallList) {
+            $method = $methodCallList[0];
+            $argumentList = $this->setArgumentListReferences($methodCallList[1] ?? []);
 
-                call_user_func_array([$serviceInstance, $method], $argumentList);
-            }
-
-            // Register sevice.
-            $this->container[$identifier] = $serviceInstance;
-
-            // Mark as initialized.
-            $this->serviceLibrary[$identifier][self::SERVICE_INITIALIZED] = true;
-        } catch (Throwable $exception) {
-            throw new RuntimeException(
-                sprintf('There was an issue during creating the object: %s', $exception->getMessage()),
-                1001,
-                $exception
-            );
+            call_user_func_array([$serviceInstance, $method], $argumentList);
         }
+
+        // Register sevice.
+        $this->container[$identifier] = $serviceInstance;
+
+        // Mark as initialized.
+        $this->serviceLibrary[$identifier][self::SERVICE_INITIALIZED] = true;
 
         return $this;
     }
@@ -143,6 +128,7 @@ class ServiceAdapter extends AbstractAdapter
      * Tries to identify referce services in the argument list.
      *
      * @param  array $argumentList
+     * @throws ReflectionException
      * @return array
      */
     private function setArgumentListReferences(array $argumentList) : array
@@ -153,13 +139,7 @@ class ServiceAdapter extends AbstractAdapter
                 continue;
             }
 
-            // Try to get the service. If exists (or can be registered), then it can be referenced too.
-            try {
-                $value = $this->get($value);
-            } catch (Exception $e) {
-                // Not a valid service: no action, go on;
-                continue;
-            }
+            $value = $this->get($value);
         }
 
         return $argumentList;

@@ -49,15 +49,16 @@ class UserAction extends IndexAction
         }
 
         /**
-         * @var Entity\User\UserEntity $userEntity
+         * @var Entity\UserEntity $userEntity
          */
         $userEntity = $this->getUserStorage()
             ->getUserByUserName($userName);
+
         /**
          * @var array $userMeta
          */
-        $userMeta = $this->getUserMetaStorage()
-            ->getUserMetaArrayForUserId((int) $userEntity->getUserId());
+        $userMeta = $this->getUserStorage()
+            ->getSimpleUserMetaListByUser((int) $userEntity->getUserId());
 
         /**
          * @var Entity\ApplicationEntity $applicationEntity
@@ -66,16 +67,19 @@ class UserAction extends IndexAction
             ->getApplicationByName($this->environmentManager->getSelectedApplication());
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity[] $publications
+         * @var Entity\EntitySet $publications
          */
         $publications = $this->getFilesystemStorage()
-            ->getPublishedDocumentsByAuthor($applicationEntity->getApplicationId(), $userEntity->getUserId());
+            ->getFilesystemPublishedDocumentListByAuthor(
+                $applicationEntity->getApplicationId(),
+                $userEntity->getUserId()
+            );
 
         /**
-         * @var Entity\Filesystem\FilesystemEntity $filesystemEntity
+         * @var Entity\FilesystemPublishedDocumentEntity $publishedDocumentEntity
          */
-        foreach ($publications as $filesystemEntity) {
-            $blogPosts[] = $this->getBlobPostData($applicationEntity, $filesystemEntity);
+        foreach ($publications as $publishedDocumentEntity) {
+            $blogPosts[] = $this->getBlobPostData($applicationEntity, $publishedDocumentEntity);
         }
 
         return [

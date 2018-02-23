@@ -14,9 +14,9 @@ declare(strict_types = 1);
 namespace WebHemi\Data\Storage;
 
 use InvalidArgumentException;
-use WebHemi\Data\EntityInterface as DataEntityInterface;
-use WebHemi\Data\ConnectorInterface;
-use WebHemi\Data\StorageInterface;
+use WebHemi\Data\Query\QueryInterface;
+use WebHemi\Data\Entity\EntityInterface;
+use WebHemi\Data\Entity\EntitySet;
 
 /**
  * Class AbstractStorage.
@@ -25,190 +25,98 @@ use WebHemi\Data\StorageInterface;
 abstract class AbstractStorage implements StorageInterface
 {
     /**
-     * @var ConnectorInterface
+     * @var QueryInterface
      */
-    protected $connector;
+    private $queryAdapter;
+
     /**
-     * @var DataEntityInterface
+     * @var EntitySet
      */
-    private $dataEntityPrototype;
+    private $entitySetPrototype;
+
     /**
-     * @var string
+     * @var EntityInterface[]
      */
-    protected $dataGroup;
-    /**
-     * @var string
-     */
-    protected $idKey;
+    private $entityPrototypes;
+
     /**
      * @var bool
      */
     protected $initialized = false;
 
     /**
-     * AbstractStorage constructor. The DataEntity SHOULD not be used directly unless it is required to represent
-     * the same instance all the time.
+     * AbstractStorage constructor.
      *
-     * @param ConnectorInterface  $connector
-     * @param DataEntityInterface $dataEntityPrototype
+     * @param QueryInterface $queryAdapter
+     * @param EntitySet $entitySetPrototype
+     * @param EntityInterface[] ...$entityPrototypes
      */
-    public function __construct(ConnectorInterface $connector, DataEntityInterface $dataEntityPrototype)
-    {
-        // Every Storage object MUST have unique adapter instance to avoid override private properties like "dataGroup"
-        $this->connector = clone $connector;
-        $this->dataEntityPrototype = $dataEntityPrototype;
-        $this->init();
-    }
+    public function __construct(
+        QueryInterface $queryAdapter,
+        EntitySet $entitySetPrototype,
+        EntityInterface ...$entityPrototypes
+    ) {
+        $this->queryAdapter = $queryAdapter;
+        $this->entitySetPrototype = $entitySetPrototype;
 
-    /**
-     * Special initialization method. The constructor MUST call it.
-     *
-     * @return StorageInterface
-     */
-    public function init() : StorageInterface
-    {
-        // They always walk in pair.
-        if (!empty($this->dataGroup) && !empty($this->idKey)) {
-            $this->connector->setDataGroup($this->dataGroup);
-            $this->connector->setIdKey($this->idKey);
-
-            $this->initialized = true;
+        foreach ($entityPrototypes as $entity) {
+            $this->entityPrototypes[get_class($entity)] = $entity;
         }
-
-        return $this;
     }
 
     /**
-     * Checks if the storage is initialized.
-     *
-     * @return bool
+     * @return QueryInterface
      */
-    public function initialized() : bool
+    public function getQueryAdapter() : QueryInterface
     {
-        return $this->initialized;
+        return $this->queryAdapter;
     }
 
     /**
-     * Returns the DataAdapter instance.
+     * Creates a clean instance of the EntitySet
      *
-     * @return ConnectorInterface
+     * @return EntitySet
      */
-    public function getConnector() : ConnectorInterface
+    public function createEntitySet() : EntitySet
     {
-        return $this->connector;
+        return clone $this->entitySetPrototype;
     }
 
     /**
-     * Creates an empty entity. Should be use by getters.
+     * Creates a clean instance of the Entity.
      *
-     * @return DataEntityInterface
+     * @param string $entityClass
+     * @param array  $data
+     * @throws InvalidArgumentException
+     * @return EntityInterface
      */
-    public function createEntity() : DataEntityInterface
+    public function createEntity(string $entityClass, array $data = []) : EntityInterface
     {
-        return clone $this->dataEntityPrototype;
-    }
-
-    /**
-     * Saves data.
-     *
-     * @param  DataEntityInterface &$dataEntity
-     * @return StorageInterface
-     */
-    public function saveEntity(DataEntityInterface&$dataEntity) : StorageInterface
-    {
-        $entityClass = get_class($dataEntity);
-        $storageEntityClass = get_class($this->dataEntityPrototype);
-
-        if ($entityClass != $storageEntityClass) {
+        if (!isset($this->entityPrototypes[$entityClass])) {
             throw new InvalidArgumentException(
-                sprintf(
-                    'Cannot use %s with this data storage class. You must use %s.',
-                    $entityClass,
-                    $storageEntityClass
-                ),
+                sprintf('Entity class reference "%s" is not defined in this class.', $entityClass),
                 1000
             );
         }
 
-        $dataId = $this->getConnector()->saveData($dataEntity->getKeyData(), $this->getEntityData($dataEntity));
+        $entity = clone $this->entityPrototypes[$entityClass];
 
-        // If key data is empty, then it was an insert. Get a new entity with all data.
-        if ($dataId && empty($dataEntity->getKeyData())) {
-            $entityData = $this->getConnector()->getData($dataId);
-            $this->populateEntity($dataEntity, $entityData);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets one Entity from the data adapter by expression.
-     *
-     * @param  array $expression
-     * @return null|DataEntityInterface
-     */
-    protected function getDataEntity(array $expression) : ? DataEntityInterface
-    {
-        $entity = null;
-        $entityList = $this->getDataEntitySet($expression, [ConnectorInterface::OPTION_LIMIT => 1]);
-
-        if (!empty($entityList)) {
-            $entity = $entityList[0];
+        if (!empty($data)) {
+            $entity->fromArray($data);
         }
 
         return $entity;
     }
 
     /**
-     * Gets a set of Entities from the data adapter by expression.
+     * Checks and corrects values to stay within the limits.
      *
-     * @param  array $expression
-     * @param  array $options
-     * @return DataEntityInterface[]
+     * @param int $limit
+     * @param int $offset
      */
-    protected function getDataEntitySet(array $expression, array $options = []) : array
+    protected function normalizeLimitAndOffset(int&$limit, int&$offset)
     {
-        $dataList = $this->getConnector()->getDataSet($expression, $options);
-
-        return $this->getEntitySetFromDataSet($dataList);
+        $limit = min(QueryInterface::MAX_ROW_LIMIT, abs($limit));
+        $offset = abs($offset);
     }
-
-    /**
-     * Gets entity list from data storage set.
-     *
-     * @param  array $dataList
-     * @return DataEntityInterface[]
-     */
-    protected function getEntitySetFromDataSet(array $dataList) : array
-    {
-        $entityList = [];
-
-        foreach ($dataList as $entityData) {
-            /**
-             * @var DataEntityInterface $entity
-             */
-            $entity = $this->createEntity();
-            $this->populateEntity($entity, $entityData);
-            $entityList[] = $entity;
-        }
-
-        return $entityList;
-    }
-
-    /**
-     * Get data from an entity.
-     *
-     * @param  DataEntityInterface $dataEntity
-     * @return array
-     */
-    abstract protected function getEntityData(DataEntityInterface $dataEntity) : array;
-
-    /**
-     * Populates an entity with storage data.
-     *
-     * @param  DataEntityInterface $dataEntity
-     * @param  array               $data
-     * @return void
-     */
-    abstract protected function populateEntity(DataEntityInterface&$dataEntity, array $data) : void;
 }
