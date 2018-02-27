@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Action\Auth;
 
 use Exception;
+use InvalidArgumentException;
 use WebHemi\Auth\CredentialInterface;
 use WebHemi\Auth\Result\Result;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
@@ -89,7 +90,12 @@ class LoginAction extends AbstractMiddlewareAction
         $form = $this->getLoginForm();
 
         if ($this->request->getMethod() == 'POST') {
+            /** @var array $postData */
             $postData = $this->request->getParsedBody();
+
+            if (!is_array($postData)) {
+                throw new InvalidArgumentException('Post data must be an array!');
+            }
 
             $this->authCredential->setCredential('username', $postData['login']['identification'] ?? '')
                 ->setCredential('password', $postData['login']['password'] ?? '');

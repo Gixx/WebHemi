@@ -157,14 +157,8 @@ class ServiceAdapter extends AbstractAdapter
                 continue;
             }
 
-            // Try to get the service. If exists (or can be registered), then it can be referenced too.
-            try {
-                $this->get($value);
-                $value = new Reference($value);
-            } catch (Exception $e) {
-                // Not a valid service: no action, go on;
-                continue;
-            }
+            $this->get($value);
+            $value = new Reference($value);
         }
 
         return $argumentList;

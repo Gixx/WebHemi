@@ -217,7 +217,7 @@ return [
                 'class' => EmptyService::class,
                 'arguments' => [
                     'key' => 'theKey',
-                    'ItIsNotAClassName'
+                    'data'=> 'ItIsNotAClassName'
                 ]
             ],
             'aliasWithLiteral' => [

@@ -4,6 +4,7 @@ SELECT
     fsd.`id_filesystem_directory`,
     fsd.`description`,
     fsd.`directory_type` AS type,
+    fsd.`proxy`,
     fsd.`is_autoindex`,
     fs.`path`,
     fs.`basename`,

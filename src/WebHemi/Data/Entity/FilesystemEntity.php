@@ -131,10 +131,10 @@ class FilesystemEntity extends AbstractEntity
     }
 
     /**
-     * @param int $parentNodeIdentifier
+     * @param null|int $parentNodeIdentifier
      * @return FilesystemEntity
      */
-    public function setParentNodeId(int $parentNodeIdentifier) : FilesystemEntity
+    public function setParentNodeId(? int $parentNodeIdentifier) : FilesystemEntity
     {
         $this->container['fk_parent_node'] = $parentNodeIdentifier;
 
@@ -152,10 +152,10 @@ class FilesystemEntity extends AbstractEntity
     }
 
     /**
-     * @param int $documentIdentifier
+     * @param null|int $documentIdentifier
      * @return FilesystemEntity
      */
-    public function setFilesystemDocumentId(int $documentIdentifier) : FilesystemEntity
+    public function setFilesystemDocumentId(? int $documentIdentifier) : FilesystemEntity
     {
         $this->container['fk_filesystem_document'] = $documentIdentifier;
 
@@ -173,10 +173,10 @@ class FilesystemEntity extends AbstractEntity
     }
 
     /**
-     * @param int $fileIdentifier
+     * @param null|int $fileIdentifier
      * @return FilesystemEntity
      */
-    public function setFilesystemFileId(int $fileIdentifier) : FilesystemEntity
+    public function setFilesystemFileId(? int $fileIdentifier) : FilesystemEntity
     {
         $this->container['fk_filesystem_file'] = $fileIdentifier;
 
@@ -194,10 +194,10 @@ class FilesystemEntity extends AbstractEntity
     }
 
     /**
-     * @param int $directoryIdentifier
+     * @param null|int $directoryIdentifier
      * @return FilesystemEntity
      */
-    public function setFilesystemDirectoryId(int $directoryIdentifier) : FilesystemEntity
+    public function setFilesystemDirectoryId(? int $directoryIdentifier) : FilesystemEntity
     {
         $this->container['fk_filesystem_directory'] = $directoryIdentifier;
 
@@ -215,10 +215,10 @@ class FilesystemEntity extends AbstractEntity
     }
 
     /**
-     * @param int $linkIdentifier
+     * @param null|int $linkIdentifier
      * @return FilesystemEntity
      */
-    public function setFilesystemLinkId(int $linkIdentifier) : FilesystemEntity
+    public function setFilesystemLinkId(? int $linkIdentifier) : FilesystemEntity
     {
         $this->container['fk_filesystem_link'] = $linkIdentifier;
 
