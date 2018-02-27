@@ -14,18 +14,14 @@ declare(strict_types = 1);
 namespace WebHemi\Renderer\Helper;
 
 use WebHemi\Data\Entity;
-use WebHemi\Data\Storage\FilesystemStorage;
 use WebHemi\Data\Storage\ApplicationStorage;
+use WebHemi\Data\Storage\FilesystemStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Renderer\HelperInterface;
 use WebHemi\Router\ProxyInterface;
 
 /**
  * Class GetTagsHelper
- *
- * @method Storage\ApplicationStorage getApplicationStorage()
- * @method Storage\Filesystem\FilesystemDirectoryStorage getFilesystemDirectoryStorage()
- * @method Storage\Filesystem\FilesystemTagStorage getFilesystemTagStorage()
  */
 class GetTagsHelper implements HelperInterface
 {
@@ -65,6 +61,7 @@ class GetTagsHelper implements HelperInterface
      * Should return the name of the helper.
      *
      * @return string
+     * @codeCoverageIgnore - plain text
      */
     public static function getName() : string
     {
@@ -75,6 +72,7 @@ class GetTagsHelper implements HelperInterface
      * Should return the name of the helper.
      *
      * @return string
+     * @codeCoverageIgnore - plain text
      */
     public static function getDefinition() : string
     {
@@ -96,6 +94,7 @@ class GetTagsHelper implements HelperInterface
      * Should return a description text.
      *
      * @return string
+     * @codeCoverageIgnore - plain text
      */
     public static function getDescription() : string
     {

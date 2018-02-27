@@ -29,6 +29,7 @@ class FilesystemDirectoryDataEntity extends AbstractEntity
         'id_filesystem_directory' => null,
         'description' => null,
         'directory_type' => null,
+        'proxy' => null,
         'is_autoindex' => null,
         'path' => null,
         'basename' => null,
@@ -64,7 +65,7 @@ class FilesystemDirectoryDataEntity extends AbstractEntity
      */
     public function setApplicationId(int $applicationIdentifier) : FilesystemDirectoryDataEntity
     {
-        $this->container['fk_application'] = $applicationIdentifier;
+        $this->container['id_application'] = $applicationIdentifier;
 
         return $this;
     }
@@ -74,8 +75,8 @@ class FilesystemDirectoryDataEntity extends AbstractEntity
      */
     public function getApplicationId() : ? int
     {
-        return !is_null($this->container['fk_application'])
-            ? (int) $this->container['fk_application']
+        return !is_null($this->container['id_application'])
+            ? (int) $this->container['id_application']
             : null;
     }
 

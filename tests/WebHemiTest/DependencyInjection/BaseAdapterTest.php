@@ -16,7 +16,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use Throwable;
 use WebHemi\DateTime;
-use WebHemi\DependencyInjection\ServiceAdapter\Symfony\ServiceAdapter as SymfonyAdapter;
+use WebHemi\DependencyInjection\ServiceAdapter\Base\ServiceAdapter as BaseAdapter;
 use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionAdapterInterface;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Configuration\ServiceInterface as ConfigInterface;
@@ -27,9 +27,9 @@ use WebHemiTest\TestService\EmptyService;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class SymfonyAdapterTest.
+ * Class BaseAdapterTest.
  */
-class SymfonyAdapterTest extends TestCase
+class BaseAdapterTest extends TestCase
 {
     /** @var Config */
     private $config;
@@ -54,7 +54,7 @@ class SymfonyAdapterTest extends TestCase
      */
     public function testConstructor()
     {
-        $adapter = new SymfonyAdapter($this->config);
+        $adapter = new BaseAdapter($this->config);
         $adapter->registerServiceInstance(ConfigInterface::class, $this->config)
             ->registerModuleServices('Global');
 
@@ -67,7 +67,7 @@ class SymfonyAdapterTest extends TestCase
      */
     public function testInitContainer()
     {
-        $adapter = new SymfonyAdapter($this->config);
+        $adapter = new BaseAdapter($this->config);
 
         $this->assertInstanceOf(DependencyInjectionAdapterInterface::class, $adapter);
         // The identifier is an instantiable class
@@ -93,7 +93,7 @@ class SymfonyAdapterTest extends TestCase
      */
     public function testRegisterService()
     {
-        $adapter = new SymfonyAdapter($this->config);
+        $adapter = new BaseAdapter($this->config);
         $adapter->registerModuleServices('Website')
             ->registerModuleServices('SomeApp');
 
@@ -101,10 +101,6 @@ class SymfonyAdapterTest extends TestCase
         $actualDate = $adapter->get('alias1');
         $this->assertInstanceOf(DateTime::class, $actualDate);
         $this->assertEquals('2016-04-05 01:02:03', $actualDate->format('Y-m-d H:i:s'));
-
-        // For some reason it may happen that the DI doesn't get a paramter...
-        $serviceResult = $adapter->get(null);
-        $this->assertNull($serviceResult);
 
         // Get a non-registered service being registered with default parameters.
         $serviceResult = $adapter->get(ArrayObject::class);
@@ -137,7 +133,7 @@ class SymfonyAdapterTest extends TestCase
     {
         $keyData = DateTime::class;
 
-        $adapter = new SymfonyAdapter($this->config);
+        $adapter = new BaseAdapter($this->config);
         $adapter->registerModuleServices('OtherApp');
 
         /** @var EmptyEntity $actualDate */
@@ -145,11 +141,15 @@ class SymfonyAdapterTest extends TestCase
         $this->assertInstanceOf(EmptyService::class, $actualObject);
         $this->assertInstanceOf(DateTime::class, $actualObject->getTheKey());
 
-        /** @var EmptyEntity $actualDate */
-        $actualObject = $adapter->get('aliasWithFalseReference');
-        $this->assertInstanceOf(EmptyService::class, $actualObject);
-        $this->assertInternalType('string', $actualObject->getTheKey());
-        $this->assertSame('ItIsNotAClassName', $actualObject->getTheKey());
+        try {
+            // In the config this reference belongs to a service which has a parameter that is not marked as literal
+            // but the alias cannot be identified as a class/service, so it must throw an error. This is the expected
+            // behavior, and not the one in the Symfony adapter...
+            $adapter->get('aliasWithFalseReference');
+        } catch (Throwable $exception) {
+            $this->assertInstanceOf(InvalidArgumentException::class, $exception);
+        }
+
 
         /** @var EmptyEntity $actualDate */
         $actualObject = $adapter->get('aliasWithLiteral');
@@ -158,16 +158,18 @@ class SymfonyAdapterTest extends TestCase
         $this->assertSame($keyData, $actualObject->getTheKey());
     }
 
+    /**
+     * Tests error
+     */
     public function testInstantiateError()
     {
-        $adapter = new SymfonyAdapter($this->config);
+        $adapter = new BaseAdapter($this->config);
         $adapter->registerModuleServices('Website');
 
         try {
             $adapter->get('ThisWillHurt');
         } catch (Throwable $exception) {
-            $this->assertInstanceOf(RuntimeException::class, $exception);
-            $this->assertInstanceOf(InvalidArgumentException::class, $exception->getPrevious());
+            $this->assertInstanceOf(InvalidArgumentException::class, $exception);
         }
     }
 }

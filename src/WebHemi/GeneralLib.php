@@ -24,6 +24,8 @@ class GeneralLib
      * Collects and returns some information about the render time. First call will start start, the others will return.
      *
      * @return array
+     *
+     * @codeCoverageIgnore - don't test core functions.
      */
     public static function renderStat() : array
     {
@@ -70,7 +72,10 @@ class GeneralLib
     public static function mergeArrayOverwrite()
     {
         if (func_num_args() < 2) {
-            throw new InvalidArgumentException(__CLASS__ . '::' . __METHOD__ . ' needs two or more array arguments');
+            throw new InvalidArgumentException(
+                __CLASS__ . '::' . __METHOD__ . ' needs two or more array arguments',
+                1000
+            );
         }
         $arrays = func_get_args();
         $merged = [];
@@ -78,7 +83,10 @@ class GeneralLib
         while ($arrays) {
             $array = array_shift($arrays);
             if (!is_array($array)) {
-                throw new InvalidArgumentException(__CLASS__ . '::' . __METHOD__ . ' encountered a non array argument');
+                throw new InvalidArgumentException(
+                    __CLASS__ . '::' . __METHOD__ . ' encountered a non array argument',
+                    1001
+                );
             }
             if (!$array) {
                 continue;

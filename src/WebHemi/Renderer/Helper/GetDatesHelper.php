@@ -62,6 +62,7 @@ class GetDatesHelper implements HelperInterface
      * Should return the name of the helper.
      *
      * @return string
+     * @codeCoverageIgnore - plain text
      */
     public static function getName() : string
     {
@@ -72,6 +73,7 @@ class GetDatesHelper implements HelperInterface
      * Should return the name of the helper.
      *
      * @return string
+     * @codeCoverageIgnore - plain text
      */
     public static function getDefinition() : string
     {
@@ -93,6 +95,7 @@ class GetDatesHelper implements HelperInterface
      * Should return a description text.
      *
      * @return string
+     * @codeCoverageIgnore - plain text
      */
     public static function getDescription() : string
     {

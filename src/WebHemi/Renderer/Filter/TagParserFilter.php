@@ -44,7 +44,6 @@ class TagParserFilter implements FilterInterface
      * Should return the name of the helper.
      *
      * @return string
-     *
      * @codeCoverageIgnore - plain text
      */
     public static function getName() : string
@@ -56,7 +55,6 @@ class TagParserFilter implements FilterInterface
      * Should return the definition of the helper.
      *
      * @return string
-     *
      * @codeCoverageIgnore - plain text
      */
     public static function getDefinition() : string
@@ -68,7 +66,6 @@ class TagParserFilter implements FilterInterface
      * Should return a description text.
      *
      * @return string
-     *
      * @codeCoverageIgnore - plain text
      */
     public static function getDescription() : string
@@ -80,7 +77,6 @@ class TagParserFilter implements FilterInterface
      * Gets filter options for the render.
      *
      * @return array
-     *
      * @codeCoverageIgnore - empty array
      */
     public static function getOptions() : array

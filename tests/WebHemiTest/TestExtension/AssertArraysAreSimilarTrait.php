@@ -31,12 +31,13 @@ trait AssertArraysAreSimilarTrait
      *
      * @param array $arrayOne
      * @param array $arrayTwo
+     * @param string $message
      *
      * @return bool
      */
-    protected function assertArraysAreSimilar(array $arrayOne, array $arrayTwo)
+    protected function assertArraysAreSimilar(array $arrayOne, array $arrayTwo, string $message = '')
     {
         $result = strcmp(serialize($arrayOne), serialize($arrayTwo));
-        $this->assertSame($result, 0);
+        $this->assertSame($result, 0, $message);
     }
 }

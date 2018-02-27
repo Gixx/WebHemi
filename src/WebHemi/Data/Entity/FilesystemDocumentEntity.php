@@ -56,10 +56,10 @@ class FilesystemDocumentEntity extends AbstractEntity
     }
 
     /**
-     * @param int $parentRevisionIdentifier
+     * @param null|int $parentRevisionIdentifier
      * @return FilesystemDocumentEntity
      */
-    public function setParentRevisionId(int $parentRevisionIdentifier) : FilesystemDocumentEntity
+    public function setParentRevisionId(? int $parentRevisionIdentifier) : FilesystemDocumentEntity
     {
         $this->container['fk_parent_revision'] = $parentRevisionIdentifier;
 
@@ -77,10 +77,10 @@ class FilesystemDocumentEntity extends AbstractEntity
     }
 
     /**
-     * @param int $authorIdentifier
+     * @param null|int $authorIdentifier
      * @return FilesystemDocumentEntity
      */
-    public function setAuthorId(int $authorIdentifier) : FilesystemDocumentEntity
+    public function setAuthorId(? int $authorIdentifier) : FilesystemDocumentEntity
     {
         $this->container['fk_author'] = $authorIdentifier;
 
@@ -101,7 +101,7 @@ class FilesystemDocumentEntity extends AbstractEntity
      * @param int $contentRevision
      * @return FilesystemDocumentEntity
      */
-    public function setContentRevision(int $contentRevision) : FilesystemDocumentEntity
+    public function setContentRevision(? int $contentRevision) : FilesystemDocumentEntity
     {
         $this->container['content_revision'] = $contentRevision;
 
