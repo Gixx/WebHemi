@@ -121,13 +121,13 @@ class GetCategoriesHelper implements HelperInterface
          * @var Entity\FilesystemDirectoryDataEntity $categoryDirectoryData
          */
         $categoryDirectoryData = $this->filesystemStorage
-            ->getFilesystemDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_CATEGORY);
+            ->getFilesystemDirectoryDataByApplicationAndProxy((int) $applicationId, ProxyInterface::LIST_CATEGORY);
 
         /**
          * @var Entity\EntitySet $categoryList
          */
         $categoryList = $this->filesystemStorage
-            ->getFilesystemCategoryListByApplication($applicationId);
+            ->getFilesystemCategoryListByApplication((int) $applicationId);
 
         /** @var Entity\FilesystemCategoryEntity $categoryEntity */
         foreach ($categoryList as $categoryEntity) {

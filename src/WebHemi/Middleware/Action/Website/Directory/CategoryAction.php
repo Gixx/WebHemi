@@ -66,7 +66,7 @@ class CategoryAction extends IndexAction
          */
         $categoryEntity = $this->getFilesystemStorage()
             ->getFilesystemCategoryByApplicationAndName(
-                $applicationEntity->getApplicationId(),
+                (int) $applicationEntity->getApplicationId(),
                 $categoryName
             );
 
@@ -79,8 +79,8 @@ class CategoryAction extends IndexAction
          */
         $publications = $this->getFilesystemStorage()
             ->getFilesystemPublishedDocumentListByCategory(
-                $applicationEntity->getApplicationId(),
-                $categoryEntity->getFilesystemCategoryId(),
+                (int) $applicationEntity->getApplicationId(),
+                (int) $categoryEntity->getFilesystemCategoryId(),
                 'fs.`date_published` '.($categoryEntity->getItemOrder() ?? 'DESC')
             );
 

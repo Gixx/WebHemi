@@ -14,9 +14,8 @@ declare(strict_types = 1);
 namespace WebHemi\Router\Proxy;
 
 use WebHemi\Data\Entity;
-use WebHemi\Data\Storage\FilesystemStorage;
 use WebHemi\Data\Storage\ApplicationStorage;
-use WebHemi\Data\Storage\StorageInterface;
+use WebHemi\Data\Storage\FilesystemStorage;
 use WebHemi\Router\ProxyInterface;
 use WebHemi\Router\Result\Result;
 
@@ -101,9 +100,11 @@ class FilesystemProxy implements ProxyInterface
     ) : void {
         // DirectoryId must exists, as well as the relevant directory entity...
         $fileSystemDirectoryEntity = $this->filesystemStorage
-            ->getFilesystemDirectoryById($fileSystemEntity->getFilesystemDirectoryId());
+            ->getFilesystemDirectoryById((int) $fileSystemEntity->getFilesystemDirectoryId());
 
-        if ($fileSystemDirectoryEntity->getIsAutoIndex() === false) {
+        if ($fileSystemDirectoryEntity instanceof Entity\FilesystemDirectoryEntity
+            && $fileSystemDirectoryEntity->getIsAutoIndex() === false
+        ) {
             $routeResult->setStatus(Result::CODE_FORBIDDEN)
                 ->setMatchedMiddleware(null);
         } else {
@@ -133,7 +134,7 @@ class FilesystemProxy implements ProxyInterface
          * @var null|Entity\FilesystemEntity $fileSystemEntity
          */
         $fileSystemEntity = $this->filesystemStorage->getFilesystemByApplicationAndPath(
-            $applicationEntity->getApplicationId(),
+            (int) $applicationEntity->getApplicationId(),
             $path,
             $baseName
         );

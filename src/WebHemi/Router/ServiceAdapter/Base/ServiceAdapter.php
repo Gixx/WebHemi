@@ -45,7 +45,7 @@ class ServiceAdapter implements ServiceInterface
      */
     private $applicationPath;
     /**
-     * @var ProxyInterface
+     * @var null|ProxyInterface
      */
     private $proxy;
 

@@ -99,7 +99,7 @@ abstract class AbstractStorage implements StorageInterface
      * @throws InvalidArgumentException
      * @return null|EntityInterface
      */
-    protected function getEntity(string $entityClass, array $data = []) : ? EntityInterface
+    protected function getEntity(string $entityClass, array $data) : ? EntityInterface
     {
         if (!empty($data)) {
             $entity = $this->createEntity($entityClass);
@@ -111,16 +111,30 @@ abstract class AbstractStorage implements StorageInterface
     }
 
     /**
+     * Creates an empty entity set.
+     *
+     * @return EntitySet
+     */
+    public function createEntitySet() : EntitySet
+    {
+        return clone $this->entitySetPrototype;
+    }
+
+    /**
      * Creates and fills and EntitySet
      *
      * @param string $entityClass
-     * @param array $data
+     * @param array|null $data
      * @throws InvalidArgumentException
      * @return EntitySet
      */
-    protected function getEntitySet(string $entityClass, array $data) : EntitySet
+    protected function getEntitySet(string $entityClass, ? array $data) : EntitySet
     {
-        $entitySet = clone $this->entitySetPrototype;
+        $entitySet = $this->createEntitySet();
+
+        if (is_null($data)) {
+            $data = [];
+        }
 
         foreach ($data as $row) {
             $entity = $this->getEntity($entityClass, $row);

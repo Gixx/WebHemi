@@ -66,7 +66,7 @@ class TagAction extends IndexAction
          */
         $tagEntity = $this->getFilesystemStorage()
             ->getFilesystemTagByApplicationAndName(
-                $applicationEntity->getApplicationId(),
+                (int) $applicationEntity->getApplicationId(),
                 $tagName
             );
 
@@ -79,8 +79,8 @@ class TagAction extends IndexAction
          */
         $publications = $this->getFilesystemStorage()
             ->getFilesystemPublishedDocumentListByTag(
-                $applicationEntity->getApplicationId(),
-                $tagEntity->getFilesystemTagId()
+                (int) $applicationEntity->getApplicationId(),
+                (int) $tagEntity->getFilesystemTagId()
             );
 
         if (empty($publications)) {

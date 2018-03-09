@@ -30,7 +30,7 @@ class Result
      */
     private $status;
     /**
-     * @var string
+     * @var null|string
      */
     private $matchedMiddleware;
     /**

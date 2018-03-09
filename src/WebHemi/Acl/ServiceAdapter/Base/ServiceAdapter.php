@@ -66,7 +66,7 @@ class ServiceAdapter extends AbstractServiceAdapter
      */
     private function getUserPolicies(UserEntity $userEntity) : EntitySet
     {
-        return $this->policyStorage->getPolicyListByUser($userEntity->getUserId());
+        return $this->policyStorage->getPolicyListByUser((int) $userEntity->getUserId());
     }
 
     /**
@@ -77,17 +77,14 @@ class ServiceAdapter extends AbstractServiceAdapter
      */
     private function getUserGroupPolicies(UserEntity $userEntity) : EntitySet
     {
-        $userGroups = $this->userStorage->getUserGroupListByUser($userEntity->getUserId());
-        /** @var null|EntitySet $groupPolicies */
-        $groupPolicies = null;
+        $userGroups = $this->userStorage->getUserGroupListByUser((int) $userEntity->getUserId());
+        $groupPolicies = $this->userStorage->createEntitySet();
 
         /** @var UserGroupEntity $userGroupEntity */
         foreach ($userGroups as $userGroupEntity) {
-            $policyList = $this->policyStorage->getPolicyListByUserGroup($userGroupEntity->getUserGroupId());
+            $policyList = $this->policyStorage->getPolicyListByUserGroup((int) $userGroupEntity->getUserGroupId());
 
-            if (empty($groupPolicies)) {
-                $groupPolicies = $policyList;
-            } else {
+            if (!empty($policyList)) {
                 $groupPolicies->merge($policyList);
             }
         }

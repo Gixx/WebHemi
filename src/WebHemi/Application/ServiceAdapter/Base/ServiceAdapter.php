@@ -118,6 +118,7 @@ class ServiceAdapter extends AbstractAdapter
             $middlewareClass = $pipelineManager->start();
 
             while (!empty($middlewareClass)
+                && is_string($middlewareClass)
                 && $this->response->getStatusCode() == ResponseInterface::STATUS_PROCESSING
             ) {
                 $this->invokeMiddleware($middlewareClass);

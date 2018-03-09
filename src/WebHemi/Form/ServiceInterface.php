@@ -21,11 +21,11 @@ interface ServiceInterface
     /**
      * ServiceInterface constructor.
      *
-     * @param string|null $name
-     * @param string|null $action
-     * @param string      $method
+     * @param string $name
+     * @param string $action
+     * @param string $method
      */
-    public function __construct(string $name = null, string $action = null, string $method = 'POST');
+    public function __construct(string $name = '', string $action = '', string $method = 'POST');
 
     /**
      * Initializes the form if it didn't happen in the constructor. (Used mostly in presets).

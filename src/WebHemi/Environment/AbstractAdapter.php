@@ -32,7 +32,7 @@ abstract class AbstractAdapter implements ServiceInterface
      */
     protected $url;
     /**
-     * @var string
+     * @var null|string
      */
     protected $subDomain;
     /**
