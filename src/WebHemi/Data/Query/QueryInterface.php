@@ -50,7 +50,7 @@ interface QueryInterface
      * @param string $queryIdentifier
      * @param array $parameters
      * @throws InvalidArgumentException
-     * @return null|array
+     * @return array
      */
-    public function fetchData(string $queryIdentifier, array $parameters = []) : ? array;
+    public function fetchData(string $queryIdentifier, array $parameters = []) : array;
 }
