@@ -52,7 +52,7 @@ class PostAction extends IndexAction
          */
         $publishedDocumentEntity = $this->getFilesystemStorage()
             ->getFilesystemPublishedDocumentByApplicationAndPath(
-                $applicationEntity->getApplicationId(),
+                (int) $applicationEntity->getApplicationId(),
                 $routingParams['path'],
                 $routingParams['basename']
             );

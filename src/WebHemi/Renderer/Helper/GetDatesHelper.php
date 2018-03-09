@@ -122,13 +122,13 @@ class GetDatesHelper implements HelperInterface
          * @var Entity\FilesystemDirectoryDataEntity $categoryDirectoryData
          */
         $categoryDirectoryData = $this->filesystemStorage
-            ->getFilesystemDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_ARCHIVE);
+            ->getFilesystemDirectoryDataByApplicationAndProxy((int) $applicationId, ProxyInterface::LIST_ARCHIVE);
 
         /**
          * @var array $contents
          */
         $contents = $this->filesystemStorage
-            ->getFilesystemPublishedDocumentDateList($applicationId);
+            ->getFilesystemPublishedDocumentDateList((int) $applicationId);
 
         foreach ($contents as $publications) {
             /**

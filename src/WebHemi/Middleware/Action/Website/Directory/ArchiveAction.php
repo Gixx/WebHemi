@@ -66,7 +66,7 @@ class ArchiveAction extends IndexAction
          */
         $publications = $this->getFilesystemStorage()
             ->getFilesystemPublishedDocumentListByDate(
-                $applicationEntity->getApplicationId(),
+                (int) $applicationEntity->getApplicationId(),
                 (int) $dateParts[0],
                 (int) $dateParts[1]
             );

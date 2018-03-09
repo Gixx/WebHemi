@@ -137,7 +137,7 @@ class IndexAction extends AbstractMiddlewareAction
          * @var Entity\EntitySet $publications
          */
         $publications = $this->getFilesystemStorage()
-            ->getFilesystemPublishedDocumentList($applicationEntity->getApplicationId());
+            ->getFilesystemPublishedDocumentList((int) $applicationEntity->getApplicationId());
 
         /**
          * @var Entity\FilesystemPublishedDocumentEntity $publishedDocumentEntity
@@ -188,20 +188,20 @@ class IndexAction extends AbstractMiddlewareAction
          * @var array $documentMeta
          */
         $documentMeta = $this->getFilesystemStorage()
-            ->getSimpleFilesystemMetaListByFilesystem($publishedDocumentEntity->getFilesystemId());
+            ->getSimpleFilesystemMetaListByFilesystem((int) $publishedDocumentEntity->getFilesystemId());
 
         return [
             'author' => $this->getPublicationAuthor(
-                $applicationEntity->getApplicationId(),
-                $publishedDocumentEntity->getAuthorId()
+                (int) $applicationEntity->getApplicationId(),
+                (int) $publishedDocumentEntity->getAuthorId()
             ),
             'tags' => $this->getPublicationTags(
-                $applicationEntity->getApplicationId(),
-                $publishedDocumentEntity->getFilesystemId()
+                (int) $applicationEntity->getApplicationId(),
+                (int) $publishedDocumentEntity->getFilesystemId()
             ),
             'category' => $this->getPublicationCategory(
-                $applicationEntity->getApplicationId(),
-                $publishedDocumentEntity->getCategoryId()
+                (int) $applicationEntity->getApplicationId(),
+                (int) $publishedDocumentEntity->getCategoryId()
             ),
             'path' => $publishedDocumentEntity->getUri(),
             'title' => $publishedDocumentEntity->getTitle(),

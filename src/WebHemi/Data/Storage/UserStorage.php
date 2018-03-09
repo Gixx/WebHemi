@@ -194,8 +194,8 @@ class UserStorage extends AbstractStorage
      */
     private function processMetaData(UserMetaEntity $userMetaEntity) : array
     {
-        $key = $userMetaEntity->getMetaKey();
-        $value = $userMetaEntity->getMetaData();
+        $key = $userMetaEntity->getMetaKey() ?? '';
+        $value = $userMetaEntity->getMetaData() ?? '';
 
         if ($key == 'avatar' && strpos($value, 'gravatar://') === 0) {
             $value = str_replace('gravatar://', '', $value);

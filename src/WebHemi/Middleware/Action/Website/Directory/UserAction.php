@@ -71,8 +71,8 @@ class UserAction extends IndexAction
          */
         $publications = $this->getFilesystemStorage()
             ->getFilesystemPublishedDocumentListByAuthor(
-                $applicationEntity->getApplicationId(),
-                $userEntity->getUserId()
+                (int) $applicationEntity->getApplicationId(),
+                (int) $userEntity->getUserId()
             );
 
         /**

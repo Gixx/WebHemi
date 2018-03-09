@@ -121,13 +121,13 @@ class GetTagsHelper implements HelperInterface
          * @var Entity\FilesystemDirectoryDataEntity $categoryDirectoryData
          */
         $categoryDirectoryData = $this->filesystemStorage
-            ->getFilesystemDirectoryDataByApplicationAndProxy($applicationId, ProxyInterface::LIST_TAG);
+            ->getFilesystemDirectoryDataByApplicationAndProxy((int) $applicationId, ProxyInterface::LIST_TAG);
 
         /**
          * @var Entity\EntitySet $tagList
          */
         $tagList = $this->filesystemStorage
-            ->getFilesystemTagListByApplication($applicationId);
+            ->getFilesystemTagListByApplication((int) $applicationId);
 
         foreach ($tagList as $tagEntity) {
             $tags[] = [

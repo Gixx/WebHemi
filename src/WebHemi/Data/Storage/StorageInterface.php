@@ -49,4 +49,11 @@ interface StorageInterface
      * @return EntityInterface
      */
     public function createEntity(string $entityClass) : EntityInterface;
+
+    /**
+     * Creates an empty entity set.
+     *
+     * @return EntitySet
+     */
+    public function createEntitySet() : EntitySet;
 }

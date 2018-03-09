@@ -47,7 +47,7 @@ class DateTime extends PHPDateTime implements TimeZoneInterface
             $time = date('Y-m-d H:i:s', $time);
         }
 
-        if (empty($timeZone)) {
+        if (!$timeZone instanceof DateTimeZone) {
             $currentTimeZone = new DateTimeZone(date_default_timezone_get());
         } else {
             $currentTimeZone = $timeZone;

@@ -32,7 +32,7 @@ abstract class AbstractElement implements ElementInterface
      */
     private $identifier;
     /**
-     * @var string
+     * @var null|string
      */
     private $label;
     /**

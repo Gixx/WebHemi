@@ -107,6 +107,8 @@ class ViewAction extends AbstractMiddlewareAction
             );
         }
 
+        $dateCreated = $userGroupEntity->getDateCreated();
+
         $data = [
             'readonly' => $userGroupEntity->getIsReadOnly(),
             'group' => [
@@ -115,7 +117,9 @@ class ViewAction extends AbstractMiddlewareAction
                 'Title' => $userGroupEntity->getTitle(),
                 'Description' => $userGroupEntity->getDescription(),
                 'Is read-only?' => $userGroupEntity->getIsReadOnly() ? 'Yes' : 'No',
-                'Date created' => $userGroupEntity->getDateCreated()->format('Y-m-d H:i:s'),
+                'Date created' => $dateCreated instanceof DateTime ?
+                    $dateCreated->format('Y-m-d H:i:s')
+                    : 'unknown',
             ],
         ];
 

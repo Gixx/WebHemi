@@ -67,37 +67,46 @@ class DashboardAction extends AbstractMiddlewareAction
         global $dependencyInjection;
 
         $userEntity = $this->authAdapter->getIdentity();
-        /**
-         * @var \WebHemi\Data\Storage\UserStorage $userStorage
-         */
-        $userStorage = $dependencyInjection->get(\WebHemi\Data\Storage\UserStorage::class);
-        /**
-         * @var \WebHemi\Data\Storage\PolicyStorage $policyStorage
-         */
-        $policyStorage = $dependencyInjection->get(\WebHemi\Data\Storage\PolicyStorage::class);
 
-        $userGroups = $userStorage->getUserGroupListByUser($userEntity->getUserId());
-        $userPolicies = $policyStorage->getPolicyListByUser($userEntity->getUserId());
-        /** @var EntitySet $userGroupPolicies */
-        $userGroupPolicies = null;
+        if ($userEntity instanceof $userEntity) {
+            /**
+             * @var \WebHemi\Data\Storage\UserStorage $userStorage
+             */
+            $userStorage = $dependencyInjection->get(\WebHemi\Data\Storage\UserStorage::class);
+            /**
+             * @var \WebHemi\Data\Storage\PolicyStorage $policyStorage
+             */
+            $policyStorage = $dependencyInjection->get(\WebHemi\Data\Storage\PolicyStorage::class);
 
-        /** @var UserGroupEntity $userGroupEntity */
-        foreach ($userGroups as $userGroupEntity) {
-            $policyList = $policyStorage->getPolicyListByUserGroup($userGroupEntity->getUserGroupId());
+            $userGroups = ($userStorage instanceof \WebHemi\Data\Storage\UserStorage)
+                ? $userStorage->getUserGroupListByUser((int) $userEntity->getUserId())
+                : new EntitySet();
 
-            if (empty($userGroupPolicies)) {
-                $userGroupPolicies = $policyList;
-            } else {
+            $userPolicies = ($policyStorage instanceof \WebHemi\Data\Storage\PolicyStorage)
+                ? $policyStorage->getPolicyListByUser((int) $userEntity->getUserId())
+                : new EntitySet();
+
+            /** @var EntitySet $userGroupPolicies */
+            $userGroupPolicies = new EntitySet();
+
+            /** @var UserGroupEntity $userGroupEntity */
+            foreach ($userGroups as $userGroupEntity) {
+                $policyList = ($policyStorage instanceof \WebHemi\Data\Storage\PolicyStorage)
+                    ? $policyStorage->getPolicyListByUserGroup((int) $userGroupEntity->getUserGroupId())
+                    : new EntitySet();
+
                 $userGroupPolicies->merge($policyList);
             }
+
+            // @TODO TBD
+            return [
+                'user' => $userEntity ?? false,
+                'user_groups' => $userGroups ?? false,
+                'user_policies' => $userPolicies ?? false,
+                'user_group_policies' => $userGroupPolicies ?? false,
+            ];
         }
 
-        // @TODO TBD
-        return [
-            'user' => $userEntity ?? false,
-            'user_groups' => $userGroups ?? false,
-            'user_policies' => $userPolicies ?? false,
-            'user_group_policies' => $userGroupPolicies ?? false,
-        ];
+        return [];
     }
 }

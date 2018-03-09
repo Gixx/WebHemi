@@ -21,6 +21,15 @@ use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 interface ClientInterface
 {
     /**
+     * Get data.
+     *
+     * @param string $url
+     * @param array $data
+     * @return PsrResponseInterface
+     */
+    public function get(string $url, array $data) : PsrResponseInterface;
+
+    /**
      * Posts data.
      *
      * @param  string $url
