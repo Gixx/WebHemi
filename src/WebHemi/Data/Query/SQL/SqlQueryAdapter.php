@@ -85,12 +85,10 @@ class SqlQueryAdapter implements QueryInterface
      * @param array $parameters
      * @throws InvalidArgumentException
      * @throws RuntimeException
-     * @return null|array
+     * @return array
      */
-    public function fetchData(string $queryIdentifier, array $parameters = []) : ? array
+    public function fetchData(string $queryIdentifier, array $parameters = []) : array
     {
-        $data = null;
-
         if (!isset($this->identifierList[$queryIdentifier])) {
             throw new InvalidArgumentException(
                 sprintf('No such query found for this adapter: "%s"', $queryIdentifier),
@@ -131,13 +129,8 @@ class SqlQueryAdapter implements QueryInterface
                 1001
             );
         }
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        if (is_array($result)) {
-            $data = $result;
-        }
-
-        return $data;
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
