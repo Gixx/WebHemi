@@ -11,7 +11,7 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Data\Query\SQL;
+namespace WebHemi\Data\Query\MySQL;
 
 use InvalidArgumentException;
 use PDO;
@@ -21,19 +21,24 @@ use WebHemi\Data\Driver\PDO\MySQL\DriverAdapter as SQLDriverAdapter;
 use WebHemi\Data\Query\QueryInterface;
 
 /**
- * Class SqlQueryAdapter
+ * Class QueryAdapter
  */
-class SqlQueryAdapter implements QueryInterface
+class QueryAdapter implements QueryInterface
 {
     /**
      * @var DriverInterface
      */
-    private $driverAdapter;
+    protected $driverAdapter;
 
     /**
      * @var array
      */
-    private $identifierList = [];
+    protected $identifierList;
+
+    /**
+     * @var string
+     */
+    protected static $statementPath = __DIR__.'/../MySQL/statements/*.sql';
 
     /**
      * QueryInterface constructor.
@@ -49,9 +54,10 @@ class SqlQueryAdapter implements QueryInterface
     /**
      * Collects all the valid statements.
      */
-    private function init() : void
+    protected function init() : void
     {
-        $statementFiles = glob(__DIR__.'/statements/*.sql', GLOB_BRACE);
+        $this->identifierList = [];
+        $statementFiles = glob(static::$statementPath, GLOB_BRACE);
 
         foreach ($statementFiles as $file) {
             $this->identifierList[basename($file, '.sql')] = $file;
@@ -69,34 +75,19 @@ class SqlQueryAdapter implements QueryInterface
     }
 
     /**
-     * Returns all the query identifiers assigned to the query adapter.
-     *
-     * @return array
-     */
-    public function getQueryIdentifierList() : array
-    {
-        return $this->identifierList;
-    }
-
-    /**
      * Fetches data buy executing a query identified by ID.
      *
-     * @param string $queryIdentifier
+     * @param string $query
      * @param array $parameters
      * @throws InvalidArgumentException
      * @throws RuntimeException
      * @return array
      */
-    public function fetchData(string $queryIdentifier, array $parameters = []) : array
+    public function fetchData(string $query, array $parameters = []) : array
     {
-        if (!isset($this->identifierList[$queryIdentifier])) {
-            throw new InvalidArgumentException(
-                sprintf('No such query found for this adapter: "%s"', $queryIdentifier),
-                1000
-            );
+        if (isset($this->identifierList[$query])) {
+            $query = file_get_contents($this->identifierList[$query]);
         }
-
-        $query = file_get_contents($this->identifierList[$queryIdentifier]);
 
         // This nasty trick helps us to be able to parameterize the ORDER BY statement.
         if (isset($parameters[':orderBy'])) {
@@ -118,14 +109,14 @@ class SqlQueryAdapter implements QueryInterface
             $executedSuccessful = $statement->execute();
         } catch (\Throwable $exception) {
             throw new RuntimeException(
-                sprintf('Error executing query for "%s". %s', $queryIdentifier, $exception->getMessage()),
+                sprintf('Error executing query for "%s". %s', $query, $exception->getMessage()),
                 1000
             );
         }
 
         if (!$executedSuccessful) {
             throw new RuntimeException(
-                sprintf('Error running query: "%s"', $queryIdentifier),
+                sprintf('Error running query: "%s"', $query),
                 1001
             );
         }
@@ -139,7 +130,7 @@ class SqlQueryAdapter implements QueryInterface
      * @param mixed $value
      * @return int
      */
-    private function getValueType($value) : int
+    protected function getValueType($value) : int
     {
         $type = PDO::PARAM_STR;
 

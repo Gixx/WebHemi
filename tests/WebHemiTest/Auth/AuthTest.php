@@ -19,7 +19,7 @@ use WebHemi\Auth\Credential\NameAndPasswordCredential;
 use WebHemi\Configuration\ServiceAdapter\Base\ServiceAdapter as Config;
 use WebHemi\Data\Entity\EntitySet;
 use WebHemi\Data\Entity\UserEntity;
-use WebHemi\Data\Query\SQL\SqlQueryAdapter as SQLiteAdapter;
+use WebHemi\Data\Query\SQLite\QueryAdapter as SQLiteAdapter;
 use WebHemi\Data\Driver\PDO\SQLite\DriverAdapter as SQLiteDriver;
 use WebHemi\Data\Storage\UserStorage;
 use WebHemiTest\TestService\EmptyAuthStorage;

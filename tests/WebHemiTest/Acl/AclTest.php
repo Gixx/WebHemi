@@ -23,7 +23,7 @@ use WebHemi\Data\Entity\ResourceEntity;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Entity\UserEntity;
 use WebHemi\Data\Entity\UserGroupEntity;
-use WebHemi\Data\Query\SQL\SqlQueryAdapter as SQLiteAdapter;
+use WebHemi\Data\Query\SQLite\QueryAdapter as SQLiteAdapter;
 use WebHemi\Data\Storage\UserStorage;
 use WebHemi\Data\Storage\PolicyStorage;
 use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;

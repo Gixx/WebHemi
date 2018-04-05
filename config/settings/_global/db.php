@@ -22,7 +22,7 @@ return [
                 'shared' => true
             ],
             Data\Query\QueryInterface::class => [
-                'class' => Data\Query\SQL\SqlQueryAdapter::class,
+                'class' => Data\Query\SQLite\QueryAdapter::class,
                 'arguments' => [
                     Data\Driver\DriverInterface::class
                 ]
