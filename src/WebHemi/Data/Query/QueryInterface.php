@@ -38,19 +38,12 @@ interface QueryInterface
     public function getDriver() : DriverInterface;
 
     /**
-     * Returns all the query identifiers assigned to the query adapter.
-     *
-     * @return array
-     */
-    public function getQueryIdentifierList() : array;
-
-    /**
      * Fetches data buy executing a query identified by ID.
      *
-     * @param string $queryIdentifier
+     * @param string $query
      * @param array $parameters
      * @throws InvalidArgumentException
      * @return array
      */
-    public function fetchData(string $queryIdentifier, array $parameters = []) : array;
+    public function fetchData(string $query, array $parameters = []) : array;
 }
