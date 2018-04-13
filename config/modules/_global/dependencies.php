@@ -59,6 +59,7 @@ return [
                 'arguments' => [
                     Environment\ServiceInterface::class,
                     Data\Storage\UserStorage::class,
+                    Data\Storage\PolicyStorage::class,
                 ],
                 'shared'    => true,
             ],
