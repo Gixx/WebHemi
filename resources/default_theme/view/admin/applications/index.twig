@@ -7,14 +7,18 @@
  #}
 {% extends "admin-layout.twig" %}
 
-{% block content %}
-    <a href="auth/logout">Logout</a>
-    <h1>Applications!</h1>
-{% for application in applications %}
-    <a href="applications/view/{{ application.name }}">{{ application.title }}</a>
-{% endfor %}
-<pre>
-    {{ dump(applications) }}
-</pre>
+{% block menuapp %}
+    {% if isAllowed('admin-applications-list') %}
+        <li class="selected"><a href="applications">Applications</a></li>
+    {% endif %}
+{% endblock %}
 
+{% block content %}
+    <h1>Applications!</h1>
+    {% for application in applications %}
+        <a href="applications/view/{{ application.name }}">{{ application.title }}</a>
+    {% endfor %}
+    <pre>
+        {{ dump(applications) }}
+    </pre>
 {% endblock %}

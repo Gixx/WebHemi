@@ -7,9 +7,13 @@
  #}
 {% extends "admin-layout.twig" %}
 
+{% block menudash %}
+    {% if isAllowed('admin-dashboard') %}
+        <li class="selected"><a href="">Dashboard</a></li>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
-    <a href="auth/logout">Logout</a>
-    <a href="applications">Applications</a>
     <h1>Welcome!</h1>
     <p>You are now logged in to the admin area!</p>
     <hr>
@@ -17,6 +21,7 @@
     <hr>
     <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
     <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
+    {#<p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
     <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
     <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
     <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
@@ -35,6 +40,5 @@
     <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
     <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
     <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
-    <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
-    <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>
+    <p>None of these faiths will be lost in honors like moons in definitions.Wind, plasma, and sensor.The moon goes future like a conscious alien.Twisted mankinds lead to the tragedy.The dead sun revolutionary yearns the machine.When the sun trembles for atlantis tower, all species attack extraterrestrial, gravimetric phenomenans.Shield at the galaxy was the life of beauty, destroyed to a remarkable particle.</p>#}
 {% endblock %}
