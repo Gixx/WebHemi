@@ -15,317 +15,63 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>WebHemi Admin</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-        <link rel="stylesheet" href="{{ application.resourcePath }}/css/font.css" />
-        <link rel="stylesheet" href="{{ application.resourcePath }}/css/admin.css" />
-        {% block additionalcss %}
+        {% block additionalHeadElements %}
             {# add or include <link rel="stylesheet"> or <style> elements. #}
         {% endblock %}
+        <link rel="stylesheet" href="{{ application.resourcePath }}/css/admin.css">
     </head>
     <body>
         <header>
-            <a href="#" class="nav material-icons">menu</a>
-            header
-            <a href="#" class="aside material-icons">aside</a>
+            {% block header %}
+            {% endblock %}
         </header>
         <nav>
-            <div class="container">
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-            </div>
+            <ul>
+                {% block menudash %}
+                    {% if isAllowed('admin-dashboard') %}
+                        <li><a href="">Dashboard</a></li>
+                    {% endif %}
+                {% endblock %}
+
+                {% block menuapp %}
+                    {% if isAllowed('admin-applications-list') %}
+                        <li><a href="applications">Applications</a></li>
+                    {% endif %}
+                {% endblock %}
+
+                {% block menucontrol %}
+                    {% if isAllowed('admin-controlpanel-index') %}
+                        <li><a href="control-panel">Control Panel</a></li>
+                    {% endif %}
+                {% endblock %}
+
+                {% block menuabout %}
+                    <li><a href="about">About</a></li>
+                {% endblock %}
+
+                <li><a href="auth/logout">Logout</a></li>
+            </ul>
         </nav>
         <main>
             {% block content %}
                 {# extend this block in templates. #}
             {% endblock %}
         </main>
-        <aside>
-            <div class="container">
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-                <ul>
-                    <li><a href="#1">Link 1</a></li>
-                    <li><a href="#2">Link 2</a></li>
-                    <li><a href="#3">Link 3</a></li>
-                    <li><a href="#4">Link 4</a></li>
-                    <li><a href="#5">Link 5</a></li>
-                </ul>
-            </div>
-        </aside>
         <footer>
-            footer
+            {% block footer %}
+                {% set stat = getStat() %}
+                <p>Rendered in {{ stat.duration }} seconds. Memory usage: {{ stat.memory }}.</p>
+            {% endblock %}
         </footer>
+
+        {% block dialog %}
+            {# add or include <dialog> elements. #}
+        {% endblock %}
+
         <script type="application/javascript" src="{{ application.resourcePath }}/js/functions.js"></script>
         <script type="application/javascript" src="{{ application.resourcePath }}/js/admin.js"></script>
-        {% block additionaljs %}
+
+        {% block additionalFootElements %}
             {# add or include <script> elements. #}
         {% endblock %}
     </body>
