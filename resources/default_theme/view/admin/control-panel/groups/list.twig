@@ -1,0 +1,43 @@
+{##
+ # WebHemi.
+ #
+ # @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
+ # @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ # @link      http://www.gixx-web.com
+ #}
+{% extends "admin/control-panel/index.twig" %}
+
+{% block header %}
+    <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > Groups
+{% endblock %}
+
+{% block content %}
+    <h1>Groups</h1>
+    {% if data %}
+        <table summary="User group list">
+            <caption>User group list</caption>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in data %}
+                <tr>
+                    <td><button onclick="location.href='control-panel/groups/view/{{ row.id }}';">View</button></td>
+                    <td>{{ row.title }}</td>
+                    <td>{{ row.description }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h3>We're sorry</h3>
+        <p>No user groups available at the moment.</p>
+    {% endif %}
+    {% if isAllowed('admin-control-panel-groups-add') %}
+        <button onclick="location.href='control-panel/groups/add'">Add new</button>
+    {% endif %}
+{% endblock %}
