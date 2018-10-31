@@ -1,0 +1,34 @@
+{##
+ # WebHemi.
+ #
+ # @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
+ # @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ # @link      http://www.gixx-web.com
+ #}
+{% extends "admin-layout.twig" %}
+
+{% block title %}{{ 'Control Panel - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
+
+{% block header %}
+    <a href="">Dashboard</a> > Control Panel
+{% endblock %}
+
+{% block menucontrol %}
+    {% if isAllowed('admin-controlpanel-index') %}
+        <li class="selected"><a href="control-panel">Control Panel</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>Control Panel</h1>
+    <ul>
+        <li><a href="control-panel/settings">Settings</a></li>
+        <li><a href="control-panel/themes">Manage themes</a></li>
+        <li><a href="control-panel/add-ons">Manage add-ons</a></li>
+        <li><a href="control-panel/users">Manage users</a></li>
+        <li><a href="control-panel/groups">Manage groups</a></li>
+        <li><a href="control-panel/resources">Manage resources</a></li>
+        <li><a href="control-panel/policies">Manage policies</a></li>
+        <li><a href="control-panel/logs">View logs</a></li>
+    </ul>
+{% endblock %}

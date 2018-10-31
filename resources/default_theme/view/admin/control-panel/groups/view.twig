@@ -1,0 +1,35 @@
+{% extends "admin/control-panel/index.twig" %}
+
+{% block header %}
+    <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > <a href="control-panel/groups">Groups</a> > {{ data.group.Title }}
+{% endblock %}
+
+{% block menucontrol %}
+    {% if isAllowed('admin-controlpanel-index') %}
+        <li class="selected"><a href="control-panel">Control Panel</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>Group: "{{ data.group.Title }}"</h1>
+    <table summary="User group data">
+        <caption>User group ({{ data.group.Title }}) details</caption>
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for key,value in data.group %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if not data.readonly %}
+        <button onclick="location.href='control-panel/groups/edit/{{ data.group.Id }}'">Edit</button>
+    {% endif %}
+{% endblock %}

@@ -13,7 +13,7 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>WebHemi Admin</title>
+        <title>{% block title %}{{ site_title|default('WebHemi Admin') }}{% endblock %}</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         {% block additionalHeadElements %}
             {# add or include <link rel="stylesheet"> or <style> elements. #}
