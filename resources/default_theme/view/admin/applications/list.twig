@@ -56,11 +56,18 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if isAllowed('admin-applications-add') %}
+        <button class="add">Add</button>
+    {% endif %}
 {% endblock %}
 
 {% block additionalFootElements %}
     <script type="application/javascript">
         (function() {
+            document.querySelector('button.add').addEventListener('click', function (event) {
+                location.href = 'applications/add';
+            });
+
             document.querySelectorAll('button.view').forEach(function (element) {
                 element.addEventListener('click', function (event) {
                     location.href = 'applications/'+event.target.dataset.name;
