@@ -71,38 +71,8 @@ class ListAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        $data = $this->getUserGroupList();
-
         return [
-            'data' => $data
+            'data' => $this->userStorage->getUserGroupList()
         ];
-    }
-
-    /**
-     * Gets the whole user group record list.
-     *
-     * @return array
-     */
-    protected function getUserGroupList() : array
-    {
-        $dataList = [];
-        /**
-         * @var array $entityList
-         */
-        $entityList = $this->userStorage->getUserGroupList();
-
-        /**
-         * @var UserGroupEntity $userGroupEntity
-         */
-        foreach ($entityList as $userGroupEntity) {
-            $dataList[] = [
-                'id' => $userGroupEntity->getUserGroupId(),
-                'name' => $userGroupEntity->getName(),
-                'title' => $userGroupEntity->getTitle(),
-                'description' => $userGroupEntity->getDescription()
-            ];
-        }
-
-        return $dataList;
     }
 }

@@ -49,7 +49,7 @@ return [
                 'middleware'      => Action\Admin\Applications\ViewAction::class,
                 'allowed_methods' => ['GET'],
             ],
-            'admin-applications-preferences' => [
+            'admin-applications-edit' => [
                 'path'            => '^/applications/(?P<name>[a-z0-9\-\_]+)/preferences/?$',
                 'middleware'      => Action\Admin\Applications\PreferencesAction::class,
                 'allowed_methods' => ['GET'],
@@ -115,21 +115,26 @@ return [
                 'middleware'      => Action\Admin\ControlPanel\Groups\ListAction::class,
                 'allowed_methods' => ['GET'],
             ],
-//            'admin-control-panel-groups-add' => [
-//                'path'            => '^/control-panel/groups/add/?$',
-//                'middleware'      => Action\Admin\ControlPanel\Groups\AddAction::class,
-//                'allowed_methods' => ['GET', 'POST'],
-//            ],
+            'admin-control-panel-groups-add' => [
+                'path'            => '^/control-panel/groups/add/?$',
+                'middleware'      => Action\Admin\ControlPanel\Groups\AddAction::class,
+                'allowed_methods' => ['GET', 'POST'],
+            ],
             'admin-control-panel-groups-view' => [
-                'path'            => '^/control-panel/groups/view/(?P<userGroupId>\d+)/?$',
+                'path'            => '^/control-panel/groups/(?P<name>[a-z0-9\-\_]+)/?$',
                 'middleware'      => Action\Admin\ControlPanel\Groups\ViewAction::class,
                 'allowed_methods' => ['GET'],
             ],
-//            'admin-control-panel-groups-edit' => [
-//                'path'            => '^/control-panel/groups/edit/(?P<userGroupId>\d+)/?$',
-//                'middleware'      => Action\Admin\ControlPanel\Groups\EditAction::class,
-//                'allowed_methods' => ['GET', 'POST'],
-//            ],
+            'admin-control-panel-groups-edit' => [
+                'path'            => '^/control-panel/groups/(?P<name>[a-z0-9\-\_]+)/edit/?$',
+                'middleware'      => Action\Admin\ControlPanel\Groups\EditAction::class,
+                'allowed_methods' => ['GET', 'POST'],
+            ],
+            'admin-control-panel-groups-delete' => [
+                'path'            => '^/control-panel/groups/(?P<name>[a-z0-9\-\_]+)/delete/?$',
+                'middleware'      => Action\Admin\ControlPanel\Groups\DeleteAction::class,
+                'allowed_methods' => ['GET', 'POST'],
+            ],
             // Resources
             'admin-control-panel-resources-list' => [
                 'path'            => '^/control-panel/resources/?$',

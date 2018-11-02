@@ -77,58 +77,12 @@ class ViewAction extends AbstractMiddlewareAction
 
         $params = $this->getRoutingParameters();
 
-        if (isset($params['userGroupId'])) {
-            $data = $this->getUserGroupDetails((int) $params['userGroupId']);
+        if (isset($params['name'])) {
+            $data = $this->userStorage->getUserGroupByName($params['name']);
         }
 
         return [
             'data' => $data,
         ];
-    }
-
-    /**
-     * Gets user group details.
-     *
-     * @param  int $userGroupId
-     * @return array
-     * @throws RuntimeException
-     */
-    protected function getUserGroupDetails(int $userGroupId) : array
-    {
-        $userGroupEntity = $this->userStorage->getUserGroupById($userGroupId);
-
-        if (!$userGroupEntity instanceof UserGroupEntity) {
-            throw new RuntimeException(
-                sprintf(
-                    'The requested user group entity with the given ID not found: %s',
-                    (string) $userGroupId
-                ),
-                404
-            );
-        }
-
-        $dateCreated = $userGroupEntity->getDateCreated();
-
-        $data = [
-            'readonly' => $userGroupEntity->getIsReadOnly(),
-            'group' => [
-                'Id' => $userGroupEntity->getUserGroupId(),
-                'Name' => $userGroupEntity->getName(),
-                'Title' => $userGroupEntity->getTitle(),
-                'Description' => $userGroupEntity->getDescription(),
-                'Is read-only?' => $userGroupEntity->getIsReadOnly() ? 'Yes' : 'No',
-                'Date created' => $dateCreated instanceof DateTime ?
-                    $dateCreated->format('Y-m-d H:i:s')
-                    : 'unknown',
-            ],
-        ];
-
-        $dateModified = $userGroupEntity->getDateModified();
-
-        if (!$userGroupEntity->getIsReadOnly() && $dateModified instanceof DateTime) {
-            $data['group']['Date modified'] = $dateModified->format('Y-m-d H:i:s');
-        }
-
-        return $data;
     }
 }
