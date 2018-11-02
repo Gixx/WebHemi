@@ -7,6 +7,8 @@
  #}
 {% extends "admin/applications/list.twig" %}
 
+{% block title %}{{ 'Applications: view - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
+
 {% block header %}
     <a href="">Dashboard</a> > <a href="applications">Applications</a> > View
 {% endblock %}
