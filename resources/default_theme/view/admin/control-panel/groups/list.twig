@@ -27,10 +27,16 @@
             </thead>
             <tbody>
             {% for row in data %}
+                {# @var row \WebHemi\Data\Entity\UserGroupEntity #}
                 <tr>
-                    <td><button onclick="location.href='control-panel/groups/view/{{ row.id }}';">View</button></td>
-                    <td>{{ row.title }}</td>
-                    <td>{{ row.description }}</td>
+                    <td>
+                        <button class="view" data-name="{{ row.getName() }}">View</button>
+                        {% if not row.getIsReadOnly() %}
+                            <button class="delete" data-name="{{ row.getName() }}">Delete</button>
+                        {% endif %}
+                    </td>
+                    <td>{{ row.getTitle() }}</td>
+                    <td>{{ row.getDescription() }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -40,6 +46,6 @@
         <p>No user groups available at the moment.</p>
     {% endif %}
     {% if isAllowed('admin-control-panel-groups-add') %}
-        <button onclick="location.href='control-panel/groups/add'">Add new</button>
+        <button class="add">Add new</button>
     {% endif %}
 {% endblock %}

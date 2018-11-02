@@ -27,7 +27,6 @@ class UserGroupEntity extends AbstractEntity
         'id_user_group' => null,
         'name' => null,
         'title' => null,
-        'introduction' => null,
         'description' => null,
         'is_read_only' => null,
         'date_created' => null,

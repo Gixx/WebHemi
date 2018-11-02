@@ -21,7 +21,7 @@
     "admin-applications-list": "admin/applications/list.twig",
     "admin-applications-view": "admin/applications/view.twig",
     "admin-applications-add": "admin/applications/add.twig",
-    "admin-applications-preferences": "admin/applications/edit.twig",
+    "admin-applications-edit": "admin/applications/edit.twig",
     "admin-applications-delete": "admin/applications/delete.twig",
 
     "admin-control-panel-index": "admin/control-panel/index.twig",
@@ -33,6 +33,9 @@
 
     "admin-control-panel-groups-list": "admin/control-panel/groups/list.twig",
     "admin-control-panel-groups-view": "admin/control-panel/groups/view.twig",
+    "admin-control-panel-groups-add": "admin/control-panel/groups/add.twig",
+    "admin-control-panel-groups-edit": "admin/control-panel/groups/edit.twig",
+    "admin-control-panel-groups-delete": "admin/control-panel/groups/delete.twig",
 
     "website-index": "website/index.twig",
     "website-post-list": "website/post-list.twig",
