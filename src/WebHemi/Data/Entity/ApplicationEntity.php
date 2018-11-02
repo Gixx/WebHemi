@@ -33,6 +33,7 @@ class ApplicationEntity extends AbstractEntity
         'description' => null,
         'keywords' => null,
         'copyright' => null,
+        'domain' => null,
         'path' => null,
         'theme' => null,
         'type' => null,
@@ -196,6 +197,25 @@ class ApplicationEntity extends AbstractEntity
     public function getCopyright() : ? string
     {
         return $this->container['copyright'];
+    }
+
+    /**
+     * @param string $domain
+     * @return ApplicationEntity
+     */
+    public function setDomain(string $domain) : ApplicationEntity
+    {
+        $this->container['domain'] = $domain;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getDomain() : ? string
+    {
+        return $this->container['domain'];
     }
 
     /**

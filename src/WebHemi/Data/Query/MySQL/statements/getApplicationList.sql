@@ -7,6 +7,7 @@ SELECT
     a.`description`,
     a.`keywords`,
     a.`copyright`,
+    a.`domain`,
     a.`path`,
     a.`theme`,
     a.`type`,

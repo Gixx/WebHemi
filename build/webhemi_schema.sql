@@ -46,7 +46,8 @@ CREATE TABLE `webhemi_application` (
     `description`    VARCHAR(255)                 NOT NULL DEFAULT '',
     `keywords`       VARCHAR(255)                 NOT NULL DEFAULT '',
     `copyright`      VARCHAR(255)                 NOT NULL DEFAULT '',
-    `path`           VARCHAR(20)                  NOT NULL,
+    `domain`         VARCHAR(255)                 NOT NULL DEFAULT 'www.[DOMAIN]',
+    `path`           VARCHAR(20)                  NOT NULL DEFAULT '/',
     `theme`          VARCHAR(20)                  NOT NULL DEFAULT 'deafult',
     `type`           ENUM ('domain', 'directory') NOT NULL DEFAULT 'directory',
     `locale`         VARCHAR(20)                  NOT NULL DEFAULT 'en_GB.UTF-8',
@@ -71,8 +72,8 @@ LOCK TABLES `webhemi_application` WRITE;
 /*!40000 ALTER TABLE `webhemi_application`
     DISABLE KEYS */;
 INSERT INTO `webhemi_application` VALUES
-    (1, 'admin', 'Admin', '', '', '', '', '', 'admin', 'default', 'directory', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL),
-    (2, 'website', 'Website', '<h1>Welcome to the WebHemi!</h1><p>After many years of endless development of a big, robust, super-universal blog engine which was suppose to build on a well known framework, I decided to re-think my goals and the way I want to reach them. Now I try to create a small, fast and "only as much as necessary", clean-code blog engine  that tries to completely apply the S.O.L.I.D. principles, uses the PSR-7 HTTP Messages Interfaces and the Middleware concept.</p>', 'Technical stuff', 'The default application for the `www` subdomain.', 'php,html,javascript,css', 'Copyright © 2017. WebHemi', 'www', 'default', 'domain', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL);
+    (1, 'admin', 'Admin', '', '', '', '', '', 'www.[DOMAIN]', '/admin', 'default', 'directory', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL),
+    (2, 'website', 'Website', '<h1>Welcome to the WebHemi!</h1><p>After many years of endless development of a big, robust, super-universal blog engine which was suppose to build on a well known framework, I decided to re-think my goals and the way I want to reach them. Now I try to create a small, fast and "only as much as necessary", clean-code blog engine  that tries to completely apply the S.O.L.I.D. principles, uses the PSR-7 HTTP Messages Interfaces and the Middleware concept.</p>', 'Technical stuff', 'The default application for the `www` subdomain.', 'php,html,javascript,css', 'Copyright © 2017. WebHemi', 'www.[DOMAIN]', '/', 'default', 'domain', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_application`
     ENABLE KEYS */;
 UNLOCK TABLES;
