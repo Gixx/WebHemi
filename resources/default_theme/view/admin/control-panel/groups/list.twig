@@ -7,12 +7,14 @@
  #}
 {% extends "admin/control-panel/index.twig" %}
 
+{% block title %}{{ 'Manage Groups - Control Panel - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
+
 {% block header %}
     <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > Groups
 {% endblock %}
 
 {% block content %}
-    <h1>Groups</h1>
+    <h1>Manage Groups</h1>
     {% if data %}
         <table summary="User group list">
             <caption>User group list</caption>
