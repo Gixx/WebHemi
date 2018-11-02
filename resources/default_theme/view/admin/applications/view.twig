@@ -1,4 +1,15 @@
-{% extends "admin/applications/index.twig" %}
+{##
+ # WebHemi.
+ #
+ # @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
+ # @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ # @link      http://www.gixx-web.com
+ #}
+{% extends "admin/applications/list.twig" %}
+
+{% block header %}
+    <a href="">Dashboard</a> > <a href="applications">Applications</a> > View
+{% endblock %}
 
 {% block content %}
     <a href="applications">back</a>
