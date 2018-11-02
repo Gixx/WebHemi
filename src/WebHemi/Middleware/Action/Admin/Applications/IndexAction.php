@@ -81,7 +81,7 @@ class IndexAction extends AbstractMiddlewareAction
         $applications = $this->applicationStorage->getApplicationList();
 
         return [
-            'applications' => $applications,
+            'data' => $applications,
         ];
     }
 }

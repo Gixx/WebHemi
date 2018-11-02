@@ -18,7 +18,7 @@
     "admin-login": "admin/login.twig",
     "admin-dashboard": "admin/dashboard.twig",
 
-    "admin-applications-list": "admin/applications/index.twig",
+    "admin-applications-list": "admin/applications/list.twig",
     "admin-applications-view": "admin/applications/view.twig",
     "admin-applications-add": "admin/applications/add.twig",
     "admin-applications-preferences": "admin/applications/edit.twig",
