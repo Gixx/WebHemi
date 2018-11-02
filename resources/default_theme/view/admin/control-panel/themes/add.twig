@@ -1,28 +1,18 @@
+{##
+ # WebHemi.
+ #
+ # @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
+ # @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ # @link      http://www.gixx-web.com
+ #}
 {% extends "admin/control-panel/index.twig" %}
 
-{% block title %}{{ 'Add New Theme - ' ~ site_title|default('Thomas Admin') }}{% endblock %}
-
-{% set location = '' %}
-{%  if application.baseUri != '/' %}
-    {% set location =  application.baseUri ~ '/' %}
-{% endif %}
-{% set location = location ~ 'control-panel/themes' %}
+{% block title %}{{ 'Manage Themes: add - Control Panel - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
 
 {% block header %}
-    <div class="mdl-layout__header-row">
-        <button class="mdl-button mdl-js-button mdl-button--icon" onclick="location.href='{{ location }}'">
-            <i class="material-icons">keyboard_arrow_left</i>
-        </button>
-        <span class="mdl-layout-title">Add New Theme</span>
-    </div>
+    <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > <a href="control-panel/themes">Themes</a> > Add
 {% endblock %}
 
 {% block content %}
-    <div class="mdl-grid themes-add">
-        <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col">
-
-            Lorem ipsum
-
-        </div>
-    </div>
+    Lorem ipsum
 {% endblock %}

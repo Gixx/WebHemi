@@ -1,61 +1,40 @@
+{##
+ # WebHemi.
+ #
+ # @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
+ # @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ # @link      http://www.gixx-web.com
+ #}
 {% extends "admin/control-panel/index.twig" %}
-{% import '@Theme/macros/cardSpacer.twig' as cardspacer %}
 
-{% block title %}{{ 'Manage Themes - ' ~ site_title|default('Thomas Admin') }}{% endblock %}
-
-{% set location = '' %}
-{%  if application.baseUri != '/' %}
-    {% set location =  application.baseUri ~ '/' %}
-{% endif %}
-{% set location = location ~ 'control-panel' %}
+{% block title %}{{ 'Manage Themes - Control Panel - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
 
 {% block header %}
-    <div class="mdl-layout__header-row">
-        <button class="mdl-button mdl-js-button mdl-button--icon" onclick="location.href='{{ location }}'">
-            <i class="material-icons">keyboard_arrow_left</i>
-        </button>
-        <span class="mdl-layout-title">Manage Themes</span>
-    </div>
+    <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > Themes
 {% endblock %}
 
 {% block content %}
-<div class="mdl-grid control-panel themes themes-list{% if isAllowed('admin-control-panel-themes-add') %} add-item{% endif %}">
-    <div class="mdl-cell mdl-cell--12-col">
-        {% for theme in themes %}
-        <div id="theme_{{ theme.name }}" class="mdl-card mdl-shadow--4dp">
-            <div class="mdl-card__title mdl-card--expand" {% if theme.preview|default(false) %}data-background-src="{{ theme.preview }}"{% endif %}>
-                <h2 class="mdl-card__title-text">{{ theme.title }}</h2>
+    <h1>Manage Themes</h1>
+    <div class="control-panel themes">
+        {% for row in data %}
+            <div id="theme_{{ row.name }}">
+                <h2>{{ row.title }}</h2>
+                <p>by {{ row.author }}</p>
+                <ul>
+                    {% if row.feature_website %}<li>Website</li>{% endif %}
+                    {% if row.feature_login %}<li>Admin Login</li>{% endif %}
+                    {% if row.feature_admin %}<li>Admin</li>{% endif %}
+                </ul>
+                <button class="view" data-name="{{ row.name }}">View</button>
+                {% if not row.read_only %}
+                    <button class="delete" data-name="{{ row.name }}">Delete</button>
+                {% endif %}
+                {% if row.preview|default(false) %}<img src="{{ row.preview }}">{% endif %}
             </div>
-            <div class="mdl-card__supporting-text">
-                by {{ theme.author }}
-            </div>
-            <div class="mdl-card__actions mdl-card--border">
-                <div class="features">
-                    <i class="material-icons {% if not theme.feature_website %}not-supported{% endif %}">public</i>
-                    <i class="material-icons {% if not theme.feature_login %}not-supported{% endif %}">account_box</i>
-                    <i class="material-icons {% if not theme.feature_admin %}not-supported{% endif %}">security</i>
-                </div>
-                <div class="actions">
-                    <button class="mdl-button mdl-js-button mdl-button--icon" onclick="location.href='{{ application.currentUri }}/{{ theme.name }}'">
-                        <i class="material-icons">visibility</i>
-                    </button>
-                    {% if not theme.read_only %}
-                    <button class="mdl-button mdl-js-button mdl-button--icon" onclick="location.href='{{ application.currentUri }}/{{ theme.name }}/delete'">
-                        <i class="material-icons">delete</i>
-                    </button>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
         {% endfor %}
-        {{ cardspacer.renderCardSpacer(3) }}
-
         {% if isAllowed('admin-control-panel-themes-add') %}
-            <button class="add-item mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="location.href='{{ application.currentUri }}/add'">
-                <i class="material-icons">add</i>
-            </button>
+            <button class="add">Add</button>
         {% endif %}
-
     </div>
-</div>
 {% endblock %}
+

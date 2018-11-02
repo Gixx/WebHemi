@@ -78,6 +78,7 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
+        // TODO create Data Storage and Entity for the Themes, maybe store in Database too
         $themes = $usedThemes = [];
 
         foreach ($this->configuration->getData('applications') as $application) {
@@ -96,7 +97,7 @@ class IndexAction extends AbstractMiddlewareAction
             $themes[$themeName]['name'] = $themes[$themeName]['title'] = $themeName;
             $themes[$themeName]['read_only'] = isset($usedThemes[$themeName]);
             $themes[$themeName]['feature_website'] = (bool) ($themeData['features']['website_support'] ?? false);
-            $themes[$themeName]['feature_login'] = (bool) ($themeData['features']['admin__login_support'] ?? false);
+            $themes[$themeName]['feature_login'] = (bool) ($themeData['features']['admin_login_support'] ?? false);
             $themes[$themeName]['feature_admin'] = (bool) ($themeData['features']['admin_support'] ?? false);
 
             foreach ($themeData['legal'] as $name => $value) {
@@ -111,7 +112,7 @@ class IndexAction extends AbstractMiddlewareAction
         ksort($themes);
 
         return [
-            'themes' => $themes,
+            'data' => $themes,
             'progressId' => 'test'
         ];
     }
