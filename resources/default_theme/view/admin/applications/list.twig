@@ -60,29 +60,3 @@
         <button class="add">Add</button>
     {% endif %}
 {% endblock %}
-
-{% block additionalFootElements %}
-    <script type="application/javascript">
-        (function() {
-            document.querySelector('button.add').addEventListener('click', function (event) {
-                location.href = 'applications/add';
-            });
-
-            document.querySelectorAll('button.view').forEach(function (element) {
-                element.addEventListener('click', function (event) {
-                    location.href = 'applications/'+event.target.dataset.name;
-                });
-            });
-
-            document.querySelectorAll('button.delete').forEach(function (element) {
-                element.addEventListener('click', function (event) {
-                    if (confirm('Are you sure to delete this application?')) {
-                        location.href = 'applications/'+event.target.dataset.name+'/delete';
-                    } else {
-                        return false;
-                    }
-                });
-            });
-        })();
-    </script>
-{% endblock %}

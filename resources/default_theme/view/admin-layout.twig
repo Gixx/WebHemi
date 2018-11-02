@@ -70,6 +70,29 @@
 
         <script type="application/javascript" src="{{ application.resourcePath }}/js/functions.js"></script>
         <script type="application/javascript" src="{{ application.resourcePath }}/js/admin.js"></script>
+        <script type="application/javascript">
+            (function() {
+                document.querySelector('button.add').addEventListener('click', function (event) {
+                    location.href = '{{ application.currentUri }}/add';
+                });
+
+                document.querySelectorAll('button.view').forEach(function (element) {
+                    element.addEventListener('click', function (event) {
+                        location.href = '{{ application.currentUri }}/'+event.target.dataset.name;
+                    });
+                });
+
+                document.querySelectorAll('button.delete').forEach(function (element) {
+                    element.addEventListener('click', function (event) {
+                        if (confirm('Are you sure to delete this item?')) {
+                            location.href = '{{ application.currentUri }}/'+event.target.dataset.name+'/delete';
+                        } else {
+                            return false;
+                        }
+                    });
+                });
+            })();
+        </script>
 
         {% block additionalFootElements %}
             {# add or include <script> elements. #}
