@@ -14,6 +14,7 @@ use WebHemi\Acl;
 use WebHemi\Application;
 use WebHemi\Auth;
 use WebHemi\Configuration;
+use WebHemi\CSRF;
 use WebHemi\Data;
 use WebHemi\DependencyInjection;
 use WebHemi\Environment;
@@ -83,6 +84,13 @@ return [
             ],
             Auth\StorageInterface::class => [
                 'class'     => Auth\Storage\Session::class,
+                'arguments' => [
+                    Session\ServiceInterface::class
+                ],
+                'shared'    => true,
+            ],
+            CSRF\ServiceInterface::class => [
+                'class'     => CSRF\ServiceAdapter\Base\ServiceAdapter::class,
                 'arguments' => [
                     Session\ServiceInterface::class
                 ],
