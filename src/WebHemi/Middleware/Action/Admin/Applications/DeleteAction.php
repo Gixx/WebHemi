@@ -16,6 +16,7 @@ namespace WebHemi\Middleware\Action\Admin\Applications;
 use InvalidArgumentException;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
@@ -42,6 +43,10 @@ class DeleteAction extends AbstractMiddlewareAction
      * @var ApplicationStorage
      */
     private $applicationStorage;
+    /**
+     * @var CSRFInterface
+     */
+    private $csrfAdapter;
 
     /**
      * DeleteAction constructor.
@@ -50,17 +55,20 @@ class DeleteAction extends AbstractMiddlewareAction
      * @param AuthInterface          $authAdapter
      * @param EnvironmentInterface   $environmentManager
      * @parem ApplicationStorage     $applicationStorage
+     * @param CSRFInterface          $csrfAdapter
      */
     public function __construct(
         ConfigurationInterface $configuration,
         AuthInterface $authAdapter,
         EnvironmentInterface $environmentManager,
-        ApplicationStorage $applicationStorage
+        ApplicationStorage $applicationStorage,
+        CSRFInterface $csrfAdapter
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
         $this->applicationStorage = $applicationStorage;
+        $this->csrfAdapter = $csrfAdapter;
     }
 
     /**
@@ -70,7 +78,7 @@ class DeleteAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-delete';
+        return '';
     }
 
     /**
@@ -91,8 +99,16 @@ class DeleteAction extends AbstractMiddlewareAction
             );
         }
 
+        $data = json_decode(file_get_contents('php://input'), true);
+        $result = false;
+
+        if ($data) {
+            $csrfToken = $data['csrf'];
+            $result = $this->csrfAdapter->verify(CSRFInterface::DEFAULT_SESSION_KEY, $csrfToken, null, true);
+        }
+
         return [
-            'application' => $applicationEntity
+            'result' => $result
         ];
     }
 }

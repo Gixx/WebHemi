@@ -36,6 +36,7 @@
   },
   "require": {
     "php": ">=7.1",
+    "ext-json": "*",
     "guzzlehttp/psr7": "1.4.2",
     "guzzlehttp/guzzle": "6.3.0",
     "txthinking/mailer": "1.4.2",

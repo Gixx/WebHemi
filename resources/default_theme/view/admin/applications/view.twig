@@ -16,4 +16,7 @@
 {% block content %}
     <a href="applications">back</a>
     <p>Ahhhm... not yet...</p>
+    {% if not data.getIsReadOnly() %}
+        <button data-name="{{ data.getName() }}">Edit</button>
+    {% endif %}
 {% endblock %}

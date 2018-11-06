@@ -14,6 +14,7 @@ use WebHemi\Acl;
 use WebHemi\Application;
 use WebHemi\Auth;
 use WebHemi\Configuration;
+use WebHemi\CSRF;
 use WebHemi\Data;
 use WebHemi\Environment;
 use WebHemi\Form;
@@ -74,7 +75,8 @@ return [
                     Configuration\ServiceInterface::class,
                     Auth\ServiceInterface::class,
                     Environment\ServiceInterface::class,
-                    Data\Storage\ApplicationStorage::class
+                    Data\Storage\ApplicationStorage::class,
+                    CSRF\ServiceInterface::class
                 ],
             ],
             Middleware\Action\Admin\Applications\AddAction::class => [
@@ -90,10 +92,11 @@ return [
                     Configuration\ServiceInterface::class,
                     Auth\ServiceInterface::class,
                     Environment\ServiceInterface::class,
-                    Data\Storage\ApplicationStorage::class
+                    Data\Storage\ApplicationStorage::class,
+                    CSRF\ServiceInterface::class
                 ],
             ],
-            Middleware\Action\Admin\Applications\PreferencesAction::class => [
+            Middleware\Action\Admin\Applications\EditAction::class => [
                 'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
             ],
             Middleware\Action\Admin\Applications\DeleteAction::class => [

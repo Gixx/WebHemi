@@ -16,15 +16,16 @@ namespace WebHemi\Middleware\Action\Admin\Applications;
 use InvalidArgumentException;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class PreferencesAction
+ * Class EditAction
  */
-class PreferencesAction extends AbstractMiddlewareAction
+class EditAction extends AbstractMiddlewareAction
 {
     /**
      * @var ConfigurationInterface
@@ -42,25 +43,32 @@ class PreferencesAction extends AbstractMiddlewareAction
      * @var ApplicationStorage
      */
     private $applicationStorage;
+    /**
+     * @var CSRFInterface
+     */
+    private $csrfAdapter;
 
     /**
-     * PreferencesAction constructor.
+     * EditAction constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param AuthInterface          $authAdapter
      * @param EnvironmentInterface   $environmentManager
      * @parem ApplicationStorage     $applicationStorage
+     * @param CSRFInterface          $csrfAdapter
      */
     public function __construct(
         ConfigurationInterface $configuration,
         AuthInterface $authAdapter,
         EnvironmentInterface $environmentManager,
-        ApplicationStorage $applicationStorage
+        ApplicationStorage $applicationStorage,
+        CSRFInterface $csrfAdapter
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
         $this->applicationStorage = $applicationStorage;
+        $this->csrfAdapter = $csrfAdapter;
     }
 
     /**
@@ -70,7 +78,7 @@ class PreferencesAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-preferences';
+        return 'admin-applications-edit';
     }
 
     /**

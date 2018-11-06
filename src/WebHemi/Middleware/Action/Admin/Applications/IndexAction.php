@@ -15,6 +15,7 @@ namespace WebHemi\Middleware\Action\Admin\Applications;
 
 use WebHemi\Auth\ServiceInterface as AuthInterface;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
+use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
@@ -40,6 +41,10 @@ class IndexAction extends AbstractMiddlewareAction
      * @var ApplicationStorage
      */
     private $applicationStorage;
+    /**
+     * @var CSRFInterface
+     */
+    private $csrfAdapter;
 
     /**
      * IndexAction constructor.
@@ -48,17 +53,20 @@ class IndexAction extends AbstractMiddlewareAction
      * @param AuthInterface          $authAdapter
      * @param EnvironmentInterface   $environmentManager
      * @param ApplicationStorage     $applicationStorage
+     * @param CSRFInterface          $csrfAdapter
      */
     public function __construct(
         ConfigurationInterface $configuration,
         AuthInterface $authAdapter,
         EnvironmentInterface $environmentManager,
-        ApplicationStorage $applicationStorage
+        ApplicationStorage $applicationStorage,
+        CSRFInterface $csrfAdapter
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
         $this->applicationStorage = $applicationStorage;
+        $this->csrfAdapter = $csrfAdapter;
     }
 
     /**
@@ -82,6 +90,7 @@ class IndexAction extends AbstractMiddlewareAction
 
         return [
             'data' => $applications,
+            'csrf' => $this->csrfAdapter->generate(CSRFInterface::DEFAULT_SESSION_KEY)
         ];
     }
 }
