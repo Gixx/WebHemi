@@ -5,20 +5,69 @@
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  * @link      http://www.gixx-web.com
  */
+:root {
+    --font-sans-serif: 'Arial', 'Helvetica', sans-serif;
+    --font-serif: 'Times', 'Times New Roman' serif;
+    --font-fantasy: fantasy;
+    --font-monospace: 'Courier', 'Courier New', monospace;
+
+    --size-tiny: 1rem;
+    --size-tiny-line: 1.5rem;
+    --size-small:  1.3rem;
+    --size-small-line: 1.5rem;
+    --size-normal: 1.4rem;
+    --size-normal-line: 1.6rem;
+    --size-middle: 1.6rem;
+    --size-middle-line: 2.2rem;
+    --size-large: 1.8rem;
+    --size-large-line: 2.7rem;
+
+    --size-h1: 3rem;
+    --size-h1-line: 3.6rem;
+    --size-h2: 2.5rem;
+    --size-h2-line: 3rem;
+    --size-h3: 2.1rem;
+    --size-h3-line: 2.8rem;
+    --size-h4: 1.9rem;
+    --size-h4-line: 2.3rem;
+    --size-h5: 1.6rem;
+    --size-h5-line: 2rem;
+    --size-h6: 1.4rem;
+    --size-h6-line: 2rem;
+
+    --size-letter-spacing-shrink: -0.012rem;
+    --size-letter-spacing-expand: 0.12rem;
+}
 
 *, *:before, *:after {
     box-sizing: border-box;
     color: rgb(117, 117, 117);
+    cursor: default;
+    font-family: var(--font-sans-serif);
+    font-size: var(--size-normal);
+    font-weight: 400;
+    line-height: var(--size-normal-line);
+    position: relative;
 }
 
-html, body {
-    position: relative;
+html {
+    font-size: 62.5%; /* this should produce 10px if your browser follows the unspoken rules */
+    height: 100%;
     margin: 0;
     padding: 0;
+    position: relative;
     width: 100%;
+}
+
+body {
+    background-color: rgb(255, 255, 255);
+    font-size: var(--size-normal);
     height: 100%;
-    color: #617072;
-    background-color: white;
+    margin: 0;
+    max-width: 100%;
+    padding: 0;
+    position: relative;
+    width: 100%;
 }
 
 .content {
