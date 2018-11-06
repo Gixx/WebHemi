@@ -42,13 +42,13 @@ class ServiceAdapter implements ServiceInterface
     public function generate(string $key) : string
     {
         $key = preg_replace('/[^a-zA-Z0-9]/', '', $key);
-
-        $extra = sha1($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']);
+        $extra = $this->getClientHash();
 
         try {
             $randomString = bin2hex(random_bytes(16));
+            $randomString = str_pad(substr($randomString, 0, 32), 32, 'a', STR_PAD_LEFT);
         } catch (\Throwable $error) {
-            $randomString = $this->randomString(32);
+            $randomString = $this->getRandomString(32);
         }
 
         $token = base64_encode(time() . $extra . $randomString);
@@ -71,21 +71,44 @@ class ServiceAdapter implements ServiceInterface
     {
         $key = preg_replace('/[^a-zA-Z0-9]/', '', $key);
 
-        $extra = sha1($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']);
-        $token = base64_decode($this->sessionManager->get(self::SESSION_PREFIX.'_'.$key));
-        $tokenTime = substr($token, 0, 10);
-        $tokenExtra = substr($token, 10, 40);
-        $tokenRandomString = substr($token, 40);
+        $sessionToken = $this->sessionManager->get(self::SESSION_PREFIX.'_'.$key) ?? '';
 
         if (!$multiple) {
             $this->sessionManager->delete(self::SESSION_PREFIX.'_'.$key);
         }
 
-        return !((!empty($ttl) && $tokenTime + $ttl > time())
-            || $extra !== $tokenExtra
-            || strlen($tokenRandomString) !== 32
-            || !ctype_xdigit($tokenRandomString)
+        $sessionToken = $this->decodeToken($sessionToken);
+        $token = $this->decodeToken($token);
+
+        return !((!empty($ttl) && $sessionToken['time'] + $ttl > time())
+            || ($token['extra'] != $this->getClientHash())
+            || ($sessionToken['randomString'] != $token['randomString'])
         );
+    }
+
+    /**
+     * Decodes the given token.
+     *
+     * @param string $token
+     * @return array
+     */
+    protected function decodeToken(string $token) : array
+    {
+        $token = base64_decode($token) ?: str_repeat('0', 82);
+
+        return [
+            'time' => substr($token, 0, 10),
+            'extra' => substr($token, 10, 40),
+            'randomString' => substr($token, 50),
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getClientHash() : string
+    {
+        return sha1($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
@@ -94,7 +117,7 @@ class ServiceAdapter implements ServiceInterface
      * @param int $length
      * @return string
      */
-    protected function randomString(int $length) : string
+    protected function getRandomString(int $length) : string
     {
         $seed = 'abcdef0123456789';
         $max = strlen($seed) - 1;
