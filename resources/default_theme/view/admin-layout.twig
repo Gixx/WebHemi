@@ -72,6 +72,7 @@
         <script type="application/javascript" src="{{ application.resourcePath }}/js/admin.js"></script>
         <script type="application/javascript">
             (function() {
+                {#
                 document.querySelectorAll('button.add').forEach(function (element) {
                     element.addEventListener('click', function (event) {
                         location.href = '{{ application.currentUri }}/add';
@@ -83,7 +84,7 @@
                         location.href = '{{ application.currentUri }}/edit';
                     });
                 });
-
+                #}
                 document.querySelectorAll('button.view').forEach(function (element) {
                     element.addEventListener('click', function (event) {
                         location.href = '{{ application.currentUri }}/'+event.target.dataset.name;
@@ -93,7 +94,29 @@
                 document.querySelectorAll('button.delete').forEach(function (element) {
                     element.addEventListener('click', function (event) {
                         if (confirm('Are you sure to delete this item?')) {
-                            location.href = '{{ application.currentUri }}/'+event.target.dataset.name+'/delete';
+                            let deleteEndpoint = '{{ application.currentUri }}/'+event.target.dataset.name+'/';
+                            fetch(deleteEndpoint, {
+                                method: 'delete',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({csrf: '{{ csrf|default('') }}'})
+                            })
+                                .then(
+                                    function(response) {
+                                        if (response.status !== 200) {
+                                            console.log('Looks like there was a problem. Status Code: ' +
+                                                response.status);
+                                            return;
+                                        }
+
+                                        // Examine the text in the response
+                                        response.json().then(function(data) {
+                                            console.log(data);
+                                        });
+                                    }
+                                )
+                                .catch(function(err) {
+                                    console.log('Fetch Error :-S', err);
+                                });
                         } else {
                             return false;
                         }
