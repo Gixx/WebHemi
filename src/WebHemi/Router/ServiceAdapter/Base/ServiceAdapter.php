@@ -85,7 +85,8 @@ class ServiceAdapter implements ServiceInterface
 
         $result = clone $this->result;
         $result->setStatus(Result::CODE_FOUND);
-        $routeDefinition = $this->findRouteDefinition($uri);
+        $routeDefinition = $this->findRouteDefinition($uri, $httpMethod);
+
         if (empty($routeDefinition)) {
             return $result->setStatus(Result::CODE_NOT_FOUND);
         }
@@ -129,7 +130,7 @@ class ServiceAdapter implements ServiceInterface
      * @param  string $uri
      * @return array|null
      */
-    private function findRouteDefinition(string $uri) : ? array
+    private function findRouteDefinition(string $uri, string $method) : ? array
     {
         $routeDefinition = [];
         $matches = [];
@@ -148,7 +149,9 @@ class ServiceAdapter implements ServiceInterface
                     'allowed_methods' => $routeData['allowed_methods']
                 ];
 
-                break;
+                if (in_array($method, $routeData['allowed_methods'])) {
+                    break;
+                }
             }
         }
 
