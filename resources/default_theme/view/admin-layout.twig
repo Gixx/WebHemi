@@ -97,26 +97,31 @@
                             let deleteEndpoint = '{{ application.currentUri }}/'+event.target.dataset.name+'/';
                             fetch(deleteEndpoint, {
                                 method: 'delete',
-                                headers: {'Content-Type': 'application/json'},
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
                                 body: JSON.stringify({csrf: '{{ csrf|default('') }}'})
-                            })
-                                .then(
-                                    function(response) {
-                                        if (response.status !== 200) {
-                                            console.log('Looks like there was a problem. Status Code: ' +
-                                                response.status);
-                                            return;
-                                        }
-
-                                        // Examine the text in the response
-                                        response.json().then(function(data) {
-                                            console.log(data);
-                                        });
-                                    }
-                                )
-                                .catch(function(err) {
-                                    console.log('Fetch Error :-S', err);
-                                });
+                            }).then(function(response) {
+                                if (response.ok) {
+                                    return response
+                                } else {
+                                    console.log('Looks like there was a problem.', response);
+                                    let error = new Error(response.statusText || response.status);
+                                    error.response = response;
+                                    throw error
+                                }
+                            }).then(function(response) {
+                                return response.json();
+                            }).then(function(data) {
+                                if (data.result) {
+                                    event.target.closest('tr').remove();
+                                } else {
+                                    event.target.style.border = '1px solid red';
+                                }
+                            }).catch(function(err) {
+                                console.log('Fetch Error :-S', err);
+                            });
                         } else {
                             return false;
                         }
