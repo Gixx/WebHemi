@@ -46,7 +46,7 @@ CREATE TABLE `webhemi_application` (
     `description`    VARCHAR(255)                 NOT NULL DEFAULT '',
     `keywords`       VARCHAR(255)                 NOT NULL DEFAULT '',
     `copyright`      VARCHAR(255)                 NOT NULL DEFAULT '',
-    `domain`         VARCHAR(255)                 NOT NULL DEFAULT 'www.[DOMAIN]',
+    `domain`         VARCHAR(255)                 NOT NULL DEFAULT '',
     `path`           VARCHAR(20)                  NOT NULL DEFAULT '/',
     `theme`          VARCHAR(20)                  NOT NULL DEFAULT 'deafult',
     `type`           ENUM ('domain', 'directory') NOT NULL DEFAULT 'directory',
@@ -58,7 +58,9 @@ CREATE TABLE `webhemi_application` (
     `date_modified`  DATETIME                              DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id_application`),
     UNIQUE KEY `unq_application_name` (`name`),
-    UNIQUE KEY `unq_application_title` (`title`)
+    UNIQUE KEY `unq_application_title` (`title`),
+    INDEX `indx_application_domain` (`domain`),
+    INDEX `indx_application_path` (`path`)
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8;
@@ -72,8 +74,8 @@ LOCK TABLES `webhemi_application` WRITE;
 /*!40000 ALTER TABLE `webhemi_application`
     DISABLE KEYS */;
 INSERT INTO `webhemi_application` VALUES
-    (1, 'admin', 'Admin', '', '', '', '', '', 'www.[DOMAIN]', '/admin', 'default', 'directory', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL),
-    (2, 'website', 'Website', '<h1>Welcome to the WebHemi!</h1><p>After many years of endless development of a big, robust, super-universal blog engine which was suppose to build on a well known framework, I decided to re-think my goals and the way I want to reach them. Now I try to create a small, fast and "only as much as necessary", clean-code blog engine  that tries to completely apply the S.O.L.I.D. principles, uses the PSR-7 HTTP Messages Interfaces and the Middleware concept.</p>', 'Technical stuff', 'The default application for the `www` subdomain.', 'php,html,javascript,css', 'Copyright © 2017. WebHemi', 'www.[DOMAIN]', '/', 'default', 'domain', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL);
+    (1, 'admin', 'Admin', '', '', '', '', '', '', '/admin', 'default', 'directory', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL),
+    (2, 'website', 'Website', '<h1>Welcome to the WebHemi!</h1><p>After many years of endless development of a big, robust, super-universal blog engine which was suppose to build on a well known framework, I decided to re-think my goals and the way I want to reach them. Now I try to create a small, fast and "only as much as necessary", clean-code blog engine  that tries to completely apply the S.O.L.I.D. principles, uses the PSR-7 HTTP Messages Interfaces and the Middleware concept.</p>', 'Technical stuff', 'The default application for the `www` subdomain.', 'php,html,javascript,css', 'Copyright © 2017. WebHemi', '', '/', 'default', 'domain', 'en_GB.UTF-8', 'Europe/London', 1, 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_application`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -112,23 +114,60 @@ LOCK TABLES `webhemi_resource` WRITE;
 /*!40000 ALTER TABLE `webhemi_resource`
     DISABLE KEYS */;
 INSERT INTO `webhemi_resource` VALUES
-    (1, 'admin-dashboard', 'Dashboard', '', 'route', 1, NOW(), NULL),
+    (1000001, 'admin-dashboard', 'Dashboard', '', 'route', 1, NOW(), NULL),
 
-    (2, 'admin-applications-list', 'List applications', '', 'route', 1, NOW(), NULL),
-    (3, 'admin-applications-add', 'Add application', '', 'route', 1, NOW(), NULL),
-    (4, 'admin-applications-view', 'View application', '', 'route', 1, NOW(), NULL),
-    (5, 'admin-applications-preferences', 'Edit application', '', 'route', 1, NOW(), NULL),
-    (6, 'admin-applications-save', 'Save application', '', 'route', 1, NOW(), NULL),
-    (7, 'admin-applications-delete', 'Delete application', '', 'route', 1, NOW(), NULL),
+    (1100001, 'admin-applications-list',   'List Applications', '', 'route', 1, NOW(), NULL),
+    (1100002, 'admin-applications-view',   'View an Application', '', 'route', 1, NOW(), NULL),
+    (1100003, 'admin-applications-add',    'Add a new Application', '', 'route', 1, NOW(), NULL),
+    (1100004, 'admin-applications-edit',   'Edit an Application', '', 'route', 1, NOW(), NULL),
+    (1100005, 'admin-applications-delete', 'Delete an Application', '', 'route', 1, NOW(), NULL),
 
-    (8, 'manage-application-admin', 'Manage the admin app', '', 'custom', 1, NOW(), NULL),
-    (9, 'manage-application-website', 'Manage the website app', '', 'custom', 1, NOW(), NULL),
+    (1200001, 'admin-control-panel-index', 'List Control Panel items', '', 'route', 1, NOW(), NULL),
+        (1200101, 'admin-control-panel-settings-list',   'List Settings', '', 'route', 1, NOW(), NULL),
+        (1200102, 'admin-control-panel-settings-view',   'View a Setting', '', 'route', 1, NOW(), NULL),
+        (1200103, 'admin-control-panel-settings-add',    'Add a new Setting', '', 'route', 1, NOW(), NULL),
+        (1200104, 'admin-control-panel-settings-edit',   'Edit a Setting', '', 'route', 1, NOW(), NULL),
+        (1200105, 'admin-control-panel-settings-delete', 'Delete a Setting', '', 'route', 1, NOW(), NULL),
 
-    (10, 'admin-control-panel-index', 'List Control Panel items', '', 'route', 1, NOW(), NULL),
-    (11, 'admin-control-panel-themes-list', 'List themes', '', 'route', 1, NOW(), NULL),
-    (12, 'admin-control-panel-themes-add', 'Add theme', '', 'route', 1, NOW(), NULL),
-    (13, 'admin-control-panel-themes-view', 'View theme', '', 'route', 1, NOW(), NULL),
-    (14, 'admin-control-panel-themes-delete', 'Delete theme', '', 'route', 1, NOW(), NULL);
+        (1200201, 'admin-control-panel-themes-list',   'List Themes', '', 'route', 1, NOW(), NULL),
+        (1200202, 'admin-control-panel-themes-view',   'View a Theme', '', 'route', 1, NOW(), NULL),
+        (1200203, 'admin-control-panel-themes-add',    'Add a new Theme', '', 'route', 1, NOW(), NULL),
+        (1200204, 'admin-control-panel-themes-delete', 'Delete a Theme', '', 'route', 1, NOW(), NULL),
+
+        (1200301, 'admin-control-panel-addons-list',   'List AddOns', '', 'route', 1, NOW(), NULL),
+        (1200302, 'admin-control-panel-addons-view',   'View a AddOn', '', 'route', 1, NOW(), NULL),
+        (1200303, 'admin-control-panel-addons-add',    'Add a new AddOn', '', 'route', 1, NOW(), NULL),
+        (1200304, 'admin-control-panel-addons-edit',   'Edit a AddOn', '', 'route', 1, NOW(), NULL),
+        (1200305, 'admin-control-panel-addons-delete', 'Delete a AddOn', '', 'route', 1, NOW(), NULL),
+
+        (1200401, 'admin-control-panel-users-list',   'List Users', '', 'route', 1, NOW(), NULL),
+        (1200402, 'admin-control-panel-users-view',   'View a User', '', 'route', 1, NOW(), NULL),
+        (1200403, 'admin-control-panel-users-add',    'Add a new User', '', 'route', 1, NOW(), NULL),
+        (1200404, 'admin-control-panel-users-edit',   'Edit a User', '', 'route', 1, NOW(), NULL),
+        (1200405, 'admin-control-panel-users-delete', 'Delete a User', '', 'route', 1, NOW(), NULL),
+
+        (1200501, 'admin-control-panel-groups-list',   'List Groups', '', 'route', 1, NOW(), NULL),
+        (1200502, 'admin-control-panel-groups-view',   'View a Group', '', 'route', 1, NOW(), NULL),
+        (1200503, 'admin-control-panel-groups-add',    'Add a new Group', '', 'route', 1, NOW(), NULL),
+        (1200504, 'admin-control-panel-groups-edit',   'Edit a Group', '', 'route', 1, NOW(), NULL),
+        (1200505, 'admin-control-panel-groups-delete', 'Delete a Group', '', 'route', 1, NOW(), NULL),
+
+        (1200601, 'admin-control-panel-resources-list',   'List Resources', '', 'route', 1, NOW(), NULL),
+        (1200602, 'admin-control-panel-resources-view',   'View a Resource', '', 'route', 1, NOW(), NULL),
+        (1200603, 'admin-control-panel-resources-add',    'Add a new Resource', '', 'route', 1, NOW(), NULL),
+        (1200604, 'admin-control-panel-resources-edit',   'Edit a Resource', '', 'route', 1, NOW(), NULL),
+        (1200605, 'admin-control-panel-resources-delete', 'Delete a Resource', '', 'route', 1, NOW(), NULL),
+
+        (1200701, 'admin-control-panel-policies-list',   'List Policies', '', 'route', 1, NOW(), NULL),
+        (1200702, 'admin-control-panel-policies-view',   'View a Policy', '', 'route', 1, NOW(), NULL),
+        (1200703, 'admin-control-panel-policies-add',    'Add a new Policy', '', 'route', 1, NOW(), NULL),
+        (1200704, 'admin-control-panel-policies-edit',   'Edit a Policy', '', 'route', 1, NOW(), NULL),
+        (1200705, 'admin-control-panel-policies-delete', 'Delete a Policy', '', 'route', 1, NOW(), NULL),
+
+        (1200801, 'admin-control-panel-logs-list',   'List Logs', '', 'route', 1, NOW(), NULL),
+        (1200802, 'admin-control-panel-logs-view',   'View a Log', '', 'route', 1, NOW(), NULL),
+
+    (1300001, 'admin-about-index', 'View the About page', '', 'route', 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_resource`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -149,7 +188,7 @@ CREATE TABLE `webhemi_policy` (
     `name`           VARCHAR(255)     NOT NULL,
     `title`          VARCHAR(255)     NOT NULL,
     `description`    TEXT             NOT NULL DEFAULT '',
-    `method`         ENUM ('GET', 'POST')      DEFAULT NULL,
+    `method`         ENUM ('GET', 'POST', 'DELETE', 'PUT') DEFAULT NULL,
     `is_read_only`   TINYINT(1)       NOT NULL DEFAULT 0,
     `date_created`   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_modified`  DATETIME                  DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -177,29 +216,62 @@ LOCK TABLES `webhemi_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_policy`
     DISABLE KEYS */;
 INSERT INTO `webhemi_policy` VALUES
-    (1, NULL, NULL, 'supervisor', 'Supervisor access',
-     'Allow access to all resources in every application with any request method.', NULL, 1, NOW(), NULL),
-    (2, 1, 1, 'dashboard', 'Dashborad access', 'Allow to view the dashboard.', NULL, 1, NOW(), NULL),
+    (777, NULL, NULL, 'supervisor', 'Supervisor access', 'Allow access to all resources in every application with any request method.', NULL, 1, NOW(), NULL),
 
-    (3, 2, 1, 'applications-list', 'Application access', 'Allow to list the applications.', NULL, 1, NOW(), NULL),
-    (4, 3, 1, 'applications-add', 'Application creator', 'Allow to create new application. Doesn\'t include "save".', NULL, 1, NOW(), NULL),
-    (5, 4, 1, 'applications-view', 'Application viewer', 'Allow to access application detail page.', NULL, 1, NOW(), NULL),
-    (6, 5, 1, 'applications-edit', 'Application editor (view)', 'Allow to edit the application preferences. Doesn\'t include "save".', NULL, 1, NOW(), NULL),
-    (7, 6, 1, 'applications-save', 'Application editor (save)', 'Allow to save the changes on the application preferences.', NULL, 1, NOW(), NULL),
-    (8, 7, 1, 'applications-delete-review', 'Application remover (review)', 'Allow to review the application that is about to be deleted. Doesn\'t include "confirm".', 'GET', 1, NOW(), NULL),
-    (9, 7, 1, 'applications-delete-confirm', 'Application remover (confirm)', 'Allow to delete application permanently.', 'POST', 1, NOW(), NULL),
+    (1000001, 1000001, 1, 'dashboard', 'Dashborad access', 'Allow to view the dashboard.', 'GET', 1, NOW(), NULL),
 
-    (10, 8, 1, 'manage-application-admin', 'Manage Admin', 'Allow to manage the Admin application. Use along with other Application policies.', NULL, 1, NOW(), NULL),
-    (11, 9, 1, 'manage-application-website', 'Manage Website', 'Allow to manage the Website application. Use along with other Application policies.', NULL, 1, NOW(), NULL),
+    (1100001, 1100001, 1, 'applications-list',   'Application access', 'Allow to list the applications.', NULL, 1, NOW(), NULL),
+    (1100002, 1100002, 1, 'applications-add',    'Application creator', 'Allow to create new application. Doesn\'t include "save".', NULL, 1, NOW(), NULL),
+    (1100003, 1100003, 1, 'applications-view',   'Application viewer', 'Allow to access application detail page.', NULL, 1, NOW(), NULL),
+    (1100004, 1100004, 1, 'applications-edit',   'Application save changes', 'Allow to edit the application preferences. Doesn\'t include "save".', NULL, 1, NOW(), NULL),
+    (1100005, 1100005, 1, 'applications-delete', 'Application delete', 'Allow to delete the application that is about to be deleted. Doesn\'t include "confirm".', 'GET', 1, NOW(), NULL),
 
-    (12, 10, 1, 'control-panel-index', 'Control panel access', 'Allow to view the Control Panel page.', NULL, 1, NOW(), NULL),
+    (1200001, 1200001, 1, 'control-panel-index', 'Control panel access', 'Allow to view the Control Panel page.', NULL, 1, NOW(), NULL),
+    (1200101, 1200101, 1, 'control-panel-settings-list',   'List Settings', '', NULL, 1, NOW(), NULL),
+    (1200102, 1200102, 1, 'control-panel-settings-view',   'View a Setting', '', NULL, 1, NOW(), NULL),
+    (1200103, 1200103, 1, 'control-panel-settings-add',    'Add a new Setting', '', NULL, 1, NOW(), NULL),
+    (1200104, 1200104, 1, 'control-panel-settings-edit',   'Edit a Setting', '', NULL, 1, NOW(), NULL),
+    (1200105, 1200105, 1, 'control-panel-settings-delete', 'Delete a Setting', '', NULL, 1, NOW(), NULL),
 
-    (13, 11, 1, 'themes-list', 'Theme Manager access', 'Allow to list the installed themes.', NULL, 1, NOW(), NULL),
-    (14, 12, 1, 'themes-add', 'Theme uploader', 'Allow to upload new theme. Doesn\'t include "save".', 'GET', 1, NOW(), NULL),
-    (15, 12, 1, 'themes-add-save', 'Theme uploader (save)', 'Allow to save the uploaded theme.', 'POST', 1, NOW(), NULL),
-    (16, 13, 1, 'themes-view', 'Theme viewer', 'Allow to view theme properties.', NULL, 1, NOW(), NULL),
-    (17, 14, 1, 'themes-delete-review', 'Theme remover (review)', 'Allow to review the theme that is about to be deleted. Doesn\'t include "confirm".', 'GET', 1, NOW(), NULL),
-    (18, 14, 1, 'themes-delete-confirm', 'Theme remover (confirm)', 'Allow to delete theme permanently.', 'POST', 1, NOW(), NULL);
+    (1200201, 1200201, 1, 'control-panel-themes-list',   'Theme Manager access', 'Allow to list the installed themes.', NULL, 1, NOW(), NULL),
+    (1200202, 1200202, 1, 'control-panel-themes-view',   'Theme viewer', 'Allow to view theme properties.', NULL, 1, NOW(), NULL),
+    (1200203, 1200203, 1, 'control-panel-themes-add',    'Theme uploader', 'Allow to upload a new theme.', NULL, 1, NOW(), NULL),
+    (1200204, 1200204, 1, 'control-panel-themes-delete', 'Theme remover ', 'Allow to delete theme permanently.', NULL, 1, NOW(), NULL),
+
+    (1200301, 1200301, 1, 'control-panel-addons-list',   'List AddOns', '', NULL, 1, NOW(), NULL),
+    (1200302, 1200302, 1, 'control-panel-addons-view',   'View a AddOn', '', NULL, 1, NOW(), NULL),
+    (1200303, 1200303, 1, 'control-panel-addons-add',    'Add a new AddOn', '', NULL, 1, NOW(), NULL),
+    (1200304, 1200304, 1, 'control-panel-addons-edit',   'Edit a AddOn', '', NULL, 1, NOW(), NULL),
+    (1200305, 1200305, 1, 'control-panel-addons-delete', 'Delete a AddOn', '', NULL, 1, NOW(), NULL),
+
+    (1200401, 1200401, 1, 'control-panel-users-list',   'List Users', '', NULL, 1, NOW(), NULL),
+    (1200402, 1200402, 1, 'control-panel-users-view',   'View a User', '', NULL, 1, NOW(), NULL),
+    (1200403, 1200403, 1, 'control-panel-users-add',    'Add a new User', '', NULL, 1, NOW(), NULL),
+    (1200404, 1200404, 1, 'control-panel-users-edit',   'Edit a User', '', NULL, 1, NOW(), NULL),
+    (1200405, 1200405, 1, 'control-panel-users-delete', 'Delete a User', '', NULL, 1, NOW(), NULL),
+
+    (1200501, 1200501, 1, 'control-panel-groups-list',   'List Groups', '', NULL, 1, NOW(), NULL),
+    (1200502, 1200502, 1, 'control-panel-groups-view',   'View a Group', '', NULL, 1, NOW(), NULL),
+    (1200503, 1200503, 1, 'control-panel-groups-add',    'Add a new Group', '', NULL, 1, NOW(), NULL),
+    (1200504, 1200504, 1, 'control-panel-groups-edit',   'Edit a Group', '', NULL, 1, NOW(), NULL),
+    (1200505, 1200505, 1, 'control-panel-groups-delete', 'Delete a Group', '', NULL, 1, NOW(), NULL),
+
+    (1200601, 1200601, 1, 'control-panel-resources-list',   'List Resources', '', NULL, 1, NOW(), NULL),
+    (1200602, 1200602, 1, 'control-panel-resources-view',   'View a Resource', '', NULL, 1, NOW(), NULL),
+    (1200603, 1200603, 1, 'control-panel-resources-add',    'Add a new Resource', '', NULL, 1, NOW(), NULL),
+    (1200604, 1200604, 1, 'control-panel-resources-edit',   'Edit a Resource', '', NULL, 1, NOW(), NULL),
+    (1200605, 1200605, 1, 'control-panel-resources-delete', 'Delete a Resource', '', NULL, 1, NOW(), NULL),
+
+    (1200701, 1200701, 1, 'control-panel-policies-list',   'List Policies', '', NULL, 1, NOW(), NULL),
+    (1200702, 1200702, 1, 'control-panel-policies-view',   'View a Policy', '', NULL, 1, NOW(), NULL),
+    (1200703, 1200703, 1, 'control-panel-policies-add',    'Add a new Policy', '', NULL, 1, NOW(), NULL),
+    (1200704, 1200704, 1, 'control-panel-policies-edit',   'Edit a Policy', '', NULL, 1, NOW(), NULL),
+    (1200705, 1200705, 1, 'control-panel-policies-delete', 'Delete a Policy', '', NULL, 1, NOW(), NULL),
+
+    (1200801, 1200801, 1, 'control-panel-logs-list',   'List Logs', '', NULL, 1, NOW(), NULL),
+    (1200802, 1200802, 1, 'control-panel-logs-view',   'View a Log', '', NULL, 1, NOW(), NULL),
+
+    (1300001, 1300001, 1, 'about-index', 'View the About page', '', NULL, 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_policy`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -245,8 +317,7 @@ LOCK TABLES `webhemi_user` WRITE;
 /*!40000 ALTER TABLE `webhemi_user`
     DISABLE KEYS */;
 INSERT INTO `webhemi_user` VALUES
-    (1, 'admin', 'admin@foo.org', '$2y$09$dmrDfcYZt9jORA4vx9MKpeyRt0ilCH/gxSbSHcfBtGaghMJ30tKzS', 'hash-admin', 1, 1, NOW(), NULL),
-    (2, 'demo', 'demo@foo.org', '$2y$09$dmrDfcYZt9jORA4vx9MKpeyRt0ilCH/gxSbSHcfBtGaghMJ30tKzS', 'hash-demo', 1, 1, NOW(), NULL);
+    (1, 'admin', 'admin@foo.org', '$2y$09$dmrDfcYZt9jORA4vx9MKpeyRt0ilCH/gxSbSHcfBtGaghMJ30tKzS', 'hash-admin', 1, 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_user`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -293,18 +364,7 @@ INSERT INTO `webhemi_user_meta` VALUES
     (NULL, 1, 'phone_numbers', '', NOW(), NULL),
     (NULL, 1, 'social_networks', '', NOW(), NULL),
     (NULL, 1, 'websites', '', NOW(), NULL),
-    (NULL, 1, 'introduction', '', NOW(), NULL),
-    (NULL, 2, 'display_name', 'Demo user', NOW(), NULL),
-    (NULL, 2, 'gender', 'male', NOW(), NULL),
-    (NULL, 2, 'avatar', '/img/avatars/tie_man.svg', NOW(), NULL),
-    (NULL, 2, 'avatar_type', 'file', NOW(), NULL),
-    (NULL, 2, 'email_visible', '0', NOW(), NULL),
-    (NULL, 2, 'location', '', NOW(), NULL),
-    (NULL, 2, 'instant_messengers', '', NOW(), NULL),
-    (NULL, 2, 'phone_numbers', '', NOW(), NULL),
-    (NULL, 2, 'social_networks', '', NOW(), NULL),
-    (NULL, 2, 'websites', '', NOW(), NULL),
-    (NULL, 2, 'introduction', '', NOW(), NULL);
+    (NULL, 1, 'introduction', '', NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_user_meta`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -378,8 +438,7 @@ LOCK TABLES `webhemi_user_group` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_group`
     DISABLE KEYS */;
 INSERT INTO `webhemi_user_group` VALUES
-    (1, 'admin', 'Administrators', 'Group for global administrators', 1, NOW(), NULL),
-    (2, 'demo', 'Demo group', 'Read-only access for test/demo purposes.', 1, NOW(), NULL);
+    (1, 'admin', 'Administrators', 'Group for global administrators', 1, NOW(), NULL);
 /*!40000 ALTER TABLE `webhemi_user_group`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -418,8 +477,7 @@ LOCK TABLES `webhemi_user_to_user_group` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_to_user_group`
     DISABLE KEYS */;
 INSERT INTO `webhemi_user_to_user_group` VALUES
-    (NULL, 1, 1),
-    (NULL, 2, 2);
+    (NULL, 1, 1);
 /*!40000 ALTER TABLE `webhemi_user_to_user_group`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -458,11 +516,7 @@ LOCK TABLES `webhemi_user_group_to_policy` WRITE;
 /*!40000 ALTER TABLE `webhemi_user_group_to_policy`
     DISABLE KEYS */;
 INSERT INTO `webhemi_user_group_to_policy` VALUES
-    (NULL, 1, 1),
-    (NULL, 2, 2),
-    (NULL, 2, 3),
-    (NULL, 2, 5),
-    (NULL, 2, 11);
+    (NULL, 1, 777);
 /*!40000 ALTER TABLE `webhemi_user_group_to_policy`
     ENABLE KEYS */;
 UNLOCK TABLES;
