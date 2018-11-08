@@ -78,7 +78,7 @@ class DeleteAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return '';
+        return 'admin-applications-delete';
     }
 
     /**
