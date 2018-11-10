@@ -103,7 +103,7 @@ class CategoryAction extends IndexAction
                 'type' => 'Categories',
             ],
             'activeMenu' => $categoryName,
-            'application' => $this->getApplicationData($applicationEntity),
+            'Application' => $applicationEntity,
             'blogPosts' => $blogPosts,
         ];
     }

@@ -4,12 +4,25 @@
  # @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  # @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  # @link      http://www.gixx-web.com
+ #
+ # Variables provided in this template:
+ #
+ # - WebHemiApplication.selectedModule <String>
+ # - WebHemiApplication.address <String>
+ # - WebHemiApplication.topDomain <String>
+ # - WebHemiApplication.domainName <String>
+ # - WebHemiApplication.domainAddress <String>
+ # - WebHemiApplication.resourcePath <String> - *website-relative* path to the static template content. Default: "/resources/default_theme/static"
+ # - WebHemiApplication.baseUri <String> - *website-relative* path of the current `application`. Default: "/"
+ # - WebHemiApplication.currentUri <String> - *website-relative* path of the current within the current application, e.g.: "/auth/login"
+ # - WebHemiApplication.language <String>
+ # - WebHemiApplication.locale <String>
  #}
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ WebHemiApplication.language }}">
     <head>
-        <base href="{%  if application.baseUri != '/' %} {{ application.baseUri }}{% endif %}/" />
+        <base href="{%  if WebHemiApplication.baseUri != '/' %}{{ WebHemiApplication.baseUri }}{% endif %}/" />
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,13 +31,17 @@
         {% block additionalHeadElements %}
             {# add or include <link rel="stylesheet"> or <style> elements. #}
         {% endblock %}
-        <link rel="stylesheet" href="{{ application.resourcePath }}/css/admin.css">
+        <link rel="stylesheet" href="{{ WebHemiApplication.resourcePath }}/css/admin.css">
+        <script type="application/javascript">
+            /**
+             * Register globals coming from the backend
+             */
+            var _WebHemiApplication = {{ WebHemiApplication|json_encode()|raw }};
         {% set csrfToken = _context[constant('\\WebHemi\\CSRF\\ServiceInterface::SESSION_KEY')]|default('') %}
         {% if csrfToken is not empty %}
-        <script type="application/javascript">
             var _CSRF = '{{ csrfToken }}';
-        </script>
         {% endif %}
+        </script>
     </head>
     <body>
         <header>
@@ -74,8 +91,8 @@
             {# add or include <dialog> elements. #}
         {% endblock %}
 
-        <script type="application/javascript" src="{{ application.resourcePath }}/js/functions.js"></script>
-        <script type="application/javascript" src="{{ application.resourcePath }}/js/admin.js"></script>
+        <script type="application/javascript" src="{{ WebHemiApplication.resourcePath }}/js/functions.js"></script>
+        <script type="application/javascript" src="{{ WebHemiApplication.resourcePath }}/js/admin.js"></script>
         {% block additionalFootElements %}
             {# add or include <script> elements. #}
         {% endblock %}

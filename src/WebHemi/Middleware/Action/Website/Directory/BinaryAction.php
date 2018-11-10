@@ -52,7 +52,7 @@ class BinaryAction extends IndexAction
                 'type' => 'Binary',
             ],
             'activeMenu' => '',
-            'application' => $this->getApplicationData($applicationEntity),
+            'Application' => $applicationEntity,
             'blogPosts' => $blogPosts,
         ];
     }

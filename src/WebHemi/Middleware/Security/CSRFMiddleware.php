@@ -72,6 +72,7 @@ class CSRFMiddleware implements MiddlewareInterface
 
         $tokenTTL = $request->isXmlHttpRequest() ? null : CSRFInterface::SESSION_TTL_IN_SECONDS;
         $allowMultipleUse = $request->isXmlHttpRequest();
+//var_dump($csrfToken, $tokenTTL, $allowMultipleUse);
         $result = $this->csrfAdapter->verify($csrfToken, $tokenTTL, $allowMultipleUse);
 
         if (!$result) {

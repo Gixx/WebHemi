@@ -102,7 +102,7 @@ class TagAction extends IndexAction
                 'type' => 'Tags',
             ],
             'activeMenu' => $tagName,
-            'application' => $this->getApplicationData($applicationEntity),
+            'Application' => $applicationEntity,
             'blogPosts' => $blogPosts,
         ];
     }

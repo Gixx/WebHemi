@@ -90,7 +90,7 @@ class UserAction extends IndexAction
                 'url' => $this->environmentManager->getRequestUri(),
                 'meta' => $userMeta,
             ],
-            'application' => $this->getApplicationData($applicationEntity),
+            'Application' => $applicationEntity,
             'blogPosts' => $blogPosts,
         ];
     }
