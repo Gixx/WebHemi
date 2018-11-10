@@ -1,7 +1,6 @@
 .DS_Store
 .idea
 /composer.phar
-/composer.lock
 /composer-setup.php
 /config/settings/local/*
 !/config/settings/local/*.template
