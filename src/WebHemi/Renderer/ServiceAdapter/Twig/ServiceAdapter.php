@@ -139,19 +139,20 @@ class ServiceAdapter implements ServiceInterface
         }
 
         // Merge mandatory Application data.
-        $applicationParams['application'] = [
-            'selectedModule' => $this->environmentManager->getSelectedModule(),
-            'address' => $this->environmentManager->getAddress(),
-            'topDomain' => $this->environmentManager->getTopDomain(),
-            'domainName' => $this->environmentManager->getApplicationDomain(),
-            'domainAddress' => 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'
-                .$this->environmentManager->getApplicationDomain(),
-            'resourcePath' => $this->templateResourcePath,
-            'baseUri' => $this->applicationBaseUri,
-            'currentUri' => $this->environmentManager->getRequestUri(),
-            'documentRoot' => $this->environmentManager->getDocumentRoot(),
-            'language' => $this->i18nService->getLanguage(),
-            'locale' => $this->i18nService->getLocale(),
+        $applicationParams = [
+            'WebHemiApplication' => [
+                'selectedModule' => $this->environmentManager->getSelectedModule(),
+                'address' => $this->environmentManager->getAddress(),
+                'topDomain' => $this->environmentManager->getTopDomain(),
+                'domainName' => $this->environmentManager->getApplicationDomain(),
+                'domainAddress' => 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'
+                    .$this->environmentManager->getApplicationDomain(),
+                'resourcePath' => $this->templateResourcePath,
+                'baseUri' => $this->applicationBaseUri,
+                'currentUri' => $this->environmentManager->getRequestUri(),
+                'language' => $this->i18nService->getLanguage(),
+                'locale' => $this->i18nService->getLocale(),
+            ],
         ];
 
         $parameters = GeneralLib::mergeArrayOverwrite($parameters, $applicationParams);

@@ -100,7 +100,7 @@ class EditAction extends AbstractMiddlewareAction
         }
 
         return [
-            'application' => $applicationEntity
+            'Application' => $applicationEntity
         ];
     }
 }

@@ -75,10 +75,14 @@ class ServiceAdapter implements ServiceInterface
         $sessionToken = $this->decodeToken($sessionToken);
         $token = $this->decodeToken($token);
 
-        return !((!empty($ttl) && $sessionToken['time'] + $ttl > time())
-            || ($token['extra'] != $this->getClientHash())
-            || ($sessionToken['randomString'] != $token['randomString'])
-        );
+        $valid = true;
+
+        if (!empty($ttl)) {
+            $valid = $valid && ($sessionToken['time'] + $ttl >= time());
+        }
+
+        return $valid && ($token['extra'] == $this->getClientHash())
+            && ($sessionToken['randomString'] == $token['randomString']);
     }
 
     /**

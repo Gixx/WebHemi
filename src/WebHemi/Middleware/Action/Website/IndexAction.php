@@ -148,7 +148,7 @@ class IndexAction extends AbstractMiddlewareAction
 
         return [
             'activeMenu' => '',
-            'application' => $this->getApplicationData($applicationEntity),
+            'Application' => $applicationEntity,
             'fixPost' => $applicationEntity->getIntroduction(),
             'blogPosts' => $blogPosts,
         ];
@@ -169,7 +169,7 @@ class IndexAction extends AbstractMiddlewareAction
             'subject' => $applicationEntity->getSubject(),
             'description' => $applicationEntity->getDescription(),
             'keywords' => $applicationEntity->getKeywords(),
-            'coptright' => $applicationEntity->getCopyright()
+            'copyright' => $applicationEntity->getCopyright()
         ];
     }
 

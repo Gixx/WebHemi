@@ -9,26 +9,27 @@
     /*
     document.querySelectorAll('button.add').forEach(function (element) {
         element.addEventListener('click', function (event) {
-            location.href = '{{ application.currentUri }}/add';
+            location.href = _WebHemiApplication.currentUri+'/add';
         });
     });
 
     document.querySelectorAll('button.edit').forEach(function (element) {
         element.addEventListener('click', function (event) {
-            location.href = '{{ application.currentUri }}/edit';
+            location.href = _WebHemiApplication.currentUri+'/edit';
         });
     });
     */
+
     document.querySelectorAll('button.view').forEach(function (element) {
         element.addEventListener('click', function (event) {
-            location.href = '{{ application.currentUri }}/'+event.target.dataset.name;
+            location.href = _WebHemiApplication.currentUri+'/'+event.target.dataset.name;
         });
     });
 
     document.querySelectorAll('button.delete').forEach(function (element) {
         element.addEventListener('click', function (event) {
             if (confirm('Are you sure to delete this item?')) {
-                let deleteEndpoint = '{{ application.currentUri }}/'+event.target.dataset.name+'/';
+                let deleteEndpoint = _WebHemiApplication.currentUri+'/'+event.target.dataset.name+'/';
                 fetch(deleteEndpoint, {
                     method: 'delete',
                     headers: {

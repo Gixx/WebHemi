@@ -52,7 +52,7 @@ class GalleryAction extends IndexAction
                 'type' => 'Gallery',
             ],
             'activeMenu' => '',
-            'application' => $this->getApplicationData($applicationEntity),
+            'Application' => $applicationEntity,
             'blogPosts' => $blogPosts,
         ];
     }
