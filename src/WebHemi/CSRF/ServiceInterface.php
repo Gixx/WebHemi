@@ -21,7 +21,7 @@ use WebHemi\Session\ServiceInterface as SessionInterface;
 interface ServiceInterface
 {
     public const SESSION_KEY = 'csrf';
-    public const SESSION_TTL_IN_SECONDS = 10;
+    public const SESSION_TTL_IN_SECONDS = 60;
 
     /**
      * ServiceInterface constructor.
