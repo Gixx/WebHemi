@@ -90,7 +90,7 @@ class IndexAction extends AbstractMiddlewareAction
 
         return [
             'data' => $applications,
-            'csrf' => $this->csrfAdapter->generate(CSRFInterface::DEFAULT_SESSION_KEY)
+            CSRFInterface::SESSION_KEY => $this->csrfAdapter->generate()
         ];
     }
 }

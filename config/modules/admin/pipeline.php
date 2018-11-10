@@ -12,12 +12,14 @@
 
 use WebHemi\Middleware\Security\AclMiddleware;
 use WebHemi\Middleware\Security\AccessLogMiddleware;
+use WebHemi\Middleware\Security\CSRFMiddleware;
 
 return [
     'middleware_pipeline' => [
         'Admin' => [
             ['service' => AclMiddleware::class, 'priority' => 10],
-            ['service' => AccessLogMiddleware::class, 'priority' => 11],
+            ['service' => CSRFMiddleware::class, 'priority' => 11],
+            ['service' => AccessLogMiddleware::class, 'priority' => 12],
         ],
     ],
 ];

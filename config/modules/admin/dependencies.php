@@ -49,6 +49,11 @@ return [
                     Environment\ServiceInterface::class
                 ]
             ],
+            Middleware\Security\CSRFMiddleware::class => [
+                'arguments' => [
+                    CSRF\ServiceInterface::class
+                ]
+            ],
             // Actions
             Middleware\Action\Auth\LoginAction::class => [
                 'arguments' => [
@@ -56,6 +61,7 @@ return [
                     Auth\CredentialInterface::class,
                     Environment\ServiceInterface::class,
                     'AdminLoginForm',
+                    CSRF\ServiceInterface::class
                 ],
             ],
             Middleware\Action\Auth\LogoutAction::class => [

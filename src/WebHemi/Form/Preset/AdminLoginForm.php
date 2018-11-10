@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace WebHemi\Form\Preset;
 
 use WebHemi\Form\Element\Html\HtmlElement;
+use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 
 /**
  * Class AdminLoginForm
@@ -30,6 +31,13 @@ class AdminLoginForm extends AbstractPreset
     protected function init() : void
     {
         $this->formAdapter->initialize('login', '', 'POST');
+
+        $csrf = $this->createElement(
+            HtmlElement::class,
+            HtmlElement::HTML_ELEMENT_HIDDEN,
+            CSRFInterface::SESSION_KEY,
+            ''
+        );
 
         $userName = $this->createElement(
             HtmlElement::class,
@@ -52,7 +60,9 @@ class AdminLoginForm extends AbstractPreset
             'Login'
         );
 
-        $this->formAdapter->addElement($userName)
+        $this->formAdapter
+            ->addElement($csrf)
+            ->addElement($userName)
             ->addElement($password)
             ->addElement($submit);
     }

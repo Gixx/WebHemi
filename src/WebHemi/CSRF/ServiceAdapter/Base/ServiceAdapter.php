@@ -36,12 +36,10 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Generate a CSRF token.
      *
-     * @param string $key
      * @return string
      */
-    public function generate(string $key) : string
+    public function generate() : string
     {
-        $key = preg_replace('/[^a-zA-Z0-9]/', '', $key);
         $extra = $this->getClientHash();
 
         try {
@@ -53,7 +51,7 @@ class ServiceAdapter implements ServiceInterface
 
         $token = base64_encode(time() . $extra . $randomString);
 
-        $this->sessionManager->set(self::SESSION_PREFIX.'_'.$key, $token);
+        $this->sessionManager->set(self::SESSION_KEY, $token);
 
         return $token;
     }
@@ -61,20 +59,17 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Check the CSRF token is valid.
      *
-     * @param string $key
      * @param string $token
      * @param null|int $ttl
      * @param bool $multiple
      * @return bool
      */
-    public function verify(string $key, string $token, ? int $ttl = null, bool $multiple = false) : bool
+    public function verify(string $token, ? int $ttl = null, bool $multiple = true) : bool
     {
-        $key = preg_replace('/[^a-zA-Z0-9]/', '', $key);
-
-        $sessionToken = $this->sessionManager->get(self::SESSION_PREFIX.'_'.$key) ?? '';
+        $sessionToken = $this->sessionManager->get(self::SESSION_KEY) ?? '';
 
         if (!$multiple) {
-            $this->sessionManager->delete(self::SESSION_PREFIX.'_'.$key);
+            $this->sessionManager->delete(self::SESSION_KEY);
         }
 
         $sessionToken = $this->decodeToken($sessionToken);

@@ -20,8 +20,8 @@ use WebHemi\Session\ServiceInterface as SessionInterface;
  */
 interface ServiceInterface
 {
-    public const SESSION_PREFIX = 'atcn';
-    public const DEFAULT_SESSION_KEY = 'csrf';
+    public const SESSION_KEY = 'csrf';
+    public const SESSION_TTL_IN_SECONDS = 60;
 
     /**
      * ServiceInterface constructor.
@@ -33,19 +33,17 @@ interface ServiceInterface
     /**
      * Generate a CSRF token.
      *
-     * @param string $key
      * @return string
      */
-    public function generate(string $key) : string;
+    public function generate() : string;
 
     /**
      * Check the CSRF token is valid.
      *
-     * @param string $key
      * @param string $token
      * @param null|int $ttl
      * @param bool $multiple
      * @return bool
      */
-    public function verify(string $key, string $token, ? int $ttl = null, bool $multiple = false) : bool;
+    public function verify(string $token, ? int $ttl = null, bool $multiple = true) : bool;
 }
