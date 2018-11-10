@@ -19,7 +19,7 @@ return [
             'admin-login' => [
                 'path'            => '^/auth/login/?$',
                 'middleware'      => Action\Auth\LoginAction::class,
-                'allowed_methods' => ['GET', 'POST'],
+                'allowed_methods' => ['GET', 'POST', 'PUT', 'DELETE'],
             ],
             'admin-logout' => [
                 'path'            => '^/auth/logout/?$',

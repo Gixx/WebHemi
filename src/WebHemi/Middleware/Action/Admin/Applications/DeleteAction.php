@@ -99,16 +99,8 @@ class DeleteAction extends AbstractMiddlewareAction
             );
         }
 
-        $data = json_decode(file_get_contents('php://input'), true);
-        $result = false;
-
-        if ($data) {
-            $csrfToken = $data['csrf'];
-            $result = $this->csrfAdapter->verify(CSRFInterface::DEFAULT_SESSION_KEY, $csrfToken, null, true);
-        }
-
         return [
-            'result' => $result
+            'result' => $applicationEntity->getIsReadOnly()
         ];
     }
 }

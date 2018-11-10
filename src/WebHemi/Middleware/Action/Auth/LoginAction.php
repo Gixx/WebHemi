@@ -18,6 +18,7 @@ use InvalidArgumentException;
 use WebHemi\Auth\CredentialInterface;
 use WebHemi\Auth\Result\Result;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
+use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Data\Entity\UserEntity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Form\Element\Html\HtmlElement;
@@ -47,6 +48,10 @@ class LoginAction extends AbstractMiddlewareAction
      * @var PresetInterface
      */
     private $loginFormPreset;
+    /**
+     * @var CSRFInterface
+     */
+    private $csrfAdapter;
 
     /**
      * LoginAction constructor.
@@ -55,17 +60,20 @@ class LoginAction extends AbstractMiddlewareAction
      * @param CredentialInterface  $authCredential
      * @param EnvironmentInterface $environmentManager
      * @param PresetInterface      $loginFormPreset
+     * @param CSRFInterface        $csrfAdapter
      */
     public function __construct(
         AuthInterface $authAdapter,
         CredentialInterface $authCredential,
         EnvironmentInterface $environmentManager,
-        PresetInterface $loginFormPreset
+        PresetInterface $loginFormPreset,
+        CSRFInterface $csrfAdapter
     ) {
         $this->authAdapter = $authAdapter;
         $this->authCredential = $authCredential;
         $this->environmentManager = $environmentManager;
         $this->loginFormPreset = $loginFormPreset;
+        $this->csrfAdapter = $csrfAdapter;
     }
 
     /**
@@ -132,10 +140,15 @@ class LoginAction extends AbstractMiddlewareAction
                         ->withHeader('Location', $url);
                 }
             }
+        } else {
+            $csrfElement = $form->getElement(CSRFInterface::SESSION_KEY);
+            if ($csrfElement instanceof HtmlElement) {
+                $csrfElement->setValues([$this->csrfAdapter->generate()]);
+            }
         }
 
         return [
-            'loginForm' => $form,
+            'loginForm' => $form
         ];
     }
 
