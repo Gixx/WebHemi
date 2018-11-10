@@ -2,5 +2,6 @@
 
 {% block content %}
     <h1 class="page-header">Internal Server Error!</h1>
-    <h2>{{ exception.getMessage() }}</h2>
+    {# @var exception \Exception #}
+    <p>{{ exception.getMessage() }}</p>
 {% endblock %}

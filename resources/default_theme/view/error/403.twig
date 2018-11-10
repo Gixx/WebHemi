@@ -2,4 +2,6 @@
 
 {% block content %}
     <h1 class="page-header">Forbidden!</h1>
+    {# @var exception \Exception #}
+    <p>{{ exception.getMessage() }}</p>
 {% endblock %}

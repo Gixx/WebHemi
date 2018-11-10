@@ -19,9 +19,12 @@
             {# add or include <link rel="stylesheet"> or <style> elements. #}
         {% endblock %}
         <link rel="stylesheet" href="{{ application.resourcePath }}/css/admin.css">
+        {% set csrfToken = _context[constant('\\WebHemi\\CSRF\\ServiceInterface::SESSION_KEY')]|default('') %}
+        {% if csrfToken is not empty %}
         <script type="application/javascript">
-            var _CSRF = '{{ csrf|default('') }}';
+            var _CSRF = '{{ csrfToken }}';
         </script>
+        {% endif %}
     </head>
     <body>
         <header>
