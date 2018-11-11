@@ -5,18 +5,101 @@
  # @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  # @link      http://www.gixx-web.com
  #}
+{# @var data \WebHemi\Data\Entity\ApplicationEntity #}
 {% extends "admin/applications/list.twig" %}
 
-{% block title %}{{ 'Applications: view - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
+{% block title %}{{ 'Manage Application: "' ~ data.getTitle() ~'" - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
 
 {% block header %}
-    <a href="">Dashboard</a> > <a href="applications">Applications</a> > View
+    <a href="">Dashboard</a> > <a href="applications">Applications</a> > {{ data.getTitle() }}
 {% endblock %}
 
 {% block content %}
-    <a href="applications">back</a>
-    <p>Ahhhm... not yet...</p>
+    <h1>Group: "{{ data.getTitle() }}"</h1>
+    <table summary="User group data">
+        <caption>Application ({{ data.getTitle() }}) details</caption>
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ID</td>
+                <td>{{ data.getApplicationId() }}</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{ data.getName() }}</td>
+            </tr>
+            <tr>
+                <td>Title</td>
+                <td>{{ data.getTitle() }}</td>
+            </tr>
+            <tr>
+                <td>Introduction</td>
+                <td>{{ data.getIntroduction() }}</td>
+            </tr>
+            <tr>
+                <td>Subject</td>
+                <td>{{ data.getSubject() }}</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>{{ data.getDescription() }}</td>
+            </tr>
+            <tr>
+                <td>Keywords</td>
+                <td>{{ data.getKeywords() }}</td>
+            </tr>
+            <tr>
+                <td>Copyright</td>
+                <td>{{ data.getCopyright() }}</td>
+            </tr>
+            <tr>
+                <td>Domain</td>
+                <td>{{ data.getDomain() }}</td>
+            </tr>
+            <tr>
+                <td>Path</td>
+                <td>{{ data.getPath() }}</td>
+            </tr>
+            <tr>
+                <td>Theme</td>
+                <td>{{ data.getTheme() }}</td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td>{{ data.getType() }}</td>
+            </tr>
+            <tr>
+                <td>Locale</td>
+                <td>{{ data.getLocale() }}</td>
+            </tr>
+            <tr>
+                <td>Timezone</td>
+                <td>{{ data.getTimezone().getName() }}</td>
+            </tr>
+            <tr>
+                <td>Is Read-only?</td>
+                <td>{{ data.getIsReadOnly() ? 'Yes' : 'No '}}</td>
+            </tr>
+            <tr>
+                <td>Is Enabled?</td>
+                <td>{{ data.getIsEnabled() ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <td>Date Created</td>
+                <td>{{ data.getDateCreated() }}</td>
+            </tr>
+            <tr>
+                <td>Date Modified</td>
+                <td>{{ data.getDateModified() }}</td>
+            </tr>
+        </tbody>
+    </table>
     {% if not data.getIsReadOnly() %}
-        <button data-name="{{ data.getName() }}">Edit</button>
+        <button class="edit" data-name="{{ data.getName() }}">Edit</button>
     {% endif %}
 {% endblock %}
