@@ -101,8 +101,8 @@ class ViewAction extends AbstractMiddlewareAction
         }
 
         return [
-            'Application' => $applicationEntity,
-            'csrf' => $this->csrfAdapter->generate(CSRFInterface::DEFAULT_SESSION_KEY)
+            'data' => $applicationEntity,
+            'csrf' => $this->csrfAdapter->generate()
         ];
     }
 }
