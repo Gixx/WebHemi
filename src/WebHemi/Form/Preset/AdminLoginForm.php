@@ -15,6 +15,7 @@ namespace WebHemi\Form\Preset;
 
 use WebHemi\Form\Element\Html\HtmlElement;
 use WebHemi\CSRF\ServiceInterface as CSRFInterface;
+use WebHemi\Validator;
 
 /**
  * Class AdminLoginForm
@@ -45,6 +46,7 @@ class AdminLoginForm extends AbstractPreset
             'identification',
             'Identification'
         );
+        $userName->addValidator($this->validatorCollection->getValidator(Validator\NotEmptyValidator::class));
 
         $password = $this->createElement(
             HtmlElement::class,
@@ -52,6 +54,7 @@ class AdminLoginForm extends AbstractPreset
             'password',
             'Password'
         );
+        $password->addValidator($this->validatorCollection->getValidator(Validator\NotEmptyValidator::class));
 
         $submit = $this->createElement(
             HtmlElement::class,

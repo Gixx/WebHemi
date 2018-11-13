@@ -27,6 +27,7 @@ use WebHemi\Parser;
 use WebHemi\Renderer;
 use WebHemi\Router;
 use WebHemi\Session;
+use WebHemi\Validator;
 
 return [
     'dependencies' => [
@@ -272,6 +273,13 @@ return [
                     Data\Storage\ApplicationStorage::class
                 ],
                 'shared'    => true,
+            ],
+            // Validators
+            Validator\ValidatorCollection::class => [
+                'arguments' => [
+                    Validator\NotEmptyValidator::class,
+                    Validator\RangeValidator::class
+                ]
             ]
         ],
     ],

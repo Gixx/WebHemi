@@ -32,7 +32,8 @@ class RangeValidatorTest extends TestCase
         $this->assertAttributeInternalType('array', 'availableValues', $validator);
         $this->assertAttributeSame(false, 'validateKeys', $validator);
 
-        $validator = new RangeValidator([1,2,3], true);
+        $validator = new RangeValidator();
+        $validator->setOptions(['availableValues' => [1,2,3], 'validateKeys' => true]);
         $this->assertAttributeSame(true, 'validateKeys', $validator);
     }
 
@@ -41,7 +42,7 @@ class RangeValidatorTest extends TestCase
      */
     public function testValidator()
     {
-        $validator = new RangeValidator([1,2,3]);
+        $validator = new RangeValidator(['availableValues' => [1,2,3]]);
 
         $data = [];
         $result = $validator->validate($data);
@@ -64,7 +65,8 @@ class RangeValidatorTest extends TestCase
      */
     public function testValidatorForKeys()
     {
-        $validator = new RangeValidator(['apple', 'pear', 'orange'], true);
+        $validator = new RangeValidator();
+        $validator->setOptions(['availableValues' => ['apple', 'pear', 'orange'], 'validateKeys' => true]);
 
         $data = ['apple' => 0, 'pear' => 1];
         $result = $validator->validate($data);

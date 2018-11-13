@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Validator;
 
+use RuntimeException;
+
 /**
  * class NotEmptyValidator.
  */
@@ -26,6 +28,18 @@ class NotEmptyValidator implements ValidatorInterface
      * @var array
      */
     private $validData;
+
+    /**
+     * Set validator options.
+     * This validator does not accept any option.
+     *
+     * @param array $options
+     * @throws RuntimeException
+     */
+    public function setOptions(array $options) : void
+    {
+        unset($options);
+    }
 
     /**
      * Validates data. Returns true when data is not empty.

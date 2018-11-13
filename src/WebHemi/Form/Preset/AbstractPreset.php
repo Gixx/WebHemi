@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use WebHemi\Form\ElementInterface;
 use WebHemi\Form\PresetInterface;
 use WebHemi\Form\ServiceInterface;
+use WebHemi\Validator\ValidatorCollection;
 
 /**
  * Class AbstractPreset
@@ -31,16 +32,25 @@ abstract class AbstractPreset implements PresetInterface
      * @var ElementInterface[]
      */
     private $elementPrototypes;
+    /**
+     * @var ValidatorCollection
+     */
+    protected $validatorCollection;
 
     /**
      * LogSelector constructor.
      *
      * @param ServiceInterface   $formAdapter
-     * @param ElementInterface[] ...$elementPrototypes
+     * @param ValidatorCollection $validatorCollection
+     * @param ElementInterface ...$elementPrototypes
      */
-    public function __construct(ServiceInterface $formAdapter, ElementInterface ...$elementPrototypes)
-    {
+    public function __construct(
+        ServiceInterface $formAdapter,
+        ValidatorCollection $validatorCollection,
+        ElementInterface ...$elementPrototypes
+    ) {
         $this->formAdapter = $formAdapter;
+        $this->validatorCollection = $validatorCollection;
 
         foreach ($elementPrototypes as $formElement) {
             $this->elementPrototypes[get_class($formElement)] = $formElement;

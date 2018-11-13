@@ -38,13 +38,24 @@ class RangeValidator implements ValidatorInterface
     /**
      * RangeValidator constructor.
      *
-     * @param array $availableValues
-     * @param bool  $validateKeys
+     * @param array $options
      */
-    public function __construct(array $availableValues, bool $validateKeys = false)
+    public function __construct(array $options = [])
     {
-        $this->availableValues = array_values($availableValues);
-        $this->validateKeys = $validateKeys;
+        $this->setOptions($options);
+    }
+
+    /**
+     * Set validator options.
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options) : void
+    {
+        $this->availableValues = isset($options['availableValues']) && is_array($options['availableValues'])
+            ? array_values($options['availableValues'])
+            : [];
+        $this->validateKeys = (bool) ($options['validateKeys'] ?? false);
     }
 
     /**

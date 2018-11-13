@@ -19,6 +19,13 @@ namespace WebHemi\Validator;
 interface ValidatorInterface
 {
     /**
+     * Set validator options.
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options) : void;
+
+    /**
      * Validates data.
      *
      * @param  array $values
