@@ -95,7 +95,10 @@ class LoginAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        $form = $this->getLoginForm();
+        /**
+         * @var HtmlForm $form
+         */
+        $form = $this->loginFormPreset->getPreset();
 
         if ($this->request->getMethod() == 'POST') {
             /** @var array $postData */
@@ -105,85 +108,55 @@ class LoginAction extends AbstractMiddlewareAction
                 throw new InvalidArgumentException('Post data must be an array!');
             }
 
-            $this->authCredential->setCredential('username', $postData['login']['identification'] ?? '')
-                ->setCredential('password', $postData['login']['password'] ?? '');
+            $form->loadData($postData);
 
-            /**
-             * @var Result $result
-             */
-            $result = $this->authAdapter->authenticate($this->authCredential);
+            if ($form->validate()) {
+                $this->authCredential->setCredential('username', $postData['login']['identification'] ?? '')
+                    ->setCredential('password', $postData['login']['password'] ?? '');
 
-            if (!$result->isValid()) {
-                $form = $this->getLoginForm($result->getMessage());
-
-                // load back faild data.
-                unset($postData['login']['password']);
-                $form->loadData($postData);
-            } else {
                 /**
-                 * @var null|UserEntity $userEntity
+                 * @var Result $result
                  */
-                $userEntity = $this->authAdapter->getIdentity();
+                $result = $this->authAdapter->authenticate($this->authCredential);
 
-                if ($userEntity instanceof UserEntity) {
-                    $this->authAdapter->setIdentity($userEntity);
+                if (!$result->isValid()) {
+                    $passwordElement = $form->getElement('password');
+                    $passwordElement->setValues(['']);
+                    $passwordElement->setError(AuthInterface::class, $result->getMessage());
+
+                    //$form = $this->getLoginForm($result->getMessage());
+
+                    // load back faild data.
+                    $form->loadData($postData);
+                } else {
+                    /**
+                     * @var null|UserEntity $userEntity
+                     */
+                    $userEntity = $this->authAdapter->getIdentity();
+
+                    if ($userEntity instanceof UserEntity) {
+                        $this->authAdapter->setIdentity($userEntity);
+                    }
+
+                    // Don't redirect upon Ajax request
+                    if (!$this->request->isXmlHttpRequest()) {
+                        $url = 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'.
+                            $this->environmentManager->getApplicationDomain().
+                            $this->environmentManager->getSelectedApplicationUri();
+
+                        $this->response = $this->response
+                            ->withStatus(302, 'Found')
+                            ->withHeader('Location', $url);
+                    }
                 }
-
-                // Don't redirect upon Ajax request
-                if (!$this->request->isXmlHttpRequest()) {
-                    $url = 'http'.($this->environmentManager->isSecuredApplication() ? 's' : '').'://'.
-                        $this->environmentManager->getApplicationDomain().
-                        $this->environmentManager->getSelectedApplicationUri();
-
-                    $this->response = $this->response
-                        ->withStatus(302, 'Found')
-                        ->withHeader('Location', $url);
-                }
-            }
-        } else {
-            $csrfElement = $form->getElement(CSRFInterface::SESSION_KEY);
-            if ($csrfElement instanceof HtmlElement) {
-                $csrfElement->setValues([$this->csrfAdapter->generate()]);
             }
         }
+
+        $csrfElement = $form->getElement(CSRFInterface::SESSION_KEY);
+        $csrfElement->setValues([$this->csrfAdapter->generate()]);
 
         return [
             'loginForm' => $form
         ];
-    }
-
-    /**
-     * Gets the login form.
-     *
-     * @param  string $customError
-     * @return HtmlForm
-     */
-    private function getLoginForm(string $customError = '') : HtmlForm
-    {
-        /**
-         * @var HtmlForm $form
-         */
-        $form = $this->loginFormPreset->getPreset();
-
-        if (!empty($customError)) {
-            /**
-             * @var ElementInterface[] $elements
-             */
-            $elements = $form->getElements();
-
-            /**
-             * @var ElementInterface $element
-             */
-            foreach ($elements as $element) {
-                if ($element->getType() == HtmlElement::HTML_ELEMENT_INPUT_PASSWORD) {
-                    $element->setError(AuthInterface::class, $customError);
-                    // Since the name attribute didn't change, adding to the form will overwrite the old one.
-                    $form->addElement($element);
-                    break;
-                }
-            }
-        }
-
-        return $form;
     }
 }

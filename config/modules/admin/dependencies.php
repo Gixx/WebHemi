@@ -20,6 +20,7 @@ use WebHemi\Environment;
 use WebHemi\Form;
 use WebHemi\Middleware;
 use WebHemi\Session;
+use WebHemi\Validator;
 
 return [
     'dependencies' => [
@@ -129,7 +130,8 @@ return [
                 'class' => Form\Preset\SimplePreset::class,
                 'arguments' => [
                     Form\ServiceAdapter\Base\ServiceAdapter::class,
-                    Form\Element\Html\HtmlElement::class
+                    Validator\ValidatorCollection::class,
+                    Form\Element\Html\HtmlElement::class,
                 ]
             ],
             'AdminLoginForm' => [

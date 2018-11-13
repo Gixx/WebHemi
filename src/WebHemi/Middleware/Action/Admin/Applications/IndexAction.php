@@ -87,6 +87,7 @@ class IndexAction extends AbstractMiddlewareAction
     public function getTemplateData() : array
     {
         $applications = $this->applicationStorage->getApplicationList();
+        $applicationForm = '';
 
         return [
             'data' => $applications,

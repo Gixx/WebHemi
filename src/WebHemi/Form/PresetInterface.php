@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Form;
 
+use WebHemi\Validator\ValidatorCollection;
+
 /**
  * Interface PresetInterface
  */
@@ -22,9 +24,14 @@ interface PresetInterface
      * PresetInterface constructor.
      *
      * @param ServiceInterface   $formAdapter
-     * @param ElementInterface[] ...$elementPrototypes
+     * @param ValidatorCollection $validatorCollection
+     * @param ElementInterface ...$elementPrototypes
      */
-    public function __construct(ServiceInterface $formAdapter, ElementInterface ...$elementPrototypes);
+    public function __construct(
+        ServiceInterface $formAdapter,
+        ValidatorCollection $validatorCollection,
+        ElementInterface ...$elementPrototypes
+    );
 
     /**
      * Returns the initialized form.
