@@ -12,7 +12,6 @@
             location.href = _WebHemiApplication.currentUri+'/add';
         });
     });
-
     document.querySelectorAll('button.edit').forEach(function (element) {
         element.addEventListener('click', function (event) {
             location.href = _WebHemiApplication.currentUri+'/edit';
