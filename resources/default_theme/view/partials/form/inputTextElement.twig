@@ -2,7 +2,7 @@
 <div class="element input text{% if formElement.getErrors() %} has-error{% endif %}">
     <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
     {% set value = formElement.getValues() %}
-    <input type="text" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ value[0] }}" />
+    <input type="text" autocomplete="{{ formElement.getName() }}" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ value[0] }}" />
     {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
     {% endif %}
