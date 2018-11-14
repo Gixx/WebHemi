@@ -83,15 +83,8 @@ return [
                     Auth\ServiceInterface::class,
                     Environment\ServiceInterface::class,
                     Data\Storage\ApplicationStorage::class,
+                    'ApplicationCreateForm',
                     CSRF\ServiceInterface::class
-                ],
-            ],
-            Middleware\Action\Admin\Applications\AddAction::class => [
-                'arguments' => [
-                    Configuration\ServiceInterface::class,
-                    Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class,
-                    'ApplicationEditForm'
                 ],
             ],
             Middleware\Action\Admin\Applications\ViewAction::class => [
@@ -100,8 +93,12 @@ return [
                     Auth\ServiceInterface::class,
                     Environment\ServiceInterface::class,
                     Data\Storage\ApplicationStorage::class,
+                    'ApplicationEditForm',
                     CSRF\ServiceInterface::class
                 ],
+            ],
+            Middleware\Action\Admin\Applications\AddAction::class => [
+                'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
             ],
             Middleware\Action\Admin\Applications\EditAction::class => [
                 'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
@@ -136,6 +133,10 @@ return [
             ],
             'AdminLoginForm' => [
                 'class'     => Form\Preset\AdminLoginForm::class,
+                'inherits' => Form\PresetInterface::class
+            ],
+            'ApplicationCreateForm' => [
+                'class'     => Form\Preset\ApplicationCreateForm::class,
                 'inherits' => Form\PresetInterface::class
             ],
             'ApplicationEditForm' => [

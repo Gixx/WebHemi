@@ -18,6 +18,7 @@ use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Form\PresetInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
@@ -42,6 +43,10 @@ class IndexAction extends AbstractMiddlewareAction
      */
     private $applicationStorage;
     /**
+     * @var PresetInterface
+     */
+    private $applicationFormPreset;
+    /**
      * @var CSRFInterface
      */
     private $csrfAdapter;
@@ -53,6 +58,7 @@ class IndexAction extends AbstractMiddlewareAction
      * @param AuthInterface          $authAdapter
      * @param EnvironmentInterface   $environmentManager
      * @param ApplicationStorage     $applicationStorage
+     * @param PresetInterface        $applicationFormPreset
      * @param CSRFInterface          $csrfAdapter
      */
     public function __construct(
@@ -60,12 +66,14 @@ class IndexAction extends AbstractMiddlewareAction
         AuthInterface $authAdapter,
         EnvironmentInterface $environmentManager,
         ApplicationStorage $applicationStorage,
+        PresetInterface $applicationFormPreset,
         CSRFInterface $csrfAdapter
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
         $this->applicationStorage = $applicationStorage;
+        $this->applicationFormPreset = $applicationFormPreset;
         $this->csrfAdapter = $csrfAdapter;
     }
 
@@ -87,10 +95,14 @@ class IndexAction extends AbstractMiddlewareAction
     public function getTemplateData() : array
     {
         $applications = $this->applicationStorage->getApplicationList();
-        $applicationForm = '';
+        $form = $this->applicationFormPreset->getPreset();
+
+        $csrfElement = $form->getElement(CSRFInterface::SESSION_KEY);
+        $csrfElement->setValues([$this->csrfAdapter->generate()]);
 
         return [
             'data' => $applications,
+            'form' => $form,
             CSRFInterface::SESSION_KEY => $this->csrfAdapter->generate()
         ];
     }

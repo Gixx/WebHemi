@@ -20,6 +20,7 @@ use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
+use WebHemi\Form\PresetInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
@@ -44,6 +45,10 @@ class ViewAction extends AbstractMiddlewareAction
      */
     private $applicationStorage;
     /**
+     * @var PresetInterface
+     */
+    private $applicationFormPreset;
+    /**
      * @var CSRFInterface
      */
     private $csrfAdapter;
@@ -55,6 +60,7 @@ class ViewAction extends AbstractMiddlewareAction
      * @param AuthInterface          $authAdapter
      * @param EnvironmentInterface   $environmentManager
      * @param ApplicationStorage     $applicationStorage
+     * @param PresetInterface        $applicationFormPreset
      * @param CSRFInterface          $csrfAdapter
      */
     public function __construct(
@@ -62,12 +68,14 @@ class ViewAction extends AbstractMiddlewareAction
         AuthInterface $authAdapter,
         EnvironmentInterface $environmentManager,
         ApplicationStorage $applicationStorage,
+        PresetInterface $applicationFormPreset,
         CSRFInterface $csrfAdapter
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
         $this->applicationStorage = $applicationStorage;
+        $this->applicationFormPreset = $applicationFormPreset;
         $this->csrfAdapter = $csrfAdapter;
     }
 

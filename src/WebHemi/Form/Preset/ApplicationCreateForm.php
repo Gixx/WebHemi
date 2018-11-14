@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace WebHemi\Form\Preset;
 
+use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Form\Element\Html\HtmlElement;
 
 /**
@@ -40,6 +41,13 @@ class ApplicationCreateForm extends AbstractPreset
     protected function init() : void
     {
         $this->initAdapter();
+
+        $csrf = $this->createElement(
+            HtmlElement::class,
+            HtmlElement::HTML_ELEMENT_HIDDEN,
+            CSRFInterface::SESSION_KEY,
+            ''
+        );
 
         $name = $this->createElement(
             HtmlElement::class,
@@ -83,7 +91,9 @@ class ApplicationCreateForm extends AbstractPreset
             'Save'
         );
 
-        $this->formAdapter->addElement($name)
+        $this->formAdapter
+            ->addElement($csrf)
+            ->addElement($name)
             ->addElement($title)
             ->addElement($introduction)
             ->addElement($subject)
