@@ -9,9 +9,7 @@
 /**
  * Webhemi Component Framework.
  *
- * @param options
- * @return {{constructor: (function(*=)), components: {}, init: init, loadError: loadError}}
- * @constructor
+ * @type {{constructor, components, init, getOptions}}
  */
 var WebHemi = function(options)
 {
@@ -20,20 +18,23 @@ var WebHemi = function(options)
     /** @type {Object} */
     let defaultOptions = {
         path: 'components/',
-        components: [
-            'Util'
+        loadComponents: [
+             'Util'
             ,'Registry'
-            // ,'Dialog'
-            // ,'ProgressDialog'
-            // ,'LazyLoadImage'
-            // ,'LazyLoadBackgroundImage'
-            // ,'Form'
-            // ,'BackgroundImageRotator'
-            // ,'Folding'
-            // ,'SwipePager'
+            ,'Dialog'
         ],
-        verbose: true,
-        event: new Event('WebHemi.loaded')
+        availableComponents: {
+             Util: {}
+            ,Registry: {}
+            ,Dialog: {}
+            ,ProgressDialog: {}
+            ,Form: {}
+            ,LazyLoadImage: {}
+            ,LazyLoadBackgroundImage: {}
+            ,BackgroundImageRotator: {}
+            ,Folding: {}
+        },
+        verbose: true
     };
 
     if (typeof options === 'undefined') {
@@ -55,6 +56,7 @@ var WebHemi = function(options)
      * Loads the compoments one after another.
      *
      * @param {number} index
+     * @return {Promise}
      */
     let loadComponents = function(index)
     {
@@ -62,44 +64,57 @@ var WebHemi = function(options)
             index = 0;
         }
 
-        if (typeof options.components[index] !== 'undefined') {
-            let componentName = options.components[index];
-
-            // if the component is not loaded
-            if (typeof window.WebHemi.components[componentName] === 'undefined') {
-                let newScriptTag = document.createElement('script');
-                newScriptTag.setAttribute('type', 'text/javascript');
-                newScriptTag.setAttribute('src', options.path + componentName + '.js');
-                newScriptTag.onerror = function(error)
-                {
-                    let errorMsg = error.toString().split("\n")[0];
-                    options.verbose && console.info(
-                        '%c✖%c the '+componentName+' component cannot be loaded: %c'+ errorMsg,
-                        'color:red',
-                        'color:black',
-                        'text-decoration:underline;font-style:italic'
-                    );
-                    window.WebHemi.loadComponent(index + 1);
-                };
-                newScriptTag.onload = function()
-                {
-                    window.WebHemi.components[componentName].init();
-                    window.WebHemi.loadComponent(index + 1);
-                };
-
-                document.body.appendChild(newScriptTag);
-            }
-        } else {
-            setTimeout(function(){
-                options.verbose && console.groupEnd();
-                options.verbose && console.info(
-                    '%c✔%c WebHemi is ready.',
-                    'color:green; font-weight:bold;',
-                    'color:black; font-weight:bold;'
-                );
-                document.dispatchEvent(options.event);
-            }, 500);
+        if (typeof options.loadComponents[index] === 'undefined') {
+            return Promise.resolve();
         }
+
+        let componentName = options.loadComponents[index];
+
+        return loadComponent(componentName).then(function () {
+            return loadComponents(index + 1);
+        }).catch(function(error) {
+            options.verbose && console.info(
+                '%c✖%c the ' + error.component + ' component cannot be loaded: %c' + error.message,
+                'color:red',
+                'color:black',
+                'text-decoration:underline;font-style:italic'
+            );
+            return loadComponents(index + 1);
+        });
+    };
+
+    /**
+     * Loads a specific compoment.
+     *
+     * @param {string} componentName
+     * @return {Promise}
+     */
+    let loadComponent = function(componentName)
+    {
+        return new Promise(function(resolve, reject) {
+            if (typeof options.availableComponents[componentName] !== 'undefined') {
+                // if the component is not loaded
+                if (typeof window.WebHemi.components[componentName] === 'undefined') {
+                    let newScriptTag = document.createElement('script');
+                    newScriptTag.setAttribute('type', 'text/javascript');
+                    newScriptTag.setAttribute('src', options.path + componentName + '.js');
+                    newScriptTag.onerror = function(error)
+                    {
+                        let errorMsg = error.toString().split("\n")[0];
+                        reject({component: componentName, message: errorMsg});
+                    };
+                    newScriptTag.onload = function()
+                    {
+                        window.WebHemi.components[componentName].init();
+                        resolve();
+                    };
+
+                    document.body.appendChild(newScriptTag);
+                }
+            } else {
+                reject({component: componentName, message: 'not a valid component'});
+            }
+        });
     };
 
     options.verbose && console.clear();
@@ -114,22 +129,27 @@ var WebHemi = function(options)
 
     return {
         constructor: WebHemi,
+
+        /**
+         * Component container.
+         */
         components: {},
 
         /**
          * Initializes the component.
          */
-        init: function () {
-            loadComponents();
-        },
-
-        /**
-         * Loads a specific component.
-         *
-         * @param index
-         */
-        loadComponent: function(index) {
-            loadComponents(index);
+        init: function ()
+        {
+            loadComponents().finally(function() {
+                options.verbose && console.groupEnd();
+                options.verbose && console.info(
+                    '%c✔%c WebHemi is ready.',
+                    'color:green; font-weight:bold;',
+                    'color:black; font-weight:bold;'
+                );
+                let readyEvent = new Event('WebHemi.Ready');
+                document.dispatchEvent(readyEvent);
+            });
         },
 
         /**
@@ -137,11 +157,12 @@ var WebHemi = function(options)
          *
          * @return {*}
          */
-        getOptions: function () {
+        getOptions: function ()
+        {
             return options;
         }
     };
-}();
+}({});
 window.WebHemi = WebHemi;
 window.WebHemi.init();
 
