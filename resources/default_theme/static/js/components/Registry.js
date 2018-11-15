@@ -20,11 +20,20 @@ WebHemi.components.Registry = function()
     /** @let {Object} container   The associative array for key-value pairs */
     let container = {};
     /** @type {Object} */
-    let options = window.WebHemi.getOptions();
+    let options = WebHemi.getOptions();
 
     if (typeof WebHemi.components.Util === 'undefined') {
         throw new ReferenceError('The Util component is required to use this component.');
     }
+
+    /** @type Util */
+    let Util = WebHemi.components.Util;
+
+    options.verbose && console.info(
+        '%c✔%c The Regsitry Component is loaded.',
+        'color:green; font-weight:bold;',
+        'color:black; font-weight:bold;'
+    );
 
     return {
         /**
@@ -32,9 +41,8 @@ WebHemi.components.Registry = function()
          */
         init: function ()
         {
-            options.verbose && console.info('%c✔%c the Regsitry component is loaded.', 'color:green; font-weight:bold;', 'color:black; font-weight:bold;');
             initialized = true;
-            WebHemi.components.Util.triggerEvent(document, 'RegistryComponentLoaded');
+            Util.triggerEvent(document, 'WebHemi.Component.Registry.Ready');
         },
 
         /**
@@ -82,7 +90,7 @@ WebHemi.components.Registry = function()
          */
         setConfig : function (param)
         {
-            if (WebHemi.components.Util.isObject(param)) {
+            if (Util.isObject(param)) {
                 for (let key in param) {
                     this.set(key, param[key]);
                 }

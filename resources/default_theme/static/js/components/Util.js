@@ -28,15 +28,20 @@ WebHemi.components.Util = function()
     /** @type {Object} */
     let options = window.WebHemi.getOptions();
 
+    options.verbose && console.info(
+        '%c✔%c The Util Component is loaded.',
+        'color:green; font-weight:bold;',
+        'color:black; font-weight:bold;'
+    );
+
     return {
         /**
          * Initializes the component.
          */
         init : function ()
         {
-            options.verbose && console.info('%c✔%c the Util component is loaded.', 'color:green; font-weight:bold;', 'color:black; font-weight:bold;');
             initialized = true;
-            this.triggerEvent(document, 'UtilComponentLoaded');
+            this.triggerEvent(document, 'WebHemi.Component.Util.Ready');
         },
 
         /**
