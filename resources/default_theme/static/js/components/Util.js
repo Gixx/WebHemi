@@ -7,7 +7,7 @@
  */
 
 /**
- * Util component.
+ * Util Component.
  *
  * @type {{init, isset, isArray, isObject, isFunction, isNull, inArray, has, clone, ajax, fetch, addEventListeners, triggerEvent, getEventPath, toggleFullscreen}}
  */

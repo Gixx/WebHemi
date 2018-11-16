@@ -1,10 +1,14 @@
 /**
- * WebHemi Components
+ * WebHemi Component Framework
  *
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  * @link      http://www.gixx-web.com
  */
+
+if (typeof window.WebHemiOptions === 'undefined') {
+    window.WebHemiOptions = {};
+}
 
 /**
  * Webhemi Component Framework.
@@ -19,20 +23,21 @@ var WebHemi = function(options)
     let defaultOptions = {
         path: 'components/',
         loadComponents: [
-             'Util'
-            ,'Registry'
-            ,'Dialog'
+            'Util',
+            'Registry',
+            'Dialog',
+            'ProgressDialog'
         ],
         availableComponents: {
-             Util: {}
-            ,Registry: {}
-            ,Dialog: {}
-            ,ProgressDialog: {}
-            ,Form: {}
-            ,LazyLoadImage: {}
-            ,LazyLoadBackgroundImage: {}
-            ,BackgroundImageRotator: {}
-            ,Folding: {}
+            Util: {},
+            Registry: {},
+            Dialog: {},
+            ProgressDialog: {},
+            Form: {},
+            LazyLoadImage: {},
+            LazyLoadBackgroundImage: {},
+            BackgroundImageRotator: {},
+            Folding: {},
         },
         verbose: true
     };
@@ -162,7 +167,7 @@ var WebHemi = function(options)
             return options;
         }
     };
-}({});
+}(window.WebHemiOptions);
 window.WebHemi = WebHemi;
 window.WebHemi.init();
 

@@ -7,7 +7,7 @@
  */
 
 /**
- * Registry component.
+ * Registry Component.
  *
  * @type {{init, has, get, set, setConfig, unset}}
  */
