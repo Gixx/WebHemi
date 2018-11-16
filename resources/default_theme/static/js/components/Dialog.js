@@ -1,5 +1,5 @@
 /**
- * WebHemi Components
+ * WebHemi Components: Dialog
  *
  * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
@@ -7,7 +7,7 @@
  */
 
 /**
- * Dialog component.
+ * Dialog Component.
  *
  * @type {{init}}
  */
@@ -67,9 +67,11 @@ WebHemi.components.Dialog = function()
              */
             open : function()
             {
-                HTMLElement.showModal();
-                if (!nativeSupport) {
-                    document.getElementById(dialogShieldId).style.display = 'block';
+                if (!HTMLElement.hasAttribute('open')) {
+                    HTMLElement.showModal();
+                    if (!nativeSupport) {
+                        document.getElementById(dialogShieldId).style.display = 'block';
+                    }
                 }
 
                 return this;
@@ -82,9 +84,11 @@ WebHemi.components.Dialog = function()
              */
             close : function()
             {
-                HTMLElement.close();
-                if (!nativeSupport) {
-                    document.getElementById(dialogShieldId).style.display = 'none';
+                if (HTMLElement.hasAttribute('open')) {
+                    HTMLElement.close();
+                    if (!nativeSupport) {
+                        document.getElementById(dialogShieldId).style.display = 'none';
+                    }
                 }
 
                 return this;
@@ -150,7 +154,6 @@ WebHemi.components.Dialog = function()
                     'color:#cecece; font-weight:bold;'
                 );
             }
-
 
             options.verbose && console.groupEnd();
 
