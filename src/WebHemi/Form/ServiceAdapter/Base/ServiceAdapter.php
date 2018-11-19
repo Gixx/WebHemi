@@ -28,6 +28,10 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     /**
      * @var string
      */
+    private $identifier = '';
+    /**
+     * @var string
+     */
     private $name;
     /**
      * @var string
@@ -37,6 +41,10 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
      * @var string
      */
     private $method;
+    /**
+     * @var string
+     */
+    private $enctype;
     /**
      * @var array
      */
@@ -48,12 +56,23 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
      * @param string $name
      * @param string $action
      * @param string $method
+     * @param string $enctype
      */
-    public function __construct(string $name = '', string $action = '', string $method = 'POST')
-    {
+    public function __construct(
+        string $name = '',
+        string $action = '',
+        string $method = 'POST',
+        string $enctype = 'application/x-www-form-urlencoded'
+    ) {
         $this->name = $name;
         $this->action = $action;
         $this->method = $method;
+        $this->enctype = $enctype;
+
+        if (!empty($this->name)) {
+            $this->name = StringLib::convertCamelCaseToUnderscore($name);
+            $this->identifier = StringLib::convertNonAlphanumericToUnderscore($this->name);
+        }
     }
 
     /**
@@ -62,18 +81,26 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
      * @param  string $name
      * @param  string $action
      * @param  string $method
+     * @param string $enctype
+     *
      * @throws RuntimeException
      * @return ServiceInterface
      */
-    public function initialize(string $name, string $action, string $method = 'POST') : ServiceInterface
-    {
+    public function initialize(
+        string $name = '',
+        string $action = '',
+        string $method = 'POST',
+        string $enctype = 'application/x-www-form-urlencoded'
+    ) : ServiceInterface {
         if (!empty($this->name) || !empty($this->action)) {
             throw new RuntimeException('The form had been already initialized!', 1000);
         }
 
-        $this->name = $name;
+        $this->name = StringLib::convertCamelCaseToUnderscore($name);
+        $this->identifier = StringLib::convertNonAlphanumericToUnderscore($this->name);
         $this->action = $action;
         $this->method = $method;
+        $this->enctype = $enctype;
 
         return $this;
     }
@@ -86,6 +113,16 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     public function getName() : string
     {
         return $this->name;
+    }
+
+    /**
+     * Gets form ID.
+     *
+     * @return string
+     */
+    public function getId() : string
+    {
+        return $this->identifier;
     }
 
     /**
@@ -106,6 +143,16 @@ class ServiceAdapter implements ServiceInterface, JsonSerializable
     public function getMethod() : string
     {
         return $this->method;
+    }
+
+    /**
+     * Gets form enctype.
+     *
+     * @return string
+     */
+    public function getEnctype() : string
+    {
+        return $this->enctype;
     }
 
     /**

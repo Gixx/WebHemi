@@ -24,8 +24,14 @@ interface ServiceInterface
      * @param string $name
      * @param string $action
      * @param string $method
+     * @param string $enctype
      */
-    public function __construct(string $name = '', string $action = '', string $method = 'POST');
+    public function __construct(
+        string $name = '',
+        string $action = '',
+        string $method = 'POST',
+        string $enctype = 'application/x-www-form-urlencoded'
+    );
 
     /**
      * Initializes the form if it didn't happen in the constructor. (Used mostly in presets).
@@ -33,9 +39,15 @@ interface ServiceInterface
      * @param  string $name
      * @param  string $action
      * @param  string $method
+     * @param  string $enctype
      * @return ServiceInterface
      */
-    public function initialize(string $name, string $action, string $method = 'POST') : ServiceInterface;
+    public function initialize(
+        string $name = '',
+        string $action = '',
+        string $method = 'POST',
+        string $enctype = 'application/x-www-form-urlencoded'
+    ) : ServiceInterface;
 
     /**
      * Gets form name.
@@ -43,6 +55,13 @@ interface ServiceInterface
      * @return string
      */
     public function getName() : string;
+
+    /**
+     * Gets form ID.
+     *
+     * @return string
+     */
+    public function getId() : string;
 
     /**
      * Gets form action.
@@ -57,6 +76,13 @@ interface ServiceInterface
      * @return string
      */
     public function getMethod() : string;
+
+    /**
+     * Gets form enctype.
+     *
+     * @return string
+     */
+    public function getEnctype() : string;
 
     /**
      * Adds an element to the form.
