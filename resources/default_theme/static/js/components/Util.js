@@ -34,6 +34,42 @@ WebHemi.components.Util = function()
         'color:black; font-weight:bold;'
     );
 
+    /**
+     * Converts a form data to object
+     *
+     * @param {FormData} formData
+     * @return {Object}
+     */
+    let formDataToObject = function(formData)
+    {
+        let object = {};
+
+        formData.forEach(function(value, key){
+            object[key] = value;
+        });
+
+        return object;
+    };
+
+    /**
+     * Converts an object to form data
+     *
+     * @param {Object} object
+     * @return {FormData}
+     */
+    let objectToFormData = function(object)
+    {
+        let formData = new FormData();
+
+        for (let attribute in object) {
+            if (object.hasOwnProperty(attribute)) {
+                formData.append(attribute, object[attribute]);
+            }
+        }
+
+        return formData
+    };
+
     return {
         /**
          * Initializes the component.
@@ -154,6 +190,7 @@ WebHemi.components.Util = function()
             if (obj instanceof Date) {
                 copy = new Date();
                 copy.setTime(obj.getTime());
+
                 return copy;
             }
 
@@ -163,6 +200,7 @@ WebHemi.components.Util = function()
                 for (let i = 0, len = obj.length; i < len; i++) {
                     copy[i] = this.clone(obj[i]);
                 }
+
                 return copy;
             }
 
@@ -170,8 +208,11 @@ WebHemi.components.Util = function()
             if (obj instanceof Object) {
                 copy = {};
                 for (let attr in obj) {
-                    if (obj.hasOwnProperty(attr)) copy[attr] = this.clone(obj[attr]);
+                    if (obj.hasOwnProperty(attr)) {
+                        copy[attr] = this.clone(obj[attr]);
+                    }
                 }
+
                 return copy;
             }
 
@@ -186,6 +227,7 @@ WebHemi.components.Util = function()
          * @example  {
          *   url: '/index',
          *   method: 'POST',
+         *   enctype: 'application/json',
          *   data: {
          *     name: 'John Doe',
          *     email: 'johndoe@foo.org'
@@ -201,6 +243,7 @@ WebHemi.components.Util = function()
             let url = typeof settings.url !== 'undefined' ? settings.url : '/';
             let method = typeof settings.method !== 'undefined' ? settings.method : 'POST';
             let async = typeof settings.async !== 'undefined' ? settings.async : true;
+            let enctype = typeof settings.enctype !== 'undefined' ? settings.enctype : 'application/json';
             let data = typeof settings.data !== 'undefined' ? settings.data : '';
             let successCallback = typeof settings.success === 'function' ? settings.success : function (data) {};
             let failureCallback = typeof settings.failure === 'function' ? settings.failure : function (data) {};
@@ -225,13 +268,32 @@ WebHemi.components.Util = function()
                 }
             };
 
-            if (!data instanceof FormData) {
-                if (typeof data === 'object') {
+            // if NOT multipart/form-data, turn the FromData into object
+            if (data instanceof FormData && enctype !== 'multipart/form-data') {
+                data = formDataToObject(data);
+            }
+
+            // if mulitpart/form-data, turn the data into FormData
+            if (!data instanceof FormData && enctype === 'multipart/form-data') {
+                data = objectToFormData(data);
+            }
+
+            switch (enctype) {
+                case 'application/json':
                     data = JSON.stringify(data);
                     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-                } else {
+                    break;
+
+                case 'application/x-www-form-urlencoded':
+                    data = Object.keys(data).map(function(key) {
+                        return key + '=' + data[key]
+                    }).join('&');
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-                }
+                    break;
+
+                case 'multipart/form-data':
+                    xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+                    break;
             }
 
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -247,6 +309,7 @@ WebHemi.components.Util = function()
          * @example {
          *   url: '/index',
          *   method: 'PUT',
+         *   enctype: 'application/json',
          *   data: {
          *     name: 'John Doe',
          *     email: 'johndoe@foo.org'
@@ -260,13 +323,40 @@ WebHemi.components.Util = function()
             let url = typeof settings.url !== 'undefined' ? settings.url : '/';
             let method = typeof settings.method !== 'undefined' ? settings.method : 'POST';
             let data = typeof settings.data !== 'undefined' ? settings.data : {};
+            let enctype = typeof settings.enctype !== 'undefined' ? settings.enctype : 'application/json';
             let successCallback = typeof settings.success === 'function' ? settings.success : function (data) {};
             let failureCallback = typeof settings.failure === 'function' ? settings.failure : function (data) {};
+
+            switch (enctype) {
+                case 'application/json':
+                    if (data instanceof FormData) {
+                        data = formDataToObject(data);
+                    }
+
+                    data = JSON.stringify(data);
+                    break;
+
+                case 'application/x-www-form-urlencoded':
+                    if (data instanceof FormData) {
+                        data = formDataToObject(data);
+                    }
+
+                    data = Object.keys(data).map(function(key) {
+                        return key + '=' + data[key]
+                    }).join('&');
+                    break;
+
+                case 'multipart/form-data':
+                    if (!data instanceof FormData) {
+                        data = objectToFormData(data);
+                    }
+                    break;
+            }
 
             fetch(url, {
                 method: method,
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': enctype,
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: data

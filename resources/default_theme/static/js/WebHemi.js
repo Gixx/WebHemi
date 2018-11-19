@@ -26,7 +26,8 @@ var WebHemi = function(options)
             'Util',
             'Registry',
             'Dialog',
-            'ProgressDialog'
+            'ProgressDialog',
+            'Form'
         ],
         availableComponents: {
             Util: {},
