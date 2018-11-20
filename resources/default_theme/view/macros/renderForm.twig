@@ -23,7 +23,20 @@
  # @example - Render the MyForm, and use the myTextboxElement with extra data for the 'special_text' element:
  #
  # {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
- # {% set options = {'specialCustomData': ['label':'Hello', 'placeholder': 'write here'], 'templates': {'special_text': 'myTextboxElement'}} %}
+ # {% set options = {
+ #      'elements': {
+ #          'special_text': {
+ #              'label':'Hello',
+ #              'attributes': {
+ #                  'placeholder': 'write here',
+ #                  'data-description': 'My Special Textbox'
+ #              }
+ #          }
+ #      },
+ #      'templates': {
+ #          'special_text': 'myTextboxElement'
+ #      }
+ # } %}
  # <html><body>
  # <div class="myForm">
  # {{ _FORM.renderForm(MyForm, options) }}
@@ -33,11 +46,11 @@
  # The `options` array will be bypassed to all the elements so they can use it to gain information too.
  #}
 {% macro renderForm(form, options) %}
-    {% set options = options|default(false) %}
+    {% set elementOptions = options.elements['form']|default(false) %}
     {% if defined('@Theme/partials/form/formElement.twig') %}
-        {% include '@Theme/partials/form/formElement.twig' with {'form': form, 'options': options} %}
+        {% include '@Theme/partials/form/formElement.twig' with {'form': form, 'options': elementOptions} %}
     {% else %}
-        {% include '@WebHemi/partials/form/formElement.twig' with {'form': form, 'options': options} %}
+        {% include '@WebHemi/partials/form/formElement.twig' with {'form': form, 'options': elementOptions} %}
     {% endif %}
 {% endmacro %}
 
@@ -59,13 +72,15 @@
         {% set elementTemplate = formElement.getType() ~ 'Element.twig' %}
     {% endif %}
 
+    {% set elementOptions = options.elements[formElement.getId()]|default(false) %}
+
     {% if defined('@Theme/partials/form/' ~ elementTemplate) %}
-        {% include '@Theme/partials/form/' ~ elementTemplate with {'formElement': formElement, 'options': options} %}
+        {% include '@Theme/partials/form/' ~ elementTemplate with {'formElement': formElement, 'options': elementOptions} %}
     {% elseif defined('@WebHemi/partials/form/' ~ elementTemplate) %}
-        {% include '@WebHemi/partials/form/' ~ elementTemplate with {'formElement': formElement, 'options': options} %}
+        {% include '@WebHemi/partials/form/' ~ elementTemplate with {'formElement': formElement, 'options': elementOptions} %}
     {% else %}
         {# default text input in the default template #}
-        {% include '@WebHemi/partials/form/inputTextElement.twig' with {'formElement': formElement, 'options': options} %}
+        {% include '@WebHemi/partials/form/inputTextElement.twig' with {'formElement': formElement, 'options': elementOptions} %}
     {% endif %}
 {% endmacro %}
 

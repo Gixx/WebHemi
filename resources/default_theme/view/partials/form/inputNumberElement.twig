@@ -1,9 +1,26 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element input number{% if formElement.getErrors() %} has-error{% endif %}">
-    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
-    {% set value = formElement.getValues() %}
+
+{% set options = options|default(false) %}
+{% set label = options.label|default(formElement.getLabel()) %}
+
+{# @var formElement \WebHemi\Form\Element\Html\Html5Element #}
+<div class="element input number">
+    <label for="{{ formElement.getId() }}">{{ label }}</label>
+    {% set values = formElement.getValues() %}
     {% set range = formElement.getValueRange() %}
-    <input type="range" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ value[0] }}"{% if range[0] %} min="{{ range[0] }}"{% endif %}{% if range[1] %} max="{{ range[1] }}"{% endif %}{% if range[2] %} step="{{ range[2] }}"{% endif %} />
+    <input  type="range"
+            id="{{ formElement.getId() }}"
+            name="{{ formElement.getName() }}"
+            value="{{ values[0] }}"
+            {% if range[0] %}min="{{ range[0] }}"{% endif %}
+            {% if range[1] %}max="{{ range[1] }}"{% endif %}
+            {% if formElement.getErrors() %} data-error="true"{% endif %}
+            {% for attribute, value in options.attributes|default([]) %}
+                {% if attribute not in  ['type', 'id', 'name', 'value', 'min', 'max', 'data-error'] %}
+                    {{ attribute }}="{{ value }}"
+                {% endif %}
+            {% endfor %}
+    />
     {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
     {% endif %}

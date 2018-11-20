@@ -21,7 +21,6 @@ class Html5Element extends AbstractElement
     public const HTML5_ELEMENT_DATALIST = 'datalist';
     public const HTML5_ELEMENT_INPUT_COLOR = 'inputColor';
     public const HTML5_ELEMENT_INPUT_DATE = 'inputDate';
-    public const HTML5_ELEMENT_INPUT_DATETIME = 'inputDateTime';
     public const HTML5_ELEMENT_INPUT_DATETIMELOCAL = 'inputDateTimeLocal';
     public const HTML5_ELEMENT_INPUT_EMAIL = 'inputEmail';
     public const HTML5_ELEMENT_INPUT_MONTH = 'inputMonth';
@@ -32,7 +31,6 @@ class Html5Element extends AbstractElement
     public const HTML5_ELEMENT_INPUT_TIME = 'inputTime';
     public const HTML5_ELEMENT_INPUT_URL = 'inputUrl';
     public const HTML5_ELEMENT_INPUT_WEEK = 'inputWeek';
-    public const HTML5_ELEMENT_KEYGEN = 'keygen';
     public const HTML5_ELEMENT_OUTPUT = 'output';
 
     /**
@@ -42,7 +40,6 @@ class Html5Element extends AbstractElement
         self::HTML5_ELEMENT_DATALIST,
         self::HTML5_ELEMENT_INPUT_COLOR,
         self::HTML5_ELEMENT_INPUT_DATE,
-        self::HTML5_ELEMENT_INPUT_DATETIME,
         self::HTML5_ELEMENT_INPUT_DATETIMELOCAL,
         self::HTML5_ELEMENT_INPUT_EMAIL,
         self::HTML5_ELEMENT_INPUT_MONTH,
@@ -53,7 +50,6 @@ class Html5Element extends AbstractElement
         self::HTML5_ELEMENT_INPUT_TIME,
         self::HTML5_ELEMENT_INPUT_URL,
         self::HTML5_ELEMENT_INPUT_WEEK,
-        self::HTML5_ELEMENT_KEYGEN,
         self::HTML5_ELEMENT_OUTPUT,
     ];
 }
