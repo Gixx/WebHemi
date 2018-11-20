@@ -19,6 +19,17 @@ use WebHemi\Validator\ValidatorInterface;
 class TestTrueValidator implements ValidatorInterface
 {
     private $data;
+
+    /**
+     * Set validator options.
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options) : void
+    {
+        unset($options);
+    }
+
     /**
      * Validates data.
      *

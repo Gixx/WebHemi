@@ -20,6 +20,8 @@ use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
 use WebHemi\Form\Element\Html\HtmlElement as HtmlFormElement;
 use WebHemi\Form\Element\Html\Html5Element as Html5FormElement;
 use WebHemi\Form\Element\Html\HtmlMultipleElement as MultipleHtmlFormElement;
+use WebHemi\Validator\NotEmptyValidator;
+use WebHemi\Validator\ValidatorCollection;
 use WebHemiTest\TestService\EmptyFormPreset;
 
 /**
@@ -35,8 +37,10 @@ class FormPresetTest extends TestCase
         $htmlElement = new HtmlFormElement();
         $html5Element = new Html5FormElement();
         $htmlMutipleElement = new MultipleHtmlFormElement();
+        $notEmptyValidator = new NotEmptyValidator();
+        $validatorCollection = new ValidatorCollection($notEmptyValidator);
 
-        $formPreset = new EmptyFormPreset(new HtmlForm(), $htmlElement);
+        $formPreset = new EmptyFormPreset(new HtmlForm(), $validatorCollection, $htmlElement);
 
         $this->assertInstanceOf(FormPresetInterface::class, $formPreset);
         $this->assertInstanceOf(FormInterface::class, $formPreset->getPreset());
@@ -47,7 +51,13 @@ class FormPresetTest extends TestCase
 
         $this->assertAttributeCount(count($expectedArray), 'elementPrototypes', $formPreset);
 
-        $formPreset = new EmptyFormPreset(new HtmlForm(), $htmlElement, $htmlMutipleElement, $html5Element);
+        $formPreset = new EmptyFormPreset(
+            new HtmlForm(),
+            $validatorCollection,
+            $htmlElement,
+            $htmlMutipleElement,
+            $html5Element
+        );
 
         $expectedArray = [
             HtmlFormElement::class => $htmlElement,
@@ -63,7 +73,10 @@ class FormPresetTest extends TestCase
      */
     public function testElementCreator()
     {
-        $formPreset = new EmptyFormPreset(new HtmlForm(), new HtmlFormElement());
+        $notEmptyValidator = new NotEmptyValidator();
+        $validatorCollection = new ValidatorCollection($notEmptyValidator);
+
+        $formPreset = new EmptyFormPreset(new HtmlForm(), $validatorCollection, new HtmlFormElement());
         $element = $formPreset->creatingTestElement(
             HtmlFormElement::class,
             HtmlFormElement::HTML_ELEMENT_BUTTON,

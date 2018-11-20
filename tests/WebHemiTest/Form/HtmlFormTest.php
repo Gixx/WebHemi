@@ -34,7 +34,7 @@ class HtmlFormTest extends TestCase
      */
     public function testConstructor()
     {
-        $name = 'someForm';
+        $name = 'some_form';
         $action = 'some/action';
 
         $form = new HtmlForm($name, $action);
@@ -52,7 +52,7 @@ class HtmlFormTest extends TestCase
      */
     public function testInit()
     {
-        $name = 'someForm';
+        $name = 'some_form';
         $action = 'some/action';
         $method = 'GET';
 
@@ -76,7 +76,7 @@ class HtmlFormTest extends TestCase
      */
     public function testGetters()
     {
-        $name = 'someForm';
+        $name = 'some_form';
         $action = 'some/action';
 
         $form = new HtmlForm($name, $action);
@@ -92,7 +92,7 @@ class HtmlFormTest extends TestCase
      */
     public function testAddElement()
     {
-        $name = 'someForm';
+        $name = 'some_form';
         $action = 'some/action';
 
         $form = new HtmlForm($name, $action);
@@ -124,7 +124,7 @@ class HtmlFormTest extends TestCase
      */
     public function testGetElement()
     {
-        $name = 'someForm';
+        $name = 'some_form';
         $action = 'some/action';
 
         $form = new HtmlForm($name, $action);
@@ -150,7 +150,7 @@ class HtmlFormTest extends TestCase
      */
     public function testLoadData()
     {
-        $name = 'someForm';
+        $name = 'some_form';
         $action = 'some/action';
         $form = new HtmlForm($name, $action);
 
@@ -162,7 +162,7 @@ class HtmlFormTest extends TestCase
 
         $data1 = [];
         $expectedJsonArrray = [
-            'name' => 'someForm',
+            'name' => 'some_form',
             'action' => 'some/action',
             'method' => 'POST',
             'data' => [
@@ -173,7 +173,7 @@ class HtmlFormTest extends TestCase
 
         ];
         $data2 = [
-            'someForm' => [
+            'some_form' => [
                 'some_data' => 1,
                 'some_other_data' => [
                     'deep_index' => 2
@@ -184,15 +184,16 @@ class HtmlFormTest extends TestCase
 
         $form->loadData($data1);
         $elements = $form->getElements();
-        $this->assertEmpty($elements['someForm[some_data]']->getValues());
-        $this->assertEmpty($elements['someForm[some_other_data]']->getValues());
+
+        $this->assertEmpty($elements['some_form[some_data]']->getValues());
+        $this->assertEmpty($elements['some_form[some_other_data]']->getValues());
         $this->assertSame(json_encode($expectedJsonArrray), json_encode($form));
         $this->assertSame($expectedJsonArrray, $form->jsonSerialize());
 
         $form->loadData($data2);
         $elements = $form->getElements();
-        $this->assertArraysAreSimilar([1], $elements['someForm[some_data]']->getValues());
-        $this->assertArraysAreSimilar(['deep_index' => 2], $elements['someForm[some_other_data]']->getValues());
+        $this->assertArraysAreSimilar([1], $elements['some_form[some_data]']->getValues());
+        $this->assertArraysAreSimilar(['deep_index' => 2], $elements['some_form[some_other_data]']->getValues());
     }
 
     /**
@@ -200,7 +201,7 @@ class HtmlFormTest extends TestCase
      */
     public function testValidator()
     {
-        $name = 'someForm';
+        $name = 'some_form';
         $action = 'some/action';
         $form = new HtmlForm($name, $action);
 
