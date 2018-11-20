@@ -61,8 +61,8 @@ WebHemi.components.Form = function ()
      */
     let FormElement = function(HTMLElement)
     {
-        let isAjax = typeof HTMLElement.dataset.ajax !== 'undefined' ? HTMLElement.dataset.asynch : false;
-        let isAsynch = typeof HTMLElement.dataset.asynch !== 'undefined' ? HTMLElement.dataset.asynch : true;
+        let isAjax = typeof HTMLElement.dataset.ajax !== 'undefined' ? Util.inArray(HTMLElement.dataset.ajax, [1, true, '1', 'true'])  : false;
+        let isAsync = typeof HTMLElement.dataset.asynch !== 'undefined' ? Util.inArray(HTMLElement.dataset.async, [1, true, '1', 'true']) : true;
         let targetUrl = HTMLElement.getAttribute('action');
         let method = HTMLElement.hasAttribute('action') ? HTMLElement.getAttribute('method') : 'POST';
         let enctype = HTMLElement.hasAttribute('enctype') ? HTMLElement.getAttribute('enctype') : 'application/json';
@@ -101,7 +101,7 @@ WebHemi.components.Form = function ()
                     data: formData,
                     enctype: enctype,
                     method: method,
-                    async: isAsynch,
+                    async: isAsync,
                     success: onSuccessCallback,
                     failure: onFailureCallback
                 });
