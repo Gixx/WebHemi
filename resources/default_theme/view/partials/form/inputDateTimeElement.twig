@@ -1,9 +1,0 @@
-{% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element input datetime{% if formElement.getErrors() %} has-error{% endif %}">
-    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
-    {% set value = formElement.getValues() %}
-    <input type="datetime" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ value[0] }}" />
-    {% if formElement.getErrors() %}
-        {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
-    {% endif %}
-</div>

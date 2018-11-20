@@ -1,5 +1,19 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
+
+{% set options = options|default(false) %}
+{% set label = options.label|default(formElement.getLabel()) %}
+
+{# @var formElement \WebHemi\Form\Element\Html\HtmlElement #}
 <div class="element button reset">
-    {% set value = formElement.getValues() %}
-    <button type="reset" name="{{ formElement.getName() }}" value="{{ value[0] }}">{{ formElement.getLabel() }}</button>
+    {% set values = formElement.getValues() %}
+    <button type="reset"
+            id="{{ formElement.getId() }}"
+            name="{{ formElement.getName() }}"
+            value="{{ values[0] }}"
+            {% for attribute, value in options.attributes|default([]) %}
+                {% if attribute not in  ['type', 'id', 'name', 'value'] %}
+                    {{ attribute }}="{{ value }}"
+                {% endif %}
+            {% endfor %}
+    >{{ label }}</button>
 </div>

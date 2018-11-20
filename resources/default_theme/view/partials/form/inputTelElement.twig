@@ -1,8 +1,25 @@
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element input tel{% if formElement.getErrors() %} has-error{% endif %}">
-    <label for="{{ formElement.getId() }}">{{ formElement.getLabel() }}</label>
-    {% set value = formElement.getValues() %}
-    <input type="tel" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" value="{{ value[0] }}" />
+
+{% set options = options|default(false) %}
+{% set label = options.label|default(formElement.getLabel()) %}
+{% set autocomplete = options.attributes.autocomplete|default(formElement.getId()) %}
+
+{# @var formElement \WebHemi\Form\Element\Html\Html5Element #}
+<div class="element input tel">
+    <label for="{{ formElement.getId() }}">{{ label }}</label>
+    {% set values = formElement.getValues() %}
+    <input  type="tel"
+            id="{{ formElement.getId() }}"
+            name="{{ formElement.getName() }}"
+            value="{{ values[0] }}"
+            autocomplete="{{ autocomplete }}"
+            {% if formElement.getErrors() %} data-error="true"{% endif %}
+            {% for attribute, value in options.attributes|default([]) %}
+                {% if attribute not in  ['type', 'id', 'name', 'value', 'autocomplete', 'data-error'] %}
+                    {{ attribute }}="{{ value }}"
+                {% endif %}
+            {% endfor %}
+    />
     {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
     {% endif %}
