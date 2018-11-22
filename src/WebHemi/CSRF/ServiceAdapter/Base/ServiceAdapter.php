@@ -36,9 +36,10 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Generate a CSRF token.
      *
+     * @param int $ttlExtendSeconds
      * @return string
      */
-    public function generate() : string
+    public function generate(int $ttlExtendSeconds = 0) : string
     {
         $extra = $this->getClientHash();
 
@@ -49,7 +50,7 @@ class ServiceAdapter implements ServiceInterface
             $randomString = $this->getRandomString(32);
         }
 
-        $token = base64_encode(time() . $extra . $randomString);
+        $token = base64_encode((time() + $ttlExtendSeconds) . $extra . $randomString);
 
         $this->sessionManager->set(self::SESSION_KEY, $token);
 
@@ -59,30 +60,28 @@ class ServiceAdapter implements ServiceInterface
     /**
      * Check the CSRF token is valid.
      *
-     * @param string $token
+     * @param string $tokenString
      * @param null|int $ttl
      * @param bool $multiple
      * @return bool
      */
-    public function verify(string $token, ? int $ttl = null, bool $multiple = true) : bool
+    public function verify(string $tokenString, ? int $ttl = null, bool $multiple = true) : bool
     {
-        $sessionToken = $this->sessionManager->get(self::SESSION_KEY) ?? '';
+        $sessionTokenString = $this->sessionManager->get(self::SESSION_KEY) ?? '';
+
+        $valid = $tokenString === $sessionTokenString;
 
         if (!$multiple) {
             $this->sessionManager->delete(self::SESSION_KEY);
         }
 
-        $sessionToken = $this->decodeToken($sessionToken);
-        $token = $this->decodeToken($token);
-
-        $valid = true;
+        $token = $this->decodeToken($tokenString);
 
         if (!empty($ttl)) {
-            $valid = $valid && ($sessionToken['time'] + $ttl >= time());
+            $valid = $valid && ($token['time'] + $ttl >= time());
         }
 
-        return $valid && ($token['extra'] == $this->getClientHash())
-            && ($sessionToken['randomString'] == $token['randomString']);
+        return $valid && ($token['extra'] == $this->getClientHash());
     }
 
     /**
