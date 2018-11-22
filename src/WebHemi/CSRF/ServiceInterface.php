@@ -33,17 +33,18 @@ interface ServiceInterface
     /**
      * Generate a CSRF token.
      *
+     * @param int $ttlExtendSeconds
      * @return string
      */
-    public function generate() : string;
+    public function generate(int $ttlExtendSeconds = 0) : string;
 
     /**
      * Check the CSRF token is valid.
      *
-     * @param string $token
+     * @param string $tokenString
      * @param null|int $ttl
      * @param bool $multiple
      * @return bool
      */
-    public function verify(string $token, ? int $ttl = null, bool $multiple = true) : bool;
+    public function verify(string $tokenString, ? int $ttl = null, bool $multiple = true) : bool;
 }
