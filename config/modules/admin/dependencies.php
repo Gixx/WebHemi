@@ -98,13 +98,13 @@ return [
                 ],
             ],
             Middleware\Action\Admin\Applications\AddAction::class => [
-                'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
+                'inherits' => Middleware\Action\Admin\Applications\IndexAction::class,
             ],
             Middleware\Action\Admin\Applications\EditAction::class => [
                 'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
             ],
             Middleware\Action\Admin\Applications\DeleteAction::class => [
-                'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
+                'inherits' => Middleware\Action\Admin\Applications\IndexAction::class,
             ],
             Middleware\Action\Admin\ControlPanel\Groups\ListAction::class => [
                 'arguments' => [

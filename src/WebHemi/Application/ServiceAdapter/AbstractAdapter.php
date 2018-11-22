@@ -16,6 +16,7 @@ namespace WebHemi\Application\ServiceAdapter;
 use Throwable;
 use WebHemi\Application\ServiceInterface;
 use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionInterface;
+use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Http\ResponseInterface;
 use WebHemi\Http\ServerRequestInterface;
 use WebHemi\Http\ServiceInterface as HttpInterface;
@@ -67,6 +68,22 @@ abstract class AbstractAdapter implements ServiceInterface
          * @var ResponseInterface $response
          */
         $this->response = $httpAdapter->getResponse();
+
+        $this->setApplicationUri();
+    }
+
+    /**
+     * Sets the application URI into the request object.
+     */
+    protected function setApplicationUri()
+    {
+        /**
+         * @var EnvironmentInterface $environmentManager
+         */
+        $environmentManager = $this->container->get(EnvironmentInterface::class);
+        $applicationUri = rtrim($environmentManager->getSelectedApplicationUri(), '/');
+        $this->request = $this->request
+            ->withAttribute('applicationUri', $applicationUri);
     }
 
     /**

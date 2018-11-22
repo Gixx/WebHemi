@@ -29,27 +29,27 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * @var ConfigurationInterface
      */
-    private $configuration;
+    protected $configuration;
     /**
      * @var AuthInterface
      */
-    private $authAdapter;
+    protected $authAdapter;
     /**
      * @var EnvironmentInterface
      */
-    private $environmentManager;
+    protected $environmentManager;
     /**
      * @var ApplicationStorage
      */
-    private $applicationStorage;
+    protected $applicationStorage;
     /**
      * @var PresetInterface
      */
-    private $applicationFormPreset;
+    protected $applicationFormPreset;
     /**
      * @var CSRFInterface
      */
-    private $csrfAdapter;
+    protected $csrfAdapter;
 
     /**
      * IndexAction constructor.
@@ -97,13 +97,15 @@ class IndexAction extends AbstractMiddlewareAction
         $applications = $this->applicationStorage->getApplicationList();
         $form = $this->applicationFormPreset->getPreset();
 
+        $csrfToken = $this->csrfAdapter->generate(180);
+
         $csrfElement = $form->getElement(CSRFInterface::SESSION_KEY);
-        $csrfElement->setValues([$this->csrfAdapter->generate()]);
+        $csrfElement->setValues([$csrfToken]);
 
         return [
             'data' => $applications,
             'form' => $form,
-            CSRFInterface::SESSION_KEY => $this->csrfAdapter->generate()
+            CSRFInterface::SESSION_KEY => $csrfToken
         ];
     }
 }
