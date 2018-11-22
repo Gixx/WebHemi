@@ -13,51 +13,11 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin\Applications;
 
-use WebHemi\Auth\ServiceInterface as AuthInterface;
-use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
-use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
-use WebHemi\Form\PresetInterface;
-use WebHemi\Middleware\Action\AbstractMiddlewareAction;
-
 /**
  * Class AddAction.
  */
-class AddAction extends AbstractMiddlewareAction
+class AddAction extends IndexAction
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-    /**
-     * @var AuthInterface
-     */
-    private $authAdapter;
-    /**
-     * @var EnvironmentInterface
-     */
-    private $environmentManager;
-    private $formPreset;
-
-    /**
-     * AddAction constructor.
-     *
-     * @param ConfigurationInterface $configuration
-     * @param AuthInterface          $authAdapter
-     * @param EnvironmentInterface   $environmentManager
-     * @param PresetInterface        $formPreset
-     */
-    public function __construct(
-        ConfigurationInterface $configuration,
-        AuthInterface $authAdapter,
-        EnvironmentInterface $environmentManager,
-        PresetInterface $formPreset
-    ) {
-        $this->configuration = $configuration;
-        $this->authAdapter = $authAdapter;
-        $this->environmentManager = $environmentManager;
-        $this->formPreset = $formPreset;
-    }
-
     /**
      * Gets template map name or template file path.
      *
@@ -75,8 +35,12 @@ class AddAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        return [
-            'form' => $this->formPreset->getPreset()
-        ];
+        // TODO fix to get it from the request object
+        $applicationUri = '/';
+        $this->response = $this->response
+            ->withStatus(302, 'Found')
+            ->withHeader('Location', $applicationUri.'applications');
+
+        return [];
     }
 }

@@ -5,6 +5,7 @@
  # @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  # @link      http://www.gixx-web.com
  #}
+{% import '@WebHemi/macros/renderForm.twig' as _FORM %}
 {% extends "admin-layout.twig" %}
 
 {% block title %}{{ 'Applications - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
@@ -57,6 +58,14 @@
         </tbody>
     </table>
     {% if isAllowed('admin-applications-add') %}
-        <button class="add">Add</button>
+        <button class="add" data-dialog="application_add">Add</button>
+    {% endif %}
+{% endblock %}
+
+{% block dialog %}
+    {% if isAllowed('admin-applications-add') %}
+    <dialog id="application_add">
+        {{ _FORM.renderForm(form) }}
+    </dialog>
     {% endif %}
 {% endblock %}
