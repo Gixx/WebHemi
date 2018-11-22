@@ -34,11 +34,7 @@ var WebHemi = function(options)
             Registry: {},
             Dialog: {},
             ProgressDialog: {},
-            Form: {},
-            LazyLoadImage: {},
-            LazyLoadBackgroundImage: {},
-            BackgroundImageRotator: {},
-            Folding: {},
+            Form: {}
         },
         verbose: true
     };
