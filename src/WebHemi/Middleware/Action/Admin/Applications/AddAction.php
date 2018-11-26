@@ -13,6 +13,11 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin\Applications;
 
+use Exception;
+use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
+use WebHemi\Http\ServerRequestInterface;
+use WebHemi\Http\ResponseInterface;
+
 /**
  * Class AddAction.
  */
@@ -31,14 +36,31 @@ class AddAction extends IndexAction
     /**
      * Gets template data.
      *
+     * @throws Exception
      * @return array
      */
     public function getTemplateData() : array
     {
-        // TODO fix to get it from the request object
-        $applicationUri = '/';
+        // TODO complete form
+        /** @var array $postData */
+        $postData = $this->request->getParsedBody();
+        /** @var HtmlForm $form */
+        $form = $this->applicationFormPreset->getPreset();
+        $form->loadData($postData);
+
+        if ($form->validate()) {
+            // TODO validate name
+            // * in case of domain: no other application with the same domain (== name)
+            // * in case of directory: no other application with the same path (== name)
+            //   + no filesystem path within the same path
+        } else {
+            throw new Exception('Form validation failed', ResponseInterface::STATUS_BAD_REQUEST);
+        }
+
+        $applicationUri = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_APPLICATION_URI);
+
         $this->response = $this->response
-            ->withStatus(302, 'Found')
+            ->withStatus(ResponseInterface::STATUS_REDIRECT, 'Found')
             ->withHeader('Location', $applicationUri.'applications');
 
         return [];

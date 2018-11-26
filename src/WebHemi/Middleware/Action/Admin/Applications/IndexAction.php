@@ -14,8 +14,10 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Action\Admin\Applications;
 
 use WebHemi\CSRF\ServiceInterface as CSRFInterface;
+use WebHemi\Data\Entity\EntitySet;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Form\PresetInterface;
+use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
@@ -70,7 +72,9 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
+        /** @var EntitySet $applications */
         $applications = $this->applicationStorage->getApplicationList();
+        /** @var HtmlForm $form */
         $form = $this->applicationFormPreset->getPreset();
 
         $csrfToken = $this->csrfAdapter->generate(180);
