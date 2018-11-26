@@ -81,9 +81,9 @@ abstract class AbstractAdapter implements ServiceInterface
          * @var EnvironmentInterface $environmentManager
          */
         $environmentManager = $this->container->get(EnvironmentInterface::class);
-        $applicationUri = rtrim($environmentManager->getSelectedApplicationUri(), '/');
+        $applicationUri = rtrim($environmentManager->getSelectedApplicationUri(), '/').'/';
         $this->request = $this->request
-            ->withAttribute('applicationUri', $applicationUri);
+            ->withAttribute(ServerRequestInterface::REQUEST_ATTR_APPLICATION_URI, $applicationUri);
     }
 
     /**

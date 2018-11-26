@@ -29,6 +29,7 @@ interface ServerRequestInterface extends PsrServerRequestInterface
     public const REQUEST_ATTR_DISPATCH_DATA = 'dispatch_data';
     public const REQUEST_ATTR_AUTHENTICATED_USER = 'authenticated_user';
     public const REQUEST_ATTR_AUTHENTICATED_USER_META = 'authenticated_user_meta';
+    public const REQUEST_ATTR_APPLICATION_URI = 'application_uri';
 
     /**
      * Checks if it is an XML HTTP Request (Ajax) or not.
