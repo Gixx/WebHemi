@@ -79,9 +79,6 @@ return [
             ],
             Middleware\Action\Admin\Applications\IndexAction::class => [
                 'arguments' => [
-                    Configuration\ServiceInterface::class,
-                    Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class,
                     Data\Storage\ApplicationStorage::class,
                     'ApplicationCreateForm',
                     CSRF\ServiceInterface::class

@@ -13,11 +13,8 @@ declare(strict_types = 1);
 
 namespace WebHemi\Middleware\Action\Admin\Applications;
 
-use WebHemi\Auth\ServiceInterface as AuthInterface;
-use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Data\Storage\ApplicationStorage;
-use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Form\PresetInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
@@ -26,18 +23,6 @@ use WebHemi\Middleware\Action\AbstractMiddlewareAction;
  */
 class IndexAction extends AbstractMiddlewareAction
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    protected $configuration;
-    /**
-     * @var AuthInterface
-     */
-    protected $authAdapter;
-    /**
-     * @var EnvironmentInterface
-     */
-    protected $environmentManager;
     /**
      * @var ApplicationStorage
      */
@@ -54,24 +39,15 @@ class IndexAction extends AbstractMiddlewareAction
     /**
      * IndexAction constructor.
      *
-     * @param ConfigurationInterface $configuration
-     * @param AuthInterface          $authAdapter
-     * @param EnvironmentInterface   $environmentManager
      * @param ApplicationStorage     $applicationStorage
      * @param PresetInterface        $applicationFormPreset
      * @param CSRFInterface          $csrfAdapter
      */
     public function __construct(
-        ConfigurationInterface $configuration,
-        AuthInterface $authAdapter,
-        EnvironmentInterface $environmentManager,
         ApplicationStorage $applicationStorage,
         PresetInterface $applicationFormPreset,
         CSRFInterface $csrfAdapter
     ) {
-        $this->configuration = $configuration;
-        $this->authAdapter = $authAdapter;
-        $this->environmentManager = $environmentManager;
         $this->applicationStorage = $applicationStorage;
         $this->applicationFormPreset = $applicationFormPreset;
         $this->csrfAdapter = $csrfAdapter;
