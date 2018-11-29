@@ -2,9 +2,9 @@
 /**
  * WebHemi.
  *
- * PHP version 7.1
+ * PHP version 7.2
  *
- * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
+ * @copyright 2012 - 2019 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
  * @link http://www.gixx-web.com
@@ -25,6 +25,6 @@ class ApplicationEditForm extends ApplicationCreateForm
      */
     protected function initAdapter()
     {
-        $this->formAdapter->initialize('application', '[URL]', 'PUT');
+        $this->formAdapter->initialize('application', '', 'PUT');
     }
 }

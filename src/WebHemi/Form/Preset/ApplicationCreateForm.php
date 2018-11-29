@@ -2,9 +2,9 @@
 /**
  * WebHemi.
  *
- * PHP version 7.1
+ * PHP version 7.2
  *
- * @copyright 2012 - 2018 Gixx-web (http://www.gixx-web.com)
+ * @copyright 2012 - 2019 Gixx-web (http://www.gixx-web.com)
  * @license   https://opensource.org/licenses/MIT The MIT License (MIT)
  *
  * @link http://www.gixx-web.com
@@ -15,6 +15,7 @@ namespace WebHemi\Form\Preset;
 
 use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Form\Element\Html\HtmlElement;
+use WebHemi\Validator;
 
 /**
  * Class ApplicationEditForm
@@ -55,6 +56,7 @@ class ApplicationCreateForm extends AbstractPreset
             'name',
             'Application name'
         );
+        $name->addValidator($this->validatorCollection->getValidator(Validator\NotEmptyValidator::class));
 
         $title = $this->createElement(
             HtmlElement::class,
@@ -62,6 +64,7 @@ class ApplicationCreateForm extends AbstractPreset
             'title',
             'Display name (title)'
         );
+        $title->addValidator($this->validatorCollection->getValidator(Validator\NotEmptyValidator::class));
 
         $introduction = $this->createElement(
             HtmlElement::class,
@@ -84,6 +87,27 @@ class ApplicationCreateForm extends AbstractPreset
             'Description'
         );
 
+        $keywords = $this->createElement(
+            HtmlElement::class,
+            HtmlElement::HTML_ELEMENT_INPUT_TEXT,
+            'keywords',
+            'Keywords'
+        );
+
+        $copyright = $this->createElement(
+            HtmlElement::class,
+            HtmlElement::HTML_ELEMENT_INPUT_TEXT,
+            'copyright',
+            'Copyright'
+        );
+
+        $cancel = $this->createElement(
+            HtmlElement::class,
+            HtmlElement::HTML_ELEMENT_BUTTON,
+            'cancel',
+            'Cancel'
+        );
+
         $submit = $this->createElement(
             HtmlElement::class,
             HtmlElement::HTML_ELEMENT_SUBMIT,
@@ -98,6 +122,9 @@ class ApplicationCreateForm extends AbstractPreset
             ->addElement($introduction)
             ->addElement($subject)
             ->addElement($description)
+            ->addElement($keywords)
+            ->addElement($copyright)
+            ->addElement($cancel)
             ->addElement($submit);
     }
 }
