@@ -33,7 +33,8 @@ WebHemi.components.Form = function ()
     let options = WebHemi.getOptions();
     /** @type {Object} */
     let formDefaultOptions = {
-        ajaxFlagAttribute: 'data-isAjax'
+        ajaxFlagAttribute: 'ajax',
+        asynchFlagAttribute: 'asynch'
     };
 
     if (typeof WebHemi.components.Util === 'undefined') {
@@ -61,8 +62,12 @@ WebHemi.components.Form = function ()
      */
     let FormElement = function(HTMLElement)
     {
-        let isAjax = typeof HTMLElement.dataset.ajax !== 'undefined' ? Util.inArray(HTMLElement.dataset.ajax, [1, true, '1', 'true'])  : false;
-        let isAsync = typeof HTMLElement.dataset.asynch !== 'undefined' ? Util.inArray(HTMLElement.dataset.async, [1, true, '1', 'true']) : true;
+        let isAjax = typeof HTMLElement.dataset[formOptions.ajaxFlagAttribute] !== 'undefined'
+            ? Util.inArray(HTMLElement.dataset[formOptions.ajaxFlagAttribute], [1, true, '1', 'true'])
+            : false;
+        let isAsync = typeof HTMLElement.dataset[formOptions.asynchFlagAttribute] !== 'undefined'
+            ? Util.inArray(HTMLElement.dataset[formOptions.asynchFlagAttribute], [1, true, '1', 'true'])
+            : true;
         let targetUrl = HTMLElement.getAttribute('action');
         let method = HTMLElement.hasAttribute('action') ? HTMLElement.getAttribute('method') : 'POST';
         let enctype = HTMLElement.hasAttribute('enctype') ? HTMLElement.getAttribute('enctype') : 'application/json';

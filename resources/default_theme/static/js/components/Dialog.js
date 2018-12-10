@@ -116,6 +116,7 @@ WebHemi.components.Dialog = function()
                 '%c  Looking for Dialog Elements...',
                 'color:#cecece'
             );
+
             dialogElements = document.querySelectorAll('dialog');
 
             if (dialogElements.length > 0) {

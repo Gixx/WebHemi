@@ -11,7 +11,7 @@
  *
  * @example Requires a <dialog> element with the following structure:
  *
- * <dialog id="{WebHemiOptions.availableComponents.ProgressDialog.dialogInfo.sessionIdAttribute}" data-session="%sessionId%">
+ * <dialog id="{WebHemiOptions.availableComponents.ProgressDialog.dialogId}" data-progress="%progressId%">
  *   <p class="{WebHemiOptions.availableComponents.ProgressDialog.dialogInfo.titleElementClass}">%title%</p>
  *   <progress value="0" max="100"></progress>
  *   <p class="{WebHemiOptions.availableComponents.ProgressDialog.dialogInfo.counterElementClass}"></p>
@@ -19,8 +19,8 @@
  *
  * Custom {WebHemiOptions} should be provided in the represented structure BEFORE the WebHemi.init();
  *
- * Data coming from the backend:
- * - %sessionId% - a sessionId which identifies the current progress
+ * Data coming from the backend should contain:
+ * - %progressId% - an identifier for the current progress (e.g.: sessionId)
  * - %title% - the title of the dialog window
  *
  * @type {{init}}
@@ -41,11 +41,11 @@ WebHemi.components.ProgressDialog = function()
     let options = WebHemi.getOptions();
     /** @type {Object} */
     let progressDialogDefaultOptions = {
-        targetUrl: '/progress.php',
+        targetUrl: '/progress.php?id=%progressId%',
         dialogId: 'webhemi-dialog-progress',
         counterType: 'percent',
         dialogInfo : {
-            sessionIdAttribute : 'data-session',
+            progressIdDataAttribute : 'progress',
             titleElementClass : 'progress-title',
             counterElementClass : 'progress-counter'
         },
@@ -87,14 +87,18 @@ WebHemi.components.ProgressDialog = function()
     let ProgressDialogElement = function(HTMLElement)
     {
         let DialogReference = HTMLElement.component;
-        let progressId = HTMLElement.getAttribute(dialogOptions.dialogInfo.sessionIdAttribute);
+
+        let progressId = typeof HTMLElement.dataset[dialogOptions.dialogInfo.sessionIdDataAttribute] !== 'undefined'
+            ? HTMLElement.dataset[dialogOptions.dialogInfo.progressIdDataAttribute]
+            : '';
+
         let progressBarElement = HTMLElement.querySelector('#'+dialogOptions.dialogId+' > progress');
         let counterElement = HTMLElement.querySelector('#'+dialogOptions.dialogId+' > .'+dialogOptions.dialogInfo.counterElementClass);
         let titleElement = HTMLElement.querySelector('#'+dialogOptions.dialogId+' > .'+dialogOptions.dialogInfo.titleElementClass);
 
         function loadProgressData()
         {
-            let jsonUrl = dialogOptions.targetUrl+'?progress_id='+progressId;
+            let jsonUrl = dialogOptions.targetUrl.replace(/%progressId%/, progressId);
 
             options.verbose && console.info('      -> HTTP GET: '+jsonUrl);
 
