@@ -23,12 +23,13 @@ WebHemi.components.Dialog = function()
     let dialogElements = [];
     /** @type {number} */
     let idCounter = 1;
-    /** @type {string} */
-    let dialogIdPrefix = 'webhemi-dialog-';
-    /** @type {string} */
-    let dialogShieldId = 'webhemi-dialog-shield';
     /** @type {Object} */
     let options = WebHemi.getOptions();
+    /** @type {Object} */
+    let componentDefaultOptions = {
+        componentIdPrefix: 'webhemi-dialog-',
+        componentShieldId: 'webhemi-dialog-shield'
+    };
 
     if (typeof WebHemi.components.Util === 'undefined') {
         throw new ReferenceError('The Util component is required to use this component.');
@@ -36,6 +37,13 @@ WebHemi.components.Dialog = function()
 
     /** @type Util */
     let Util = WebHemi.components.Util;
+
+    // Complete the missing option elements.
+    for (let i in componentDefaultOptions) {
+        if (componentDefaultOptions.hasOwnProperty(i) && typeof options.availableComponents.ProgressDialog[i] === 'undefined') {
+            options.availableComponents.ProgressDialog[i] = componentDefaultOptions[i];
+        }
+    }
 
     /**
      * Dialog element handler.
@@ -144,7 +152,7 @@ WebHemi.components.Dialog = function()
 
                 for (let i = 0, len = dialogElements.length; i < len; i++) {
                     if (!dialogElements[i].hasAttribute('id')) {
-                        dialogElements[i].setAttribute('id', dialogIdPrefix + (idCounter++));
+                        dialogElements[i].setAttribute('id', componentOptions.componentIdPrefix + (idCounter++));
                     }
 
                     dialogElements[i].component = new DialogElement(dialogElements[i]);

@@ -43,7 +43,7 @@
         <title>{{ title|default('WebHemi Admin') }}</title>
         <link rel="stylesheet" href="{{ WebHemiApplication.resourcePath }}/css/login.css" />
     </head>
-    <body>
+    <body data-webhemi-component="BackgroundImageRotator" data-background-set-resource="{{ WebHemiApplication.resourcePath }}/img/login" data-background-set-speed="5000" data-background-set="01.jpg,02.jpg,05.jpg">
         <div class="content">
             <h1>Webhemi admin</h1>
             {% if loginForm %}

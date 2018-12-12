@@ -11,7 +11,7 @@
  *
  * @example Requires a <dialog> element with the following structure:
  *
- * <dialog id="{WebHemiOptions.availableComponents.ProgressDialog.dialogId}" data-progress="%progressId%">
+ * <dialog id="{WebHemiOptions.availableComponents.ProgressDialog.componentId}" data-progress="%progressId%">
  *   <p class="{WebHemiOptions.availableComponents.ProgressDialog.dialogInfo.titleElementClass}">%title%</p>
  *   <progress value="0" max="100"></progress>
  *   <p class="{WebHemiOptions.availableComponents.ProgressDialog.dialogInfo.counterElementClass}"></p>
@@ -40,9 +40,9 @@ WebHemi.components.ProgressDialog = function()
     /** @type {Object} */
     let options = WebHemi.getOptions();
     /** @type {Object} */
-    let progressDialogDefaultOptions = {
+    let componentDefaultOptions = {
+        componentId: 'webhemi-dialog-progress',
         targetUrl: '/progress.php?id=%progressId%',
-        dialogId: 'webhemi-dialog-progress',
         counterType: 'percent',
         dialogInfo : {
             progressIdDataAttribute : 'progress',
@@ -65,16 +65,17 @@ WebHemi.components.ProgressDialog = function()
     let Dialog = WebHemi.components.Dialog;
 
     // Complete the missing option elements.
-    for (let i in progressDialogDefaultOptions) {
-        if (progressDialogDefaultOptions.hasOwnProperty(i) && typeof options.availableComponents.ProgressDialog[i] === 'undefined') {
-            options.availableComponents.ProgressDialog[i] = progressDialogDefaultOptions[i];
+    for (let i in componentDefaultOptions) {
+        if (componentDefaultOptions.hasOwnProperty(i) && typeof options.availableComponents.ProgressDialog[i] === 'undefined') {
+            options.availableComponents.ProgressDialog[i] = componentDefaultOptions[i];
         }
     }
 
-    let dialogOptions = options.availableComponents.ProgressDialog;
+    let componentOptions = options.availableComponents.ProgressDialog;
 
-    if (dialogOptions.counterType !== 'counter' || dialogOptions.counterType !== 'percent') {
-        dialogOptions.counterType = 'percent';
+    // Ensure for the right data
+    if (componentOptions.counterType !== 'counter' || componentOptions.counterType !== 'percent') {
+        componentOptions.counterType = 'percent';
     }
 
     /**
@@ -88,17 +89,17 @@ WebHemi.components.ProgressDialog = function()
     {
         let DialogReference = HTMLElement.component;
 
-        let progressId = typeof HTMLElement.dataset[dialogOptions.dialogInfo.sessionIdDataAttribute] !== 'undefined'
-            ? HTMLElement.dataset[dialogOptions.dialogInfo.progressIdDataAttribute]
+        let progressId = typeof HTMLElement.dataset[componentOptions.dialogInfo.sessionIdDataAttribute] !== 'undefined'
+            ? HTMLElement.dataset[componentOptions.dialogInfo.progressIdDataAttribute]
             : '';
 
-        let progressBarElement = HTMLElement.querySelector('#'+dialogOptions.dialogId+' > progress');
-        let counterElement = HTMLElement.querySelector('#'+dialogOptions.dialogId+' > .'+dialogOptions.dialogInfo.counterElementClass);
-        let titleElement = HTMLElement.querySelector('#'+dialogOptions.dialogId+' > .'+dialogOptions.dialogInfo.titleElementClass);
+        let progressBarElement = HTMLElement.querySelector('#'+componentOptions.componentId+' > progress');
+        let counterElement = HTMLElement.querySelector('#'+componentOptions.componentId+' > .'+componentOptions.dialogInfo.counterElementClass);
+        let titleElement = HTMLElement.querySelector('#'+componentOptions.componentId+' > .'+componentOptions.dialogInfo.titleElementClass);
 
         function loadProgressData()
         {
-            let jsonUrl = dialogOptions.targetUrl.replace(/%progressId%/, progressId);
+            let jsonUrl = componentOptions.targetUrl.replace(/%progressId%/, progressId);
 
             options.verbose && console.info('      -> HTTP GET: '+jsonUrl);
 
@@ -114,7 +115,7 @@ WebHemi.components.ProgressDialog = function()
 
                     let counter = parseInt(Math.ceil(data.current / data.total * 100));
 
-                    if (dialogOptions.counterType === 'counter') {
+                    if (componentOptions.counterType === 'counter') {
                         counterElement.innerHTML = data.current + ' / ' + data.total;
                     } else {
                         counterElement.innerHTML = counter + '%';
@@ -239,15 +240,15 @@ WebHemi.components.ProgressDialog = function()
                 return;
             }
 
-            options.verbose && console.group('%c  Looking for Progress Dialog Element...', 'color:#cecece');
+            options.verbose && console.group('%c  Looking for the Progress Dialog Element...', 'color:#cecece');
 
-            progressDialogElement = document.querySelector('#'+dialogOptions.dialogId);
+            progressDialogElement = document.querySelector('#'+componentOptions.componentId);
 
             if (progressDialogElement) {
                 if (typeof progressDialogElement.component === 'undefined'
                     || progressDialogElement.component.constructor.name !== 'DialogElement'
                 ) {
-                    throw new ReferenceError('The dialog element #'+dialogOptions.dialogId+' is not registered as DialogElement.');
+                    throw new ReferenceError('The element #'+componentOptions.componentId+' is not registered as DialogElement.');
                 }
 
                 // Overwrite the element's component with the extended component.

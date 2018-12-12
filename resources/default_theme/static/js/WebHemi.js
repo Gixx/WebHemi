@@ -19,22 +19,23 @@ var WebHemi = function(options)
 {
     "use strict";
 
+    // TODO implement `data-component` to search for and to load only the required components automatically
     /** @type {Object} */
     let defaultOptions = {
         path: 'components/',
         loadComponents: [
             'Util',
-            'Registry',
             'Dialog',
             'ProgressDialog',
-            'Form'
+            'Form',
+            'BackgroundImageRotator'
         ],
         availableComponents: {
             Util: {},
-            Registry: {},
             Dialog: {},
             ProgressDialog: {},
-            Form: {}
+            Form: {},
+            BackgroundImageRotator: {}
         },
         verbose: true
     };
