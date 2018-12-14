@@ -706,6 +706,7 @@ CREATE TABLE `webhemi_filesystem` (
     `date_created`            DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_modified`           DATETIME                     DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     `date_published`          DATETIME                     DEFAULT NULL,
+    `date_published_archive`  DATE                         DEFAULT NULL,
     PRIMARY KEY (`id_filesystem`),
     UNIQUE KEY `unq_uri` (`fk_application`, `path`, `basename`),
     KEY `idx_filesystem_fk_application` (`fk_application`),
@@ -720,6 +721,7 @@ CREATE TABLE `webhemi_filesystem` (
     KEY `idx_filesystem_is_hidden` (`is_hidden`),
     KEY `idx_filesystem_is_read_only` (`is_read_only`),
     KEY `idx_filesystem_is_deleted` (`is_deleted`),
+    KEY `idx_filesystem_date_published_archive` (`date_published_archive`),
     CONSTRAINT `fkx_filesystem_fk_application` FOREIGN KEY (`fk_application`) REFERENCES `webhemi_application` (`id_application`)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
@@ -754,12 +756,12 @@ LOCK TABLES `webhemi_filesystem` WRITE;
 /*!40000 ALTER TABLE `webhemi_filesystem`
     DISABLE KEYS */;
 INSERT INTO `webhemi_filesystem` VALUES
-    (1, 2, NULL, NULL, NULL, NULL, 1, NULL, '/', 'category', 'Categories', '', 1, 1, 0, NOW(), NULL, NOW()),
-    (2, 2, NULL, NULL, NULL, NULL, 2, NULL, '/', 'tag', 'Tags', '', 1, 1, 0, NOW(), NULL, NOW()),
-    (3, 2, NULL, NULL, NULL, NULL, 3, NULL, '/', 'archive', 'Archive', '', 1, 1, 0, NOW(), NULL, NOW()),
-    (4, 2, NULL, NULL, NULL, NULL, 4, NULL, '/', 'media', 'Uploaded images', '', 1, 1, 0, NOW(), NULL, NOW()),
-    (5, 2, NULL, NULL, NULL, NULL, 5, NULL, '/', 'uploads', 'Uploaded files', '', 1, 1, 0, NOW(), NULL, NOW()),
-    (6, 2, NULL, NULL, NULL, NULL, 6, NULL, '/', 'user', 'User', '', 1, 1, 0, NOW(), NULL, NOW());
+    (1, 2, NULL, NULL, NULL, NULL, 1, NULL, '/', 'category', 'Categories', '', 1, 1, 0, NOW(), NULL, NOW(), DATE_FORMAT(NOW(), '%Y-%m-01')),
+    (2, 2, NULL, NULL, NULL, NULL, 2, NULL, '/', 'tag', 'Tags', '', 1, 1, 0, NOW(), NULL, NOW(), DATE_FORMAT(NOW(), '%Y-%m-01')),
+    (3, 2, NULL, NULL, NULL, NULL, 3, NULL, '/', 'archive', 'Archive', '', 1, 1, 0, NOW(), NULL, NOW(), DATE_FORMAT(NOW(), '%Y-%m-01')),
+    (4, 2, NULL, NULL, NULL, NULL, 4, NULL, '/', 'media', 'Uploaded images', '', 1, 1, 0, NOW(), NULL, NOW(), DATE_FORMAT(NOW(), '%Y-%m-01')),
+    (5, 2, NULL, NULL, NULL, NULL, 5, NULL, '/', 'uploads', 'Uploaded files', '', 1, 1, 0, NOW(), NULL, NOW(), DATE_FORMAT(NOW(), '%Y-%m-01')),
+    (6, 2, NULL, NULL, NULL, NULL, 6, NULL, '/', 'user', 'User', '', 1, 1, 0, NOW(), NULL, NOW(), DATE_FORMAT(NOW(), '%Y-%m-01'));
 /*!40000 ALTER TABLE `webhemi_filesystem`
     ENABLE KEYS */;
 UNLOCK TABLES;

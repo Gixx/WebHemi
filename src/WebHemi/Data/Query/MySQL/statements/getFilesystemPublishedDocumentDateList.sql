@@ -1,5 +1,5 @@
 SELECT
-    fs.`date_published`,
+    fs.`date_published_archive`,
     COUNT(*) AS number_of_publications
 FROM
     `webhemi_filesystem` AS fs
@@ -10,10 +10,9 @@ WHERE
     fs.`is_deleted` = 0 AND
     fs.`date_published` IS NOT NULL
 GROUP BY
-    YEAR(fs.`date_published`),
-    MONTH(fs.`date_published`)
+    fs.`date_published_archive`
 ORDER BY
-    fs.`date_published` DESC
+    fs.`date_published_archive` DESC
 LIMIT
     :limit
 OFFSET
