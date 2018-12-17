@@ -48,12 +48,13 @@
     "layershifter/tld-extract": "2.0.0"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master",
-    "phpunit/phpunit": "7.5.1",
-    "phpmd/phpmd": "2.6.0",
+    "friendsofphp/php-cs-fixer": "2.13.1",
     "pdepend/pdepend": "2.5.2",
-    "squizlabs/php_codesniffer": "3.3.2",
-    "phpstan/phpstan": "0.9.2"
+    "phpmd/phpmd": "2.6.0",
+    "phpstan/phpstan": "0.9.2",
+    "phpunit/phpunit": "7.5.1",
+    "roave/security-advisories": "dev-master",
+    "squizlabs/php_codesniffer": "3.3.2"
   },
   "scripts-descriptions": {
     "check": "Run all tests!"
@@ -67,7 +68,8 @@
     ],
     "md": "vendor/bin/phpmd src/ text phpmd.xml",
     "cs": "vendor/bin/phpcs --standard=PSR2 src/",
-    "cs-fix": "vendor/bin/phpcbf src/",
+    "cbf": "vendor/bin/phpcbf src/",
+    "cs-fixer": "vendor/bin/phpc-cs-fixer src/",
     "test-fast": "vendor/bin/phpunit -c phpunit-fast.xml",
     "test-full": "vendor/bin/phpunit -c phpunit.xml",
     "phpstan": "vendor/bin/phpstan analyse src --level=7",
