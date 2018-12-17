@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace WebHemi\Middleware\Action\Admin;
 
 use WebHemi\Data\Entity\EntitySet;
+use WebHemi\Data\Entity\UserEntity;
 use WebHemi\Data\Entity\UserGroupEntity;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
@@ -68,7 +69,7 @@ class DashboardAction extends AbstractMiddlewareAction
 
         $userEntity = $this->authAdapter->getIdentity();
 
-        if ($userEntity instanceof $userEntity) {
+        if ($userEntity instanceof UserEntity) {
             /**
              * @var \WebHemi\Data\Storage\UserStorage $userStorage
              */
