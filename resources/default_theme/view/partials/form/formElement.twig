@@ -3,17 +3,19 @@
 {% set options = options|default(false) %}
 
 {# @var form \WebHemi\Form\ServiceAdapter\Base\ServiceAdapter #}
+{# @var formElement \WebHemi\Form\Element\Html\HtmlElement #}
+{% set attributes = '' %}
+{% for attribute, value in options.attributes|default([]) %}
+    {% if attribute not in  ['id', 'name', 'action', 'method', 'enctype'] %}
+        {% set attributes = attributes ~ ' ' ~ attribute ~ '="' ~ value ~ '"' %}
+    {% endif %}
+{% endfor %}
 <form id="{{ form.getId() }}"
       name="{{ form.getName() }}"
       action="{{ form.getAction }}"
       method="{{ form.getMethod() }}"
       enctype="{{ form.getEnctype() }}"
-    {% for attribute, value in options.attributes|default([]) %}
-        {% if attribute not in  ['id', 'name', 'action', 'method', 'enctype'] %}
-            {{ attribute }}="{{ value }}"
-        {% endif %}
-    {% endfor %}
->
+      {{ attributes }}>
     {% for formElement in form.getElements() %}
         {{ _FORM.renderElement(formElement, options) }}
     {% endfor %}

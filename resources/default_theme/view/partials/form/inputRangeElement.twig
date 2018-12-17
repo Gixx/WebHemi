@@ -4,10 +4,16 @@
 {% set label = options.label|default(formElement.getLabel()) %}
 
 {# @var formElement \WebHemi\Form\Element\Html\Html5Element #}
+{% set values = formElement.getValues() %}
+{% set range = formElement.getValueRange() %}
+{% set attributes = '' %}
+{% for attribute, value in options.attributes|default([]) %}
+    {% if attribute not in  ['type', 'id', 'name', 'value', 'autocomplete', 'data-error', 'min', 'max', 'step'] %}
+        {% set attributes = attributes ~ ' ' ~ attribute ~ '="' ~ value ~ '"' %}
+    {% endif %}
+{% endfor %}
 <div class="element input range">
     <label for="{{ formElement.getId() }}">{{ label }}</label>
-    {% set values = formElement.getValues() %}
-    {% set range = formElement.getValueRange() %}
     <input  type="range"
             id="{{ formElement.getId() }}"
             name="{{ formElement.getName() }}"
@@ -16,11 +22,7 @@
             {% if range[1] %}max="{{ range[1] }}"{% endif %}
             {% if range[2] %}step="{{ range[2] }}"{% endif %}
             {% if formElement.getErrors() %} data-error="true"{% endif %}
-            {% for attribute, value in options.attributes|default([]) %}
-                {% if attribute not in  ['type', 'id', 'name', 'value', 'min', 'max', 'step', 'data-error'] %}
-                    {{ attribute }}="{{ value }}"
-                {% endif %}
-            {% endfor %}
+            {{ attributes }}
     />
     {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement.getErrors()) }}

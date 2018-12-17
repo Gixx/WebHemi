@@ -4,16 +4,18 @@
 {% set label = options.label|default(formElement.getLabel()) %}
 
 {# @var formElement \WebHemi\Form\Element\Html\HtmlElement #}
+{% set values = formElement.getValues() %}
+{% set attributes = '' %}
+{% for attribute, value in options.attributes|default([]) %}
+    {% if attribute not in  ['type', 'id', 'name', 'value'] %}
+        {% set attributes = attributes ~ ' ' ~ attribute ~ '="' ~ value ~ '"' %}
+    {% endif %}
+{% endfor %}
 <div class="element button reset">
-    {% set values = formElement.getValues() %}
     <button type="reset"
             id="{{ formElement.getId() }}"
             name="{{ formElement.getName() }}"
             value="{{ values[0] }}"
-            {% for attribute, value in options.attributes|default([]) %}
-                {% if attribute not in  ['type', 'id', 'name', 'value'] %}
-                    {{ attribute }}="{{ value }}"
-                {% endif %}
-            {% endfor %}
+            {{ attributes }}
     >{{ label }}</button>
 </div>

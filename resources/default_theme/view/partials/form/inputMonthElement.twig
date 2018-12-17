@@ -5,20 +5,22 @@
 {% set autocomplete = options.attributes.autocomplete|default(formElement.getId()) %}
 
 {# @var formElement \WebHemi\Form\Element\Html\Html5Element #}
+{% set values = formElement.getValues() %}
+{% set attributes = '' %}
+{% for attribute, value in options.attributes|default([]) %}
+    {% if attribute not in  ['type', 'id', 'name', 'value', 'autocomplete', 'data-error'] %}
+        {% set attributes = attributes ~ ' ' ~ attribute ~ '="' ~ value ~ '"' %}
+    {% endif %}
+{% endfor %}
 <div class="element input month">
     <label for="{{ formElement.getId() }}">{{ label }}</label>
-    {% set values = formElement.getValues() %}
     <input  type="month"
             id="{{ formElement.getId() }}"
             name="{{ formElement.getName() }}"
             value="{{ values[0] }}"
             autocomplete="{{ autocomplete }}"
             {% if formElement.getErrors() %} data-error="true"{% endif %}
-            {% for attribute, value in options.attributes|default([]) %}
-                {% if attribute not in  ['type', 'id', 'name', 'value', 'autocomplete', 'data-error'] %}
-                    {{ attribute }}="{{ value }}"
-                {% endif %}
-            {% endfor %}
+            {{ attributes }}
     />
     {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
