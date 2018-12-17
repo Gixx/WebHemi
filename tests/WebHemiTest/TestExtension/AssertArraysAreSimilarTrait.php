@@ -17,14 +17,9 @@ namespace WebHemiTest\TestExtension;
 trait AssertArraysAreSimilarTrait
 {
     /**
-     * {@inheritDoc}
-     *
-     * @param $expected
-     * @param $actual
-     * @param string $message
-     * @return mixed
+     * @inheritDoc
      */
-    abstract public static function assertSame($expected, $actual, $message = '');
+    abstract public static function assertSame($expected, $actual, string $message = '') : void;
 
     /**
      * Compares two arrays.
@@ -32,10 +27,8 @@ trait AssertArraysAreSimilarTrait
      * @param array $arrayOne
      * @param array $arrayTwo
      * @param string $message
-     *
-     * @return bool
      */
-    protected function assertArraysAreSimilar(array $arrayOne, array $arrayTwo, string $message = '')
+    protected function assertArraysAreSimilar(array $arrayOne, array $arrayTwo, string $message = '') : void
     {
         $result = strcmp(serialize($arrayOne), serialize($arrayTwo));
         $this->assertSame($result, 0, $message);
