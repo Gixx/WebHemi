@@ -139,7 +139,7 @@ abstract class AbstractAdapter implements ServiceInterface
     {
         $this->checkMiddleware($middleWareClass);
 
-        if (in_array($middleWareClass, $this->keyMiddlewareList)) {
+        if (in_array($middleWareClass, $this->keyMiddlewareList, true)) {
             // Don't throw error if the user defines the default middleware classes.
             return $this;
         }
