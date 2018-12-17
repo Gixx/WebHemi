@@ -22,8 +22,8 @@ trait InvokePrivateMethodTrait
      * @param object &$object    Instantiated object that we will run method on.
      * @param string $methodName Method name to call
      * @param array  $parameters Array of parameters to pass into method.
-     *
      * @return mixed Method return.
+     * @throws \ReflectionException
      */
     protected function invokePrivateMethod(&$object, $methodName, array $parameters = [])
     {
