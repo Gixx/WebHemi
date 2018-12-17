@@ -22,9 +22,9 @@ use WebHemiTest\TestExtension\AssertArraysAreSimilarTrait as AssertTrait;
 use WebHemiTest\TestExtension\InvokePrivateMethodTrait;
 
 /**
- * Class PipelineTest.
+ * Class PipelineManagerTest.
  */
-class PipelineTest extends TestCase
+class PipelineManagerTest extends TestCase
 {
     protected $config;
 
