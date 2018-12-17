@@ -25,7 +25,7 @@ use WebHemi\Session\ServiceInterface as SessionInterface;
 require_once __DIR__.'/vendor/autoload.php';
 
 // Set up core objects
-$configurationData = require_once __DIR__.'/config/config.php';
+$configurationData = include __DIR__.'/config/config.php';
 // Get the service class names from the configuration, so no need to hardcode them.
 // These global dependency definitions are mandatory and MUST exist
 $applicationClass = $configurationData['dependencies']['Global'][ApplicationInterface::class]['class'];
