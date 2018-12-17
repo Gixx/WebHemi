@@ -62,13 +62,11 @@ class AclTest extends TestCase
     /**
      * Check requirements - also checks SQLite availability.
      */
-    protected function checkRequirements()
+    protected function checkRequirements() : void
     {
         if (!extension_loaded('pdo_sqlite')) {
             throw new SkippedTestError('No SQLite Available');
         }
-
-        parent::checkRequirements();
     }
 
     /**

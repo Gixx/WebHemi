@@ -55,8 +55,6 @@ class AuthTest extends TestCase
         if (!extension_loaded('pdo_sqlite')) {
             throw new SkippedTestError('No SQLite Available');
         }
-
-        parent::checkRequirements();
     }
 
     /**
