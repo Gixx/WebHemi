@@ -3,16 +3,20 @@
 {% set options = options|default(false) %}
 {% set label = options.label|default(formElement.getLabel()) %}
 
+{# @var formElement \WebHemi\Form\Element\Html\HtmlElement #}
+{% set values = formElement.getValues() %}
+{% set attributes = '' %}
+{% for attribute, value in options.attributes|default([]) %}
+    {% if attribute not in  ['id', 'name', 'data-error'] %}
+        {% set attributes = attributes ~ ' ' ~ attribute ~ '="' ~ value ~ '"' %}
+    {% endif %}
+{% endfor %}
 <div class="element input textarea">
     <label for="{{ formElement.getId() }}">{{ label }}</label>
-    {% set values = formElement.getValues() %}
     <textarea id="{{ formElement.getId() }}"
               name="{{ formElement.getName() }}"
-            {% for attribute, value in options.attributes|default([]) %}
-                {% if attribute not in  ['id', 'name'] %}
-                    {{ attribute }}="{{ value }}"
-                {% endif %}
-            {% endfor %}
+              {% if formElement.getErrors() %} data-error="true"{% endif %}
+              {{ attributes }}
     >{{ values[0] }}</textarea>
     {% if formElement.getErrors() %}
         {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
