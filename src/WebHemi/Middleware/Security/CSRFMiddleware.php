@@ -55,7 +55,7 @@ class CSRFMiddleware implements MiddlewareInterface
     public function __invoke(ServerRequestInterface&$request, ResponseInterface&$response) : void
     {
         // Get requests will not harm
-        if ($request->getMethod() == 'GET') {
+        if ($request->getMethod() === 'GET') {
             return;
         }
 
@@ -83,11 +83,13 @@ class CSRFMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param array $haystack
-     * @param $needle
+     * Recursively search for a key in an Iterable data
+     *
+     * @param $haystack
+     * @param string $needle
      * @return Generator
      */
-    protected function recursiveFind(array $haystack, $needle)
+    protected function recursiveFind($haystack, string $needle) : Generator
     {
         $iterator  = new RecursiveArrayIterator($haystack);
         $recursive = new RecursiveIteratorIterator(
