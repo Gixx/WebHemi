@@ -72,9 +72,6 @@ class CSRFMiddleware implements MiddlewareInterface
 
         $tokenTTL = $request->isXmlHttpRequest() ? null : CSRFInterface::SESSION_TTL_IN_SECONDS;
         $allowMultipleUse = $request->isXmlHttpRequest();
-
-
-
         $result = $this->csrfAdapter->verify($csrfToken, $tokenTTL, $allowMultipleUse);
 
         if (!$result) {
@@ -85,7 +82,7 @@ class CSRFMiddleware implements MiddlewareInterface
     /**
      * Recursively search for a key in an Iterable data
      *
-     * @param $haystack
+     * @param mixed $haystack
      * @param string $needle
      * @return Generator
      */
