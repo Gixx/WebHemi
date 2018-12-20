@@ -41,7 +41,7 @@ class ServiceAdapter extends AbstractAdapter
      */
     public function initSession() : ServiceInterface
     {
-        if (defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
+        if (\defined('PHPUNIT_WEBHEMI_TESTSUITE')) {
             return $this;
         }
 
@@ -118,21 +118,21 @@ class ServiceAdapter extends AbstractAdapter
             $middlewareClass = $pipelineManager->start();
 
             while (!empty($middlewareClass)
-                && is_string($middlewareClass)
-                && $this->response->getStatusCode() == ResponseInterface::STATUS_PROCESSING
+                && \is_string($middlewareClass)
+                && $this->response->getStatusCode() === ResponseInterface::STATUS_PROCESSING
             ) {
                 $this->invokeMiddleware($middlewareClass);
                 $middlewareClass = $pipelineManager->next();
-            };
+            }
 
             // If there was no error, we mark as ready for output.
-            if ($this->response->getStatusCode() == ResponseInterface::STATUS_PROCESSING) {
+            if ($this->response->getStatusCode() === ResponseInterface::STATUS_PROCESSING) {
                 $this->response = $this->response->withStatus(ResponseInterface::STATUS_OK);
             }
         } catch (Throwable $exception) {
             $code = ResponseInterface::STATUS_INTERNAL_SERVER_ERROR;
 
-            if (in_array(
+            if (\in_array(
                 $exception->getCode(),
                 [
                     ResponseInterface::STATUS_BAD_REQUEST,
@@ -140,8 +140,9 @@ class ServiceAdapter extends AbstractAdapter
                     ResponseInterface::STATUS_FORBIDDEN,
                     ResponseInterface::STATUS_NOT_FOUND,
                     ResponseInterface::STATUS_BAD_METHOD,
-                    ResponseInterface::STATUS_NOT_IMPLEMENTED,
-                ]
+                    ResponseInterface::STATUS_NOT_IMPLEMENTED
+                ],
+                true
             )
             ) {
                 $code = $exception->getCode();
@@ -173,7 +174,7 @@ class ServiceAdapter extends AbstractAdapter
     {
         // Create template only when there's no redirect
         if (!$this->request->isXmlHttpRequest()
-            && ResponseInterface::STATUS_REDIRECT != $this->response->getStatusCode()
+            && ResponseInterface::STATUS_REDIRECT !== $this->response->getStatusCode()
         ) {
             /**
              * @var RendererInterface $templateRenderer
@@ -193,7 +194,7 @@ class ServiceAdapter extends AbstractAdapter
             $exception = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
 
             // If there was any error, change the remplate
-            if (!empty($exception)) {
+            if ($exception !== null) {
                 $template = 'error-'.$this->response->getStatusCode();
                 $data['exception'] = $exception;
             }
@@ -218,7 +219,7 @@ class ServiceAdapter extends AbstractAdapter
     public function sendOutput() : void
     {
         // @codeCoverageIgnoreStart
-        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && headers_sent()) {
+        if (!\defined('PHPUNIT_WEBHEMI_TESTSUITE') && headers_sent()) {
             throw new RuntimeException('Unable to emit response; headers already sent', 1000);
         }
         // @codeCoverageIgnoreEnd
@@ -237,12 +238,12 @@ class ServiceAdapter extends AbstractAdapter
              */
             $exception = $this->request->getAttribute(ServerRequestInterface::REQUEST_ATTR_MIDDLEWARE_EXCEPTION);
 
-            if (!empty($exception)) {
+            if ($exception !== null) {
                 $templateData['exception'] = $exception;
             }
 
             $output = json_encode($templateData);
-            $contentLength = strlen($output);
+            $contentLength = \strlen($output);
             $this->response = $this->response->withHeader('Content-Type', 'application/json; charset=UTF-8');
         }
 
@@ -267,8 +268,8 @@ class ServiceAdapter extends AbstractAdapter
         $requestAttributes = $this->request->getAttributes();
 
         // As an extra step if an action middleware is resolved, it should be invoked by the dispatcher.
-        if (isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
-            && $middleware instanceof CommonMiddleware\DispatcherMiddleware
+        if ($middleware instanceof CommonMiddleware\DispatcherMiddleware
+            && isset($requestAttributes[ServerRequestInterface::REQUEST_ATTR_RESOLVED_ACTION_CLASS])
         ) {
             /**
              * @var MiddlewareInterface $actionMiddleware
@@ -292,13 +293,13 @@ class ServiceAdapter extends AbstractAdapter
      * @param  null|int $contentLength
      * @return void
      *
-     * @codeCoverageIgnore - no putput for tests.
+     * @codeCoverageIgnore - no output for tests.
      */
     protected function injectContentLength(? int $contentLength) : void
     {
-        $contentLength = intval($contentLength);
+        $contentLength = (int) $contentLength;
 
-        if (!$this->response->hasHeader('Content-Length') && $contentLength > 0) {
+        if ($contentLength > 0 && !$this->response->hasHeader('Content-Length')) {
             $this->response = $this->response->withHeader('Content-Length', (string) $contentLength);
         }
     }
@@ -350,7 +351,7 @@ class ServiceAdapter extends AbstractAdapter
             $name  = $this->filterHeaderName($headerName);
             $first = true;
 
-            foreach ($values as $value) {
+            foreach ((array) $values as $value) {
                 header(sprintf('%s: %s', $name, $value), $first);
                 $first = false;
             }

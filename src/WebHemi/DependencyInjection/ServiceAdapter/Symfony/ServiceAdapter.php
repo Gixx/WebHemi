@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace WebHemi\DependencyInjection\ServiceAdapter\Symfony;
 
-use Exception;
 use Throwable;
 use InvalidArgumentException;
 use RuntimeException;
@@ -72,7 +71,7 @@ class ServiceAdapter extends AbstractAdapter
      */
     public function get(? string $identifier)
     {
-        if (is_null($identifier)) {
+        if ($identifier === null) {
             return null;
         }
 
@@ -134,7 +133,7 @@ class ServiceAdapter extends AbstractAdapter
         }
 
         // Register method callings.
-        foreach ($this->serviceLibrary[$identifier][self::SERVICE_METHOD_CALL] as $methodCallList) {
+        foreach ((array) $this->serviceLibrary[$identifier][self::SERVICE_METHOD_CALL] as $methodCallList) {
             $method = $methodCallList[0];
             $argumentList = $this->setArgumentListReferences($methodCallList[1] ?? []);
             $service->addMethodCall($method, $argumentList);
@@ -195,7 +194,7 @@ class ServiceAdapter extends AbstractAdapter
             $instanceType = gettype($serviceInstance);
 
             // Register synthetic services
-            if ('object' !== $instanceType) {
+            if ($instanceType !== 'object') {
                 throw new InvalidArgumentException(
                     sprintf('The second parameter must be an object instance, %s given.', $instanceType),
                     1001
@@ -214,7 +213,7 @@ class ServiceAdapter extends AbstractAdapter
                 self::SERVICE_ARGUMENTS => [],
                 self::SERVICE_METHOD_CALL => [],
                 self::SERVICE_SHARE => true,
-                self::SERVICE_CLASS => get_class($serviceInstance),
+                self::SERVICE_CLASS => \get_class($serviceInstance)
             ];
         }
 
