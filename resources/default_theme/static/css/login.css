@@ -80,7 +80,7 @@ body {
     min-height: 34rem;
     border-radius: 2.5rem;
     background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 0 0.2rem 0.5rem rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 3rem 0 rgba(0, 0, 0, 0.5);
 }
 
 .content h1 {
