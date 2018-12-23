@@ -126,7 +126,7 @@ body {
     color: rgb(97, 112, 114);
     border: none;
     border-bottom: 0.1rem dashed rgb(97, 112, 114);
-    background-color: rgb(255, 255, 255);
+    background-color: transparent;
 }
 
 .content #login .element .error {
