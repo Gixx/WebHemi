@@ -274,6 +274,12 @@ return [
                 ],
                 'shared'    => true,
             ],
+            Renderer\Helper\GetCurrentUserHelper::class => [
+                'arguments' => [
+                    Auth\ServiceInterface::class
+                ],
+                'shared'    => true
+            ],
             // Validators
             Validator\ValidatorCollection::class => [
                 'arguments' => [

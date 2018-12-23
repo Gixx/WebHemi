@@ -16,7 +16,8 @@ return [
         'Admin' => [
             'filter' => [],
             'helper' => [
-                Renderer\Helper\IsAllowedHelper::class
+                Renderer\Helper\IsAllowedHelper::class,
+                Renderer\Helper\GetCurrentUserHelper::class
             ],
         ]
     ]

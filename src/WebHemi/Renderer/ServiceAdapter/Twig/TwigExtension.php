@@ -61,7 +61,7 @@ class TwigExtension extends Twig_Extension
      *
      * @return Twig_SimpleFilter[]
      */
-    public function getFilters()
+    public function getFilters() : array
     {
         return $this->getExtensions('filter');
     }
