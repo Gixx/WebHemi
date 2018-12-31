@@ -13,11 +13,25 @@ document.addEventListener('WebHemi.Ready', function () {
             let dialogId = buttonElement.dataset.dialog || 'dialog';
             let dialogElement = document.querySelector('dialog#'+dialogId);
 
-            if (dialogElement && typeof dialogElement.component !== 'undefined') {
+            if (dialogElement && dialogElement.component !== undefined) {
                 /** @type {DialogElement} */
                 let component = dialogElement.component;
 
                 component.open();
+            }
+        });
+    });
+
+    document.querySelectorAll('dialog .button.reset button').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            let buttonElement = event.target;
+            let dialogElement = buttonElement.closest('dialog');
+
+            if (dialogElement && dialogElement.component !== undefined) {
+                /** @type {DialogElement} */
+                let component = dialogElement.component;
+
+                component.close();
             }
         });
     });
