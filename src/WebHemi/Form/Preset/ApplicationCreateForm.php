@@ -103,7 +103,7 @@ class ApplicationCreateForm extends AbstractPreset
 
         $cancel = $this->createElement(
             HtmlElement::class,
-            HtmlElement::HTML_ELEMENT_BUTTON,
+            HtmlElement::HTML_ELEMENT_RESET,
             'cancel',
             'Cancel'
         );
