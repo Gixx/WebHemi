@@ -180,6 +180,14 @@ return [
                 ],
                 'shared'    => true,
             ],
+            Data\Storage\DomainStorage::class => [
+                'arguments' => [
+                    Data\Query\QueryInterface::class,
+                    Data\Entity\EntitySet::class,
+                    Data\Entity\DomainEntity::class
+                ],
+                'shared'    => true,
+            ],
             Data\Storage\UserStorage::class => [
                 'arguments' => [
                     Data\Query\QueryInterface::class,

@@ -14,21 +14,27 @@
 {% endblock %}
 
 {% block menucontrol %}
-    {% if isAllowed('admin-controlpanel-index') %}
         <li class="selected"><a href="control-panel">Control Panel</a></li>
-    {% endif %}
 {% endblock %}
 
 {% block content %}
-    <h1>Control Panel</h1>
-    <ul>
-        <li><a href="control-panel/settings">Settings</a></li>
-        <li><a href="control-panel/themes">Manage themes</a></li>
-        <li><a href="control-panel/add-ons">Manage add-ons</a></li>
-        <li><a href="control-panel/users">Manage users</a></li>
-        <li><a href="control-panel/groups">Manage groups</a></li>
-        <li><a href="control-panel/resources">Manage resources</a></li>
-        <li><a href="control-panel/policies">Manage policies</a></li>
-        <li><a href="control-panel/logs">View logs</a></li>
-    </ul>
+    <aside>
+        <ul>
+            <li{% if selectedPanel|default('domains') == 'domains' %} class="selected"{% endif %}><a href="control-panel/domains">Domains</a></li>
+            <li{% if selectedPanel|default('domains') == 'applications' %} class="selected"{% endif %}><a href="control-panel/applications">Applications</a></li>
+            <li{% if selectedPanel|default('domains') == 'settings' %} class="selected"{% endif %}><a href="control-panel/settings">Settings</a></li>
+            <li{% if selectedPanel|default('domains') == 'themes' %} class="selected"{% endif %}><a href="control-panel/themes">Manage themes</a></li>
+            <li{% if selectedPanel|default('domains') == 'add-ons' %} class="selected"{% endif %}><a href="control-panel/add-ons">Manage add-ons</a></li>
+            <li{% if selectedPanel|default('domains') == 'users' %} class="selected"{% endif %}><a href="control-panel/users">Manage users</a></li>
+            <li{% if selectedPanel|default('domains') == 'groups' %} class="selected"{% endif %}><a href="control-panel/groups">Manage groups</a></li>
+            <li{% if selectedPanel|default('domains') == 'resources' %} class="selected"{% endif %}><a href="control-panel/resources">Manage resources</a></li>
+            <li{% if selectedPanel|default('domains') == 'policies' %} class="selected"{% endif %}><a href="control-panel/policies">Manage policies</a></li>
+            <li{% if selectedPanel|default('domains') == 'logs' %} class="selected"{% endif %}><a href="control-panel/logs">View logs</a></li>
+        </ul>
+    </aside>
+    <section>
+        {% block panelcontent %}
+        <h1>Control Panel</h1>
+        {% endblock %}
+    </section>
 {% endblock %}

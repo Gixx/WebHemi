@@ -24,66 +24,63 @@ class ApplicationEntityTest extends AbstractEntityTestCase
     /** @var array  */
     protected $testData = [
         'id_application' => 1,
+        'fk_domain' => 1,
+        'path' => 'test path',
         'name' => 'test name',
         'title' => 'test title',
+        'theme' => 'test theme',
+        'locale' => 'en_GB',
+        'timezone' => 'Europe/London',
         'introduction' => 'test introduction',
         'subject' => 'test subject',
         'description' => 'test description',
         'keywords' => 'test keywords',
         'copyright' => 'test copyright',
-        'domain' => 'test domain',
-        'path' => 'test path',
-        'theme' => 'test theme',
-        'type' => 'test type',
-        'locale' => 'en_GB',
-        'timezone' => 'Europe/London',
         'is_read_only' => 1,
         'is_enabled' => 0,
         'date_created' => '2016-04-26 23:21:19',
-        'date_modified' => null,
+        'date_modified' => null
     ];
 
     /** @var array  */
     protected $expectedGetters = [
         'getApplicationId' => 1,
+        'getDomainId' => 1,
         'getName' => 'test name',
         'getTitle' => 'test title',
+        'getPath' => 'test path',
+        'getTheme' => 'test theme',
+        'getLocale' => 'en_GB',
         'getIntroduction' => 'test introduction',
         'getSubject' => 'test subject',
         'getDescription' => 'test description',
         'getKeywords' => 'test keywords',
         'getCopyright' => 'test copyright',
-        'getDomain' => 'test domain',
-        'getPath' => 'test path',
-        'getTheme' => 'test theme',
-        'getType' => 'test type',
-        'getLocale' => 'en_GB',
         'getTimeZone' => null,
         'getIsReadOnly' => true,
         'getIsEnabled' => false,
         'getDateCreated' => null,
-        'getDateModified' => null,
+        'getDateModified' => null
     ];
 
     /** @var array  */
     protected $expectedSetters = [
         'setApplicationId' => 1,
+        'setDomainId' => 1,
         'setName' => 'test name',
         'setTitle' => 'test title',
+        'setPath' => 'test path',
+        'setTheme' => 'test theme',
+        'setLocale' => 'en_GB',
         'setIntroduction' => 'test introduction',
         'setSubject' => 'test subject',
         'setDescription' => 'test description',
         'setKeywords' => 'test keywords',
         'setCopyright' => 'test copyright',
-        'setDomain' => 'test domain',
-        'setPath' => 'test path',
-        'setTheme' => 'test theme',
-        'setType' => 'test type',
-        'setLocale' => 'en_GB',
         'setTimeZone' => null,
         'setIsReadOnly' => true,
         'setIsEnabled' => false,
-        'setDateCreated' => null,
+        'setDateCreated' => null
     ];
 
     /**

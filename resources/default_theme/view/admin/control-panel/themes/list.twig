@@ -13,7 +13,9 @@
     <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > Themes
 {% endblock %}
 
-{% block content %}
+{% set selectedPanel = 'themes' %}
+
+{% block panelcontent %}
     <h1>Manage Themes</h1>
     <div class="control-panel themes">
         {% for row in data %}

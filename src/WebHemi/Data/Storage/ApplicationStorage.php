@@ -25,14 +25,17 @@ class ApplicationStorage extends AbstractStorage
     /**
      * Returns every Application entity.
      *
-     * @param int $limit
-     * @param int $offset
+     * @param int|null $limit
+     * @param int|null $offset
      * @return EntitySet
      */
     public function getApplicationList(
-        int $limit = QueryInterface::MAX_ROW_LIMIT,
-        int $offset = 0
+        ? int $limit = null,
+        ? int $offset = null
     ) : EntitySet {
+        $limit = $limit ?? QueryInterface::MAX_ROW_LIMIT;
+        $offset = $offset ?? 0;
+
         $this->normalizeLimitAndOffset($limit, $offset);
 
         $data = $this->getQueryAdapter()->fetchData(

@@ -17,8 +17,10 @@ use Exception;
 use InvalidArgumentException;
 use LayerShifter\TLDExtract\Extract;
 use LayerShifter\TLDExtract\Result;
+use Throwable;
 use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
 use WebHemi\Environment\AbstractAdapter;
+use UnexpectedValueException;
 
 /**
  * Class ServiceAdapter.
@@ -69,7 +71,7 @@ class ServiceAdapter extends AbstractAdapter
             'POST'   => $postData,
             'SERVER' => $serverData,
             'COOKIE' => $cookieData,
-            'FILES'  => $filesData,
+            'FILES'  => $filesData
         ];
 
         $this->isHttps = isset($this->environmentData['SERVER']['HTTPS']) && $this->environmentData['SERVER']['HTTPS'];
@@ -137,7 +139,7 @@ class ServiceAdapter extends AbstractAdapter
             $ipAddress = $this->environmentData['SERVER']['REMOTE_ADDR'];
         }
 
-        return (string) $ipAddress;
+        return $ipAddress;
     }
 
     /**
@@ -155,11 +157,11 @@ class ServiceAdapter extends AbstractAdapter
          */
         $domainParts = $this->domainAdapter->parse($this->url);
 
-        if (empty($domainParts->getSuffix())) {
-            throw new Exception('This application does not support IP access');
+        if ($domainParts->getSuffix() === null) {
+            throw new UnexpectedValueException('This application does not support IP access');
         }
 
-        $this->checkSubdomain($domainParts);
+        $this->checkSubDomain($domainParts);
 
         $this->subDomain = $domainParts->getSubdomain();
         $this->topDomain = $domainParts->getHostname().'.'.$domainParts->getSuffix();
@@ -178,10 +180,10 @@ class ServiceAdapter extends AbstractAdapter
     private function setAdapterOptions() : int
     {
         try {
-            if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && 'dev' == getenv('APPLICATION_ENV')) {
+            if (!\defined('PHPUNIT_WEBHEMI_TESTSUITE') && getenv('APPLICATION_ENV') === 'dev') {
                 $this->domainAdapter->setExtractionMode(Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
             }
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             return $exception->getCode();
         }
 
@@ -195,10 +197,10 @@ class ServiceAdapter extends AbstractAdapter
      *
      * @codeCoverageIgnore - don't test redirect
      */
-    private function checkSubdomain(Result $domainParts) : void
+    private function checkSubDomain(Result $domainParts) : void
     {
-        // Redirecting to www when no subdomain is present
-        if (!defined('PHPUNIT_WEBHEMI_TESTSUITE') && empty($domainParts->getSubdomain())) {
+        // Redirecting to www when no sub-domain is present
+        if (!\defined('PHPUNIT_WEBHEMI_TESTSUITE') && $domainParts->getSubdomain() === null) {
             $schema = 'http'.($this->isSecuredApplication() ? 's' : '').'://';
             $uri = $this->environmentData['SERVER']['REQUEST_URI'];
             header('Location: '.$schema.'www.'.$domainParts->getFullHost().$uri);
@@ -217,25 +219,23 @@ class ServiceAdapter extends AbstractAdapter
         // @codeCoverageIgnoreStart
         if (!isset($this->applicationDomain)) {
             // For safety purposes only, But it can't happen unless somebody change/overwrite the constructor.
-            throw new Exception('Domain is not set');
+            throw new UnexpectedValueException('Domain is not set');
         }
         // @codeCoverageIgnoreEnd
 
         $urlParts = parse_url($this->url);
-        list($subDirectory) = explode('/', ltrim($urlParts['path'], '/'), 2);
+        [$subDirectory] = explode('/', ltrim($urlParts['path'], '/'), 2);
 
         $applications = $this->configuration->toArray();
-        $aplicationNames = array_keys($applications);
-        $selectedApplication = $this->getSelectedApplicationName($aplicationNames, $subDirectory);
+        $applicationNames = array_keys($applications);
+        $selectedApplication = $this->getSelectedApplicationName($applicationNames, $subDirectory);
 
         $applicationData = $applications[$selectedApplication];
 
-        $this->selectedModule = $applicationData['module'] ?? self::DEFAULT_MODULE;
         $this->selectedApplication = $selectedApplication;
+        $this->selectedModule = $applicationData['module'] ?? self::DEFAULT_MODULE;
         $this->selectedTheme = $applicationData['theme'] ?? self::DEFAULT_THEME;
-        $this->selectedApplicationUri = $applicationData['type'] == self::APPLICATION_TYPE_DIRECTORY
-            ? '/'.$subDirectory
-            : '/';
+        $this->selectedApplicationUri = $applicationData['path'] ?? '/';
 
         // Final check for config and resources.
         if ($this->selectedTheme !== self::DEFAULT_THEME) {
@@ -248,18 +248,18 @@ class ServiceAdapter extends AbstractAdapter
     /**
      * Gets the selected application's name.
      *
-     * @param  array  $aplicationNames
+     * @param  array  $applicationNames
      * @param  string $subDirectory
      * @return string
      */
-    private function getSelectedApplicationName(array $aplicationNames, string $subDirectory) : string
+    private function getSelectedApplicationName(array $applicationNames, string $subDirectory) : string
     {
         $selectedApplication = self::DEFAULT_APPLICATION;
 
         /**
          * @var string $applicationName
          */
-        foreach ($aplicationNames as $applicationName) {
+        foreach ($applicationNames as $applicationName) {
             if ($this->checkDirectoryIsValid($applicationName, $subDirectory)
                 || $this->checkDomainIsValid($applicationName)
             ) {
@@ -283,11 +283,10 @@ class ServiceAdapter extends AbstractAdapter
         $applications = $this->configuration->toArray();
         $applicationData = $applications[$applicationName];
 
-        return $applicationName != 'website'
-            && $this->applicationDomain == $applicationData['domain']
-            && !empty($subDirectory)
-            && $applicationData['type'] == self::APPLICATION_TYPE_DIRECTORY
-            && $applicationData['path'] == '/'.$subDirectory;
+        return !empty($subDirectory)
+            && $applicationName !== 'website'
+            && $this->applicationDomain === $applicationData['domain']
+            && $applicationData['path'] === '/'.$subDirectory;
     }
 
     /**
@@ -301,7 +300,7 @@ class ServiceAdapter extends AbstractAdapter
         $applications = $this->configuration->toArray();
         $applicationData = $applications[$applicationName];
 
-        return $this->applicationDomain == $applicationData['domain']
-            && $applicationData['type'] == self::APPLICATION_TYPE_DOMAIN;
+        return $this->applicationDomain === $applicationData['domain']
+            && $applicationData['path'] === '/';
     }
 }

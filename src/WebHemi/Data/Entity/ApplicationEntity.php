@@ -21,29 +21,37 @@ use WebHemi\DateTime;
  */
 class ApplicationEntity extends AbstractEntity
 {
+    public const REFERENCE_DOMAIN = 'fk_domain';
+
     /**
-     * @var array
+     * ApplicationEntity constructor.
      */
-    protected $container = [
-        'id_application' => null,
-        'name' => null,
-        'title' => null,
-        'introduction' => null,
-        'subject' => null,
-        'description' => null,
-        'keywords' => null,
-        'copyright' => null,
-        'domain' => null,
-        'path' => null,
-        'theme' => null,
-        'type' => null,
-        'locale' => null,
-        'timezone' => null,
-        'is_read_only' => null,
-        'is_enabled' => null,
-        'date_created' => null,
-        'date_modified' => null,
-    ];
+    public function __construct()
+    {
+        $this->container = [
+            'id_application' => null,
+            'fk_domain' => null,
+            'path' => null,
+            'name' => null,
+            'title' => null,
+            'theme' => null,
+            'locale' => null,
+            'timezone' => null,
+            'introduction' => null,
+            'subject' => null,
+            'description' => null,
+            'keywords' => null,
+            'copyright' => null,
+            'is_read_only' => null,
+            'is_enabled' => null,
+            'date_created' => null,
+            'date_modified' => null
+        ];
+
+        $this->referenceContainer = [
+            self::REFERENCE_DOMAIN => null
+        ];
+    }
 
     /**
      * @param int $identifier
@@ -61,8 +69,29 @@ class ApplicationEntity extends AbstractEntity
      */
     public function getApplicationId() : ? int
     {
-        return !is_null($this->container['id_application'])
+        return $this->container['id_application'] !== null
             ? (int) $this->container['id_application']
+            : null;
+    }
+
+    /**
+     * @param int $doaminIdentifier
+     * @return ApplicationEntity
+     */
+    public function setDomainId(int $doaminIdentifier) : ApplicationEntity
+    {
+        $this->container['fk_domain'] = $doaminIdentifier;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDomainId() : ? int
+    {
+        return $this->container['fk_domain'] !== null
+            ? (int) $this->container['fk_domain']
             : null;
     }
 
@@ -200,25 +229,6 @@ class ApplicationEntity extends AbstractEntity
     }
 
     /**
-     * @param string $domain
-     * @return ApplicationEntity
-     */
-    public function setDomain(string $domain) : ApplicationEntity
-    {
-        $this->container['domain'] = $domain;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getDomain() : ? string
-    {
-        return $this->container['domain'];
-    }
-
-    /**
      * @param string $path
      * @return ApplicationEntity
      */
@@ -254,25 +264,6 @@ class ApplicationEntity extends AbstractEntity
     public function getTheme() : ? string
     {
         return $this->container['theme'];
-    }
-
-    /**
-     * @param string $type
-     * @return ApplicationEntity
-     */
-    public function setType(string $type) : ApplicationEntity
-    {
-        $this->container['type'] = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getType() : ? string
-    {
-        return $this->container['type'];
     }
 
     /**

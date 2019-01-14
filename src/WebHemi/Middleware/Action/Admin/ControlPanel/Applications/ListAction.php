@@ -11,24 +11,31 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Middleware\Action\Admin\Applications;
+namespace WebHemi\Middleware\Action\Admin\ControlPanel\Applications;
 
 use WebHemi\CSRF\ServiceInterface as CSRFInterface;
+use WebHemi\Data\Entity\ApplicationEntity;
+use WebHemi\Data\Entity\DomainEntity;
 use WebHemi\Data\Entity\EntitySet;
 use WebHemi\Data\Storage\ApplicationStorage;
+use WebHemi\Data\Storage\DomainStorage;
 use WebHemi\Form\PresetInterface;
 use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class IndexAction.
+ * Class ListAction.
  */
-class IndexAction extends AbstractMiddlewareAction
+class ListAction extends AbstractMiddlewareAction
 {
     /**
      * @var ApplicationStorage
      */
     protected $applicationStorage;
+    /**
+     * @var DomainStorage
+     */
+    protected $domainStorage;
     /**
      * @var PresetInterface
      */
@@ -42,15 +49,18 @@ class IndexAction extends AbstractMiddlewareAction
      * IndexAction constructor.
      *
      * @param ApplicationStorage     $applicationStorage
+     * @param DomainStorage          $domainStorage
      * @param PresetInterface        $applicationFormPreset
      * @param CSRFInterface          $csrfAdapter
      */
     public function __construct(
         ApplicationStorage $applicationStorage,
+        DomainStorage $domainStorage,
         PresetInterface $applicationFormPreset,
         CSRFInterface $csrfAdapter
     ) {
         $this->applicationStorage = $applicationStorage;
+        $this->domainStorage = $domainStorage;
         $this->applicationFormPreset = $applicationFormPreset;
         $this->csrfAdapter = $csrfAdapter;
     }
@@ -62,7 +72,7 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-list';
+        return 'admin-control-panel-applications-list';
     }
 
     /**
@@ -72,8 +82,26 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
+        /** @var DomainEntity[] $domains */
+        $domains = [];
+
         /** @var EntitySet $applications */
         $applications = $this->applicationStorage->getApplicationList();
+
+        /** @var ApplicationEntity $applicationEntity */
+        foreach ($applications as $key => $applicationEntity) {
+            $domainId = $applicationEntity->getDomainId();
+
+            if (!isset($domains[$domainId])) {
+                $domains[$domainId] = $this->domainStorage->getDomainById($domainId);
+            }
+
+            if ($domains[$domainId] instanceof DomainEntity) {
+                $applicationEntity->setReference(ApplicationEntity::REFERENCE_DOMAIN, $domains[$domainId]);
+                $applications->offsetSet($key, $applicationEntity);
+            }
+        }
+
         /** @var HtmlForm $form */
         $form = $this->applicationFormPreset->getPreset();
 

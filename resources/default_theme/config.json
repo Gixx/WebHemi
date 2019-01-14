@@ -16,18 +16,37 @@
   },
   "map": {
     "admin-login": "admin/login.twig",
+
     "admin-dashboard": "admin/dashboard.twig",
 
-    "admin-applications-list": "admin/applications/list.twig",
-    "admin-applications-view": "admin/applications/view.twig",
+    "admin-content-editor-index": "admin/content-editor/index.twig",
 
     "admin-control-panel-index": "admin/control-panel/index.twig",
+
+    "admin-control-panel-domains-list": "admin/control-panel/domains/list.twig",
+
+    "admin-control-panel-applications-list": "admin/control-panel/applications/list.twig",
+    "admin-control-panel-applications-view": "admin/control-panel/applications/view.twig",
+
+    "admin-control-panel-settings-list": "admin/control-panel/settings/list.twig",
 
     "admin-control-panel-themes-list": "admin/control-panel/themes/list.twig",
     "admin-control-panel-themes-view": "admin/control-panel/themes/view.twig",
 
+    "admin-control-panel-add-ons-list": "admin/control-panel/add-ons/list.twig",
+
+    "admin-control-panel-users-list": "admin/control-panel/users/list.twig",
+
     "admin-control-panel-groups-list": "admin/control-panel/groups/list.twig",
     "admin-control-panel-groups-view": "admin/control-panel/groups/view.twig",
+
+    "admin-control-panel-resources-list": "admin/control-panel/resources/list.twig",
+
+    "admin-control-panel-policies-list": "admin/control-panel/policies/list.twig",
+
+    "admin-control-panel-logs-list": "admin/control-panel/logs/list.twig",
+
+    "admin-about-index": "admin/about/index.twig",
 
     "website-index": "website/index.twig",
 

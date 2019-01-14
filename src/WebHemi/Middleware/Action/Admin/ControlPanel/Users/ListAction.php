@@ -17,9 +17,9 @@ use RuntimeException;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class IndexAction
+ * Class ListAction
  */
-class IndexAction extends AbstractMiddlewareAction
+class ListAction extends AbstractMiddlewareAction
 {
     /**
      * Gets template map name or template file path.
@@ -38,7 +38,6 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        throw new RuntimeException('Not Implemented', 501);
         return [];
     }
 }

@@ -49,7 +49,7 @@ abstract class AbstractStorage implements StorageInterface
      *
      * @param QueryInterface $queryAdapter
      * @param EntitySet $entitySetPrototype
-     * @param EntityInterface[] ...$entityPrototypes
+     * @param EntityInterface ...$entityPrototypes
      */
     public function __construct(
         QueryInterface $queryAdapter,
@@ -60,7 +60,7 @@ abstract class AbstractStorage implements StorageInterface
         $this->entitySetPrototype = $entitySetPrototype;
 
         foreach ($entityPrototypes as $entity) {
-            $this->entityPrototypes[get_class($entity)] = $entity;
+            $this->entityPrototypes[\get_class($entity)] = $entity;
         }
     }
 
@@ -132,14 +132,14 @@ abstract class AbstractStorage implements StorageInterface
     {
         $entitySet = $this->createEntitySet();
 
-        if (is_null($data)) {
+        if ($data === null) {
             $data = [];
         }
 
         foreach ($data as $row) {
             $entity = $this->getEntity($entityClass, $row);
 
-            if (!empty($entity)) {
+            if ($entity !== null) {
                 $entitySet[] = $entity;
             }
         }
@@ -156,6 +156,6 @@ abstract class AbstractStorage implements StorageInterface
     protected function normalizeLimitAndOffset(int&$limit, int&$offset) : void
     {
         $limit = min(QueryInterface::MAX_ROW_LIMIT, abs($limit));
-        $offset = abs($offset);
+        $offset = (int) abs($offset);
     }
 }

@@ -28,7 +28,7 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return '';
+        return 'admin-about-index';
     }
 
     /**
@@ -38,8 +38,6 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        throw new RuntimeException('Not Implemented', 501);
-
         return [];
     }
 }

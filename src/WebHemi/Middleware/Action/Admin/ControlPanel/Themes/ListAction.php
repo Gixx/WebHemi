@@ -18,9 +18,9 @@ use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class IndexAction
+ * Class ListAction
  */
-class IndexAction extends AbstractMiddlewareAction
+class ListAction extends AbstractMiddlewareAction
 {
     /**
      * @var ConfigurationInterface

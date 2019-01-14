@@ -1,0 +1,26 @@
+{##
+ # WebHemi.
+ #
+ # @copyright2012 - 2019 Gixx-web (http://www.gixx-web.com)
+ # @license   https://opensource.org/licenses/MIT The MIT License (MIT)
+ # @link      http://www.gixx-web.com
+ #}
+{% extends "admin-layout.twig" %}
+
+{% block title %}{{ 'About WebHemi - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
+
+{% block header %}
+    <a href="">Dashboard</a> > About WebHemi
+{% endblock %}
+
+{% block menuabout %}
+        <li class="selected"><a href="about">About WebHemi</a></li>
+{% endblock %}
+
+{% block content %}
+    <section>
+        {% block panelcontent %}
+        <h1>About WebHemi</h1>
+        {% endblock %}
+    </section>
+{% endblock %}

@@ -56,27 +56,27 @@
                     {% endif %}
                 {% endblock %}
 
-                {% block menuapp %}
-                    {% if isAllowed('admin-applications-list') %}
-                        <li><a href="applications">Applications</a></li>
+                {% block menucontent %}
+                    {% if isAllowed('admin-content-editor-index') %}
+                        <li><a href="content-editor">Content Editor</a></li>
                     {% endif %}
                 {% endblock %}
 
                 {% block menucontrol %}
-                    {% if isAllowed('admin-controlpanel-index') %}
+                    {% if isAllowed('admin-control-panel-index') %}
                         <li><a href="control-panel">Control Panel</a></li>
                     {% endif %}
                 {% endblock %}
 
                 {% block menuabout %}
-                    <li><a href="about">About</a></li>
+                    <li><a href="about">About WebHemi</a></li>
                 {% endblock %}
 
                 {% set currentUser = getCurrentUser() %}
                 {% if currentUser is not empty %}
-                <li><a href="auth/logout">Logout</a></li>
+                    <li><a href="auth/logout">Logout</a></li>
                 {% else %}
-                <li><a href="auth/login">Login</a></li>
+                    <li><a href="auth/login">Login</a></li>
                 {% endif %}
             </ul>
         </nav>

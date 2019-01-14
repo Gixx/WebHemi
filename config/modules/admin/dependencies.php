@@ -63,28 +63,29 @@ return [
                     Environment\ServiceInterface::class,
                     'AdminLoginForm',
                     CSRF\ServiceInterface::class
-                ],
+                ]
             ],
             Middleware\Action\Auth\LogoutAction::class => [
                 'arguments' => [
                     Auth\ServiceInterface::class,
-                    Environment\ServiceInterface::class,
+                    Environment\ServiceInterface::class
                 ]
             ],
             Middleware\Action\Admin\DashboardAction::class => [
                 'arguments' => [
                     Auth\ServiceInterface::class,
                     Environment\ServiceInterface::class
-                ],
+                ]
             ],
-            Middleware\Action\Admin\Applications\IndexAction::class => [
+            Middleware\Action\Admin\ControlPanel\Applications\ListAction::class => [
                 'arguments' => [
                     Data\Storage\ApplicationStorage::class,
+                    Data\Storage\DomainStorage::class,
                     'ApplicationCreateForm',
                     CSRF\ServiceInterface::class
-                ],
+                ]
             ],
-            Middleware\Action\Admin\Applications\ViewAction::class => [
+            Middleware\Action\Admin\ControlPanel\Applications\ViewAction::class => [
                 'arguments' => [
                     Configuration\ServiceInterface::class,
                     Auth\ServiceInterface::class,
@@ -92,16 +93,16 @@ return [
                     Data\Storage\ApplicationStorage::class,
                     'ApplicationEditForm',
                     CSRF\ServiceInterface::class
-                ],
+                ]
             ],
-            Middleware\Action\Admin\Applications\AddAction::class => [
-                'inherits' => Middleware\Action\Admin\Applications\IndexAction::class,
+            Middleware\Action\Admin\ControlPanel\Applications\AddAction::class => [
+                'inherits' => Middleware\Action\Admin\ControlPanel\Applications\ListAction::class
             ],
-            Middleware\Action\Admin\Applications\EditAction::class => [
-                'inherits' => Middleware\Action\Admin\Applications\ViewAction::class,
+            Middleware\Action\Admin\ControlPanel\Applications\EditAction::class => [
+                'inherits' => Middleware\Action\Admin\ControlPanel\Applications\ViewAction::class
             ],
-            Middleware\Action\Admin\Applications\DeleteAction::class => [
-                'inherits' => Middleware\Action\Admin\Applications\IndexAction::class,
+            Middleware\Action\Admin\ControlPanel\Applications\DeleteAction::class => [
+                'inherits' => Middleware\Action\Admin\ControlPanel\Applications\ListAction::class
             ],
             Middleware\Action\Admin\ControlPanel\Groups\ListAction::class => [
                 'arguments' => [
@@ -113,11 +114,11 @@ return [
             Middleware\Action\Admin\ControlPanel\Groups\ViewAction::class => [
                 'inherits' => Middleware\Action\Admin\ControlPanel\Groups\ListAction::class
             ],
-            Middleware\Action\Admin\ControlPanel\Themes\IndexAction::class => [
+            Middleware\Action\Admin\ControlPanel\Themes\ListAction::class => [
                 'arguments' => [
                     Configuration\ServiceInterface::class,
-                    Environment\ServiceInterface::class,
-                ],
+                    Environment\ServiceInterface::class
+                ]
             ],
             // Form Presets - looks kinda hack, but it is by purpose.
             Form\PresetInterface::class => [
@@ -125,7 +126,7 @@ return [
                 'arguments' => [
                     Form\ServiceAdapter\Base\ServiceAdapter::class,
                     Validator\ValidatorCollection::class,
-                    Form\Element\Html\HtmlElement::class,
+                    Form\Element\Html\HtmlElement::class
                 ]
             ],
             'AdminLoginForm' => [
@@ -141,5 +142,5 @@ return [
                 'inherits' => Form\PresetInterface::class
             ]
         ]
-    ],
+    ]
 ];

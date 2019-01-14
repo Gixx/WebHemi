@@ -14,7 +14,9 @@
     <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > <a href="control-panel/groups">Groups</a> > {{ data.getTitle() }}
 {% endblock %}
 
-{% block content %}
+{% set selectedPanel = 'groups' %}
+
+{% block panelcontent %}
     <h1>Group: "{{ data.getTitle() }}"</h1>
     <table summary="User group data">
         <caption>User group ({{ data.getTitle() }}) details</caption>
