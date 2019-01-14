@@ -22,6 +22,8 @@ class EmptyEntity implements EntityInterface
     public $storage = [];
     /** @var string */
     public $key;
+    /** @var array */
+    public $references = [];
 
     /**
      * EmptyEntity constructor.
@@ -33,6 +35,31 @@ class EmptyEntity implements EntityInterface
     {
         $this->key = $key;
         $this->storage[$this->key] = $keyData;
+    }
+
+    /**
+     * Set reference entity.
+     *
+     * @param string $referenceName
+     * @param EntityInterface $referenceEntity
+     * @return bool
+     */
+    public function setReference(string $referenceName, EntityInterface $referenceEntity): bool
+    {
+        $this->references[$referenceName] = $referenceEntity;
+
+        return true;
+    }
+
+    /**
+     * Get reference entity by key
+     *
+     * @param string $referenceName
+     * @return EntityInterface|null
+     */
+    public function getReference(string $referenceName): ? EntityInterface
+    {
+        return $this->references[$referenceName] ?? null;
     }
 
     /**

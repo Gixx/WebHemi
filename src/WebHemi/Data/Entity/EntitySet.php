@@ -40,7 +40,7 @@ class EntitySet implements ArrayAccess, Iterator
      */
     public function offsetExists($offset) : bool
     {
-        if (!is_int($offset)) {
+        if (!\is_int($offset)) {
             throw new InvalidArgumentException(
                 sprintf(__METHOD__.' requires parameter 1 to be integer, %s given.', gettype($offset)),
                 1000
@@ -57,9 +57,9 @@ class EntitySet implements ArrayAccess, Iterator
      * @throws InvalidArgumentException
      * @return null|EntityInterface
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): ? EntityInterface
     {
-        if (!is_int($offset)) {
+        if (!\is_int($offset)) {
             throw new InvalidArgumentException(
                 sprintf(__METHOD__.' requires parameter 1 to be integer, %s given.', gettype($offset)),
                 1001
@@ -78,11 +78,11 @@ class EntitySet implements ArrayAccess, Iterator
      */
     public function offsetSet($offset, $value) : void
     {
-        if (is_null($offset)) {
+        if ($offset === null) {
             $offset = empty($this->container) ? 0 : max(array_keys($this->container)) + 1;
         }
 
-        if (!is_int($offset)) {
+        if (!\is_int($offset)) {
             throw new InvalidArgumentException(
                 sprintf(__METHOD__.' requires parameter 1 to be integer, %s given.', gettype($offset)),
                 1002
@@ -109,7 +109,7 @@ class EntitySet implements ArrayAccess, Iterator
      */
     public function offsetUnset($offset) : void
     {
-        if (!is_int($offset)) {
+        if (!\is_int($offset)) {
             throw new InvalidArgumentException(
                 sprintf(__METHOD__.' requires parameter 1 to be integer, %s given.', gettype($offset)),
                 1004

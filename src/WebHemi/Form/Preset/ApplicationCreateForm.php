@@ -29,7 +29,7 @@ class ApplicationCreateForm extends AbstractPreset
      */
     protected function initAdapter()
     {
-        $this->formAdapter->initialize('application', '', 'POST');
+        $this->formAdapter->initialize('application');
     }
 
     /**

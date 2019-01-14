@@ -19,6 +19,23 @@ namespace WebHemi\Data\Entity;
 interface EntityInterface
 {
     /**
+     * Set reference entity.
+     *
+     * @param string $referenceName
+     * @param EntityInterface $referenceEntity
+     * @return bool
+     */
+    public function setReference(string $referenceName, EntityInterface $referenceEntity): bool;
+
+    /**
+     * Get reference entity by key
+     *
+     * @param string $referenceName
+     * @return EntityInterface|null
+     */
+    public function getReference(string $referenceName): ? EntityInterface;
+
+    /**
      * Returns entity data as an array.
      *
      * @return array

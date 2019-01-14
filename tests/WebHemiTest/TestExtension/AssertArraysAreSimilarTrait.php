@@ -19,7 +19,7 @@ trait AssertArraysAreSimilarTrait
     /**
      * @inheritDoc
      */
-    abstract public static function assertSame($expected, $actual, string $message = '') : void;
+//    abstract public static function assertSame($expected, $actual, string $message = '') : void;
 
     /**
      * Compares two arrays.

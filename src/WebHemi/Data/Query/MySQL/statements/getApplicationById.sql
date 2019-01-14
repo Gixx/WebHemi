@@ -1,23 +1,22 @@
 SELECT
-    `id_application`,
-    `name`,
-    `title`,
-    `introduction`,
-    `subject`,
-    `description`,
-    `keywords`,
-    `copyright`,
-    `domain`,
-    `path`,
-    `theme`,
-    `type`,
-    `locale`,
-    `timezone`,
-    `is_read_only`,
-    `is_enabled`,
-    `date_created`,
-    `date_modified`
+    a.`id_application`,
+    a.`fk_domain`,
+    a.`path`,
+    a.`theme`,
+    a.`locale`,
+    a.`timezone`,
+    a.`name`,
+    a.`title`,
+    a.`introduction`,
+    a.`subject`,
+    a.`description`,
+    a.`keywords`,
+    a.`copyright`,
+    a.`is_read_only`,
+    a.`is_enabled`,
+    a.`date_created`,
+    a.`date_modified`
 FROM
-    `webhemi_application`
+    `webhemi_application` AS a
 WHERE
-    `id_application` = :idApplication
+    a.`id_application` = :idApplication

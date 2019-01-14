@@ -26,6 +26,46 @@ abstract class AbstractEntity implements EntityInterface
     protected $container = [];
 
     /**
+     * @var array
+     */
+    protected $referenceContainer = [];
+
+    /**
+     * Set reference entity.
+     *
+     * @param string $referenceName
+     * @param EntityInterface $referenceEntity
+     * @return bool
+     */
+    public function setReference(string $referenceName, EntityInterface $referenceEntity): bool
+    {
+        if (!\array_key_exists($referenceName, $this->referenceContainer)) {
+            return false;
+        }
+
+        $this->referenceContainer[$referenceName] = $referenceEntity;
+
+        return true;
+    }
+
+    /**
+     * Get reference entity by key
+     *
+     * @param string $referenceName
+     * @return EntityInterface|null
+     */
+    public function getReference(string $referenceName): ? EntityInterface
+    {
+        if (isset($this->referenceContainer[$referenceName])
+            && $this->referenceContainer[$referenceName] instanceof EntityInterface
+        ) {
+            return $this->referenceContainer[$referenceName];
+        }
+
+        return null;
+    }
+
+    /**
      * Returns entity data as an array.
      *
      * @return array
@@ -43,10 +83,10 @@ abstract class AbstractEntity implements EntityInterface
     public function fromArray(array $arrayData): void
     {
         foreach ($arrayData as $key => $value) {
-            if (!array_key_exists($key, $this->container)) {
+            if (!\array_key_exists($key, $this->container)) {
                 throw new InvalidArgumentException(
-                    sprintf('"%s" is not defined in '.get_called_class(), $key),
-                    1000
+                    sprintf('"%s" is not defined in '.static::class, $key),
+                    1001
                 );
             }
 

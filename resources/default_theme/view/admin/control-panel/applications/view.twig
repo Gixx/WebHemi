@@ -6,15 +6,17 @@
  # @link      http://www.gixx-web.com
  #}
 {# @var data \WebHemi\Data\Entity\ApplicationEntity #}
-{% extends "admin/applications/list.twig" %}
+{% extends "admin/control-panel/applications/list.twig" %}
 
-{% block title %}{{ 'Manage Application: "' ~ data.getTitle() ~'" - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
+{% block title %}{{ 'Manage Application: "' ~ data.getTitle() ~'" - Control Panel - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
 
 {% block header %}
-    <a href="">Dashboard</a> > <a href="applications">Applications</a> > {{ data.getTitle() }}
+    <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > <a href="control-panel/applications">Applications</a> > {{ data.getTitle() }}
 {% endblock %}
 
-{% block content %}
+{% set selectedPanel = 'applications' %}
+
+{% block panelcontent %}
     <h1>Application: "{{ data.getTitle() }}"</h1>
     <table summary="User group data">
         <caption>Application ({{ data.getTitle() }}) details</caption>

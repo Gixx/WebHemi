@@ -13,7 +13,9 @@
     <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > Groups
 {% endblock %}
 
-{% block content %}
+{% set selectedPanel = 'groups' %}
+
+{% block panelcontent %}
     <h1>Manage Groups</h1>
     {% if data %}
         <table summary="User group list">

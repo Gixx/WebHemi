@@ -11,15 +11,15 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Middleware\Action\Admin\ControlPanel\AddOns;
+namespace WebHemi\Middleware\Action\Admin\ControlPanel\Domains;
 
 use RuntimeException;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class IndexAction
+ * Class ListAction
  */
-class IndexAction extends AbstractMiddlewareAction
+class ListAction extends AbstractMiddlewareAction
 {
     /**
      * Gets template map name or template file path.
@@ -28,7 +28,7 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-control-panel-add-ons-index';
+        return 'admin-control-panel-domains-list';
     }
 
     /**
@@ -38,7 +38,6 @@ class IndexAction extends AbstractMiddlewareAction
      */
     public function getTemplateData() : array
     {
-        throw new RuntimeException('Not Implemented', 501);
         return [];
     }
 }

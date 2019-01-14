@@ -11,7 +11,7 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Middleware\Action\Admin\Applications;
+namespace WebHemi\Middleware\Action\Admin\ControlPanel\Applications;
 
 use Exception;
 use WebHemi\Form\ServiceAdapter\Base\ServiceAdapter as HtmlForm;
@@ -21,7 +21,7 @@ use WebHemi\Http\ResponseInterface;
 /**
  * Class AddAction.
  */
-class AddAction extends IndexAction
+class AddAction extends ListAction
 {
     /**
      * Gets template map name or template file path.
@@ -30,7 +30,7 @@ class AddAction extends IndexAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-add';
+        return 'admin-control-panel-applications-add';
     }
 
     /**

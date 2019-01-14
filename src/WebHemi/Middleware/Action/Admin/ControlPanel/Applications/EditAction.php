@@ -11,7 +11,7 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Middleware\Action\Admin\Applications;
+namespace WebHemi\Middleware\Action\Admin\ControlPanel\Applications;
 
 use InvalidArgumentException;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
@@ -78,7 +78,7 @@ class EditAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-edit';
+        return 'admin-control-panel-applications-edit';
     }
 
     /**

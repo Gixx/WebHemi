@@ -165,33 +165,75 @@ body > nav > ul > li.selected > a {
 }
 
 body > main {
+    grid-area: main;
+}
+
+body > main > aside {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 0 2rem;
+    margin: 0 0 -4.5rem 0;
+}
+
+body > main > aside > ul {
+    align-items: flex-start;
+    display: inline-flex;
+    flex-direction: row;
+    min-height: 5rem;
+    list-style: none;
+    padding: 0;
+}
+
+body > main > aside > ul > li {
+    border: 0.2rem solid rgb(217, 217, 217);
+    line-height: 2rem;
+    padding: 0.5rem 1rem 2.5rem 1rem;
+    margin: 0 0.3rem -2rem 0;
+    background-color: rgb(255, 255, 255);
+    border-radius: 0.5rem;
+    white-space: nowrap;
+}
+
+body > main > aside > ul > li.selected {
+    border: 0.2rem solid rgb(117, 117, 117);
+}
+
+body > main > aside > ul > li > a {
+    text-decoration: none;
+}
+
+body > main > aside > ul > li.selected > a {
+    font-weight: bold;
+}
+
+
+body > main > section {
+    margin: 1rem;
+    padding: 2rem;
     background: rgb(255,255,255);
     border-radius: 0.5rem;
     box-shadow: 0 0 0.2rem 0 rgba(0,0,0,.14), 0 0 0.1rem -0.2rem rgba(0,0,0,.2), 0 0 0.5rem 0 rgba(0,0,0,.12);
-    grid-area: main;
-    margin: 1rem;
-    overflow: scroll;
-    padding: 2rem;
 }
 
-body > main > table {
+body > main > section > table {
     border-collapse: separate;
     width: 100%;
 }
 
-body > main > table > caption {
+body > main > section > table > caption {
     font-weight: 700;
     font-size: var(--size-h3);
     line-height: var(--size-h3-line);
     padding: 0.5rem;
 }
 
-body > main > table th,
-body > main > table td {
+body > main > section > table th,
+body > main > section > table td {
     padding: 0.5rem 1rem;
 }
 
-body > main > table th {
+body > main > section > table th {
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
     font-variant: small-caps;
@@ -199,7 +241,7 @@ body > main > table th {
     text-align: center;
 }
 
-body > main > table tr:nth-child(even) {
+body > main > section > table tr:nth-child(even) {
     background-color: rgb(239, 239, 239);
 }
 

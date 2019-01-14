@@ -11,7 +11,7 @@
  */
 declare(strict_types = 1);
 
-namespace WebHemi\Middleware\Action\Admin\Applications;
+namespace WebHemi\Middleware\Action\Admin\ControlPanel\Applications;
 
 use InvalidArgumentException;
 use WebHemi\Auth\ServiceInterface as AuthInterface;
@@ -20,13 +20,12 @@ use WebHemi\CSRF\ServiceInterface as CSRFInterface;
 use WebHemi\Data\Entity\ApplicationEntity;
 use WebHemi\Data\Storage\ApplicationStorage;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
-use WebHemi\Form\PresetInterface;
 use WebHemi\Middleware\Action\AbstractMiddlewareAction;
 
 /**
- * Class ViewAction.
+ * Class DeleteAction.
  */
-class ViewAction extends AbstractMiddlewareAction
+class DeleteAction extends AbstractMiddlewareAction
 {
     /**
      * @var ConfigurationInterface
@@ -45,22 +44,17 @@ class ViewAction extends AbstractMiddlewareAction
      */
     private $applicationStorage;
     /**
-     * @var PresetInterface
-     */
-    private $applicationFormPreset;
-    /**
      * @var CSRFInterface
      */
     private $csrfAdapter;
 
     /**
-     * ViewAction constructor.
+     * DeleteAction constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param AuthInterface          $authAdapter
      * @param EnvironmentInterface   $environmentManager
-     * @param ApplicationStorage     $applicationStorage
-     * @param PresetInterface        $applicationFormPreset
+     * @parem ApplicationStorage     $applicationStorage
      * @param CSRFInterface          $csrfAdapter
      */
     public function __construct(
@@ -68,14 +62,12 @@ class ViewAction extends AbstractMiddlewareAction
         AuthInterface $authAdapter,
         EnvironmentInterface $environmentManager,
         ApplicationStorage $applicationStorage,
-        PresetInterface $applicationFormPreset,
         CSRFInterface $csrfAdapter
     ) {
         $this->configuration = $configuration;
         $this->authAdapter = $authAdapter;
         $this->environmentManager = $environmentManager;
         $this->applicationStorage = $applicationStorage;
-        $this->applicationFormPreset = $applicationFormPreset;
         $this->csrfAdapter = $csrfAdapter;
     }
 
@@ -86,7 +78,7 @@ class ViewAction extends AbstractMiddlewareAction
      */
     public function getTemplateName() : string
     {
-        return 'admin-applications-view';
+        return 'admin-control-panel-applications-delete';
     }
 
     /**
@@ -97,7 +89,6 @@ class ViewAction extends AbstractMiddlewareAction
     public function getTemplateData() : array
     {
         $params = $this->getRoutingParameters();
-
         $applicationName = $params['name'] ?? '';
         $applicationEntity = $this->applicationStorage->getApplicationByName($applicationName);
 
@@ -109,8 +100,7 @@ class ViewAction extends AbstractMiddlewareAction
         }
 
         return [
-            'data' => $applicationEntity,
-            'csrf' => $this->csrfAdapter->generate()
+            'result' => $applicationEntity->getIsReadOnly()
         ];
     }
 }

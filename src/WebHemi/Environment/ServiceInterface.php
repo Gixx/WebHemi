@@ -20,8 +20,6 @@ use WebHemi\Configuration\ServiceInterface as ConfigurationInterface;
  */
 interface ServiceInterface
 {
-    public const APPLICATION_TYPE_DIRECTORY = 'directory';
-    public const APPLICATION_TYPE_DOMAIN = 'domain';
     public const COOKIE_AUTO_LOGIN_PREFIX = 'atln';
     public const COOKIE_SESSION_PREFIX = 'atsn';
     public const DEFAULT_APPLICATION = 'website';

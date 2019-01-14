@@ -6,21 +6,17 @@
  # @link      http://www.gixx-web.com
  #}
 {% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-{% extends "admin-layout.twig" %}
+{% extends "admin/control-panel/index.twig" %}
 
-{% block title %}{{ 'Applications - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
+{% block title %}{{ 'Manage Applications - Control Panel - ' ~ site_title|default('WebHemi Admin') }}{% endblock %}
 
 {% block header %}
-    <a href="">Dashboard</a> > Applications
+    <a href="">Dashboard</a> > <a href="control-panel">Control Panel</a> > Applications
 {% endblock %}
 
-{% block menuapp %}
-    {% if isAllowed('admin-applications-list') %}
-        <li class="selected"><a href="applications">Applications</a></li>
-    {% endif %}
-{% endblock %}
+{% set selectedPanel = 'applications' %}
 
-{% block content %}
+{% block panelcontent %}
     <h1>Applications</h1>
     <table summary="Applications">
         <caption>Applications</caption>
@@ -30,7 +26,6 @@
             <th>Name</th>
             <th>Title</th>
             <th>Subject</th>
-            <th>Type</th>
             <th>Domain</th>
             <th>Path</th>
             <th>Theme</th>
@@ -39,6 +34,7 @@
         <tbody>
         {% for row in data %}
             {# @var row \WebHemi\Data\Entity\ApplicationEntity #}
+            {% set domain = row.getReference('fk_domain') %}
             <tr>
                 <td>
                     <button class="view" data-name="{{ row.getName() }}">View</button>
@@ -49,8 +45,7 @@
                 <td>{{ row.getName() }}</td>
                 <td>{{ row.getTitle() }}</td>
                 <td>{{ row.getSubject() }}</td>
-                <td>{{ row.getType() }}</td>
-                <td>{{ row.getDomain() }}</td>
+                <td>{{ domain.getSchema() ~ domain.getDomain() }}</td>
                 <td>{{ row.getPath() }}</td>
                 <td>{{ row.getTheme() }}</td>
             </tr>
