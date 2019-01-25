@@ -148,11 +148,7 @@ return [
                     RouterAdapterInterface::class,
                 ]
             ],
-            DispatcherMiddleware::class => [
-                'arguments' => [
-                    RendererAdapterInterface::class,
-                ]
-            ],
+            DispatcherMiddleware::class => [],
             FinalMiddleware::class => [
                 'class' => TestMiddleware::class,
                 'arguments' => ['this is the final middleware simulation' => 'final']

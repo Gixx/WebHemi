@@ -1,4 +1,6 @@
 #!/bin/sh
+dir="$(dirname "$0")"
+cd $dir
 
 # Converts a mysqldump file into a Sqlite 3 compatible file. It also extracts the MySQL `KEY xxxxx` from the
 # CREATE block and create them in separate commands _after_ all the INSERTs.
@@ -11,7 +13,8 @@
 
 # Thanks to and @artemyk and @gkuenning for their nice tweaks.
 
-mysqldump  --compatible=ansi --skip-extended-insert --compact --no-tablespaces --opt  "$@" | \
+#mysqldump  --compatible=ansi --skip-extended-insert --compact --no-tablespaces --opt  "$@" | \
+echo "$(cat $1)" | \
 
 awk '
 

@@ -157,25 +157,6 @@ class PolicyEntity extends AbstractEntity
     }
 
     /**
-     * @param string $method
-     * @return PolicyEntity
-     */
-    public function setMethod(string $method) : PolicyEntity
-    {
-        $this->container['method'] = $method;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getMethod() : ? string
-    {
-        return $this->container['method'];
-    }
-
-    /**
      * @param bool $isReadonly
      * @return PolicyEntity
      */

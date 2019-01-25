@@ -32,14 +32,12 @@ class ServiceAdapter extends AbstractServiceAdapter
      * @param  UserEntity             $userEntity
      * @param  ResourceEntity|null    $resourceEntity
      * @param  ApplicationEntity|null $applicationEntity
-     * @param  string|null            $method
      * @return bool
      */
     public function isAllowed(
         UserEntity $userEntity,
         ? ResourceEntity $resourceEntity = null,
-        ? ApplicationEntity $applicationEntity = null,
-        ? string $method = null
+        ? ApplicationEntity $applicationEntity = null
     ) : bool {
         // By default we block everything.
         $allowed = false;
@@ -49,7 +47,7 @@ class ServiceAdapter extends AbstractServiceAdapter
 
         /** @var PolicyEntity $policyEntity */
         foreach ($policies as $policyEntity) {
-            if ($this->isPolicyAllowed($policyEntity, $resourceEntity, $applicationEntity, $method)) {
+            if ($this->isPolicyAllowed($policyEntity, $resourceEntity, $applicationEntity)) {
                 $allowed = true;
                 break;
             }
