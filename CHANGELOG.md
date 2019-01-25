@@ -1,20 +1,34 @@
 # Change log #
 
+## Version 4.0.0-7.0 ##
+* Decouple domain from application
+* Improve strictness
+* Make the schema compatible with MySQL 5.7.5 default settings
+* Refactor Policies on schema level
+* Improve CSRF usage: add middleware to verify CSRF token prior everything else
+* (Form): Add enctype and ID for the form
+* (Form): Support custom form element attributes; remove obsolete elements
+* (JS): App Promise into the component loading
+* (JS): Add dialog component
+* (JS): Add background image rotate component
+* (Template): Correct layout menu for the error pages, if user is not logged in
+
+
 ## Version 4.0.0-6.1 ##
 * Further code improvements: PHPStan now passes level 7
-* Fix HTTP Client request parameters 
+* Fix HTTP Client request parameters
 * Minor fixes
 
 ## Version 4.0.0-6.0 ##
 * Refactor the data module: rethink the way the PHP works in the end, and realize that it's absolutely no need for special
-  abstraction to build SQL queries, when I can build and test and use them by their own. 
+  abstraction to build SQL queries, when I can build and test and use them by their own.
   * No more database table representation: reduce complexity, improve readability,
   * Easier configuration,
   * Introduce query representation: each query is in their own `.sql` file, which can be executed by the IDE (like PHPStorm),
   * Entities now reflects the results of the queries,
   * Introduce EntitySet as a replace of a normal array of Entities.
 * Improve code quality: PHPStan now passes level 2 (previous version passed only level 0).
-* TODO: add unit tests for the new Data module. 
+* TODO: add unit tests for the new Data module.
 
 ## Version 4.0.0-5.3 ##
 * Changes in rendering and output:
@@ -23,7 +37,7 @@
   * Allow to send output without rendering.
 * Fix Router and RouterProxy: it gave false status code for non-autoindex directories.
 * Add initInternationalization() to Application to avoid translation errors when dealing with DateTime information before the rendering.
-* Adopt unit tests for the new codes.  
+* Adopt unit tests for the new codes.
 
 ## Version 4.0.0-5.2 ##
 * Replace the Symfony Dependency Injection Container with a WebHemi solution with keep the performance (speed) but reduce
@@ -47,7 +61,7 @@ the memory consumption
   * Get rid of FastRoute since it was unable to fulfill complex regular expressions like `^(?P<path>\/[\w\/\-]*\w)?\/(?P<basename>(?!index\..?html$)[\w\-]+\.[a-z0-9]{2,5})$`
   * Develop a simple Router
   * Introduce RouteProxy to handle dynamic contents
-* Add/rename some database tables 
+* Add/rename some database tables
 * Extend database tables with new fields where they were necessary
 * Update unit tests to work also with the new codes
 
@@ -81,7 +95,7 @@ the memory consumption
 ## Version 4.0.0-4.3 ##
 
 * Add support for connecting to multiple databases
-* Add support for service configuration inheritance 
+* Add support for service configuration inheritance
 * Refactor the Dependency Injection Container Service:
   * Add abstract class for the internal operation (init, resolve inheritance etc)
   * Change the way of registering services and service instances
@@ -119,7 +133,7 @@ the memory consumption
 * Refactor UnitTests to PHPUnit 6.
 * Add/fix unit tests, increase coverage.
 * Refactor trait used by the renderer and helper:
-  * rename ThemeCheckTrait to GetSelectedThemeResourcePathTrait since that is what it does, 
+  * rename ThemeCheckTrait to GetSelectedThemeResourcePathTrait since that is what it does,
   * hide properties and methods used by this trait from the descendant classes,
   * make it to be independent of descendant classes (inject dependencies).
 
@@ -153,7 +167,7 @@ the memory consumption
 ## Version 4.0.0-2.2 ##
 
 * Create the [Docker Builder](https://github.com/Gixx/docker-builder) project to provide a PHP 7.1 dev environment:
-  * with nginx 
+  * with nginx
   * with https (self-signed)
   * with PHP 7.1
   * with MySQL 5.7
@@ -173,7 +187,7 @@ the memory consumption
 ## Version 4.0.0-2.0 ##
 
 * Add brand new WebHemi\Form support
-* Add Twig templates for generating semantic WebHemi\Form markup  
+* Add Twig templates for generating semantic WebHemi\Form markup
 * Solve Twig template inheritance (when no custom found use the default one)
 * Minor fixes
 * Move all continuous integration tools to Scrutinizer

@@ -173,12 +173,12 @@ class AclTest extends TestCase
      * User Group id 90000 is assigned                                   to Policy id 90000,               90003
      * User Group id 90001 is assigned                                   to Policy id        90001,        90003
      *
-     * | Resource | Application | Method |    | Policy || Allow User A? | Allow User B? |
-     * +----------+-------------+--------+----+--------++---------------+---------------+
-     * |     null |        null |   null | => |  90000 ||           Yes |            No |
-     * |    90000 |        null |    GET | => |  90001 ||           Yes |           Yes |
-     * |     null |       90000 |   POST | => |  90002 ||           Yes |            No |
-     * |    90000 |       90000 |   null | => |  90003 ||           Yes |           Yes |
+     * | Resource | Application |    | Policy || Allow User A? | Allow User B? |
+     * +----------+-------------+----+--------++---------------+---------------+
+     * |     null |        null | => |  90000 ||           Yes |            No |
+     * |    90000 |        null | => |  90001 ||           Yes |           Yes |
+     * |     null |       90000 | => |  90002 ||           Yes |            No |
+     * |    90000 |       90000 | => |  90003 ||           Yes |           Yes |
      *
      * User A has the Jolly Joker policy (all resource in all application with all method), so he has access to
      * everything.
@@ -239,29 +239,22 @@ class AclTest extends TestCase
 
         // POLICY 90000
         // always TRUE because User A is assigned to Policy 90000 which is admin
-        $this->assertTrue($aclAdapter->isAllowed($userA, null, null, null));
+        $this->assertTrue($aclAdapter->isAllowed($userA));
         // FALSE because User B isn't assigned to Policy 90000 and not member of User Group 90000
-        $this->assertFalse($aclAdapter->isAllowed($userB, null, null, null));
+        $this->assertFalse($aclAdapter->isAllowed($userB));
 
         // POLICY 90001
         // always TRUE because User A is assigned to Policy 90000 which is admin
-        $this->assertTrue($aclAdapter->isAllowed($userA, $resourceEntity, null, 'GET'));
-        $this->assertTrue($aclAdapter->isAllowed($userA, $resourceEntity, null, 'POST'));
-        $this->assertTrue($aclAdapter->isAllowed($userA, $resourceEntity, null, null));
-        // TRUE for GET, FALSE otherwise
-        $this->assertTrue($aclAdapter->isAllowed($userB, $resourceEntity, null, 'GET'));
-        $this->assertFalse($aclAdapter->isAllowed($userB, $resourceEntity, null, 'POST'));
-        $this->assertFalse($aclAdapter->isAllowed($userB, $resourceEntity, null, null));
+        $this->assertTrue($aclAdapter->isAllowed($userA, $resourceEntity));
+        // should be TRUE
+        $this->assertTrue($aclAdapter->isAllowed($userB, $resourceEntity));
+        //$this->assertFalse($aclAdapter->isAllowed($userB, $resourceEntity));
 
         // POLICY 90002
         // always TRUE because User A is assigned to Policy 90000 which is admin
-        $this->assertTrue($aclAdapter->isAllowed($userA, null, $applicationEntity, 'GET'));
-        $this->assertTrue($aclAdapter->isAllowed($userA, null, $applicationEntity, 'POST'));
-        $this->assertTrue($aclAdapter->isAllowed($userA, null, $applicationEntity, null));
+        $this->assertTrue($aclAdapter->isAllowed($userA, null, $applicationEntity));
         // always FALSE because User B isn't assigned to Policy 90002 and no User Group is assigned to Policy 90002
-        $this->assertFalse($aclAdapter->isAllowed($userB, null, $applicationEntity, 'GET'));
-        $this->assertFalse($aclAdapter->isAllowed($userB, null, $applicationEntity, 'POST'));
-        $this->assertFalse($aclAdapter->isAllowed($userB, null, $applicationEntity, null));
+        $this->assertFalse($aclAdapter->isAllowed($userB, null, $applicationEntity));
 
         // POLICY 90003
         // always TRUE because User A is assigned to Policy 90000 which is admin

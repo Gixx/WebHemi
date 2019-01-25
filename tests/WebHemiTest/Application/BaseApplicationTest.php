@@ -13,7 +13,7 @@ namespace WebHemiTest\Application;
 
 use PHPUnit\Framework\TestCase;
 use WebHemi\DependencyInjection\ServiceInterface as DependencyInjectionInterface;
-use WebHemi\DependencyInjection\ServiceAdapter\Symfony\ServiceAdapter as DependencyInjectionAdapter;
+use WebHemi\DependencyInjection\ServiceAdapter\Base\ServiceAdapter as DependencyInjectionAdapter;
 use WebHemi\Environment\ServiceInterface as EnvironmentInterface;
 use WebHemi\MiddlewarePipeline\ServiceInterface as PipelineInterface;
 use WebHemi\MiddlewarePipeline\ServiceAdapter\Base\ServiceAdapter as PipelineManager;
@@ -149,13 +149,6 @@ class BaseApplicationTest extends TestCase
         $this->assertSame(count($expectedPipelineTrace), TestMiddleware::$counter);
         $this->assertArraysAreSimilar($expectedPipelineTrace, TestMiddleware::$trace);
         $this->assertSame(200, TestMiddleware::$responseStatus);
-//
-//        $expectedBody = [
-//            'message' => 'Hello World!',
-//            'template_resource_path' => '/resources/vendor_themes/test_theme/static'
-//        ];
-//        $actualBody = json_decode(TestMiddleware::$responseBody, true);
-//        $this->assertArraysAreSimilar($expectedBody, $actualBody);
     }
 
     /**
