@@ -19,8 +19,9 @@
  * >...</HTMLElement>
  *
  * @legend
- *  HTMLElement - any block-leve element. If the element has a background image by default, it will be included.
- *  id="optional-element-id" -  giving ID for the element is optional. If not set, the component will give one.
+ *  HTMLElement - any block-level element. If the element has a background image by default, it will be included in the
+ *                background image set.
+ *  id="optional-element-id" -  giving an ID for the element is optional. If not set, the component will generate one.
  *  data-webhemi-component="BackgroundImageRotator" - MANDATORY to activate the component
  *  data-background-set-resource - a website-local folder where the images are present
  *  data-background-set - a comma separated list of images. Any absolute link will load as is. The rest will be loaded
