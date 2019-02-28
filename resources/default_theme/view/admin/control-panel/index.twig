@@ -20,16 +20,36 @@
 {% block content %}
     <aside>
         <ul>
-            <li{% if selectedPanel|default('domains') == 'domains' %} class="selected"{% endif %}><a href="control-panel/domains">Domains</a></li>
-            <li{% if selectedPanel|default('domains') == 'applications' %} class="selected"{% endif %}><a href="control-panel/applications">Applications</a></li>
-            <li{% if selectedPanel|default('domains') == 'settings' %} class="selected"{% endif %}><a href="control-panel/settings">Settings</a></li>
-            <li{% if selectedPanel|default('domains') == 'themes' %} class="selected"{% endif %}><a href="control-panel/themes">Manage themes</a></li>
-            <li{% if selectedPanel|default('domains') == 'add-ons' %} class="selected"{% endif %}><a href="control-panel/add-ons">Manage add-ons</a></li>
-            <li{% if selectedPanel|default('domains') == 'users' %} class="selected"{% endif %}><a href="control-panel/users">Manage users</a></li>
-            <li{% if selectedPanel|default('domains') == 'groups' %} class="selected"{% endif %}><a href="control-panel/groups">Manage groups</a></li>
-            <li{% if selectedPanel|default('domains') == 'resources' %} class="selected"{% endif %}><a href="control-panel/resources">Manage resources</a></li>
-            <li{% if selectedPanel|default('domains') == 'policies' %} class="selected"{% endif %}><a href="control-panel/policies">Manage policies</a></li>
-            <li{% if selectedPanel|default('domains') == 'logs' %} class="selected"{% endif %}><a href="control-panel/logs">View logs</a></li>
+            {% if isAllowed('admin-control-panel-domains-list') %}
+            <li{% if selectedPanel|default('') == 'domains' %} class="selected"{% endif %}><a href="control-panel/domains">Domains</a></li>
+            {% endif %}
+            {% if isAllowed('admin-control-panel-applications-list') %}
+            <li{% if selectedPanel|default('') == 'applications' %} class="selected"{% endif %}><a href="control-panel/applications">Applications</a></li>
+            {% endif %}
+            {% if isAllowed('admin-control-panel-settings-list') %}
+            <li{% if selectedPanel|default('') == 'settings' %} class="selected"{% endif %}><a href="control-panel/settings">Settings</a></li>
+            {% endif %}
+            {% if isAllowed('admin-control-panel-themes-list') %}
+            <li{% if selectedPanel|default('') == 'themes' %} class="selected"{% endif %}><a href="control-panel/themes">Manage themes</a></li>
+            {% endif %}
+            {% if isAllowed('admin-control-panel-add-ons-list') %}
+            <li{% if selectedPanel|default('') == 'add-ons' %} class="selected"{% endif %}><a href="control-panel/add-ons">Manage add-ons</a></li>
+            {% endif %}
+            {% if isAllowed('admin-control-panel-users-list') %}
+            <li{% if selectedPanel|default('') == 'users' %} class="selected"{% endif %}><a href="control-panel/users">Manage users</a></li>
+            {% endif %}
+            {% if isAllowed('admin-control-panel-groups-list') %}
+            <li{% if selectedPanel|default('') == 'groups' %} class="selected"{% endif %}><a href="control-panel/groups">Manage groups</a></li>
+            {% endif %}
+            {% if isAllowed('admin-control-panel-resources-list') %}
+            <li{% if selectedPanel|default('') == 'resources' %} class="selected"{% endif %}><a href="control-panel/resources">Manage resources</a></li>
+            {% endif %}
+            {% if isAllowed('admin-control-panel-ploicies-list') %}
+            <li{% if selectedPanel|default('') == 'policies' %} class="selected"{% endif %}><a href="control-panel/policies">Manage policies</a></li>
+            {% endif %}
+            {% if isAllowed('admin-control-panel-logs-list') %}
+            <li{% if selectedPanel|default('') == 'logs' %} class="selected"{% endif %}><a href="control-panel/logs">View logs</a></li>
+            {% endif %}
         </ul>
     </aside>
     <section>
