@@ -10,89 +10,21 @@ document.addEventListener('WebHemi.Ready', function () {
     document.querySelectorAll('button.add').forEach(function (element) {
         element.addEventListener('click', function (event) {
             let buttonElement = event.target;
-            let dialogId = buttonElement.dataset.dialog || 'dialog';
-            let dialogElement = document.querySelector('dialog#'+dialogId);
 
-            if (dialogElement && dialogElement.component !== undefined) {
-                /** @type {DialogElement} */
-                let component = dialogElement.component;
-
-                component.open();
-            }
-        });
-    });
-
-    document.querySelectorAll('dialog .button.reset button').forEach(function (element) {
-        element.addEventListener('click', function (event) {
-            let buttonElement = event.target;
-            let dialogElement = buttonElement.closest('dialog');
-
-            if (dialogElement && dialogElement.component !== undefined) {
-                /** @type {DialogElement} */
-                let component = dialogElement.component;
-
-                component.close();
-            }
-        });
-    });
-});
-
-
-/*
-(function() {
-
-    document.querySelectorAll('button.add').forEach(function (element) {
-        element.addEventListener('click', function (event) {
-            location.href = _WebHemiApplication.currentUri+'/add';
-        });
-    });
-    document.querySelectorAll('button.edit').forEach(function (element) {
-        element.addEventListener('click', function (event) {
-            location.href = _WebHemiApplication.currentUri+'/edit';
-        });
-    });
-
-    document.querySelectorAll('button.view').forEach(function (element) {
-        element.addEventListener('click', function (event) {
-            location.href = _WebHemiApplication.currentUri+'/'+event.target.dataset.name;
         });
     });
 
     document.querySelectorAll('button.delete').forEach(function (element) {
         element.addEventListener('click', function (event) {
-            if (confirm('Are you sure to delete this item?')) {
-                let deleteEndpoint = _WebHemiApplication.currentUri+'/'+event.target.dataset.name+'/';
-                fetch(deleteEndpoint, {
-                    method: 'delete',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({csrf: _CSRF})
-                }).then(function(response) {
-                    if (response.ok) {
-                        return response
-                    } else {
-                        console.log('Looks like there was a problem.', response);
-                        let error = new Error(response.statusText || response.status);
-                        error.response = response;
-                        throw error
-                    }
-                }).then(function(response) {
-                    return response.json();
-                }).then(function(data) {
-                    if (data.result) {
-                        event.target.closest('tr').remove();
-                    } else {
-                        event.target.style.border = '1px solid red';
-                    }
-                }).catch(function(err) {
-                    console.log('Fetch Error :-S', err);
-                });
-            } else {
-                return false;
-            }
+            let buttonElement = event.target;
+
         });
     });
-})();
-*/
+
+    document.querySelectorAll('button.view').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            let buttonElement = event.target;
+
+        });
+    });
+});

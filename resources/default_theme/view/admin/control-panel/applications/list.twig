@@ -22,7 +22,7 @@
         <caption>Applications</caption>
         <thead>
         <tr>
-            <th></th>
+            <th>Action</th>
             <th>Name</th>
             <th>Title</th>
             <th>Subject</th>
@@ -37,8 +37,10 @@
             {% set domain = row.getReference('fk_domain') %}
             <tr>
                 <td>
+                    {% if isAllowed('admin-control-panel-applications-view') %}
                     <button class="view" data-name="{{ row.getName() }}">View</button>
-                    {% if not row.isReadOnly() %}
+                    {% endif %}
+                    {% if not row.isReadOnly() and isAllowed('admin-control-panel-applications-delete') %}
                         <button class="delete" data-name="{{ row.getName() }}">Delete</button>
                     {% endif %}
                 </td>
@@ -52,15 +54,7 @@
         {% endfor %}
         </tbody>
     </table>
-    {% if isAllowed('admin-applications-add') %}
-        <button class="add" data-dialog="application_add">Add</button>
-    {% endif %}
-{% endblock %}
-
-{% block dialog %}
-    {% if isAllowed('admin-applications-add') %}
-    <dialog id="application_add">
-        {{ _FORM.renderForm(form) }}
-    </dialog>
+    {% if isAllowed('admin-control-panel-applications-add') %}
+        <button class="add">Add</button>
     {% endif %}
 {% endblock %}
