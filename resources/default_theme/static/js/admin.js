@@ -10,7 +10,6 @@ document.addEventListener('WebHemi.Ready', function () {
     document.querySelectorAll('button.add').forEach(function (element) {
         element.addEventListener('click', function (event) {
             let buttonElement = event.target;
-
         });
     });
 
@@ -24,7 +23,22 @@ document.addEventListener('WebHemi.Ready', function () {
     document.querySelectorAll('button.view').forEach(function (element) {
         element.addEventListener('click', function (event) {
             let buttonElement = event.target;
+            let subject = buttonElement.dataset.name;
+            let url = window.location.href;
 
+            if (url.substr(-1) !== '/') {
+                url += '/';
+            }
+
+            let ajaxOptions = {
+                url: url + subject,
+                method: 'GET',
+                successCallback: function(data) {
+                    console.log(data);
+                }
+            };
+
+            WebHemi.components.Util.ajax(ajaxOptions);
         });
     });
 });
