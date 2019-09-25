@@ -1,8 +1,0 @@
-{% import '@WebHemi/macros/renderForm.twig' as _FORM %}
-<div class="element input image{% if formElement.getErrors() %} has-error{% endif %}">
-    {% set value = formElement.getValues() %}
-    <input type="image" id="{{ formElement.getId() }}" name="{{ formElement.getName() }}" src="{{ value[0] }}" alt="{{ formElement.getLabel() }}" />
-    {% if formElement.getErrors() %}
-        {{ _FORM.renderErrorBlock(formElement.getErrors()) }}
-    {% endif %}
-</div>

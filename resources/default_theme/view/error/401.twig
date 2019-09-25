@@ -1,8 +1,0 @@
-{% extends WebHemiApplication.selectedModule == 'Admin' ? 'admin-layout.twig' : 'layout.twig' %}
-
-{% block content %}
-    <h1 class="page-header">Unauthorized!</h1>
-    {# @var exception \Exception #}
-    <p>{{ exception.getMessage() }}</p>
-    <a href="auth/login">Login here!</a>
-{% endblock %}
