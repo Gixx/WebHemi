@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
-class ApiController extends AbstractController
+final class ApiController extends AbstractController
 {
     #[Route('api/users', name: 'api_users', methods: 'GET')]
     public function getUsers(): Response

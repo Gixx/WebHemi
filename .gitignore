@@ -29,3 +29,7 @@
 phpstan.neon
 ###< phpstan/phpstan ###
 /build/
+
+###> deptrac/deptrac ###
+/.deptrac.cache
+###< deptrac/deptrac ###

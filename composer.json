@@ -24,10 +24,11 @@
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
+        "deptrac/deptrac": "^4.6",
         "friendsofphp/php-cs-fixer": "^3.95",
-        "phpmd/phpmd": "^2.5",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^13.1",
+        "rector/rector": "^2.4",
         "squizlabs/php_codesniffer": "^4.0",
         "symfony/debug-bundle": "8.0.*",
         "symfony/phpunit-bridge": "^8.0",
@@ -76,6 +77,32 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "qa:phpcs": "vendor/bin/phpcs --standard=PSR12 src",
+        "fix:php-cs-fixer": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+        "qa:php-cs-fixer:dry-run": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff",
+        "qa:phpstan": "vendor/bin/phpstan analyse -c phpstan.dist.neon src",
+        "qa:psalm": "vendor/bin/psalm --config=psalm.xml",
+        "test:phpunit": "vendor/bin/phpunit -c phpunit.dist.xml",
+        "qa:phpcpd": "@php bin/phpcpd.phar src",
+        "qa:phploc": "@php bin/phploc.phar src",
+        "qa:deptrac": "vendor/bin/deptrac",
+        "fix:rector": "vendor/bin/rector src --config=rector.php",
+        "qa:rector:dry-run": "vendor/bin/rector src --config=rector.php --dry-run",
+        "qa": [
+            "@qa:phpcs",
+            "@qa:php-cs-fixer:dry-run",
+            "@qa:rector:dry-run",
+            "@qa:phpstan",
+            "@qa:psalm",
+            "@test:phpunit",
+            "@qa:phpcpd",
+            "@qa:phploc",
+            "@qa:deptrac"
+        ],
+        "fix": [
+            "@fix:php-cs-fixer",
+            "@fix:rector"
         ]
     },
     "conflict": {

@@ -29,19 +29,28 @@ jobs:
               run: composer install --no-interaction --prefer-dist
 
             - name: PHP Code Sniffer (PSR12)
-              run: vendor/bin/phpcs --standard=PSR12 src/
+              run: composer run qa:phpcs
 
-            - name: PHP Mess Detector
-              run: vendor/bin/phpmd src/ text phpmd.xml || echo "PHPMD found issues"
+            - name: PHP CS Fixer (dry-run)
+              run: composer run qa:php-cs-fixer:dry-run
 
-                # 3. PHP Copy/Paste Detector (Helyettesíti: php_cpd)
+            - name: Rector (dry-run)
+              run: composer run qa:rector:dry-run
+
             - name: PHP CPD
-              run: |
-                wget https://phar.phpunit.de/phpcpd.phar
-                php phpcpd.phar src/
+              run: composer run qa:phpcpd
+
+            - name: PHP LOC
+              run: composer run qa:phploc
 
             - name: PHP Stan
-              run: vendor/bin/phpstan src/
+              run: composer run qa:phpstan
+
+            - name: Psalm
+              run: composer run qa:psalm
+
+            - name: Deptrac
+              run: composer run qa:deptrac
 
             - name: Run Tests
               run: vendor/bin/phpunit -c phpunit.dist.xml --coverage-clover coverage.xml

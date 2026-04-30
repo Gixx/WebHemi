@@ -11,3 +11,12 @@ An old project on new foundation. Rewrite the blog engine based on Symfony.
 [![WebHemi Development](https://img.shields.io/badge/Development-dev--master-orange.svg)](https://github.com/Gixx/WebHemi)
 ![Build Status](https://github.com/Gixx/WebHemi/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/Gixx/WebHemi/branch/main/graph/badge.svg)](https://codecov.io/gh/Gixx/WebHemi)
+
+## Git hooks
+
+Enable the repository-managed Git hooks (includes a `pre-commit` hook that runs `composer run qa`):
+
+```bash
+chmod +x .githooks/pre-commit
+git config core.hooksPath .githooks
+```

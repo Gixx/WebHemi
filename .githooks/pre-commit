@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+set -eu
+
+# Always run from repository root, even when Git executes the hook from .git/hooks.
+HOOK_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+REPO_ROOT=$(dirname "$HOOK_DIR")
+cd "$REPO_ROOT"
+
+if ! command -v composer >/dev/null 2>&1; then
+    echo "[pre-commit] Composer is not available in PATH." >&2
+    exit 1
+fi
+
+echo "[pre-commit] Running composer run qa..."
+composer run qa
