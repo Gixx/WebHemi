@@ -37,7 +37,7 @@ build:
             environment:
                 php: '8.4'
 
-            tests:
+            before_setup:
                 before:
                     - sudo apt-get update
                     - sudo apt-get install -y build-essential zlib1g-dev
@@ -49,6 +49,7 @@ build:
                         make
                         sudo make install
 
+            test:
                 override:
                     # Itt exportáljuk az útvonalat, hogy a pkg-config megtalálja
                     - export PKG_CONFIG_PATH=/usr/local/openssl/lib/pkgconfig:$PKG_CONFIG_PATH
