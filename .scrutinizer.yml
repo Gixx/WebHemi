@@ -37,17 +37,19 @@ build:
             environment:
                 php: '8.4'
 
-            tests:
-                before:
-                    # Install build essentials to compile openssl
-                    - sudo apt-get update
-                    - sudo apt-get install -y build-essential checkinstall zlib1g-dev
-                    # Download, configure, and install OpenSSL 1.1.1
-                    - wget https://openssl.org
-                    - tar -zxf openssl-1.1.1w.tar.gz
-                    - cd openssl-1.1.1w && ./config && make && sudo make install
-                    - sudo ldconfig
+            before:
+                - sudo apt-get update
+                - sudo apt-get install -y build-essential zlib1g-dev
+                - wget https://www.openssl.org/source/openssl-1.1.1w.tar.gz
+                - tar -zxf openssl-1.1.1w.tar.gz
+                - |
+                    cd openssl-1.1.1w
+                    ./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl
+                    make
+                    sudo make install
                 override:
+                    # Itt exportáljuk az útvonalat, hogy a pkg-config megtalálja
+                    - export PKG_CONFIG_PATH=/usr/local/openssl/lib/pkgconfig:$PKG_CONFIG_PATH
                     - 'php-scrutinizer-run --enable-security-analysis'
                     - 'vendor/bin/phpunit -c phpunit.xml --coverage-clover build/logs/clover.xml'
 
@@ -64,7 +66,7 @@ tools:
     php_code_sniffer:
         enabled: true
         config:
-            standard: PSR2
+            standard: PSR12
         filter:
             paths: ["src/*"]
 
