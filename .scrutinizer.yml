@@ -31,7 +31,7 @@ before_commands:
     - 'composer install --no-interaction --prefer-dist'
 
 build:
-    image: default-bionic
+    image: default-focal
     nodes:
         analysis:
             environment:
