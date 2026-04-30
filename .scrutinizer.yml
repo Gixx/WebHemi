@@ -47,11 +47,11 @@ build:
                     ./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl
                     make
                     sudo make install
-                override:
-                    # Itt exportáljuk az útvonalat, hogy a pkg-config megtalálja
-                    - export PKG_CONFIG_PATH=/usr/local/openssl/lib/pkgconfig:$PKG_CONFIG_PATH
-                    - 'php-scrutinizer-run --enable-security-analysis'
-                    - 'vendor/bin/phpunit -c phpunit.xml --coverage-clover build/logs/clover.xml'
+            override:
+                # Itt exportáljuk az útvonalat, hogy a pkg-config megtalálja
+                - export PKG_CONFIG_PATH=/usr/local/openssl/lib/pkgconfig:$PKG_CONFIG_PATH
+                - 'php-scrutinizer-run --enable-security-analysis'
+                - 'vendor/bin/phpunit -c phpunit.xml --coverage-clover build/logs/clover.xml'
 
 tools:
     external_code_coverage: false
