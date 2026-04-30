@@ -1,0 +1,52 @@
+name: CI
+
+on:
+    push:
+        branches: [ "main", "master" ]
+    pull_request:
+        branches: [ "main", "master" ]
+
+jobs:
+    tests:
+        name: PHP ${{ matrix.php }} Tests
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php: ['8.4']
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, libxml, openssl
+                  coverage: pcov
+
+            - name: Install dependencies
+              run: composer install --no-interaction --prefer-dist
+
+            - name: PHP Code Sniffer (PSR12)
+              run: vendor/bin/phpcs --standard=PSR12 src/
+
+            - name: PHP Mess Detector
+              run: vendor/bin/phpmd src/ text phpmd.xml || echo "PHPMD found issues"
+
+                # 3. PHP Copy/Paste Detector (Helyettesíti: php_cpd)
+            - name: PHP CPD
+              run: |
+                wget https://phar.phpunit.de/phpcpd.phar
+                php phpcpd.phar src/
+
+            - name: PHP Stan
+              run: vendor/bin/phpstan src/
+
+            - name: Run Tests
+              run: vendor/bin/phpunit -c phpunit.dist.xml --coverage-clover coverage.xml
+
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v4
+              with:
+                files: ./coverage.xml
