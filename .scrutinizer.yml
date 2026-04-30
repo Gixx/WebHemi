@@ -32,6 +32,7 @@ before_commands:
 
 build:
     image: default-jammy
+
     nodes:
         analysis:
             environment:
