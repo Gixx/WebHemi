@@ -31,7 +31,7 @@ before_commands:
     - 'composer install --no-interaction --prefer-dist'
 
 build:
-    image: default-focal
+    image: default-jammy
     nodes:
         analysis:
             environment:
