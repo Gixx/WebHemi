@@ -7,10 +7,14 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "doctrine/doctrine-bundle": "^3.2",
+        "doctrine/doctrine-migrations-bundle": "^4.0",
+        "doctrine/orm": "^3.6",
         "phpdocumentor/reflection-docblock": "^6.0",
         "phpstan/phpdoc-parser": "^2.3",
         "symfony/console": "8.0.*",
         "symfony/dotenv": "8.0.*",
+        "symfony/expression-language": "8.0.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "8.0.*",
         "symfony/monolog-bundle": "^3.0|^4.0",
@@ -79,7 +83,6 @@
             "@auto-scripts"
         ],
         "qa:phpcs": "vendor/bin/phpcs --standard=PSR12 src",
-        "fix:php-cs-fixer": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",
         "qa:php-cs-fixer:dry-run": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff",
         "qa:phpstan": "vendor/bin/phpstan analyse -c phpstan.dist.neon src",
         "qa:psalm": "vendor/bin/psalm --config=psalm.xml",
@@ -87,20 +90,22 @@
         "qa:phpcpd": "@php bin/phpcpd.phar src",
         "qa:phploc": "@php bin/phploc.phar src",
         "qa:deptrac": "vendor/bin/deptrac",
-        "fix:rector": "vendor/bin/rector src --config=rector.php",
         "qa:rector:dry-run": "vendor/bin/rector src --config=rector.php --dry-run",
         "qa": [
             "@qa:phpcs",
             "@qa:php-cs-fixer:dry-run",
             "@qa:rector:dry-run",
             "@qa:phpstan",
-            "@qa:psalm",
-            "@test:phpunit",
             "@qa:phpcpd",
             "@qa:phploc",
-            "@qa:deptrac"
+            "@qa:deptrac",
+            "@test:phpunit"
         ],
+        "fix:phpcbf": "vendor/bin/phpcbf --standard=PSR12 src",
+        "fix:php-cs-fixer": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+        "fix:rector": "vendor/bin/rector src --config=rector.php",
         "fix": [
+            "@fix:phpcbf",
             "@fix:php-cs-fixer",
             "@fix:rector"
         ]

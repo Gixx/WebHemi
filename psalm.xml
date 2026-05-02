@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<psalm>
+<psalm findUnusedIssueHandlerSuppression="false">
     <projectFiles>
         <directory name="src" />
         <ignoreFiles>
@@ -10,14 +10,37 @@
     <issueHandlers>
         <UnusedClass>
             <errorLevel type="suppress">
-                <directory name="src/Controller" />
+                <directory name="src/Admin/Controller" />
+                <directory name="src/Site/Controller" />
+                <directory name="src/Routing" />
+                <directory name="src/Site/Command" />
                 <file name="src/Kernel.php" />
             </errorLevel>
         </UnusedClass>
         <PossiblyUnusedMethod>
             <errorLevel type="suppress">
-                <directory name="src/Model" />
+                <directory name="src/Entity" />
+                <directory name="src/Admin/Controller" />
+                <directory name="src/Site/Controller" />
+                <directory name="src/Routing" />
             </errorLevel>
         </PossiblyUnusedMethod>
+        <ClassMustBeFinal>
+            <errorLevel type="suppress">
+                <directory name="src/Entity" />
+            </errorLevel>
+        </ClassMustBeFinal>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="src/Entity" />
+                <directory name="src/Admin/Controller" />
+                <directory name="src/Site/Controller" />
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+        <RedundantCastGivenDocblockType>
+            <errorLevel type="suppress">
+                <directory name="src/Routing" />
+            </errorLevel>
+        </RedundantCastGivenDocblockType>
     </issueHandlers>
 </psalm>

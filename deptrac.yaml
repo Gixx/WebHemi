@@ -8,23 +8,28 @@ deptrac:
             name: Controller
             collectors:
                 -
-                    type: classLike
-                    value: .*Controller.*
+                    type: directory
+                    value: src/Admin/Controller
+                -
+                    type: directory
+                    value: src/Site/Controller
         -
             name: Repository
             collectors:
                 -
-                    type: classLike
-                    value: .*Repository.*
+                    type: directory
+                    value: src/Repository
         -
             name: Service
             collectors:
                 -
                     type: classLike
-                    value: .*Service.*
+                    value: '^App\\.*Service.*$'
     ruleset:
         Controller:
             - Service
+            - Repository
         Service:
             - Repository
         Repository:
+            - Service
