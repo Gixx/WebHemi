@@ -36,6 +36,31 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 16px 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .admin-user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .admin-user-email {
+            max-width: 160px;
+            font-size: 12px;
+            word-break: break-all;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
         .admin-sidebar nav a {
             display: block;
             padding: 12px 20px;
@@ -47,6 +72,11 @@
         .admin-sidebar nav a:hover,
         .admin-sidebar nav a.active {
             background-color: #34495e;
+        }
+
+        .admin-sidebar nav a.logout-link {
+            margin-top: 12px;
+            color: #ffd6d6;
         }
 
         .admin-content {
@@ -201,8 +231,15 @@
         <aside class="admin-sidebar">
             <h2>Admin</h2>
             <nav>
+                {% if app.user %}
+                    <div class="admin-user">
+                        <img src="{{ app.user.avatarUrl }}" alt="Avatar">
+                        <div class="admin-user-email">{{ app.user.userIdentifier }}</div>
+                    </div>
+                {% endif %}
                 <a href="{{ path('admin_dashboard') }}" {% if app.request.attributes.get('_route') starts with 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a>
                 <a href="{{ path('admin_site_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_site_' %}class="active"{% endif %}>Sites</a>
+                <a href="{{ path('_logout_main') }}" class="logout-link">Logout</a>
             </nav>
             <div class="admin-meta">
                 <div>Version: {{ app_version }}</div>

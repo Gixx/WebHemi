@@ -56,7 +56,10 @@ final class CreateAdminUserCommand extends Command
         $user = $this->userRepository->findOneBy(['email' => $email]);
         $createdUser = false;
         if (!$user instanceof User) {
-            $user = (new User())->setEmail($email);
+            $user = (new User())
+                ->setEmail($email)
+                ->setAvatarType(User::AVATAR_TYPE_DEFAULT)
+                ->setAvatarPath(null);
             $this->entityManager->persist($user);
             $createdUser = true;
         }

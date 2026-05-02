@@ -16,6 +16,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\UniqueConstraint(name: 'uniq_app_user_email', columns: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const AVATAR_TYPE_DEFAULT = 'default';
+    public const AVATAR_TYPE_GRAVATAR = 'gravatar';
+    public const AVATAR_TYPE_UPLOAD = 'upload';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -26,6 +30,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private string $passwordHash;
+
+    #[ORM\Column(length: 16)]
+    private string $avatarType = self::AVATAR_TYPE_DEFAULT;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private string|null $avatarPath = null;
 
     /**
      * @var Collection<int, Role>
@@ -71,6 +81,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->passwordHash = trim($passwordHash);
 
         return $this;
+    }
+
+    public function getAvatarType(): string
+    {
+        return $this->avatarType;
+    }
+
+    public function setAvatarType(string $avatarType): self
+    {
+        $normalized = strtolower(trim($avatarType));
+        $allowedTypes = [self::AVATAR_TYPE_DEFAULT, self::AVATAR_TYPE_GRAVATAR, self::AVATAR_TYPE_UPLOAD];
+        if (!in_array($normalized, $allowedTypes, true)) {
+            throw new \InvalidArgumentException(sprintf('Invalid avatar type: %s', $avatarType));
+        }
+
+        $this->avatarType = $normalized;
+
+        return $this;
+    }
+
+    public function getAvatarPath(): ?string
+    {
+        return $this->avatarPath;
+    }
+
+    public function setAvatarPath(string|null $avatarPath): self
+    {
+        $normalizedPath = null;
+        if (is_string($avatarPath)) {
+            $trimmed = trim($avatarPath);
+            $normalizedPath = '' === $trimmed ? null : $trimmed;
+        }
+
+        $this->avatarPath = $normalizedPath;
+
+        return $this;
+    }
+
+    public function getAvatarUrl(): string
+    {
+        if (self::AVATAR_TYPE_UPLOAD === $this->avatarType) {
+            if (is_string($this->avatarPath)) {
+                if (
+                    str_starts_with($this->avatarPath, 'http://')
+                    || str_starts_with($this->avatarPath, 'https://')
+                    || str_starts_with($this->avatarPath, '/')
+                ) {
+                    return $this->avatarPath;
+                }
+
+                return '/' . $this->avatarPath;
+            }
+
+            return '/assets/admin/icons/avatar/default-male.svg';
+        }
+
+        if (self::AVATAR_TYPE_GRAVATAR === $this->avatarType) {
+            $hash = md5(strtolower(trim($this->email)));
+
+            return sprintf('https://www.gravatar.com/avatar/%s?d=mp&s=96', $hash);
+        }
+
+        return '/assets/admin/icons/avatar/default-male.svg';
     }
 
     /**
