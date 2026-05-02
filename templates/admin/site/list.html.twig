@@ -1,0 +1,48 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}Sites{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_site_create') }}" class="btn btn-primary">Create New Site</a>
+    </div>
+
+    {% if sites is empty %}
+        <p>No sites found. <a href="{{ path('admin_site_create') }}">Create one</a>.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Slug</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for site in sites %}
+                    <tr>
+                        <td><code>{{ site.slug }}</code></td>
+                        <td>{{ site.name }}</td>
+                        <td>
+                            {% if site.isEnabled %}
+                                <span style="color: green;">Enabled</span>
+                            {% else %}
+                                <span style="color: red;">Disabled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-small" style="background-color: #95a5a6; color: white; text-decoration: none;">Hosts</a>
+                                <a href="{{ path('admin_site_edit', {id: site.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                <form method="POST" action="{{ path('admin_site_delete', {id: site.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}Hosts - {{ site.name }}{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_site_list') }}" style="text-decoration: none;">← Sites</a>
+        <h2>{{ site.name }} - Hosts</h2>
+        <a href="{{ path('admin_site_host_create', {siteId: site.id}) }}" class="btn btn-primary">Add Host</a>
+    </div>
+
+    {% if hosts is empty %}
+        <p>No hosts configured. <a href="{{ path('admin_site_host_create', {siteId: site.id}) }}">Add one</a>.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Host</th>
+                    <th>Surface</th>
+                    <th>Status</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for host in hosts %}
+                    <tr>
+                        <td><code>{{ host.host }}</code></td>
+                        <td>{{ host.surface }}</td>
+                        <td>
+                            <strong style="color: {% if host.status == 'verified' %}green{% elseif host.status == 'active' %}blue{% else %}orange{% endif %};">
+                                {{ host.status|capitalize }}
+                            </strong>
+                        </td>
+                        <td>{% if host.isActive %}Yes{% else %}No{% endif %}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ path('admin_site_host_edit', {siteId: site.id, hostId: host.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                <form method="POST" action="{{ path('admin_site_host_delete', {siteId: site.id, hostId: host.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

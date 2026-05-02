@@ -1,0 +1,47 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" style="text-decoration: none;">← Back</a>
+
+    <form method="POST">
+        {% if not host.id %}
+            <div class="form-group">
+                <label for="host">Host</label>
+                <input type="url" id="host" name="host" placeholder="e.g., example.com or sub.example.com" value="{{ host.host }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="surface">Surface</label>
+                <select id="surface" name="surface" required>
+                    <option value="site" {% if host.surface == 'site' %}selected{% endif %}>Public Site</option>
+                    <option value="admin" {% if host.surface == 'admin' %}selected{% endif %}>Admin</option>
+                </select>
+            </div>
+        {% endif %}
+
+        {% if host.id %}
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    <option value="pending" {% if host.status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="verified" {% if host.status == 'verified' %}selected{% endif %}>Verified</option>
+                    <option value="active" {% if host.status == 'active' %}selected{% endif %}>Active</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="isActive">
+                    <input type="checkbox" id="isActive" name="isActive" value="1" {% if host.isActive %}checked{% endif %}>
+                    Active
+                </label>
+            </div>
+        {% endif %}
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">{{ host.id ? 'Update' : 'Create' }}</button>
+            <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn" style="background-color: #95a5a6; color: white; text-decoration: none;">Cancel</a>
+        </div>
+    </form>
+{% endblock %}
