@@ -18,4 +18,10 @@ final readonly class DoctrineHostContextProvider implements HostContextProviderI
     {
         return $this->siteHostRepository->findContextByHost($normalizedHost);
     }
+
+    #[\Override]
+    public function findCanonicalSiteHost(int $siteId): ?string
+    {
+        return $this->siteHostRepository->findCanonicalSiteHost($siteId);
+    }
 }

@@ -46,4 +46,29 @@ final class SiteHostRepository extends ServiceEntityRepository
             'host' => (string) $row['host'],
         ];
     }
+
+    public function findCanonicalSiteHost(int $siteId): ?string
+    {
+        $row = $this->createQueryBuilder('siteHost')
+            ->select('siteHost.host')
+            ->innerJoin('siteHost.site', 'site')
+            ->andWhere('siteHost.site = :siteId')
+            ->andWhere('siteHost.surface = :surface')
+            ->andWhere('siteHost.status IN (:statuses)')
+            ->andWhere('siteHost.isActive = true')
+            ->andWhere('site.isEnabled = true')
+            ->setParameter('siteId', $siteId)
+            ->setParameter('surface', 'site')
+            ->setParameter('statuses', ['verified', 'active'])
+            ->orderBy('siteHost.host', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!is_array($row) || !isset($row['host']) || !is_string($row['host']) || '' === $row['host']) {
+            return null;
+        }
+
+        return $row['host'];
+    }
 }

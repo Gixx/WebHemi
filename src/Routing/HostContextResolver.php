@@ -32,4 +32,13 @@ final readonly class HostContextResolver
             'host' => (string) $context['host'],
         ];
     }
+
+    public function resolveCanonicalSiteHost(int $siteId): ?string
+    {
+        if ($siteId < 1) {
+            return null;
+        }
+
+        return $this->hostContextProvider->findCanonicalSiteHost($siteId);
+    }
 }
