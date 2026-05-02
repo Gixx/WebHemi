@@ -1,4 +1,4 @@
-name: Badge / PHPCS
+name: PHPCS
 
 on:
     workflow_run:
@@ -25,7 +25,7 @@ jobs:
                         { owner, repo, run_id: runId, per_page: 100 }
                       );
 
-                      const targetJob = jobs.find((job) => job.name === targetName);
+                      const targetJob = jobs.find((job) => job.name === targetName || job.name.startsWith(`${targetName} (`));
                       if (!targetJob) {
                         core.setFailed(`Job not found in CI run: ${targetName}`);
                         return;
