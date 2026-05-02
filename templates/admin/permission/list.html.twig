@@ -1,0 +1,41 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}Permissions{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_permission_create') }}" class="btn btn-primary">Create New Permission</a>
+    </div>
+
+    {% if permissions is empty %}
+        <p>No permissions found. <a href="{{ path('admin_permission_create') }}">Create one</a>.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Label</th>
+                    <th>Roles</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for permission in permissions %}
+                    <tr>
+                        <td><code>{{ permission.name }}</code></td>
+                        <td>{{ permission.label }}</td>
+                        <td>{{ permission.roles|length }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ path('admin_permission_edit', {id: permission.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                <form method="POST" action="{{ path('admin_permission_delete', {id: permission.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
