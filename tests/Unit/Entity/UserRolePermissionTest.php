@@ -45,12 +45,15 @@ final class UserRolePermissionTest extends TestCase
 
         $user->addRole($role);
 
-        self::assertTrue($user->getRoles()->contains($role));
+        self::assertTrue($user->getRoleEntities()->contains($role));
+        self::assertContains('ROLE_USER', $user->getRoles());
+        self::assertContains('ROLE_EDITOR', $user->getRoles());
         self::assertTrue($role->getUserRoles()->contains($user));
 
         $user->removeRole($role);
 
-        self::assertFalse($user->getRoles()->contains($role));
+        self::assertFalse($user->getRoleEntities()->contains($role));
+        self::assertSame(['ROLE_USER'], $user->getRoles());
         self::assertFalse($role->getUserRoles()->contains($user));
     }
 
