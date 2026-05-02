@@ -22,6 +22,8 @@ final class HostContextSubscriberTest extends TestCase
     {
         $subscriber = new HostContextSubscriber(new HostContextResolver($this->provider([
             'admin.mysite.local' => ['site_id' => 1, 'surface' => 'admin'],
+        ], [
+            1 => 'mysite.local',
         ])));
 
         $request = Request::create('http://admin.mysite.local/');
@@ -29,9 +31,24 @@ final class HostContextSubscriberTest extends TestCase
 
         $subscriber->onKernelRequest($event);
 
-        self::assertSame(1, $request->attributes->get('site_id'));
-        self::assertSame('admin', $request->attributes->get('surface'));
-        self::assertSame('admin.mysite.local', $request->attributes->get('resolved_host'));
+        self::assertSame('http://mysite.local/admin', $event->getResponse()?->headers->get('Location'));
+    }
+
+    #[Test]
+    public function redirectsAdminAliasPathRequestsToCanonicalAdminPath(): void
+    {
+        $subscriber = new HostContextSubscriber(new HostContextResolver($this->provider([
+            'admin.mysite.local' => ['site_id' => 1, 'surface' => 'admin'],
+        ], [
+            1 => 'mysite.local',
+        ])));
+
+        $request = Request::create('http://admin.mysite.local:8000/sites?page=2');
+        $event = new RequestEvent($this->kernelStub(), $request, HttpKernelInterface::MAIN_REQUEST);
+
+        $subscriber->onKernelRequest($event);
+
+        self::assertSame('http://mysite.local:8000/admin/sites?page=2', $event->getResponse()?->headers->get('Location'));
     }
 
     #[Test]
@@ -96,15 +113,19 @@ final class HostContextSubscriberTest extends TestCase
 
     /**
      * @param array<string, array{site_id:int, surface:string}> $map
+     * @param array<int, string> $canonicalHosts
      */
-    private function provider(array $map): HostContextProviderInterface
+    private function provider(array $map, array $canonicalHosts = []): HostContextProviderInterface
     {
-        return new class ($map) implements HostContextProviderInterface {
+        return new class ($map, $canonicalHosts) implements HostContextProviderInterface {
             /**
              * @param array<string, array{site_id:int, surface:string}> $map
+             * @param array<int, string> $canonicalHosts
              */
-            public function __construct(private readonly array $map)
-            {
+            public function __construct(
+                private readonly array $map,
+                private readonly array $canonicalHosts,
+            ) {
             }
 
             public function findContextByHost(string $normalizedHost): ?array
@@ -118,6 +139,11 @@ final class HostContextSubscriberTest extends TestCase
                     'surface' => $this->map[$normalizedHost]['surface'],
                     'host' => $normalizedHost,
                 ];
+            }
+
+            public function findCanonicalSiteHost(int $siteId): ?string
+            {
+                return $this->canonicalHosts[$siteId] ?? null;
             }
         };
     }

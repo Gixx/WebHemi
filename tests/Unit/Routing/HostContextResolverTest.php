@@ -36,17 +36,32 @@ final class HostContextResolverTest extends TestCase
         self::assertNull($resolver->resolveFromHost('missing.mysite.local'));
     }
 
+    #[Test]
+    public function resolvesCanonicalSiteHost(): void
+    {
+        $resolver = new HostContextResolver($this->provider([], [
+            1 => 'mysite.local',
+        ]));
+
+        self::assertSame('mysite.local', $resolver->resolveCanonicalSiteHost(1));
+        self::assertNull($resolver->resolveCanonicalSiteHost(999));
+    }
+
     /**
      * @param array<string, array{site_id:int, surface:string}> $map
+     * @param array<int, string> $canonicalHosts
      */
-    private function provider(array $map): HostContextProviderInterface
+    private function provider(array $map, array $canonicalHosts = []): HostContextProviderInterface
     {
-        return new class ($map) implements HostContextProviderInterface {
+        return new class ($map, $canonicalHosts) implements HostContextProviderInterface {
             /**
              * @param array<string, array{site_id:int, surface:string}> $map
+             * @param array<int, string> $canonicalHosts
              */
-            public function __construct(private readonly array $map)
-            {
+            public function __construct(
+                private readonly array $map,
+                private readonly array $canonicalHosts,
+            ) {
             }
 
             public function findContextByHost(string $normalizedHost): ?array
@@ -60,6 +75,11 @@ final class HostContextResolverTest extends TestCase
                     'surface' => $this->map[$normalizedHost]['surface'],
                     'host' => $normalizedHost,
                 ];
+            }
+
+            public function findCanonicalSiteHost(int $siteId): ?string
+            {
+                return $this->canonicalHosts[$siteId] ?? null;
             }
         };
     }
