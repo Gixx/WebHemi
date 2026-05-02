@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/users', name: 'admin_user_')]
 final class UserController extends AbstractController
@@ -26,6 +27,7 @@ final class UserController extends AbstractController
     }
 
     #[Route(name: 'list', methods: ['GET'])]
+    #[IsGranted('user.list')]
     public function list(): Response
     {
         return $this->render('admin/user/list.html.twig', [
@@ -34,6 +36,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    #[IsGranted('user.create')]
     public function create(Request $request): Response
     {
         $user = new User();
@@ -67,6 +70,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[IsGranted('user.edit')]
     public function edit(int $id, Request $request): Response
     {
         $user = $this->userRepository->find($id);
@@ -103,6 +107,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[IsGranted('user.delete')]
     public function delete(int $id): Response
     {
         $user = $this->userRepository->find($id);

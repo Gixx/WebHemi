@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/sites/{siteId}/hosts', name: 'admin_site_host_')]
 final class SiteHostController extends AbstractController
@@ -24,6 +25,7 @@ final class SiteHostController extends AbstractController
     }
 
     #[Route(name: 'list', methods: ['GET'])]
+    #[IsGranted('site.edit')]
     public function list(int $siteId): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -40,6 +42,7 @@ final class SiteHostController extends AbstractController
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    #[IsGranted('site.edit')]
     public function create(int $siteId, Request $request): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -84,6 +87,7 @@ final class SiteHostController extends AbstractController
     }
 
     #[Route('/{hostId}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[IsGranted('site.edit')]
     public function edit(int $siteId, int $hostId, Request $request): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -114,6 +118,7 @@ final class SiteHostController extends AbstractController
     }
 
     #[Route('/{hostId}/delete', name: 'delete', methods: ['POST'])]
+    #[IsGranted('site.edit')]
     public function delete(int $siteId, int $hostId): Response
     {
         $site = $this->siteRepository->find($siteId);

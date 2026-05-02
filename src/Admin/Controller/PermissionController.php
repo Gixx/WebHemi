@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/permissions', name: 'admin_permission_')]
 final class PermissionController extends AbstractController
@@ -22,6 +23,7 @@ final class PermissionController extends AbstractController
     }
 
     #[Route(name: 'list', methods: ['GET'])]
+    #[IsGranted('permission.list')]
     public function list(): Response
     {
         return $this->render('admin/permission/list.html.twig', [
@@ -30,6 +32,7 @@ final class PermissionController extends AbstractController
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    #[IsGranted('permission.create')]
     public function create(Request $request): Response
     {
         $permission = new Permission();
@@ -57,6 +60,7 @@ final class PermissionController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[IsGranted('permission.edit')]
     public function edit(int $id, Request $request): Response
     {
         $permission = $this->permissionRepository->find($id);
@@ -82,6 +86,7 @@ final class PermissionController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[IsGranted('permission.delete')]
     public function delete(int $id): Response
     {
         $permission = $this->permissionRepository->find($id);

@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/roles', name: 'admin_role_')]
 final class RoleController extends AbstractController
@@ -24,6 +25,7 @@ final class RoleController extends AbstractController
     }
 
     #[Route(name: 'list', methods: ['GET'])]
+    #[IsGranted('role.list')]
     public function list(): Response
     {
         return $this->render('admin/role/list.html.twig', [
@@ -32,6 +34,7 @@ final class RoleController extends AbstractController
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    #[IsGranted('role.create')]
     public function create(Request $request): Response
     {
         $role = new Role();
@@ -61,6 +64,7 @@ final class RoleController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[IsGranted('role.edit')]
     public function edit(int $id, Request $request): Response
     {
         $role = $this->roleRepository->find($id);
@@ -88,6 +92,7 @@ final class RoleController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[IsGranted('role.delete')]
     public function delete(int $id): Response
     {
         $role = $this->roleRepository->find($id);
