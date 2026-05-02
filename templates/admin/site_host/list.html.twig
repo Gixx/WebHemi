@@ -6,6 +6,9 @@
     <div style="margin-bottom: 20px;">
         <a href="{{ path('admin_site_list') }}" style="text-decoration: none;">← Sites</a>
         <h2>{{ site.name }} - Hosts</h2>
+        <p style="margin: 10px 0 15px; color: #666;">
+            The canonical admin URL uses the public site host and the <code>/admin</code> path. Legacy admin-specific hosts are treated as redirect aliases only.
+        </p>
         <a href="{{ path('admin_site_host_create', {siteId: site.id}) }}" class="btn btn-primary">Add Host</a>
     </div>
 

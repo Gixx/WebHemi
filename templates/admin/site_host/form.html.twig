@@ -13,11 +13,12 @@
             </div>
 
             <div class="form-group">
-                <label for="surface">Surface</label>
-                <select id="surface" name="surface" required>
-                    <option value="site" {% if host.surface == 'site' %}selected{% endif %}>Public Site</option>
-                    <option value="admin" {% if host.surface == 'admin' %}selected{% endif %}>Admin</option>
-                </select>
+                <label>Surface</label>
+                <input type="hidden" id="surface" name="surface" value="site">
+                <p style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9;">Public Site</p>
+                <small style="display: block; margin-top: 8px; color: #666;">
+                    The admin area is always served from the canonical <code>/admin</code> path on a public site host.
+                </small>
             </div>
         {% endif %}
 

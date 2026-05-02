@@ -52,11 +52,21 @@ final class SiteHostController extends AbstractController
 
         if ($request->isMethod(Request::METHOD_POST)) {
             $host->setHost($request->request->getString('host', ''));
-            $host->setSurface($request->request->getString('surface', 'site'));
-            $host->setStatus('pending');
-            $host->setIsActive($request->request->getBoolean('isActive', true));
+            $submittedSurface = strtolower(trim($request->request->getString('surface', 'site')));
 
-            if ($this->isValidHost($host)) {
+            if ('site' !== $submittedSurface) {
+                $this->addFlash(
+                    'error',
+                    'New hosts can only be created as public site hosts. '
+                    . 'The admin surface is always available via the canonical /admin path.',
+                );
+            } else {
+                $host->setSurface('site');
+                $host->setStatus('pending');
+                $host->setIsActive($request->request->getBoolean('isActive', true));
+            }
+
+            if ('site' === $submittedSurface && $this->isValidHost($host)) {
                 $this->entityManager->persist($host);
                 $this->entityManager->flush();
 
@@ -125,6 +135,6 @@ final class SiteHostController extends AbstractController
 
     private function isValidHost(SiteHost $host): bool
     {
-        return '' !== $host->getHost() && '' !== $host->getSurface();
+        return '' !== $host->getHost() && 'site' === $host->getSurface();
     }
 }
