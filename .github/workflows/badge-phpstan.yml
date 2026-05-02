@@ -18,19 +18,33 @@ jobs:
                   script: |
                       const { owner, repo } = context.repo;
                       const runId = context.payload.workflow_run.id;
-                      const targetName = 'QA / PHPStan';
+                      const exactNames = [
+                        'QA / PHPStan',
+                        'QA / PHP Stan'
+                      ];
 
                       const jobs = await github.paginate(
                         github.rest.actions.listJobsForWorkflowRun,
                         { owner, repo, run_id: runId, per_page: 100 }
                       );
 
-                      const targetJob = jobs.find((job) => job.name === targetName || job.name.startsWith(`${targetName} (`));
+                      const targetJob = jobs.find((job) => {
+                        if (exactNames.includes(job.name)) {
+                          return true;
+                        }
+
+                        const lowerName = job.name.toLowerCase();
+                        return (
+                          job.name.startsWith('QA /')
+                          && (lowerName.includes('phpstan') || lowerName.includes('php stan'))
+                        );
+                      });
                       if (!targetJob) {
-                        core.setFailed(`Job not found in CI run: ${targetName}`);
+                        const availableNames = jobs.map((job) => job.name).join(', ');
+                        core.setFailed(`Job not found in CI run (PHPStan). Available jobs: ${availableNames}`);
                         return;
                       }
 
                       if (targetJob.conclusion !== 'success') {
-                        core.setFailed(`CI job failed: ${targetName} (${targetJob.conclusion})`);
+                        core.setFailed(`CI job failed: ${targetJob.name} (${targetJob.conclusion})`);
                       }
