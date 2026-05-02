@@ -3,12 +3,75 @@ name: CI
 on:
     push:
         branches: [ "main", "master" ]
+        tags: [ "v*" ]
     pull_request:
         branches: [ "main", "master" ]
 
 jobs:
+    qa:
+        name: QA / ${{ matrix.label }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: ['8.4']
+                include:
+                    - label: PHPCS (PSR12)
+                      command: composer run qa:phpcs --no-interaction
+                    - label: PHP CS Fixer (dry-run)
+                      command: composer run qa:php-cs-fixer:dry-run --no-interaction
+                    - label: Rector (dry-run)
+                      command: composer run qa:rector:dry-run --no-interaction
+                    - label: PHP CPD
+                      command: composer run qa:phpcpd --no-interaction
+                    - label: PHP LOC
+                      command: composer run qa:phploc --no-interaction
+                    - label: PHPStan
+                      command: composer run qa:phpstan --no-interaction
+                    - label: Deptrac
+                      command: composer run qa:deptrac --no-interaction
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Export build metadata
+              shell: bash
+              run: |
+                  if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+                      version="${GITHUB_REF_NAME#v}"
+                  elif [[ -n "${GITHUB_HEAD_REF}" ]]; then
+                      version="${GITHUB_HEAD_REF}"
+                  else
+                      version="${GITHUB_REF_NAME}"
+                  fi
+
+                  version="${version:-dev}"
+                  version="${version//\//-}"
+
+                  build="${GITHUB_RUN_NUMBER:-0}"
+                  commit="${GITHUB_SHA:0:7}"
+                  commit="${commit:-unknown}"
+
+                  echo "APP_VERSION=${version}" >> "${GITHUB_ENV}"
+                  echo "APP_BUILD=${build}" >> "${GITHUB_ENV}"
+                  echo "APP_COMMIT=${commit}" >> "${GITHUB_ENV}"
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, libxml, openssl
+                  coverage: none
+
+            - name: Install dependencies
+              run: composer install --no-interaction --prefer-dist
+
+            - name: Run ${{ matrix.label }}
+              run: ${{ matrix.command }}
+
     tests:
-        name: PHP ${{ matrix.php }} Tests
+        name: Tests / PHPUnit
         runs-on: ubuntu-latest
         strategy:
             matrix:
@@ -17,6 +80,28 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
+
+            - name: Export build metadata
+              shell: bash
+              run: |
+                  if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+                      version="${GITHUB_REF_NAME#v}"
+                  elif [[ -n "${GITHUB_HEAD_REF}" ]]; then
+                      version="${GITHUB_HEAD_REF}"
+                  else
+                      version="${GITHUB_REF_NAME}"
+                  fi
+
+                  version="${version:-dev}"
+                  version="${version//\//-}"
+
+                  build="${GITHUB_RUN_NUMBER:-0}"
+                  commit="${GITHUB_SHA:0:7}"
+                  commit="${commit:-unknown}"
+
+                  echo "APP_VERSION=${version}" >> "${GITHUB_ENV}"
+                  echo "APP_BUILD=${build}" >> "${GITHUB_ENV}"
+                  echo "APP_COMMIT=${commit}" >> "${GITHUB_ENV}"
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -28,30 +113,6 @@ jobs:
             - name: Install dependencies
               run: composer install --no-interaction --prefer-dist
 
-            - name: PHP Code Sniffer (PSR12)
-              run: composer run qa:phpcs
-
-            - name: PHP CS Fixer (dry-run)
-              run: composer run qa:php-cs-fixer:dry-run
-
-            - name: Rector (dry-run)
-              run: composer run qa:rector:dry-run
-
-            - name: PHP CPD
-              run: composer run qa:phpcpd
-
-            - name: PHP LOC
-              run: composer run qa:phploc
-
-            - name: PHP Stan
-              run: composer run qa:phpstan
-
-#            - name: Psalm
-#              run: composer run qa:psalm
-
-            - name: Deptrac
-              run: composer run qa:deptrac
-
             - name: Run Tests
               run: vendor/bin/phpunit -c phpunit.dist.xml --coverage-clover coverage.xml
 
@@ -59,3 +120,20 @@ jobs:
               uses: codecov/codecov-action@v4
               with:
                 files: ./coverage.xml
+
+    final-status:
+        name: CI / Final Status
+        runs-on: ubuntu-latest
+        if: ${{ always() }}
+        needs:
+            - qa
+            - tests
+
+        steps:
+            - name: Fail if any check failed
+              shell: bash
+              run: |
+                  if [[ "${{ needs.qa.result }}" != "success" ]] || [[ "${{ needs.tests.result }}" != "success" ]]; then
+                      echo "One or more QA jobs failed."
+                      exit 1
+                  fi

@@ -1,0 +1,36 @@
+name: Badge / PHPUnit
+
+on:
+    workflow_run:
+        workflows: ["CI"]
+        types: [completed]
+
+jobs:
+    badge:
+        name: PHPUnit Badge Status
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'master' }}
+
+        steps:
+            - name: Mirror PHPUnit job result
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const { owner, repo } = context.repo;
+                      const runId = context.payload.workflow_run.id;
+                      const targetName = 'Tests / PHPUnit';
+
+                      const jobs = await github.paginate(
+                        github.rest.actions.listJobsForWorkflowRun,
+                        { owner, repo, run_id: runId, per_page: 100 }
+                      );
+
+                      const targetJob = jobs.find((job) => job.name === targetName);
+                      if (!targetJob) {
+                        core.setFailed(`Job not found in CI run: ${targetName}`);
+                        return;
+                      }
+
+                      if (targetJob.conclusion !== 'success') {
+                        core.setFailed(`CI job failed: ${targetName} (${targetJob.conclusion})`);
+                      }
