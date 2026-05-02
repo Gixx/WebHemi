@@ -1,0 +1,43 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}Roles{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_role_create') }}" class="btn btn-primary">Create New Role</a>
+    </div>
+
+    {% if roles is empty %}
+        <p>No roles found. <a href="{{ path('admin_role_create') }}">Create one</a>.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Label</th>
+                    <th>Permissions</th>
+                    <th>Users</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for role in roles %}
+                    <tr>
+                        <td><code>{{ role.name }}</code></td>
+                        <td>{{ role.label }}</td>
+                        <td>{{ role.permissions|length }}</td>
+                        <td>{{ role.userRoles|length }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ path('admin_role_edit', {id: role.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                <form method="POST" action="{{ path('admin_role_delete', {id: role.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
