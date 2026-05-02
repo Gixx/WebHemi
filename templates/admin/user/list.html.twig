@@ -1,0 +1,50 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}Users{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_user_create') }}" class="btn btn-primary">Create New User</a>
+    </div>
+
+    {% if users is empty %}
+        <p>No users found. <a href="{{ path('admin_user_create') }}">Create one</a>.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Avatar</th>
+                    <th>Roles</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <img src="{{ user.avatarUrl }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
+                            <small style="color: #888;">{{ user.avatarType }}</small>
+                        </td>
+                        <td>
+                            {% for role in user.roleEntities %}
+                                <code style="margin-right: 4px; background: #ecf0f1; padding: 2px 6px; border-radius: 3px;">{{ role.name }}</code>
+                            {% else %}
+                                <span style="color: #aaa;">—</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                <form method="POST" action="{{ path('admin_user_delete', {id: user.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

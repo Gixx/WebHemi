@@ -1,0 +1,51 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <form method="POST" style="max-width: 640px;">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" {% if not user.id %}required{% endif %}>
+        </div>
+
+        <div class="form-group">
+            <label for="password">
+                Password
+                {% if user.id %}<small style="font-weight:normal; color:#888;">(leave blank to keep current)</small>{% endif %}
+            </label>
+            <input type="password" id="password" name="password" autocomplete="new-password" {% if not user.id %}required{% endif %}>
+        </div>
+
+        <div class="form-group">
+            <label for="avatarType">Avatar type</label>
+            <select id="avatarType" name="avatarType">
+                <option value="default" {% if user.avatarType == 'default' %}selected{% endif %}>Default</option>
+                <option value="gravatar" {% if user.avatarType == 'gravatar' %}selected{% endif %}>Gravatar</option>
+                <option value="upload" {% if user.avatarType == 'upload' %}selected{% endif %}>Upload (not yet implemented)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Roles</label>
+            {% if allRoles is empty %}
+                <p style="color: #888;">No roles available yet. <a href="{{ path('admin_role_create') }}">Create one</a>.</p>
+            {% else %}
+                <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                    {% for role in allRoles %}
+                        <label style="font-weight: normal; display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer;">
+                            <input type="checkbox" name="roles[]" value="{{ role.id }}"
+                                {% if user.roleEntities is defined and role in user.roleEntities %}checked{% endif %}>
+                            <code>{{ role.name }}</code> — {{ role.label }}
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">{{ user.id ? 'Update' : 'Create' }}</button>
+            <a href="{{ path('admin_user_list') }}" class="btn" style="background-color: #95a5a6; color: white; text-decoration: none;">Cancel</a>
+        </div>
+    </form>
+{% endblock %}
