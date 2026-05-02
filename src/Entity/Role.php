@@ -21,10 +21,10 @@ class Role
 
     /** Symfony-compatible role name, e.g. ROLE_ADMIN */
     #[ORM\Column(length: 64)]
-    private string $name;
+    private string $name = '';
 
     #[ORM\Column(length: 128)]
-    private string $label;
+    private string $label = '';
 
     /**
      * @var Collection<int, User>
@@ -88,6 +88,23 @@ class Role
     public function getPermissions(): Collection
     {
         return $this->permissions;
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        $normalizedPermission = strtolower(trim($permission));
+
+        if ('' === $normalizedPermission) {
+            return false;
+        }
+
+        foreach ($this->permissions as $assignedPermission) {
+            if ($assignedPermission->getName() === $normalizedPermission) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function addUserRole(User $user): self

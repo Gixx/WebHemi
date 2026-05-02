@@ -26,10 +26,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int|null $id = null;
 
     #[ORM\Column(length: 191)]
-    private string $email;
+    private string $email = '';
 
     #[ORM\Column(length: 255)]
-    private string $passwordHash;
+    private string $passwordHash = '';
 
     #[ORM\Column(length: 16)]
     private string $avatarType = self::AVATAR_TYPE_DEFAULT;
@@ -166,6 +166,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoleEntities(): Collection
     {
         return $this->roles;
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        $normalizedPermission = strtolower(trim($permission));
+
+        if ('' === $normalizedPermission) {
+            return false;
+        }
+
+        foreach ($this->roles as $role) {
+            if ($role->hasPermission($normalizedPermission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getUserIdentifier(): string

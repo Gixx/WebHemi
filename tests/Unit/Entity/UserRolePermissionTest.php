@@ -78,4 +78,36 @@ final class UserRolePermissionTest extends TestCase
         self::assertFalse($role->getPermissions()->contains($permission));
         self::assertFalse($permission->getRoles()->contains($role));
     }
+
+    #[Test]
+    public function resolvesUserPermissionsThroughAssignedRoles(): void
+    {
+        $user = (new User())
+            ->setEmail('manager@example.com')
+            ->setPasswordHash('hashed-password');
+
+        $role = (new Role())
+            ->setName('ROLE_MANAGER')
+            ->setLabel('Manager');
+
+        $listPermission = (new Permission())
+            ->setName(' user.list ')
+            ->setLabel('List users');
+
+        $deletePermission = (new Permission())
+            ->setName('user.delete')
+            ->setLabel('Delete users');
+
+        $role->addPermission($listPermission);
+        $user->addRole($role);
+
+        self::assertTrue($role->hasPermission('user.list'));
+        self::assertTrue($user->hasPermission('USER.LIST'));
+        self::assertFalse($role->hasPermission('user.edit'));
+        self::assertFalse($user->hasPermission('user.delete'));
+
+        $role->addPermission($deletePermission);
+
+        self::assertTrue($user->hasPermission('user.delete'));
+    }
 }

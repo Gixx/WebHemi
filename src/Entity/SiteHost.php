@@ -22,10 +22,10 @@ class SiteHost
     private Site $site;
 
     #[ORM\Column(length: 191)]
-    private string $host;
+    private string $host = '';
 
     #[ORM\Column(length: 16)]
-    private string $surface;
+    private string $surface = '';
 
     #[ORM\Column(length: 16)]
     private string $status = 'pending';

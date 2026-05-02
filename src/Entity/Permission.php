@@ -20,10 +20,10 @@ class Permission
     private int|null $id = null;
 
     #[ORM\Column(length: 128)]
-    private string $name;
+    private string $name = '';
 
     #[ORM\Column(length: 128)]
-    private string $label;
+    private string $label = '';
 
     /**
      * @var Collection<int, Role>

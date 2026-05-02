@@ -20,10 +20,10 @@ class Site
     private int|null $id = null;
 
     #[ORM\Column(length: 64)]
-    private string $slug;
+    private string $slug = '';
 
     #[ORM\Column(length: 128)]
-    private string $name;
+    private string $name = '';
 
     #[ORM\Column]
     private bool $isEnabled = true;
