@@ -239,6 +239,9 @@
                 {% endif %}
                 <a href="{{ path('admin_dashboard') }}" {% if app.request.attributes.get('_route') starts with 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a>
                 <a href="{{ path('admin_site_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_site_' %}class="active"{% endif %}>Sites</a>
+                <a href="{{ path('admin_permission_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_permission_' %}class="active"{% endif %}>Permissions</a>
+                <a href="{{ path('admin_role_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_role_' %}class="active"{% endif %}>Roles</a>
+                <a href="{{ path('admin_user_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_user_' %}class="active"{% endif %}>Users</a>
                 <a href="{{ path('_logout_main') }}" class="logout-link">Logout</a>
             </nav>
             <div class="admin-meta">
