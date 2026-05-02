@@ -3,12 +3,19 @@
 {% block page_title %}Users{% endblock %}
 
 {% block content %}
-    <div style="margin-bottom: 20px;">
-        <a href="{{ path('admin_user_create') }}" class="btn btn-primary">Create New User</a>
-    </div>
+    {% if is_granted('user.create') %}
+        <div style="margin-bottom: 20px;">
+            <a href="{{ path('admin_user_create') }}" class="btn btn-primary">Create New User</a>
+        </div>
+    {% endif %}
 
     {% if users is empty %}
-        <p>No users found. <a href="{{ path('admin_user_create') }}">Create one</a>.</p>
+        <p>
+            No users found.
+            {% if is_granted('user.create') %}
+                <a href="{{ path('admin_user_create') }}">Create one</a>.
+            {% endif %}
+        </p>
     {% else %}
         <table>
             <thead>
@@ -35,12 +42,20 @@
                             {% endfor %}
                         </td>
                         <td>
-                            <div class="btn-group">
-                                <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-primary btn-small">Edit</a>
-                                <form method="POST" action="{{ path('admin_user_delete', {id: user.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
-                                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
-                                </form>
-                            </div>
+                            {% if is_granted('user.edit') or is_granted('user.delete') %}
+                                <div class="btn-group">
+                                    {% if is_granted('user.edit') %}
+                                        <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                    {% endif %}
+                                    {% if is_granted('user.delete') %}
+                                        <form method="POST" action="{{ path('admin_user_delete', {id: user.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                            <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <span style="color: #aaa;">—</span>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

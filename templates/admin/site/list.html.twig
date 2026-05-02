@@ -3,12 +3,19 @@
 {% block page_title %}Sites{% endblock %}
 
 {% block content %}
-    <div style="margin-bottom: 20px;">
-        <a href="{{ path('admin_site_create') }}" class="btn btn-primary">Create New Site</a>
-    </div>
+    {% if is_granted('site.create') %}
+        <div style="margin-bottom: 20px;">
+            <a href="{{ path('admin_site_create') }}" class="btn btn-primary">Create New Site</a>
+        </div>
+    {% endif %}
 
     {% if sites is empty %}
-        <p>No sites found. <a href="{{ path('admin_site_create') }}">Create one</a>.</p>
+        <p>
+            No sites found.
+            {% if is_granted('site.create') %}
+                <a href="{{ path('admin_site_create') }}">Create one</a>.
+            {% endif %}
+        </p>
     {% else %}
         <table>
             <thead>
@@ -32,13 +39,21 @@
                             {% endif %}
                         </td>
                         <td>
-                            <div class="btn-group">
-                                <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-small" style="background-color: #95a5a6; color: white; text-decoration: none;">Hosts</a>
-                                <a href="{{ path('admin_site_edit', {id: site.id}) }}" class="btn btn-primary btn-small">Edit</a>
-                                <form method="POST" action="{{ path('admin_site_delete', {id: site.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
-                                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
-                                </form>
-                            </div>
+                            {% if is_granted('site.edit') or is_granted('site.delete') %}
+                                <div class="btn-group">
+                                    {% if is_granted('site.edit') %}
+                                        <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-small" style="background-color: #95a5a6; color: white; text-decoration: none;">Hosts</a>
+                                        <a href="{{ path('admin_site_edit', {id: site.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                    {% endif %}
+                                    {% if is_granted('site.delete') %}
+                                        <form method="POST" action="{{ path('admin_site_delete', {id: site.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                            <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <span style="color: #aaa;">—</span>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

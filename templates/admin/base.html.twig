@@ -237,11 +237,21 @@
                         <div class="admin-user-email">{{ app.user.userIdentifier }}</div>
                     </div>
                 {% endif %}
-                <a href="{{ path('admin_dashboard') }}" {% if app.request.attributes.get('_route') starts with 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a>
-                <a href="{{ path('admin_site_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_site_' %}class="active"{% endif %}>Sites</a>
-                <a href="{{ path('admin_permission_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_permission_' %}class="active"{% endif %}>Permissions</a>
-                <a href="{{ path('admin_role_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_role_' %}class="active"{% endif %}>Roles</a>
-                <a href="{{ path('admin_user_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_user_' %}class="active"{% endif %}>Users</a>
+                {% if is_granted('dashboard.view') %}
+                    <a href="{{ path('admin_dashboard') }}" {% if app.request.attributes.get('_route') starts with 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a>
+                {% endif %}
+                {% if is_granted('site.list') %}
+                    <a href="{{ path('admin_site_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_site_' %}class="active"{% endif %}>Sites</a>
+                {% endif %}
+                {% if is_granted('permission.list') %}
+                    <a href="{{ path('admin_permission_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_permission_' %}class="active"{% endif %}>Permissions</a>
+                {% endif %}
+                {% if is_granted('role.list') %}
+                    <a href="{{ path('admin_role_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_role_' %}class="active"{% endif %}>Roles</a>
+                {% endif %}
+                {% if is_granted('user.list') %}
+                    <a href="{{ path('admin_user_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_user_' %}class="active"{% endif %}>Users</a>
+                {% endif %}
                 <a href="{{ path('_logout_main') }}" class="logout-link">Logout</a>
             </nav>
             <div class="admin-meta">

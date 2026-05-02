@@ -3,12 +3,19 @@
 {% block page_title %}Roles{% endblock %}
 
 {% block content %}
-    <div style="margin-bottom: 20px;">
-        <a href="{{ path('admin_role_create') }}" class="btn btn-primary">Create New Role</a>
-    </div>
+    {% if is_granted('role.create') %}
+        <div style="margin-bottom: 20px;">
+            <a href="{{ path('admin_role_create') }}" class="btn btn-primary">Create New Role</a>
+        </div>
+    {% endif %}
 
     {% if roles is empty %}
-        <p>No roles found. <a href="{{ path('admin_role_create') }}">Create one</a>.</p>
+        <p>
+            No roles found.
+            {% if is_granted('role.create') %}
+                <a href="{{ path('admin_role_create') }}">Create one</a>.
+            {% endif %}
+        </p>
     {% else %}
         <table>
             <thead>
@@ -28,12 +35,20 @@
                         <td>{{ role.permissions|length }}</td>
                         <td>{{ role.userRoles|length }}</td>
                         <td>
-                            <div class="btn-group">
-                                <a href="{{ path('admin_role_edit', {id: role.id}) }}" class="btn btn-primary btn-small">Edit</a>
-                                <form method="POST" action="{{ path('admin_role_delete', {id: role.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
-                                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
-                                </form>
-                            </div>
+                            {% if is_granted('role.edit') or is_granted('role.delete') %}
+                                <div class="btn-group">
+                                    {% if is_granted('role.edit') %}
+                                        <a href="{{ path('admin_role_edit', {id: role.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                    {% endif %}
+                                    {% if is_granted('role.delete') %}
+                                        <form method="POST" action="{{ path('admin_role_delete', {id: role.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                            <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <span style="color: #aaa;">—</span>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

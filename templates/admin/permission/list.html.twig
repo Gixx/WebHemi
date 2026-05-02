@@ -3,12 +3,19 @@
 {% block page_title %}Permissions{% endblock %}
 
 {% block content %}
-    <div style="margin-bottom: 20px;">
-        <a href="{{ path('admin_permission_create') }}" class="btn btn-primary">Create New Permission</a>
-    </div>
+    {% if is_granted('permission.create') %}
+        <div style="margin-bottom: 20px;">
+            <a href="{{ path('admin_permission_create') }}" class="btn btn-primary">Create New Permission</a>
+        </div>
+    {% endif %}
 
     {% if permissions is empty %}
-        <p>No permissions found. <a href="{{ path('admin_permission_create') }}">Create one</a>.</p>
+        <p>
+            No permissions found.
+            {% if is_granted('permission.create') %}
+                <a href="{{ path('admin_permission_create') }}">Create one</a>.
+            {% endif %}
+        </p>
     {% else %}
         <table>
             <thead>
@@ -26,12 +33,20 @@
                         <td>{{ permission.label }}</td>
                         <td>{{ permission.roles|length }}</td>
                         <td>
-                            <div class="btn-group">
-                                <a href="{{ path('admin_permission_edit', {id: permission.id}) }}" class="btn btn-primary btn-small">Edit</a>
-                                <form method="POST" action="{{ path('admin_permission_delete', {id: permission.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
-                                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
-                                </form>
-                            </div>
+                            {% if is_granted('permission.edit') or is_granted('permission.delete') %}
+                                <div class="btn-group">
+                                    {% if is_granted('permission.edit') %}
+                                        <a href="{{ path('admin_permission_edit', {id: permission.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                    {% endif %}
+                                    {% if is_granted('permission.delete') %}
+                                        <form method="POST" action="{{ path('admin_permission_delete', {id: permission.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                            <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <span style="color: #aaa;">—</span>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
