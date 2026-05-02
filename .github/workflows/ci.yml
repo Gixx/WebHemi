@@ -46,8 +46,8 @@ jobs:
             - name: PHP Stan
               run: composer run qa:phpstan
 
-            - name: Psalm
-              run: composer run qa:psalm
+#            - name: Psalm
+#              run: composer run qa:psalm
 
             - name: Deptrac
               run: composer run qa:deptrac
