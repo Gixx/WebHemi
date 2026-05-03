@@ -29,5 +29,10 @@ services:
         arguments:
             $adminPathPrefix: '%app.admin_path_prefix%'
 
+    App\SiteHost\Verification\HostOwnershipVerifier:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+            $requestStack: '@request_stack'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

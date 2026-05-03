@@ -38,6 +38,9 @@
                         <td>{% if host.isActive %}Yes{% else %}No{% endif %}</td>
                         <td>
                             <div class="btn-group">
+                                <form method="POST" action="{{ path('admin_site_host_verify', {siteId: site.id, hostId: host.id}) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-success btn-small">{% if host.status == 'verified' %}Re-verify{% else %}Verify{% endif %}</button>
+                                </form>
                                 <a href="{{ path('admin_site_host_edit', {siteId: site.id, hostId: host.id}) }}" class="btn btn-primary btn-small">Edit</a>
                                 <form method="POST" action="{{ path('admin_site_host_delete', {siteId: site.id, hostId: host.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
                                     <button type="submit" class="btn btn-danger btn-small">Delete</button>
