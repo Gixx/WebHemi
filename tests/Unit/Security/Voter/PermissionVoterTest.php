@@ -33,7 +33,7 @@ final class PermissionVoterTest extends TestCase
         $role->addPermission($permission);
         $user->addRole($role);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $voter = new PermissionVoter();
@@ -48,7 +48,7 @@ final class PermissionVoterTest extends TestCase
             ->setEmail('viewer@example.com')
             ->setPasswordHash('hashed-password');
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $voter = new PermissionVoter();
@@ -63,7 +63,7 @@ final class PermissionVoterTest extends TestCase
             ->setEmail('admin@example.com')
             ->setPasswordHash('hashed-password');
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
         $token->method('getRoleNames')->willReturn(['ROLE_ADMIN']);
 
@@ -75,7 +75,7 @@ final class PermissionVoterTest extends TestCase
     #[Test]
     public function abstainsForNonPermissionAttributes(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn(null);
 
         $voter = new PermissionVoter();
