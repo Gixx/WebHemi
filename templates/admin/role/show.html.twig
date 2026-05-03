@@ -1,0 +1,89 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}Role Details{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_role_list') }}">&larr; Back to Roles</a>
+    </div>
+
+    <table>
+        <tbody>
+            <tr>
+                <th style="width: 200px;">Name</th>
+                <td><code>{{ role.name }}</code></td>
+            </tr>
+            <tr>
+                <th>Label</th>
+                <td>{{ role.label }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>
+                    {% if role.isReadOnly %}
+                        <span style="color: #8e44ad;">Built-in (read-only)</span>
+                    {% else %}
+                        <span style="color: #7f8c8d;">Custom</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Permissions</th>
+                <td>{{ role.permissions|length }}</td>
+            </tr>
+            <tr>
+                <th>Users</th>
+                <td>{{ role.userRoles|length }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <h3 style="margin-bottom: 10px;">Related Permissions</h3>
+        {% if role.permissions is empty %}
+            <p style="color: #777;">No permissions assigned.</p>
+        {% else %}
+            <ul style="padding-left: 20px;">
+                {% for permission in role.permissions %}
+                    <li>
+                        {% if is_granted('permission.view') %}
+                            <a href="{{ path('admin_permission_show', {id: permission.id}) }}"><code>{{ permission.name }}</code> - {{ permission.label }}</a>
+                        {% else %}
+                            <code>{{ permission.name }}</code> - {{ permission.label }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <h3 style="margin: 20px 0 10px;">Related Users</h3>
+        {% if role.userRoles is empty %}
+            <p style="color: #777;">No users assigned.</p>
+        {% else %}
+            <ul style="padding-left: 20px;">
+                {% for user in role.userRoles %}
+                    <li>
+                        {% if is_granted('user.view') %}
+                            <a href="{{ path('admin_user_show', {id: user.id}) }}">{{ user.email }}</a>
+                        {% else %}
+                            {{ user.email }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    {% if not role.isReadOnly and (is_granted('role.edit') or is_granted('role.delete')) %}
+        <div class="btn-group" style="margin-top: 24px;">
+            {% if is_granted('role.edit') %}
+                <a href="{{ path('admin_role_edit', {id: role.id}) }}" class="btn btn-primary">Edit</a>
+            {% endif %}
+            {% if is_granted('role.delete') and role.userRoles|length == 0 %}
+                <form method="POST" action="{{ path('admin_role_delete', {id: role.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

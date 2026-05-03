@@ -25,6 +25,9 @@ class Permission
     #[ORM\Column(length: 128)]
     private string $label = '';
 
+    #[ORM\Column(options: ['default' => false])]
+    private bool $isReadOnly = false;
+
     /**
      * @var Collection<int, Role>
      */
@@ -61,6 +64,18 @@ class Permission
     public function setLabel(string $label): self
     {
         $this->label = trim($label);
+
+        return $this;
+    }
+
+    public function isReadOnly(): bool
+    {
+        return $this->isReadOnly;
+    }
+
+    public function setIsReadOnly(bool $isReadOnly): self
+    {
+        $this->isReadOnly = $isReadOnly;
 
         return $this;
     }

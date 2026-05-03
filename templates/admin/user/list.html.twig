@@ -3,6 +3,8 @@
 {% block page_title %}Users{% endblock %}
 
 {% block content %}
+    {% set currentUserIsAdmin = app.user and app.user.hasRole('ROLE_ADMIN') %}
+
     {% if is_granted('user.create') %}
         <div style="margin-bottom: 20px;">
             <a href="{{ path('admin_user_create') }}" class="btn btn-primary">Create New User</a>
@@ -28,6 +30,7 @@
             </thead>
             <tbody>
                 {% for user in users %}
+                    {% set canDeleteUser = is_granted('user.delete') and user.id != app.user.id and (not user.hasRole('ROLE_ADMIN') or currentUserIsAdmin) %}
                     <tr>
                         <td>{{ user.email }}</td>
                         <td>
@@ -42,12 +45,15 @@
                             {% endfor %}
                         </td>
                         <td>
-                            {% if is_granted('user.edit') or is_granted('user.delete') %}
+                            {% if is_granted('user.view') or is_granted('user.edit') or canDeleteUser %}
                                 <div class="btn-group">
+                                    {% if is_granted('user.view') %}
+                                        <a href="{{ path('admin_user_show', {id: user.id}) }}" class="btn btn-success btn-small">View</a>
+                                    {% endif %}
                                     {% if is_granted('user.edit') %}
                                         <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-primary btn-small">Edit</a>
                                     {% endif %}
-                                    {% if is_granted('user.delete') %}
+                                    {% if canDeleteUser %}
                                         <form method="POST" action="{{ path('admin_user_delete', {id: user.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
                                             <button type="submit" class="btn btn-danger btn-small">Delete</button>
                                         </form>

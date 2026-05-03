@@ -22,6 +22,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Label</th>
+                    <th>Type</th>
                     <th>Roles</th>
                     <th>Actions</th>
                 </tr>
@@ -31,14 +32,24 @@
                     <tr>
                         <td><code>{{ permission.name }}</code></td>
                         <td>{{ permission.label }}</td>
+                        <td>
+                            {% if permission.isReadOnly %}
+                                <span style="color: #8e44ad;">Built-in</span>
+                            {% else %}
+                                <span style="color: #7f8c8d;">Custom</span>
+                            {% endif %}
+                        </td>
                         <td>{{ permission.roles|length }}</td>
                         <td>
-                            {% if is_granted('permission.edit') or is_granted('permission.delete') %}
+                            {% if is_granted('permission.view') or ((not permission.isReadOnly) and (is_granted('permission.edit') or is_granted('permission.delete'))) %}
                                 <div class="btn-group">
-                                    {% if is_granted('permission.edit') %}
+                                    {% if is_granted('permission.view') %}
+                                        <a href="{{ path('admin_permission_show', {id: permission.id}) }}" class="btn btn-success btn-small">View</a>
+                                    {% endif %}
+                                    {% if not permission.isReadOnly and is_granted('permission.edit') %}
                                         <a href="{{ path('admin_permission_edit', {id: permission.id}) }}" class="btn btn-primary btn-small">Edit</a>
                                     {% endif %}
-                                    {% if is_granted('permission.delete') %}
+                                    {% if not permission.isReadOnly and is_granted('permission.delete') %}
                                         <form method="POST" action="{{ path('admin_permission_delete', {id: permission.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
                                             <button type="submit" class="btn btn-danger btn-small">Delete</button>
                                         </form>

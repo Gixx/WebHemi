@@ -39,8 +39,11 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if is_granted('site.edit') or is_granted('site.delete') %}
+                            {% if is_granted('site.view') or is_granted('site.edit') or is_granted('site.delete') %}
                                 <div class="btn-group">
+                                    {% if is_granted('site.view') %}
+                                        <a href="{{ path('admin_site_show', {id: site.id}) }}" class="btn btn-success btn-small">View</a>
+                                    {% endif %}
                                     {% if is_granted('site.edit') %}
                                         <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-small" style="background-color: #95a5a6; color: white; text-decoration: none;">Hosts</a>
                                         <a href="{{ path('admin_site_edit', {id: site.id}) }}" class="btn btn-primary btn-small">Edit</a>

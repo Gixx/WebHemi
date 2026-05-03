@@ -1,0 +1,68 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}Site Details{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_site_list') }}">&larr; Back to Sites</a>
+    </div>
+
+    <table>
+        <tbody>
+            <tr>
+                <th style="width: 200px;">Slug</th>
+                <td><code>{{ site.slug }}</code></td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ site.name }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>
+                    {% if site.isEnabled %}
+                        <span style="color: green;">Enabled</span>
+                    {% else %}
+                        <span style="color: red;">Disabled</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Hosts</th>
+                <td>{{ site.hosts|length }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <h3 style="margin-bottom: 10px;">Related Content</h3>
+        {% if site.hosts is empty %}
+            <p style="color: #777;">No hosts attached.</p>
+        {% else %}
+            <ul style="padding-left: 20px;">
+                {% for host in site.hosts %}
+                    <li>
+                        <code>{{ host.host }}</code> ({{ host.surface }}, {{ host.status }})
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if is_granted('site.edit') %}
+            <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-small" style="background-color: #95a5a6; color: white; text-decoration: none;">Manage Hosts</a>
+        {% endif %}
+    </div>
+
+    {% if is_granted('site.edit') or is_granted('site.delete') %}
+        <div class="btn-group" style="margin-top: 24px;">
+            {% if is_granted('site.edit') %}
+                <a href="{{ path('admin_site_edit', {id: site.id}) }}" class="btn btn-primary">Edit</a>
+            {% endif %}
+            {% if is_granted('site.delete') %}
+                <form method="POST" action="{{ path('admin_site_delete', {id: site.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -52,6 +52,8 @@ final class SiteController extends AbstractController
 
                 return $this->redirectToRoute('admin_site_list');
             }
+
+            $this->addFlash('failed', 'Slug and name are required.');
         }
 
         return $this->render('admin/site/form.html.twig', [
@@ -60,7 +62,21 @@ final class SiteController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Route('/{id<\d+>}', name: 'show', methods: ['GET'])]
+    #[IsGranted('site.view')]
+    public function show(int $id): Response
+    {
+        $site = $this->siteRepository->find($id);
+        if (null === $site) {
+            throw $this->createNotFoundException('Site not found.');
+        }
+
+        return $this->render('admin/site/show.html.twig', [
+            'site' => $site,
+        ]);
+    }
+
+    #[Route('/{id<\d+>}/edit', name: 'edit', methods: ['GET', 'POST'])]
     #[IsGranted('site.edit')]
     public function edit(int $id, Request $request): Response
     {
@@ -85,7 +101,7 @@ final class SiteController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[Route('/{id<\d+>}/delete', name: 'delete', methods: ['POST'])]
     #[IsGranted('site.delete')]
     public function delete(int $id): Response
     {

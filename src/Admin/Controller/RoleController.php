@@ -53,7 +53,7 @@ final class RoleController extends AbstractController
                 return $this->redirectToRoute('admin_role_list');
             }
 
-            $this->addFlash('error', 'Name and label are required.');
+            $this->addFlash('failed', 'Name and label are required.');
         }
 
         return $this->render('admin/role/form.html.twig', [
@@ -63,13 +63,33 @@ final class RoleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Route('/{id<\d+>}', name: 'show', methods: ['GET'])]
+    #[IsGranted('role.view')]
+    public function show(int $id): Response
+    {
+        $role = $this->roleRepository->find($id);
+        if (null === $role) {
+            throw $this->createNotFoundException('Role not found.');
+        }
+
+        return $this->render('admin/role/show.html.twig', [
+            'role' => $role,
+        ]);
+    }
+
+    #[Route('/{id<\d+>}/edit', name: 'edit', methods: ['GET', 'POST'])]
     #[IsGranted('role.edit')]
     public function edit(int $id, Request $request): Response
     {
         $role = $this->roleRepository->find($id);
         if (null === $role) {
             throw $this->createNotFoundException('Role not found.');
+        }
+
+        if ($role->isReadOnly()) {
+            $this->addFlash('warning', 'This role is read-only and cannot be edited.');
+
+            return $this->redirectToRoute('admin_role_list');
         }
 
         if ($request->isMethod(Request::METHOD_POST)) {
@@ -91,7 +111,7 @@ final class RoleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[Route('/{id<\d+>}/delete', name: 'delete', methods: ['POST'])]
     #[IsGranted('role.delete')]
     public function delete(int $id): Response
     {
@@ -100,8 +120,14 @@ final class RoleController extends AbstractController
             throw $this->createNotFoundException('Role not found.');
         }
 
+        if ($role->isReadOnly()) {
+            $this->addFlash('warning', 'This role is read-only and cannot be deleted.');
+
+            return $this->redirectToRoute('admin_role_list');
+        }
+
         if ($role->getUserRoles()->count() > 0) {
-            $this->addFlash('error', 'Cannot delete a role that is assigned to users.');
+            $this->addFlash('warning', 'Cannot delete a role that is assigned to users.');
 
             return $this->redirectToRoute('admin_role_list');
         }

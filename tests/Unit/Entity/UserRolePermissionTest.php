@@ -110,4 +110,43 @@ final class UserRolePermissionTest extends TestCase
 
         self::assertTrue($user->hasPermission('user.delete'));
     }
+
+    #[Test]
+    public function resolvesRolesThroughHasRoleHelper(): void
+    {
+        $user = (new User())
+            ->setEmail('ops@example.com')
+            ->setPasswordHash('hashed-password');
+
+        $adminRole = (new Role())
+            ->setName(' role_admin ')
+            ->setLabel('Administrator');
+
+        $user->addRole($adminRole);
+
+        self::assertTrue($user->hasRole('ROLE_ADMIN'));
+        self::assertTrue($user->hasRole(' role_admin '));
+        self::assertFalse($user->hasRole('ROLE_EDITOR'));
+    }
+
+    #[Test]
+    public function supportsReadOnlyFlagsOnRoleAndPermission(): void
+    {
+        $role = (new Role())
+            ->setName('ROLE_ADMIN')
+            ->setLabel('Administrator');
+
+        $permission = (new Permission())
+            ->setName('dashboard.view')
+            ->setLabel('View dashboard');
+
+        self::assertFalse($role->isReadOnly());
+        self::assertFalse($permission->isReadOnly());
+
+        $role->setIsReadOnly(true);
+        $permission->setIsReadOnly(true);
+
+        self::assertTrue($role->isReadOnly());
+        self::assertTrue($permission->isReadOnly());
+    }
 }

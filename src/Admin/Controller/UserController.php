@@ -47,7 +47,7 @@ final class UserController extends AbstractController
             $avatarType = $request->request->getString('avatarType', User::AVATAR_TYPE_DEFAULT);
 
             if ('' === $email || '' === $password) {
-                $this->addFlash('error', 'Email and password are required.');
+                $this->addFlash('failed', 'Email and password are required.');
             } else {
                 $user->setEmail($email)
                     ->setPasswordHash($this->passwordHasher->hashPassword($user, $password))
@@ -69,7 +69,21 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Route('/{id<\d+>}', name: 'show', methods: ['GET'])]
+    #[IsGranted('user.view')]
+    public function show(int $id): Response
+    {
+        $user = $this->userRepository->find($id);
+        if (null === $user) {
+            throw $this->createNotFoundException('User not found.');
+        }
+
+        return $this->render('admin/user/show.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/{id<\d+>}/edit', name: 'edit', methods: ['GET', 'POST'])]
     #[IsGranted('user.edit')]
     public function edit(int $id, Request $request): Response
     {
@@ -106,7 +120,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[Route('/{id<\d+>}/delete', name: 'delete', methods: ['POST'])]
     #[IsGranted('user.delete')]
     public function delete(int $id): Response
     {
@@ -115,8 +129,16 @@ final class UserController extends AbstractController
             throw $this->createNotFoundException('User not found.');
         }
 
-        if ($this->getUser() instanceof User && $this->getUser()->getId() === $user->getId()) {
-            $this->addFlash('error', 'You cannot delete your own account.');
+        $currentUser = $this->getUser();
+
+        if ($currentUser instanceof User && $currentUser->getId() === $user->getId()) {
+            $this->addFlash('warning', 'You cannot delete your own account.');
+
+            return $this->redirectToRoute('admin_user_list');
+        }
+
+        if ($user->hasRole('ROLE_ADMIN') && (!$currentUser instanceof User || !$currentUser->hasRole('ROLE_ADMIN'))) {
+            $this->addFlash('warning', 'Only ROLE_ADMIN users can delete a ROLE_ADMIN user.');
 
             return $this->redirectToRoute('admin_user_list');
         }

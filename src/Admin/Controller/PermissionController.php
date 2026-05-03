@@ -50,7 +50,7 @@ final class PermissionController extends AbstractController
                 return $this->redirectToRoute('admin_permission_list');
             }
 
-            $this->addFlash('error', 'Name and label are required.');
+            $this->addFlash('failed', 'Name and label are required.');
         }
 
         return $this->render('admin/permission/form.html.twig', [
@@ -59,13 +59,33 @@ final class PermissionController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Route('/{id<\d+>}', name: 'show', methods: ['GET'])]
+    #[IsGranted('permission.view')]
+    public function show(int $id): Response
+    {
+        $permission = $this->permissionRepository->find($id);
+        if (null === $permission) {
+            throw $this->createNotFoundException('Permission not found.');
+        }
+
+        return $this->render('admin/permission/show.html.twig', [
+            'permission' => $permission,
+        ]);
+    }
+
+    #[Route('/{id<\d+>}/edit', name: 'edit', methods: ['GET', 'POST'])]
     #[IsGranted('permission.edit')]
     public function edit(int $id, Request $request): Response
     {
         $permission = $this->permissionRepository->find($id);
         if (null === $permission) {
             throw $this->createNotFoundException('Permission not found.');
+        }
+
+        if ($permission->isReadOnly()) {
+            $this->addFlash('warning', 'This permission is read-only and cannot be edited.');
+
+            return $this->redirectToRoute('admin_permission_list');
         }
 
         if ($request->isMethod(Request::METHOD_POST)) {
@@ -85,13 +105,19 @@ final class PermissionController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[Route('/{id<\d+>}/delete', name: 'delete', methods: ['POST'])]
     #[IsGranted('permission.delete')]
     public function delete(int $id): Response
     {
         $permission = $this->permissionRepository->find($id);
         if (null === $permission) {
             throw $this->createNotFoundException('Permission not found.');
+        }
+
+        if ($permission->isReadOnly()) {
+            $this->addFlash('warning', 'This permission is read-only and cannot be deleted.');
+
+            return $this->redirectToRoute('admin_permission_list');
         }
 
         $this->entityManager->remove($permission);

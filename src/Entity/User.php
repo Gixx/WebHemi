@@ -185,6 +185,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return false;
     }
 
+    public function hasRole(string $roleName): bool
+    {
+        $normalizedRoleName = strtoupper(trim($roleName));
+
+        if ('' === $normalizedRoleName) {
+            return false;
+        }
+
+        foreach ($this->roles as $role) {
+            if ($role->getName() === $normalizedRoleName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getUserIdentifier(): string
     {
         return $this->email;

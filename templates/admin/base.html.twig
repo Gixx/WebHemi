@@ -19,7 +19,14 @@
 
         .admin-wrapper {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
+        }
+
+        .admin-wrapper.auth-layout {
+            display: block;
+            background:
+                radial-gradient(circle at top right, rgba(52, 152, 219, 0.18), transparent 32%),
+                linear-gradient(180deg, #f8fbff 0%, #eef3f8 100%);
         }
 
         .admin-sidebar {
@@ -85,6 +92,13 @@
             flex-direction: column;
         }
 
+        .admin-content.auth-content {
+            max-width: 520px;
+            min-height: 100vh;
+            margin: 0 auto;
+            justify-content: center;
+        }
+
         .admin-header {
             background-color: white;
             border-bottom: 1px solid #ddd;
@@ -102,6 +116,11 @@
             flex: 1;
             padding: 30px;
             overflow-y: auto;
+        }
+
+        .admin-body.auth-body {
+            padding: 32px 24px;
+            overflow: visible;
         }
 
         .flash-messages {
@@ -125,6 +144,22 @@
             background-color: #f8d7da;
             color: #721c24;
             border-color: #f5c6cb;
+        }
+
+        .alert-failed {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeeba;
+        }
+
+        .login-error {
+            margin-bottom: 20px;
         }
 
         table {
@@ -180,6 +215,15 @@
             opacity: 0.9;
         }
 
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
         .btn-small {
             padding: 6px 12px;
             font-size: 12px;
@@ -197,6 +241,7 @@
 
         input[type="text"],
         input[type="email"],
+        input[type="password"],
         input[type="url"],
         select,
         textarea {
@@ -224,52 +269,113 @@
             font-size: 12px;
             line-height: 1.5;
         }
+
+        .admin-auth-card {
+            background-color: white;
+            border: 1px solid #dbe4ee;
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(44, 62, 80, 0.12);
+            overflow: hidden;
+        }
+
+        .admin-auth-card-header {
+            padding: 32px 32px 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+        }
+
+        .admin-auth-eyebrow {
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background-color: rgba(255, 255, 255, 0.12);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .admin-auth-card-header h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .admin-auth-subtitle {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.5;
+        }
+
+        .admin-auth-card-body {
+            padding: 32px;
+        }
+
+        .admin-auth-card .btn {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .admin-auth-meta {
+            margin-top: 18px;
+            color: #6b7785;
+            font-size: 13px;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
-    <div class="admin-wrapper">
-        <aside class="admin-sidebar">
-            <h2>Admin</h2>
-            <nav>
-                {% if app.user %}
-                    <div class="admin-user">
-                        <img src="{{ app.user.avatarUrl }}" alt="Avatar">
-                        <div class="admin-user-email">{{ app.user.userIdentifier }}</div>
-                    </div>
-                {% endif %}
-                {% if is_granted('dashboard.view') %}
-                    <a href="{{ path('admin_dashboard') }}" {% if app.request.attributes.get('_route') starts with 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a>
-                {% endif %}
-                {% if is_granted('site.list') %}
-                    <a href="{{ path('admin_site_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_site_' %}class="active"{% endif %}>Sites</a>
-                {% endif %}
-                {% if is_granted('permission.list') %}
-                    <a href="{{ path('admin_permission_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_permission_' %}class="active"{% endif %}>Permissions</a>
-                {% endif %}
-                {% if is_granted('role.list') %}
-                    <a href="{{ path('admin_role_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_role_' %}class="active"{% endif %}>Roles</a>
-                {% endif %}
-                {% if is_granted('user.list') %}
-                    <a href="{{ path('admin_user_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_user_' %}class="active"{% endif %}>Users</a>
-                {% endif %}
-                <a href="{{ path('_logout_main') }}" class="logout-link">Logout</a>
-            </nav>
-            <div class="admin-meta">
-                <div>Version: {{ app_version }}</div>
-                <div>Build: {{ app_build }}</div>
-                <div>Commit: {{ app_commit }}</div>
-            </div>
-        </aside>
+    <div class="admin-wrapper {% block admin_wrapper_class %}{% endblock %}">
+        {% block admin_sidebar %}
+            <aside class="admin-sidebar">
+                <h2>Admin</h2>
+                <nav>
+                    {% if app.user %}
+                        <div class="admin-user">
+                            <img src="{{ app.user.avatarUrl }}" alt="Avatar">
+                            <div class="admin-user-email">{{ app.user.userIdentifier }}</div>
+                        </div>
+                    {% endif %}
+                    {% if is_granted('dashboard.view') %}
+                        <a href="{{ path('admin_dashboard') }}" {% if app.request.attributes.get('_route') starts with 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a>
+                    {% endif %}
+                    {% if is_granted('site.list') %}
+                        <a href="{{ path('admin_site_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_site_' %}class="active"{% endif %}>Sites</a>
+                    {% endif %}
+                    {% if is_granted('permission.list') %}
+                        <a href="{{ path('admin_permission_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_permission_' %}class="active"{% endif %}>Permissions</a>
+                    {% endif %}
+                    {% if is_granted('role.list') %}
+                        <a href="{{ path('admin_role_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_role_' %}class="active"{% endif %}>Roles</a>
+                    {% endif %}
+                    {% if is_granted('user.list') %}
+                        <a href="{{ path('admin_user_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_user_' %}class="active"{% endif %}>Users</a>
+                    {% endif %}
+                    <a href="{{ path('_logout_main') }}" class="logout-link">Logout</a>
+                </nav>
+                <div class="admin-meta">
+                    <div>Version: {{ app_version }}</div>
+                    <div>Build: {{ app_build }}</div>
+                    <div>Commit: {{ app_commit }}</div>
+                </div>
+            </aside>
+        {% endblock %}
 
-        <div class="admin-content">
-            <header class="admin-header">
-                <h1>{% block page_title %}WebHemi Admin{% endblock %}</h1>
-            </header>
+        <div class="admin-content {% block admin_content_class %}{% endblock %}">
+            {% block admin_header %}
+                <header class="admin-header">
+                    <h1>{% block page_title %}WebHemi Admin{% endblock %}</h1>
+                </header>
+            {% endblock %}
 
-            <main class="admin-body">
-                {% if app.flashes %}
+            <main class="admin-body {% block admin_body_class %}{% endblock %}">
+                {% set flashes = app.flashes %}
+                {% if flashes is not empty %}
                     <div class="flash-messages">
-                        {% for type, messages in app.flashes %}
+                        {% for type, messages in flashes %}
                             {% for message in messages %}
                                 <div class="alert alert-{{ type }}">{{ message }}</div>
                             {% endfor %}

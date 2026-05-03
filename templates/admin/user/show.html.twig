@@ -1,0 +1,64 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}User Details{% endblock %}
+
+{% block content %}
+    {% set currentUserIsAdmin = app.user and app.user.hasRole('ROLE_ADMIN') %}
+    {% set canDeleteUser = is_granted('user.delete') and user.id != app.user.id and (not user.hasRole('ROLE_ADMIN') or currentUserIsAdmin) %}
+
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_user_list') }}">&larr; Back to Users</a>
+    </div>
+
+    <table>
+        <tbody>
+            <tr>
+                <th style="width: 200px;">Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Avatar</th>
+                <td>
+                    <img src="{{ user.avatarUrl }}" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; vertical-align: middle; margin-right: 8px;">
+                    <small style="color: #888;">{{ user.avatarType }}</small>
+                </td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roleEntities|length }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <h3 style="margin-bottom: 10px;">Related Roles</h3>
+        {% if user.roleEntities is empty %}
+            <p style="color: #777;">No roles assigned.</p>
+        {% else %}
+            <ul style="padding-left: 20px;">
+                {% for role in user.roleEntities %}
+                    <li>
+                        {% if is_granted('role.view') %}
+                            <a href="{{ path('admin_role_show', {id: role.id}) }}"><code>{{ role.name }}</code> - {{ role.label }}</a>
+                        {% else %}
+                            <code>{{ role.name }}</code> - {{ role.label }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    {% if is_granted('user.edit') or canDeleteUser %}
+        <div class="btn-group" style="margin-top: 24px;">
+            {% if is_granted('user.edit') %}
+                <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-primary">Edit</a>
+            {% endif %}
+            {% if canDeleteUser %}
+                <form method="POST" action="{{ path('admin_user_delete', {id: user.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
