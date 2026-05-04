@@ -16,6 +16,15 @@ An old project on new foundation. Rewrite the blog engine based on Symfony.
 [![PHPUnit](https://github.com/Gixx/WebHemi/actions/workflows/badge-phpunit.yml/badge.svg)](https://github.com/Gixx/WebHemi/actions/workflows/badge-phpunit.yml)
 [![codecov](https://codecov.io/gh/Gixx/WebHemi/branch/main/graph/badge.svg)](https://codecov.io/gh/Gixx/WebHemi)
 
+## Documentation
+
+- [Local Dev Server Setup](docs/local-dev-server-setup.md)
+- [Admin RBAC and View Pages](docs/admin-rbac-and-view-pages.md)
+- [Host Ownership Verification Flow](docs/host-ownership-verification-flow.md)
+- [Flash Messaging Conventions](docs/flash-messaging-conventions.md)
+- [QA Pipeline Commands](docs/qa-pipeline-commands.md)
+- [Xdebug WSL to PhpStorm Setup](docs/xdebug-wsl-phpstorm-setup.md)
+
 ## Git hooks
 
 Enable the repository-managed Git hooks (includes a `pre-commit` hook that runs `composer run qa`):
