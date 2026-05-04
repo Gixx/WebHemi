@@ -3,7 +3,9 @@
 {% block page_title %}{{ title }}{% endblock %}
 
 {% block content %}
-    <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" style="text-decoration: none;">← Back</a>
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-secondary btn-small">&larr; Back</a>
+    </div>
 
     <form method="POST">
         {% if not host.id %}
@@ -43,7 +45,7 @@
 
         <div class="btn-group">
             <button type="submit" class="btn btn-primary">{{ host.id ? 'Update' : 'Create' }}</button>
-            <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn" style="background-color: #95a5a6; color: white; text-decoration: none;">Cancel</a>
+            <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 {% endblock %}

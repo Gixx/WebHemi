@@ -4,7 +4,7 @@
 
 {% block content %}
     <div style="margin-bottom: 20px;">
-        <a href="{{ path('admin_site_list') }}">&larr; Back to Sites</a>
+        <a href="{{ path('admin_site_list') }}" class="btn btn-secondary btn-small">&larr; Back to Sites</a>
     </div>
 
     <table>
@@ -39,17 +39,28 @@
         {% if site.hosts is empty %}
             <p style="color: #777;">No hosts attached.</p>
         {% else %}
-            <ul style="padding-left: 20px;">
-                {% for host in site.hosts %}
-                    <li>
-                        <code>{{ host.host }}</code> ({{ host.surface }}, {{ host.status }})
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-        {% if is_granted('site.edit') %}
-            <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-small" style="background-color: #95a5a6; color: white; text-decoration: none;">Manage Hosts</a>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th style="width: 140px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for host in site.hosts %}
+                        <tr>
+                            <td><code>{{ host.host }}</code> ({{ host.surface }}, {{ host.status }})</td>
+                            <td>
+                                {% if is_granted('site.edit') %}
+                                    <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-primary btn-small">View</a>
+                                {% else %}
+                                    <span style="color: #7f8c8d;">No access</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
 

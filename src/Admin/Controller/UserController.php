@@ -92,13 +92,25 @@ final class UserController extends AbstractController
             throw $this->createNotFoundException('User not found.');
         }
 
+        $currentUser = $this->getUser();
+        $isAdmin = $currentUser instanceof User && $currentUser->hasRole('ROLE_ADMIN');
+
+        if (!$isAdmin && (!$currentUser instanceof User || $currentUser->getId() !== $user->getId())) {
+            $this->addFlash('warning', 'You can only edit your own profile.');
+
+            return $this->redirectToRoute('admin_user_list');
+        }
+
         if ($request->isMethod(Request::METHOD_POST)) {
-            $email = $request->request->getString('email', '');
             $password = $request->request->getString('password', '');
             $avatarType = $request->request->getString('avatarType', User::AVATAR_TYPE_DEFAULT);
 
-            if ('' !== $email) {
-                $user->setEmail($email);
+            if ($isAdmin) {
+                $email = $request->request->getString('email', '');
+                if ('' !== $email) {
+                    $user->setEmail($email);
+                }
+                $this->syncRoles($user, $request->request->all('roles'));
             }
 
             if ('' !== $password) {
@@ -106,7 +118,6 @@ final class UserController extends AbstractController
             }
 
             $user->setAvatarType($avatarType);
-            $this->syncRoles($user, $request->request->all('roles'));
             $this->entityManager->flush();
             $this->addFlash('success', 'User updated successfully.');
 
@@ -117,6 +128,7 @@ final class UserController extends AbstractController
             'user' => $user,
             'allRoles' => $this->roleRepository->findBy([], ['name' => 'ASC']),
             'title' => 'Edit User',
+            'isAdmin' => $isAdmin,
         ]);
     }
 
@@ -150,7 +162,7 @@ final class UserController extends AbstractController
         return $this->redirectToRoute('admin_user_list');
     }
 
-    /** @param array<int, mixed> $roleIds */
+    /** @param array<mixed> $roleIds */
     private function syncRoles(User $user, array $roleIds): void
     {
         foreach ($user->getRoleEntities()->toArray() as $existing) {

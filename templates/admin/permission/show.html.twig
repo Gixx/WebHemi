@@ -4,7 +4,7 @@
 
 {% block content %}
     <div style="margin-bottom: 20px;">
-        <a href="{{ path('admin_permission_list') }}">&larr; Back to Permissions</a>
+        <a href="{{ path('admin_permission_list') }}" class="btn btn-secondary btn-small">&larr; Back to Permissions</a>
     </div>
 
     <table>
@@ -39,17 +39,28 @@
         {% if permission.roles is empty %}
             <p style="color: #777;">No roles assigned.</p>
         {% else %}
-            <ul style="padding-left: 20px;">
-                {% for role in permission.roles %}
-                    <li>
-                        {% if is_granted('role.view') %}
-                            <a href="{{ path('admin_role_show', {id: role.id}) }}"><code>{{ role.name }}</code> - {{ role.label }}</a>
-                        {% else %}
-                            <code>{{ role.name }}</code> - {{ role.label }}
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th style="width: 140px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for role in permission.roles %}
+                        <tr>
+                            <td><code>{{ role.name }}</code> - {{ role.label }}</td>
+                            <td>
+                                {% if is_granted('role.view') %}
+                                    <a href="{{ path('admin_role_show', {id: role.id}) }}" class="btn btn-primary btn-small">View</a>
+                                {% else %}
+                                    <span style="color: #7f8c8d;">No access</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
 

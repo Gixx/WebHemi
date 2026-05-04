@@ -4,7 +4,7 @@
 
 {% block content %}
     <div style="margin-bottom: 20px;">
-        <a href="{{ path('admin_site_list') }}" style="text-decoration: none;">← Sites</a>
+        <a href="{{ path('admin_site_list') }}" class="btn btn-secondary btn-small">&larr; Sites</a>
         <h2>{{ site.name }} - Hosts</h2>
         <p style="margin: 10px 0 15px; color: #666;">
             The canonical admin URL uses the public site host and the <code>/admin</code> path. Legacy admin-specific hosts are treated as redirect aliases only.

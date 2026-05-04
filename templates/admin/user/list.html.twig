@@ -51,7 +51,9 @@
                                         <a href="{{ path('admin_user_show', {id: user.id}) }}" class="btn btn-success btn-small">View</a>
                                     {% endif %}
                                     {% if is_granted('user.edit') %}
-                                        <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                        {% if currentUserIsAdmin or user.id == app.user.id %}
+                                            <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-primary btn-small">Edit</a>
+                                        {% endif %}
                                     {% endif %}
                                     {% if canDeleteUser %}
                                         <form method="POST" action="{{ path('admin_user_delete', {id: user.id}) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">

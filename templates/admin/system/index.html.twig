@@ -42,25 +42,25 @@
 <div class="system-grid">
     {% if is_granted('site.list') %}
         <a href="{{ path('admin_site_list') }}" class="system-card">
-            <img src="{{ asset('assets/admin/icons/system/sites.svg') }}" alt="Sites icon" class="system-card-icon">
+            <img src="/assets/admin/icons/system/sites.svg" alt="Sites icon" class="system-card-icon">
             <span class="system-card-label">Sites</span>
         </a>
     {% endif %}
     {% if is_granted('permission.list') %}
         <a href="{{ path('admin_permission_list') }}" class="system-card">
-            <img src="{{ asset('assets/admin/icons/system/permissions.svg') }}" alt="Permissions icon" class="system-card-icon">
+            <img src="/assets/admin/icons/system/permissions.svg" alt="Permissions icon" class="system-card-icon">
             <span class="system-card-label">Permissions</span>
         </a>
     {% endif %}
     {% if is_granted('role.list') %}
         <a href="{{ path('admin_role_list') }}" class="system-card">
-            <img src="{{ asset('assets/admin/icons/system/roles.svg') }}" alt="Roles icon" class="system-card-icon">
+            <img src="/assets/admin/icons/system/roles.svg" alt="Roles icon" class="system-card-icon">
             <span class="system-card-label">Roles</span>
         </a>
     {% endif %}
     {% if is_granted('user.list') %}
         <a href="{{ path('admin_user_list') }}" class="system-card">
-            <img src="{{ asset('assets/admin/icons/system/users.svg') }}" alt="Users icon" class="system-card-icon">
+            <img src="/assets/admin/icons/system/users.svg" alt="Users icon" class="system-card-icon">
             <span class="system-card-label">Users</span>
         </a>
     {% endif %}
