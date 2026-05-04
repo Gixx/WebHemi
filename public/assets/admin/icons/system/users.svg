@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Pastel mint green disc -->
+  <circle cx="32" cy="32" r="28" fill="#B0E0CC"/>
+  <!-- Head -->
+  <circle cx="32" cy="25" r="6" fill="none" stroke="#1E7A50" stroke-width="2"/>
+  <!-- Shoulders / body arc -->
+  <path d="M19 47 Q19 37 32 37 Q45 37 45 47"
+        fill="none" stroke="#1E7A50" stroke-width="2" stroke-linecap="round"/>
+</svg>

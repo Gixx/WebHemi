@@ -342,17 +342,16 @@
                     {% if is_granted('dashboard.view') %}
                         <a href="{{ path('admin_dashboard') }}" {% if app.request.attributes.get('_route') starts with 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a>
                     {% endif %}
-                    {% if is_granted('site.list') %}
-                        <a href="{{ path('admin_site_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_site_' %}class="active"{% endif %}>Sites</a>
-                    {% endif %}
-                    {% if is_granted('permission.list') %}
-                        <a href="{{ path('admin_permission_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_permission_' %}class="active"{% endif %}>Permissions</a>
-                    {% endif %}
-                    {% if is_granted('role.list') %}
-                        <a href="{{ path('admin_role_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_role_' %}class="active"{% endif %}>Roles</a>
-                    {% endif %}
-                    {% if is_granted('user.list') %}
-                        <a href="{{ path('admin_user_list') }}" {% if app.request.attributes.get('_route') starts with 'admin_user_' %}class="active"{% endif %}>Users</a>
+                    {% if is_granted('site.list') or is_granted('permission.list') or is_granted('role.list') or is_granted('user.list') %}
+                        {% set system_routes = ['admin_system_', 'admin_site_', 'admin_permission_', 'admin_role_', 'admin_user_'] %}
+                        {% set current_route = app.request.attributes.get('_route') %}
+                        {% set is_system_active = false %}
+                        {% for prefix in system_routes %}
+                            {% if current_route starts with prefix %}
+                                {% set is_system_active = true %}
+                            {% endif %}
+                        {% endfor %}
+                        <a href="{{ path('admin_system_index') }}" {% if is_system_active %}class="active"{% endif %}>System</a>
                     {% endif %}
                     <a href="{{ path('_logout_main') }}" class="logout-link">Logout</a>
                 </nav>
