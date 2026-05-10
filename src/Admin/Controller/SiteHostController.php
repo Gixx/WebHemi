@@ -28,6 +28,7 @@ final class SiteHostController extends AbstractController
 
     #[Route(name: 'list', methods: ['GET'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function list(int $siteId): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -45,6 +46,7 @@ final class SiteHostController extends AbstractController
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function create(int $siteId, Request $request): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -103,6 +105,7 @@ final class SiteHostController extends AbstractController
 
     #[Route('/{hostId}/edit', name: 'edit', methods: ['GET', 'POST'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function edit(int $siteId, int $hostId, Request $request): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -134,6 +137,7 @@ final class SiteHostController extends AbstractController
 
     #[Route('/{hostId}/delete', name: 'delete', methods: ['POST'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function delete(int $siteId, int $hostId): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -155,6 +159,7 @@ final class SiteHostController extends AbstractController
 
     #[Route('/{hostId}/verify', name: 'verify', methods: ['POST'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function verify(int $siteId, int $hostId): Response
     {
         $site = $this->siteRepository->find($siteId);

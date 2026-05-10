@@ -6,10 +6,15 @@ namespace App\Tests\Unit\Security\Voter;
 
 use App\Entity\Permission;
 use App\Entity\Role;
+use App\Entity\Site;
+use App\Entity\SiteAssignment;
 use App\Entity\User;
+use App\Repository\SiteAssignmentRepository;
 use App\Security\Voter\PermissionVoter;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -18,25 +23,23 @@ final class PermissionVoterTest extends TestCase
     #[Test]
     public function grantsAccessWhenTheUserHasThePermission(): void
     {
-        $user = (new User())
-            ->setEmail('editor@example.com')
-            ->setPasswordHash('hashed-password');
-
-        $role = (new Role())
-            ->setName('ROLE_EDITOR')
-            ->setLabel('Editor');
-
-        $permission = (new Permission())
-            ->setName('user.edit')
-            ->setLabel('Edit users');
-
+        $role = (new Role())->setName('ROLE_EDITOR')->setLabel('Editor');
+        $permission = (new Permission())->setName('user.edit')->setLabel('Edit users');
         $role->addPermission($permission);
-        $user->addRole($role);
+
+        $user = (new User())->setEmail('editor@example.com')->setPasswordHash('hashed');
+        $site = (new Site())->setSlug('mysite')->setName('My Site');
+
+        $assignment = (new SiteAssignment())->setUser($user)->setSite($site)->setRole($role);
 
         $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
+        $token->method('getRoleNames')->willReturn(['ROLE_USER']);
 
-        $voter = new PermissionVoter();
+        $voter = new PermissionVoter(
+            $this->requestStackWithSiteId(1),
+            $this->repositoryReturning($user, 1, $assignment),
+        );
 
         self::assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, null, ['user.edit']));
     }
@@ -44,30 +47,90 @@ final class PermissionVoterTest extends TestCase
     #[Test]
     public function deniesAccessWhenThePermissionIsMissing(): void
     {
-        $user = (new User())
-            ->setEmail('viewer@example.com')
-            ->setPasswordHash('hashed-password');
+        $role = (new Role())->setName('ROLE_EDITOR')->setLabel('Editor');
+        $user = (new User())->setEmail('viewer@example.com')->setPasswordHash('hashed');
+        $site = (new Site())->setSlug('mysite')->setName('My Site');
+
+        $assignment = (new SiteAssignment())->setUser($user)->setSite($site)->setRole($role);
 
         $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
+        $token->method('getRoleNames')->willReturn(['ROLE_USER']);
 
-        $voter = new PermissionVoter();
+        $voter = new PermissionVoter(
+            $this->requestStackWithSiteId(1),
+            $this->repositoryReturning($user, 1, $assignment),
+        );
 
         self::assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, null, ['user.delete']));
     }
 
     #[Test]
-    public function grantsAccessForRoleAdminWithoutMappedPermissions(): void
+    public function deniesAccessWhenThereIsNoSiteAssignment(): void
     {
-        $user = (new User())
-            ->setEmail('admin@example.com')
-            ->setPasswordHash('hashed-password');
+        $user = (new User())->setEmail('nobody@example.com')->setPasswordHash('hashed');
 
         $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
+        $token->method('getRoleNames')->willReturn(['ROLE_USER']);
+
+        $voter = new PermissionVoter(
+            $this->requestStackWithSiteId(1),
+            $this->repositoryReturning($user, 1, null),
+        );
+
+        self::assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, null, ['site.edit']));
+    }
+
+    #[Test]
+    public function deniesAccessWhenThereIsNoSiteContext(): void
+    {
+        $user = (new User())->setEmail('nobody@example.com')->setPasswordHash('hashed');
+
+        $token = $this->createStub(TokenInterface::class);
+        $token->method('getUser')->willReturn($user);
+        $token->method('getRoleNames')->willReturn(['ROLE_USER']);
+
+        $repo = $this->createMock(SiteAssignmentRepository::class);
+        $repo->expects(self::never())->method('findForUserAndSite');
+
+        $voter = new PermissionVoter(new RequestStack(), $repo);
+
+        self::assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, null, ['site.edit']));
+    }
+
+    #[Test]
+    public function grantsAccessForRoleSiteAdmin(): void
+    {
+        $role = (new Role())->setName('ROLE_SITE_ADMIN')->setLabel('Site Administrator');
+        $user = (new User())->setEmail('siteadmin@example.com')->setPasswordHash('hashed');
+        $site = (new Site())->setSlug('mysite')->setName('My Site');
+
+        $assignment = (new SiteAssignment())->setUser($user)->setSite($site)->setRole($role);
+
+        $token = $this->createStub(TokenInterface::class);
+        $token->method('getUser')->willReturn($user);
+        $token->method('getRoleNames')->willReturn(['ROLE_USER']);
+
+        $voter = new PermissionVoter(
+            $this->requestStackWithSiteId(1),
+            $this->repositoryReturning($user, 1, $assignment),
+        );
+
+        self::assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, null, ['site.delete']));
+    }
+
+    #[Test]
+    public function grantsAccessForRoleAdmin(): void
+    {
+        $token = $this->createStub(TokenInterface::class);
+        $token->method('getUser')->willReturn(null);
         $token->method('getRoleNames')->willReturn(['ROLE_ADMIN']);
 
-        $voter = new PermissionVoter();
+        $repo = $this->createMock(SiteAssignmentRepository::class);
+        $repo->expects(self::never())->method('findForUserAndSite');
+
+        $voter = new PermissionVoter(new RequestStack(), $repo);
 
         self::assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, null, ['permission.delete']));
     }
@@ -77,9 +140,35 @@ final class PermissionVoterTest extends TestCase
     {
         $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn(null);
+        $token->method('getRoleNames')->willReturn([]);
 
-        $voter = new PermissionVoter();
+        $repo = $this->createMock(SiteAssignmentRepository::class);
+        $repo->expects(self::never())->method('findForUserAndSite');
+
+        $voter = new PermissionVoter(new RequestStack(), $repo);
 
         self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, null, ['ROLE_ADMIN']));
+    }
+
+    private function requestStackWithSiteId(int $siteId): RequestStack
+    {
+        $request = new Request();
+        $request->attributes->set('site_id', $siteId);
+
+        $stack = new RequestStack();
+        $stack->push($request);
+
+        return $stack;
+    }
+
+    private function repositoryReturning(User $user, int $siteId, ?SiteAssignment $result): SiteAssignmentRepository
+    {
+        $repo = $this->createMock(SiteAssignmentRepository::class);
+        $repo->expects(self::once())
+            ->method('findForUserAndSite')
+            ->with($user, $siteId)
+            ->willReturn($result);
+
+        return $repo;
     }
 }

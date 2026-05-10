@@ -1,8 +1,65 @@
 {% extends "admin/base.html.twig" %}
 
-{% block page_title %}Dashboard{% endblock %}
+{% block page_title %}Desktop{% endblock %}
+
+{% block admin_sidebar %}{% endblock %}
+{% block admin_header %}{% endblock %}
+{% block admin_body_class %}desktop-admin-body{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="/assets/admin/desktop/desktop.css">
+{% endblock %}
 
 {% block content %}
-    <h2>Welcome to WebHemi Admin</h2>
-    <p>Manage your sites, hosts, and content from here.</p>
+    <div class="desktop-shell" id="desktopShell">
+        <div class="desktop-icons">
+            <button
+                type="button"
+                class="desktop-icon js-desktop-launch"
+                data-window-id="control-panel"
+                data-window-title="Control Panel"
+                data-window-url="{{ path('admin_desktop_window_control_panel') }}"
+                data-window-width="760"
+                data-window-height="520"
+            >
+                <img src="/assets/admin/icons/system/sites.svg" alt="Control Panel">
+                <span>Control Panel</span>
+            </button>
+
+            {% for site in sitesForDesktop %}
+                {% if site.id is not null %}
+                    <button
+                        type="button"
+                        class="desktop-icon js-desktop-launch"
+                        data-window-id="site-workspace-{{ site.id }}"
+                        data-window-title="{{ site.name|e('html_attr') }} Workspace"
+                        data-window-url="{{ path('admin_desktop_window_site_workspace', {id: site.id}) }}"
+                        data-window-width="700"
+                        data-window-height="480"
+                    >
+                        <img src="/assets/admin/icons/system/sites.svg" alt="Site workspace">
+                        <span>{{ site.name }}</span>
+                    </button>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="desktop-window-layer" id="desktopWindowLayer"></div>
+
+        <div class="desktop-taskbar" id="desktopTaskbar">
+            <button type="button" id="desktopStartButton" class="desktop-start-button">Start</button>
+            <div id="desktopTaskButtons" class="desktop-task-buttons"></div>
+            <div class="desktop-clock" id="desktopClock">--:--</div>
+        </div>
+
+        <div class="desktop-start-menu" id="desktopStartMenu" hidden>
+            <a href="{{ path('_logout_main') }}" class="desktop-start-item">Logout</a>
+            <button type="button" class="desktop-start-item" disabled>Help (soon)</button>
+            <button type="button" class="desktop-start-item" disabled>Find (soon)</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body_end %}
+    <script src="/assets/admin/desktop/desktop.js"></script>
 {% endblock %}

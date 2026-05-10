@@ -44,9 +44,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinTable(name: 'user_role')]
     private Collection $roles;
 
+    /**
+     * @var Collection<int, SiteAssignment>
+     */
+    #[ORM\OneToMany(
+        targetEntity: SiteAssignment::class,
+        mappedBy: 'user',
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $siteAssignments;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
+        $this->siteAssignments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -226,6 +238,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->roles->removeElement($role)) {
             $role->removeUserRole($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SiteAssignment>
+     */
+    public function getSiteAssignments(): Collection
+    {
+        return $this->siteAssignments;
+    }
+
+    public function addSiteAssignment(SiteAssignment $assignment): self
+    {
+        if (!$this->siteAssignments->contains($assignment)) {
+            $this->siteAssignments->add($assignment);
+            $assignment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSiteAssignment(SiteAssignment $assignment): self
+    {
+        $this->siteAssignments->removeElement($assignment);
 
         return $this;
     }
