@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security\Request;
 
+use App\Entity\SurfaceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
@@ -15,6 +16,6 @@ final class AdminSurfaceRootRequestMatcher implements RequestMatcherInterface
             return false;
         }
 
-        return 'admin' === $request->attributes->get('surface');
+        return SurfaceType::tryFrom((string) $request->attributes->get('surface')) === SurfaceType::Admin;
     }
 }

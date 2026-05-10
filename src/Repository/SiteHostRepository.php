@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\SiteHost;
+use App\Entity\SurfaceType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -58,7 +59,7 @@ final class SiteHostRepository extends ServiceEntityRepository
             ->andWhere('siteHost.isActive = true')
             ->andWhere('site.isEnabled = true')
             ->setParameter('siteId', $siteId)
-            ->setParameter('surface', 'site')
+            ->setParameter('surface', SurfaceType::Site->value)
             ->setParameter('statuses', ['verified', 'active'])
             ->orderBy('siteHost.host', 'ASC')
             ->setMaxResults(1)

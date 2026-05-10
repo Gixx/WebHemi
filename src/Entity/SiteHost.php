@@ -24,8 +24,8 @@ class SiteHost
     #[ORM\Column(length: 191)]
     private string $host = '';
 
-    #[ORM\Column(length: 16)]
-    private string $surface = '';
+    #[ORM\Column(length: 16, enumType: SurfaceType::class)]
+    private SurfaceType $surface = SurfaceType::Site;
 
     #[ORM\Column(length: 16)]
     private string $status = 'pending';
@@ -62,14 +62,14 @@ class SiteHost
         return $this;
     }
 
-    public function getSurface(): string
+    public function getSurface(): SurfaceType
     {
         return $this->surface;
     }
 
-    public function setSurface(string $surface): self
+    public function setSurface(SurfaceType $surface): self
     {
-        $this->surface = strtolower(trim($surface));
+        $this->surface = $surface;
 
         return $this;
     }

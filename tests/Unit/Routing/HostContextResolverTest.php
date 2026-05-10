@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Routing;
 
+use App\Entity\SurfaceType;
 use App\Routing\HostContextProviderInterface;
 use App\Routing\HostContextResolver;
 use PHPUnit\Framework\Attributes\Test;
@@ -22,7 +23,7 @@ final class HostContextResolverTest extends TestCase
 
         self::assertNotNull($result);
         self::assertSame(1, $result['site_id']);
-        self::assertSame('admin', $result['surface']);
+        self::assertSame(SurfaceType::Admin, $result['surface']);
         self::assertSame('admin.mysite.local', $result['host']);
     }
 

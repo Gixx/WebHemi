@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Routing;
 
+use App\Entity\SurfaceType;
+
 final readonly class HostContextResolver
 {
     public function __construct(
@@ -12,7 +14,7 @@ final readonly class HostContextResolver
     }
 
     /**
-     * @return array{site_id:int, surface:string, host:string}|null
+     * @return array{site_id:int, surface:\App\Entity\SurfaceType, host:string}|null
      */
     public function resolveFromHost(string $host): ?array
     {
@@ -26,9 +28,14 @@ final readonly class HostContextResolver
             return null;
         }
 
+        $surface = SurfaceType::tryFrom((string) $context['surface']);
+        if (null === $surface) {
+            return null;
+        }
+
         return [
             'site_id' => (int) $context['site_id'],
-            'surface' => (string) $context['surface'],
+            'surface' => $surface,
             'host' => (string) $context['host'],
         ];
     }

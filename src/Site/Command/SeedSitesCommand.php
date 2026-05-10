@@ -6,6 +6,7 @@ namespace App\Site\Command;
 
 use App\Entity\Site;
 use App\Entity\SiteHost;
+use App\Entity\SurfaceType;
 use App\Repository\SiteHostRepository;
 use App\Repository\SiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,12 +33,12 @@ final class SeedSitesCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $site1 = $this->upsertSite('mysite', 'My Site');
-        $this->upsertHost($site1, 'admin.mysite.local', 'admin');
-        $this->upsertHost($site1, 'mysite.local', 'site');
-        $this->upsertHost($site1, 'www.mysite.local', 'site');
+        $this->upsertHost($site1, 'admin.mysite.local', SurfaceType::Admin);
+        $this->upsertHost($site1, 'mysite.local', SurfaceType::Site);
+        $this->upsertHost($site1, 'www.mysite.local', SurfaceType::Site);
 
         $site2 = $this->upsertSite('another', 'Another Site');
-        $this->upsertHost($site2, 'another.mysite.local', 'site');
+        $this->upsertHost($site2, 'another.mysite.local', SurfaceType::Site);
 
         $this->entityManager->flush();
 
@@ -63,7 +64,7 @@ final class SeedSitesCommand extends Command
         return $site;
     }
 
-    private function upsertHost(Site $site, string $host, string $surface): void
+    private function upsertHost(Site $site, string $host, SurfaceType $surface): void
     {
         $normalizedHost = strtolower(trim($host));
 

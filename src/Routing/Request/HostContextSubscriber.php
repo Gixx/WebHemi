@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Routing\Request;
 
+use App\Entity\SurfaceType;
 use App\Routing\HostContextResolver;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +34,7 @@ final readonly class HostContextSubscriber implements EventSubscriberInterface
             throw new NotFoundHttpException('Unknown host.');
         }
 
-        if ('admin' === $context['surface']) {
+        if (SurfaceType::Admin === $context['surface']) {
             $canonicalHost = $this->hostContextResolver->resolveCanonicalSiteHost((int) $context['site_id']);
             if (is_string($canonicalHost) && '' !== $canonicalHost && $canonicalHost !== $context['host']) {
                 $event->setResponse(new RedirectResponse($this->buildCanonicalAdminUrl($request, $canonicalHost)));
@@ -43,12 +44,12 @@ final readonly class HostContextSubscriber implements EventSubscriberInterface
         }
 
         $surface = $context['surface'];
-        if ('site' === $surface && $this->isAdminPath($request->getPathInfo())) {
-            $surface = 'admin';
+        if (SurfaceType::Site === $surface && $this->isAdminPath($request->getPathInfo())) {
+            $surface = SurfaceType::Admin;
         }
 
         $request->attributes->set('site_id', $context['site_id']);
-        $request->attributes->set('surface', $surface);
+        $request->attributes->set('surface', $surface->value);
         $request->attributes->set('resolved_host', $context['host']);
     }
 
