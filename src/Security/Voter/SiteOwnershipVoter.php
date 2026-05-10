@@ -4,26 +4,30 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
-use App\Entity\SiteAssignment;
 use App\Entity\User;
 use App\Repository\SiteAssignmentRepository;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-/** @extends Voter<string, mixed> */
-final class PermissionVoter extends Voter
+/**
+ * Checks that the current user has any SiteAssignment for the given site ID.
+ * Use as: #[IsGranted('site.own', subject: 'routeParamName')]
+ *
+ * @extends Voter<'site.own', int>
+ */
+final class SiteOwnershipVoter extends Voter
 {
     public function __construct(
-        private readonly RequestStack $requestStack,
         private readonly SiteAssignmentRepository $siteAssignmentRepository,
     ) {
     }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return '' !== trim($attribute) && str_contains($attribute, '.') && $attribute !== 'site.own';
+        $siteId = is_int($subject) ? $subject : (is_string($subject) && ctype_digit($subject) ? (int) $subject : 0);
+
+        return $attribute === 'site.own' && $siteId > 0;
     }
 
     protected function voteOnAttribute(
@@ -41,22 +45,7 @@ final class PermissionVoter extends Voter
             return false;
         }
 
-        $siteId = is_int($subject) && $subject > 0
-            ? $subject
-            : ($this->requestStack->getCurrentRequest()?->attributes->getInt('site_id') ?? 0);
-        if ($siteId < 1) {
-            return false;
-        }
-
-        $assignment = $this->siteAssignmentRepository->findForUserAndSite($user, $siteId);
-        if (!$assignment instanceof SiteAssignment) {
-            return false;
-        }
-
-        if ($assignment->getRole()->getName() === 'ROLE_SITE_ADMIN') {
-            return true;
-        }
-
-        return $assignment->getRole()->hasPermission($attribute);
+        return $this->siteAssignmentRepository
+                ->findForUserAndSite($user, (int) $subject) instanceof \App\Entity\SiteAssignment;
     }
 }

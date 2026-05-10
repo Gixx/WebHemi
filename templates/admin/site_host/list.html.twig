@@ -29,7 +29,7 @@
                 {% for host in hosts %}
                     <tr>
                         <td><code>{{ host.host }}</code></td>
-                        <td>{{ host.surface }}</td>
+                        <td>{{ host.surface.value }}</td>
                         <td>
                             <strong style="color: {% if host.status == 'verified' %}green{% elseif host.status == 'active' %}blue{% else %}orange{% endif %};">
                                 {{ host.status|capitalize }}

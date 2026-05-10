@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Admin\Controller;
 
 use App\Entity\SiteHost;
+use App\Entity\SurfaceType;
 use App\Repository\SiteHostRepository;
 use App\Repository\SiteRepository;
 use App\SiteHost\Verification\HostOwnershipVerifier;
@@ -28,6 +29,7 @@ final class SiteHostController extends AbstractController
 
     #[Route(name: 'list', methods: ['GET'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function list(int $siteId): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -45,6 +47,7 @@ final class SiteHostController extends AbstractController
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function create(int $siteId, Request $request): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -57,20 +60,20 @@ final class SiteHostController extends AbstractController
 
         if ($request->isMethod(Request::METHOD_POST)) {
             $host->setHost($request->request->getString('host', ''));
-            $submittedSurface = strtolower(trim($request->request->getString('surface', 'site')));
+            $submittedSurface = SurfaceType::tryFrom(strtolower(trim($request->request->getString('surface', ''))));
 
-            if ('site' !== $submittedSurface) {
+            if (SurfaceType::Site !== $submittedSurface) {
                 $this->addFlash(
                     'failed',
                     'New hosts can only be created as public site hosts. '
                     . 'The admin surface is always available via the canonical /admin path.',
                 );
             } else {
-                $host->setSurface('site');
+                $host->setSurface(SurfaceType::Site);
                 $host->setIsActive($request->request->getBoolean('isActive', true));
             }
 
-            if ('site' === $submittedSurface && $this->isValidHost($host)) {
+            if (SurfaceType::Site === $submittedSurface && $this->isValidHost($host)) {
                 $verificationResult = $this->hostOwnershipVerifier->verify($host->getHost());
                 $host->setStatus($verificationResult->verified ? 'verified' : 'pending');
 
@@ -89,7 +92,7 @@ final class SiteHostController extends AbstractController
                 return $this->redirectToRoute('admin_site_host_list', ['siteId' => $siteId]);
             }
 
-            if ('site' === $submittedSurface) {
+            if (SurfaceType::Site === $submittedSurface) {
                 $this->addFlash('failed', 'Please provide a valid hostname (for example: sub.example.com).');
             }
         }
@@ -103,6 +106,7 @@ final class SiteHostController extends AbstractController
 
     #[Route('/{hostId}/edit', name: 'edit', methods: ['GET', 'POST'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function edit(int $siteId, int $hostId, Request $request): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -134,6 +138,7 @@ final class SiteHostController extends AbstractController
 
     #[Route('/{hostId}/delete', name: 'delete', methods: ['POST'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function delete(int $siteId, int $hostId): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -155,6 +160,7 @@ final class SiteHostController extends AbstractController
 
     #[Route('/{hostId}/verify', name: 'verify', methods: ['POST'])]
     #[IsGranted('site.edit')]
+    #[IsGranted('site.own', subject: 'siteId')]
     public function verify(int $siteId, int $hostId): Response
     {
         $site = $this->siteRepository->find($siteId);
@@ -182,7 +188,7 @@ final class SiteHostController extends AbstractController
 
     private function isValidHost(SiteHost $host): bool
     {
-        if ('' === $host->getHost() || 'site' !== $host->getSurface()) {
+        if ('' === $host->getHost() || SurfaceType::Site !== $host->getSurface()) {
             return false;
         }
 

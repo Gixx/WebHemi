@@ -335,6 +335,7 @@
             line-height: 1.6;
         }
     </style>
+    {% block head_extra %}{% endblock %}
 </head>
 <body>
     <div class="admin-wrapper {% block admin_wrapper_class %}{% endblock %}">
@@ -395,5 +396,6 @@
             </main>
         </div>
     </div>
+    {% block body_end %}{% endblock %}
 </body>
 </html>

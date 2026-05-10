@@ -49,7 +49,7 @@
                 <tbody>
                     {% for host in site.hosts %}
                         <tr>
-                            <td><code>{{ host.host }}</code> ({{ host.surface }}, {{ host.status }})</td>
+                            <td><code>{{ host.host }}</code> ({{ host.surface.value }}, {{ host.status }})</td>
                             <td>
                                 {% if is_granted('site.edit') %}
                                     <a href="{{ path('admin_site_host_list', {siteId: site.id}) }}" class="btn btn-primary btn-small">View</a>

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Admin\Controller;
 
 use App\Entity\Site;
+use App\Entity\User;
+use App\Repository\SiteAssignmentRepository;
 use App\Repository\SiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +20,7 @@ final class SiteController extends AbstractController
 {
     public function __construct(
         private readonly SiteRepository $siteRepository,
+        private readonly SiteAssignmentRepository $siteAssignmentRepository,
         private readonly EntityManagerInterface $entityManager,
     ) {
     }
@@ -26,7 +29,13 @@ final class SiteController extends AbstractController
     #[IsGranted('site.list')]
     public function list(): Response
     {
-        $sites = $this->siteRepository->findAll();
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $sites = $this->siteRepository->findAll();
+        } else {
+            /** @var User $user */
+            $user = $this->getUser();
+            $sites = $this->siteAssignmentRepository->findSitesForUser($user);
+        }
 
         return $this->render('admin/site/list.html.twig', [
             'sites' => $sites,
@@ -34,7 +43,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-    #[IsGranted('site.create')]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request): Response
     {
         $site = new Site();
@@ -63,7 +72,8 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/{id<\d+>}', name: 'show', methods: ['GET'])]
-    #[IsGranted('site.view')]
+    #[IsGranted('site.view', subject: 'id')]
+    #[IsGranted('site.own', subject: 'id')]
     public function show(int $id): Response
     {
         $site = $this->siteRepository->find($id);
@@ -77,7 +87,8 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/{id<\d+>}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    #[IsGranted('site.edit')]
+    #[IsGranted('site.edit', subject: 'id')]
+    #[IsGranted('site.own', subject: 'id')]
     public function edit(int $id, Request $request): Response
     {
         $site = $this->siteRepository->find($id);
@@ -102,7 +113,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/{id<\d+>}/delete', name: 'delete', methods: ['POST'])]
-    #[IsGranted('site.delete')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id): Response
     {
         $site = $this->siteRepository->find($id);

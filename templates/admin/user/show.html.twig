@@ -31,9 +31,9 @@
     </table>
 
     <div style="margin-top: 20px;">
-        <h3 style="margin-bottom: 10px;">Related Roles</h3>
+        <h3 style="margin-bottom: 10px;">Global Roles</h3>
         {% if user.roleEntities is empty %}
-            <p style="color: #777;">No roles assigned.</p>
+            <p style="color: #777;">No global roles assigned.</p>
         {% else %}
             <table>
                 <thead>
@@ -53,6 +53,35 @@
                                     <span style="color: #7f8c8d;">No access</span>
                                 {% endif %}
                             </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 28px;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 10px;">
+            <h3 style="margin: 0;">Site Assignments</h3>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('admin_user_assignments', {id: user.id}) }}" class="btn btn-primary btn-small">Manage</a>
+            {% endif %}
+        </div>
+        {% if siteAssignments is empty %}
+            <p style="color: #777;">No site assignments.</p>
+        {% else %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Site</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in siteAssignments %}
+                        <tr>
+                            <td>{{ assignment.site.name }}</td>
+                            <td><code>{{ assignment.role.name }}</code></td>
                         </tr>
                     {% endfor %}
                 </tbody>

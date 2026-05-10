@@ -1,0 +1,75 @@
+{% extends "admin/base.html.twig" %}
+
+{% block page_title %}Site Assignments — {{ user.email }}{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_user_show', {id: user.id}) }}" class="btn btn-secondary btn-small">&larr; Back to User</a>
+    </div>
+
+    <div style="margin-bottom: 28px;">
+        <h3 style="margin-bottom: 10px;">Current Assignments</h3>
+        {% if assignments is empty %}
+            <p style="color: #777;">No site assignments yet.</p>
+        {% else %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Site</th>
+                        <th>Role</th>
+                        <th style="width: 100px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in assignments %}
+                        <tr>
+                            <td>{{ assignment.site.name }} <small style="color: #888;">({{ assignment.site.slug }})</small></td>
+                            <td><code>{{ assignment.role.name }}</code> — {{ assignment.role.label }}</td>
+                            <td>
+                                <form method="POST" action="{{ path('admin_user_assignment_remove', {id: user.id, assignmentId: assignment.id}) }}" onsubmit="return confirm('Remove this assignment?');">
+                                    <button type="submit" class="btn btn-danger btn-small">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <div>
+        <h3 style="margin-bottom: 10px;">Add Assignment</h3>
+        {% set assignedSiteIds = assignments|map(a => a.site.id) %}
+        {% set unassignedSites = availableSites|filter(s => s.id not in assignedSiteIds) %}
+
+        {% if unassignedSites is empty %}
+            <p style="color: #777;">All sites are already assigned.</p>
+        {% elseif availableRoles is empty %}
+            <p style="color: #777;">No roles available. <a href="{{ path('admin_role_create') }}">Create one</a>.</p>
+        {% else %}
+            <form method="POST" style="max-width: 480px;">
+                <div class="form-group">
+                    <label for="site_id">Site</label>
+                    <select id="site_id" name="site_id" required>
+                        <option value="">— select a site —</option>
+                        {% for site in unassignedSites %}
+                            <option value="{{ site.id }}">{{ site.name }} ({{ site.slug }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="role_id">Role</label>
+                    <select id="role_id" name="role_id" required>
+                        <option value="">— select a role —</option>
+                        {% for role in availableRoles %}
+                            <option value="{{ role.id }}">{{ role.name }} — {{ role.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Assign</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
