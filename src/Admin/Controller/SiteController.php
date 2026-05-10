@@ -72,7 +72,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/{id<\d+>}', name: 'show', methods: ['GET'])]
-    #[IsGranted('site.view')]
+    #[IsGranted('site.view', subject: 'id')]
     #[IsGranted('site.own', subject: 'id')]
     public function show(int $id): Response
     {
@@ -87,7 +87,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/{id<\d+>}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    #[IsGranted('site.edit')]
+    #[IsGranted('site.edit', subject: 'id')]
     #[IsGranted('site.own', subject: 'id')]
     public function edit(int $id, Request $request): Response
     {

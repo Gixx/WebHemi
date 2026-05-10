@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Security\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,18 +28,15 @@ final class LoginType extends AbstractType
                 'attr' => [
                     'autocomplete' => 'current-password',
                 ],
-            ])
-            ->add('_csrf_token', HiddenType::class, [
-                'data' => (string) $options['csrf_token'],
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'csrf_token' => '',
+            'csrf_protection' => true,
+            'csrf_field_name' => '_csrf_token',
+            'csrf_token_id'   => 'authenticate',
         ]);
-
-        $resolver->setAllowedTypes('csrf_token', 'string');
     }
 }

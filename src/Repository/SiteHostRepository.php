@@ -43,7 +43,7 @@ final class SiteHostRepository extends ServiceEntityRepository
 
         return [
             'site_id' => (int) $row['site_id'],
-            'surface' => (string) $row['surface'],
+            'surface' => $row['surface'] instanceof SurfaceType ? $row['surface']->value : (string) $row['surface'],
             'host' => (string) $row['host'],
         ];
     }

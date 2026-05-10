@@ -23,7 +23,7 @@ final class PermissionVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return '' !== trim($attribute) && str_contains($attribute, '.');
+        return '' !== trim($attribute) && str_contains($attribute, '.') && $attribute !== 'site.own';
     }
 
     protected function voteOnAttribute(
@@ -41,7 +41,9 @@ final class PermissionVoter extends Voter
             return false;
         }
 
-        $siteId = $this->requestStack->getCurrentRequest()?->attributes->getInt('site_id') ?? 0;
+        $siteId = is_int($subject) && $subject > 0
+            ? $subject
+            : ($this->requestStack->getCurrentRequest()?->attributes->getInt('site_id') ?? 0);
         if ($siteId < 1) {
             return false;
         }
