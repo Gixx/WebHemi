@@ -3,6 +3,10 @@
 {% block page_title %}Sites{% endblock %}
 
 {% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_system_index') }}" class="btn btn-secondary btn-small">&larr; Back to System</a>
+    </div>
+
     {% if is_granted('site.create') %}
         <div style="margin-bottom: 20px;">
             <a href="{{ path('admin_site_create') }}" class="btn btn-primary">Create New Site</a>

@@ -3,6 +3,10 @@
 {% block page_title %}Users{% endblock %}
 
 {% block content %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('admin_system_index') }}" class="btn btn-secondary btn-small">&larr; Back to System</a>
+    </div>
+
     {% set currentUserIsAdmin = app.user and app.user.hasRole('ROLE_ADMIN') %}
 
     {% if is_granted('user.create') %}
