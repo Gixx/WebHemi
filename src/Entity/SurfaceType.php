@@ -8,4 +8,5 @@ enum SurfaceType: string
 {
     case Admin = 'admin';
     case Site  = 'site';
+    case Api   = 'api';
 }
