@@ -7,7 +7,6 @@ namespace App\Api\Controller\Role;
 use App\Repository\RoleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -24,7 +23,7 @@ class GetController extends AbstractController
     {
         $role = $this->roleRepository->find($id);
         if (null === $role) {
-            throw new NotFoundHttpException('Role not found.');
+            throw $this->createNotFoundException('Role not found.');
         }
 
         return $this->json([
