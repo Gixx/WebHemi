@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Admin\Controller;
+namespace App\Admin\Controller\System;
 
 use App\Entity\Role;
 use App\Repository\PermissionRepository;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/roles', name: 'admin_role_')]
+#[Route('/admin/system/roles', name: 'admin_role_')]
 final class RoleController extends AbstractController
 {
     public function __construct(

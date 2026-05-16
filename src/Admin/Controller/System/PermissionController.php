@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Admin\Controller;
+namespace App\Admin\Controller\System;
 
 use App\Entity\Permission;
 use App\Repository\PermissionRepository;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/permissions', name: 'admin_permission_')]
+#[Route('/admin/system/permissions', name: 'admin_permission_')]
 final class PermissionController extends AbstractController
 {
     public function __construct(

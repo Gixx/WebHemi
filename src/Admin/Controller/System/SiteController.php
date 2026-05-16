@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Admin\Controller;
+namespace App\Admin\Controller\System;
 
 use App\Entity\Site;
 use App\Entity\User;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/sites', name: 'admin_site_')]
+#[Route('/admin/system/sites', name: 'admin_site_')]
 final class SiteController extends AbstractController
 {
     public function __construct(

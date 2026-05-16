@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Admin\Controller;
+namespace App\Admin\Controller\System;
 
 use App\Entity\SiteHost;
 use App\Entity\SurfaceType;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/sites/{siteId}/hosts', name: 'admin_site_host_')]
+#[Route('/admin/system/sites/{siteId}/hosts', name: 'admin_site_host_')]
 final class SiteHostController extends AbstractController
 {
     public function __construct(
