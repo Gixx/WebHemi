@@ -5,7 +5,8 @@
 From the hub root:
 
 ```bash
-make up      # Storybook + UI watch/sync + Symfony
+make cert    # once: *.webhemi.local PKCS#12 signed by Symfony CA
+make up      # Storybook + UI watch/sync + Symfony HTTPS
 make status
 make down
 ```
@@ -13,70 +14,106 @@ make down
 | URL | What you get |
 |-----|----------------|
 | http://127.0.0.1:6006 | Storybook (`webhemi-ui`) |
-| http://127.0.0.1:8000/login | Admin login (React UI) |
-| http://127.0.0.1:8000/admin | Admin dashboard (after login) |
-| http://127.0.0.1:8000/ | JSON site stub (by design) |
+| https://127.0.0.1:8000/login | Admin login (React UI) |
+| https://admin.webhemi.local:8000/login | Same admin via seeded host |
+| https://www.webhemi.local:8000/ | Site JSON stub (by design) |
 
 Logs and PIDs live under `.dev/` (gitignored).
+Certificate files live under `webhemi-php/var/certs/` (gitignored via `var/`).
 
-## Why `http://127.0.0.1:8000/` is JSON
+## HTTPS certificate (`*.webhemi.local`)
 
-`/` is the **site** home controller and currently returns JSON context (app, surface, host). That is intentional until a public site UI exists.
+Same flow as the archived monolith docs:
 
-Use **`/login`** or **`/admin`** for the control panel — paths work on any Host header, including `127.0.0.1`.
+1. Trust Symfony local CA (once per machine):
 
-## Why `admin.webhemi.local` does not resolve
+```bash
+symfony server:ca:install
+```
 
-The seed creates DB rows for `admin.webhemi.local` / `www.webhemi.local`, but your OS must map those names to the machine running Symfony.
+2. Generate wildcard p12:
 
-### WSL2 + Windows browser
+```bash
+make cert
+# → webhemi-php/var/certs/webhemi.local.p12
+```
 
-Edit the **Windows** hosts file (Admin notepad):
+SAN includes: `webhemi.local`, `*.webhemi.local`, `localhost`, `127.0.0.1`.
+
+3. `make up` starts:
+
+```bash
+symfony serve -d --dir=webhemi-php --p12=webhemi-php/var/certs/webhemi.local.p12
+```
+
+If the p12 is missing, `make up` generates it automatically.
+
+### Firefox
+
+Import `$HOME/.config/symfony-cli/certs/rootCA.pem` under
+Settings → Privacy & Security → Certificates → Authorities → Import
+(trust for websites). Or enable `security.enterprise_roots.enabled` in `about:config`.
+
+## Why `/` is JSON
+
+`/` is the **site** home controller and currently returns JSON context. Use **`/login`** or **`/admin`** for the control panel.
+
+## Hosts file (`admin.webhemi.local`)
+
+### Windows browser → edit Windows hosts
 
 `C:\Windows\System32\drivers\etc\hosts`
 
 ```text
+127.0.0.1   webhemi.local
 127.0.0.1   admin.webhemi.local
 127.0.0.1   www.webhemi.local
 ```
 
-Then open:
-
-- http://admin.webhemi.local:8000/login
-- http://www.webhemi.local:8000/
-
-`make up` starts Symfony with `--allow-http --no-tls` so plain HTTP works with custom hostnames (no HTTPS redirect loop).
-
-### Linux-only
+### curl / tools inside WSL → edit WSL `/etc/hosts`
 
 ```bash
 sudo tee -a /etc/hosts <<'EOF'
+127.0.0.1   webhemi.local
 127.0.0.1   admin.webhemi.local
 127.0.0.1   www.webhemi.local
 EOF
 ```
 
-## What `make up` runs
+## React UI (zero-Node in webhemi-php)
 
-1. One-shot `webhemi-ui` build + `webhemi-php` `bin/sync-ui.sh`
-2. Storybook on port **6006**
-3. `chokidar` watch on `webhemi-ui/src` → rebuild → sync into PHP AssetMapper
-4. Symfony CLI daemon on port **8000** (or `php -S` fallback)
+All TypeScript/React (including admin pages) lives in **`webhemi-ui`**.
+
+`webhemi-php` only has tiny plain JS controllers that re-export from `@webhemi/ui`:
+
+```js
+import { LoginPage } from '@webhemi/ui';
+export default LoginPage;
+```
+
+No `package.json` / `node_modules` in `webhemi-php`. After UI changes:
+
+```bash
+make sync-ui
+# or: (cd webhemi-ui && npm run build) && (cd webhemi-php && bash bin/sync-ui.sh)
+```
+
+`make up` runs Storybook + UI watch→sync + Symfony; Node runs only for `webhemi-ui`.
 
 ## Makefile vs DDEV
 
 | | Makefile (now) | DDEV (later) |
 |--|----------------|--------------|
 | Storybook + UI watch | Native Node processes | Extra service / sidecar |
-| Symfony | `symfony server` / `php -S` | nginx + PHP-FPM container |
-| Custom hostnames | Manual `/etc/hosts` | Built-in `*.ddev.site` |
+| Symfony | `symfony serve` + local p12 | nginx + PHP-FPM container |
+| Custom hostnames | Manual hosts file | Built-in `*.ddev.site` |
 | DB | SQLite file (default) | MySQL/Postgres easy |
-| Fit | Hub multi-process orchestration | PHP+DB+HTTPS “real” stack |
 
-**Use Make now** for UI↔PHP sync ergonomics. Consider DDEV later if you want containerized PHP, managed hostnames, and a non-SQLite database without fighting WSL networking.
+**Use Make now** for UI↔PHP sync ergonomics. Consider DDEV later for containerized PHP/DB.
 
 ## Prerequisites
 
-- PHP ≥ 8.4, Composer, Symfony CLI (`symfony`)
-- Node/npm (for Storybook + UI build)
-- Seeded PHP app: `cd webhemi-php && composer install && php bin/console doctrine:schema:create -n && php bin/console app:seed -n`
+- PHP ≥ 8.4, Composer, Symfony CLI (`symfony`), OpenSSL
+- Node/npm (Storybook + UI build)
+- Seeded PHP app: see `webhemi-php/README.md`
+- `symfony server:ca:install` once

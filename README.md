@@ -85,10 +85,11 @@ make down
 | URL | Purpose |
 |-----|---------|
 | http://127.0.0.1:6006 | Storybook |
-| http://127.0.0.1:8000/login | Admin login |
-| http://127.0.0.1:8000/ | Site JSON stub (by design) |
+| https://127.0.0.1:8000/login | Admin login (HTTPS + local p12) |
+| https://admin.webhemi.local:8000/login | Admin via seeded host |
+| https://www.webhemi.local:8000/ | Site JSON stub (by design) |
 
-Custom hosts (`admin.webhemi.local`) and WSL notes: [`docs/local-dev.md`](docs/local-dev.md).
+Custom hosts and certificate: [`docs/local-dev.md`](docs/local-dev.md). First time: `make cert` (or `symfony server:ca:install` then `make cert`).
 
 ### UI / PHP / JS separately
 
