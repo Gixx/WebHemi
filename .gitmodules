@@ -1,0 +1,9 @@
+[submodule "webhemi-ui"]
+	path = webhemi-ui
+	url = git@github.com:Gixx/webhemi-ui.git
+[submodule "webhemi-php"]
+	path = webhemi-php
+	url = git@github.com:Gixx/webhemi-php.git
+[submodule "webhemi-js"]
+	path = webhemi-js
+	url = git@github.com:Gixx/webhemi-js.git
