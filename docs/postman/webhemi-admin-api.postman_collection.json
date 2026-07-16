@@ -1,0 +1,589 @@
+{
+  "info": {
+    "_postman_id": "5aeb6f4c-cd64-4e1a-91cb-1f4bd6462119",
+    "name": "WebHemi Admin API",
+    "description": "Postman collection for the admin API implemented under `src/Api`. Authentication is session-based: send the **Login** request first, then keep using the same `{{baseUrl}}` so Postman can reuse the session cookie automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://admin.example.local:8000",
+      "type": "string"
+    },
+    {
+      "key": "email",
+      "value": "admin@example.com",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "ChangeMe123!",
+      "type": "string"
+    },
+    {
+      "key": "permissionId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "roleId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "siteId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "hostId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "assignmentId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Session-based authentication endpoints.",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/login",
+            "description": "Authenticates a user with JSON credentials. The Symfony security firewall issues a session cookie, so Postman can reuse it for the following authenticated requests.\n\nExample response:\n```json\n{\n  \"email\": \"admin@example.com\",\n  \"roles\": [\"ROLE_USER\", \"ROLE_ADMIN\"]\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/logout",
+            "description": "Invalidates the current authenticated session.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Permissions",
+      "description": "CRUD operations for permission records.",
+      "item": [
+        {
+          "name": "List Permissions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/permissions",
+            "description": "Returns every permission sorted by name.\n\nExample response:\n```json\n[\n  {\n    \"id\": 1,\n    \"name\": \"post.publish\",\n    \"label\": \"Publish posts\",\n    \"isReadOnly\": false\n  }\n]\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Permission",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/permissions/{{permissionId}}",
+            "description": "Returns one permission together with the roles that currently include it.\n\nExample response:\n```json\n{\n  \"id\": 1,\n  \"name\": \"post.publish\",\n  \"label\": \"Publish posts\",\n  \"isReadOnly\": false,\n  \"roles\": [\n    {\n      \"id\": 2,\n      \"name\": \"ROLE_EDITOR\",\n      \"label\": \"Editor\"\n    }\n  ]\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Permission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"post.publish\",\n  \"label\": \"Publish posts\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/permissions",
+            "description": "Creates a new permission.\n\nExample response:\n```json\n{\n  \"id\": 7\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Permission",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"post.publish\",\n  \"label\": \"Publish and schedule posts\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/permissions/{{permissionId}}",
+            "description": "Updates editable permission fields. Read-only permissions cannot be changed.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Permission",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/permissions/{{permissionId}}",
+            "description": "Deletes an editable permission. Read-only permissions cannot be removed.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "description": "CRUD operations for role records and their permission mappings.",
+      "item": [
+        {
+          "name": "List Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/roles",
+            "description": "Returns every role together with the number of permissions assigned to it.\n\nExample response:\n```json\n[\n  {\n    \"id\": 1,\n    \"name\": \"ROLE_ADMIN\",\n    \"label\": \"Administrator\",\n    \"isReadOnly\": true,\n    \"permissionCount\": 18\n  }\n]\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Role",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/roles/{{roleId}}",
+            "description": "Returns one role together with its permission list.\n\nExample response:\n```json\n{\n  \"id\": 2,\n  \"name\": \"ROLE_EDITOR\",\n  \"label\": \"Editor\",\n  \"isReadOnly\": false,\n  \"permissions\": [\n    {\n      \"id\": 1,\n      \"name\": \"post.publish\",\n      \"label\": \"Publish posts\"\n    }\n  ]\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ROLE_EDITOR\",\n  \"label\": \"Editor\",\n  \"permissions\": [1, 2]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/roles",
+            "description": "Creates a new role and optionally attaches permissions by ID.\n\nExample response:\n```json\n{\n  \"id\": 4\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ROLE_EDITOR\",\n  \"label\": \"Content Editor\",\n  \"permissions\": [1, 3, 5]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/roles/{{roleId}}",
+            "description": "Updates editable role fields and fully replaces the permission list when `permissions` is present. Read-only roles cannot be changed.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/roles/{{roleId}}",
+            "description": "Deletes an editable role that is not assigned to any user.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "User management endpoints for admin accounts.",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/users",
+            "description": "Returns every user sorted by email.\n\nExample response:\n```json\n[\n  {\n    \"id\": 1,\n    \"email\": \"admin@example.com\",\n    \"avatarType\": \"default\",\n    \"roles\": [\"ROLE_USER\", \"ROLE_ADMIN\"]\n  }\n]\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/users/{{userId}}",
+            "description": "Returns one user with the resolved avatar URL, effective roles, and site assignments.\n\nExample response:\n```json\n{\n  \"id\": 3,\n  \"email\": \"editor@example.com\",\n  \"avatarType\": \"gravatar\",\n  \"avatarUrl\": \"https://www.gravatar.com/avatar/abc123?d=mp&s=96\",\n  \"roles\": [\"ROLE_USER\", \"ROLE_EDITOR\"],\n  \"siteAssignments\": [\n    {\n      \"id\": 9,\n      \"siteId\": 2,\n      \"siteName\": \"Demo Site\",\n      \"roleId\": 2,\n      \"roleName\": \"ROLE_EDITOR\"\n    }\n  ]\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"editor@example.com\",\n  \"password\": \"ChangeMe123!\",\n  \"avatarType\": \"gravatar\",\n  \"roles\": [2]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/users",
+            "description": "Creates a user. Allowed avatar types are `default`, `gravatar`, and `upload`.\n\nExample response:\n```json\n{\n  \"id\": 5\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"editor@example.com\",\n  \"password\": \"EvenStronger123!\",\n  \"avatarType\": \"default\",\n  \"roles\": [2, 3]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/users/{{userId}}",
+            "description": "Updates a user. Admins can change `email` and `roles`; non-admin users can only update their own profile fields such as `password` and `avatarType`.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/users/{{userId}}",
+            "description": "Deletes a user. A user cannot delete their own account, and only `ROLE_ADMIN` users can delete another `ROLE_ADMIN` user.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sites",
+      "description": "Site management endpoints.",
+      "item": [
+        {
+          "name": "List Sites",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/sites",
+            "description": "Returns all sites for administrators, or only the sites assigned to the current non-admin user.\n\nExample response:\n```json\n[\n  {\n    \"id\": 2,\n    \"slug\": \"demo-site\",\n    \"name\": \"Demo Site\",\n    \"isEnabled\": true\n  }\n]\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Site",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/sites/{{siteId}}",
+            "description": "Returns one site. Access requires both site visibility and site ownership checks.\n\nExample response:\n```json\n{\n  \"id\": 2,\n  \"slug\": \"demo-site\",\n  \"name\": \"Demo Site\",\n  \"isEnabled\": true\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Site",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"demo-site\",\n  \"name\": \"Demo Site\",\n  \"isEnabled\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/sites",
+            "description": "Creates a site. This endpoint is restricted to administrators.\n\nExample response:\n```json\n{\n  \"id\": 6\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Site",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Demo Site EU\",\n  \"isEnabled\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/sites/{{siteId}}",
+            "description": "Updates mutable site fields. Access requires both site edit permission and site ownership.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Site",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/sites/{{siteId}}",
+            "description": "Deletes a site. This endpoint is restricted to administrators.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Hosts",
+      "description": "Host management endpoints nested under a site.",
+      "item": [
+        {
+          "name": "List Hosts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/sites/{{siteId}}/hosts",
+            "description": "Returns all hosts assigned to the selected site.\n\nExample response:\n```json\n[\n  {\n    \"id\": 4,\n    \"host\": \"demo.example.local\",\n    \"surface\": \"site\",\n    \"status\": \"verified\",\n    \"isActive\": true\n  }\n]\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Host",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/sites/{{siteId}}/hosts/{{hostId}}",
+            "description": "Returns one host for the selected site.\n\nExample response:\n```json\n{\n  \"id\": 4,\n  \"siteId\": 2,\n  \"host\": \"demo.example.local\",\n  \"surface\": \"site\",\n  \"status\": \"verified\",\n  \"isActive\": true\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Host",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"host\": \"demo.example.local\",\n  \"surface\": \"site\",\n  \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/sites/{{siteId}}/hosts",
+            "description": "Creates a public site host. The `surface` value must be `site`, and the host is verified immediately during creation.\n\nExample response:\n```json\n{\n  \"id\": 8,\n  \"status\": \"pending\"\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Host",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\",\n  \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/sites/{{siteId}}/hosts/{{hostId}}",
+            "description": "Updates host state. Supported status values are `pending`, `verified`, and `active`.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Host",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/sites/{{siteId}}/hosts/{{hostId}}/verify",
+            "description": "Re-runs host ownership verification for the selected host.\n\nExample response:\n```json\n{\n  \"verified\": true,\n  \"status\": \"verified\"\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Host",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/sites/{{siteId}}/hosts/{{hostId}}",
+            "description": "Deletes a host from the selected site.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Site Assignments",
+      "description": "Per-user site assignment endpoints for administrators.",
+      "item": [
+        {
+          "name": "List Site Assignments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/users/{{userId}}/assignments",
+            "description": "Returns all site assignments for a user.\n\nExample response:\n```json\n[\n  {\n    \"id\": 9,\n    \"siteId\": 2,\n    \"siteName\": \"Demo Site\",\n    \"roleId\": 2,\n    \"roleName\": \"ROLE_EDITOR\"\n  }\n]\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Site Assignment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"siteId\": 2,\n  \"roleId\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/api/users/{{userId}}/assignments",
+            "description": "Creates a site assignment for a user. The target site and role must both exist, and each user can only have one assignment per site.\n\nExample response:\n```json\n{\n  \"id\": 10\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Site Assignment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/admin/api/users/{{userId}}/assignments/{{assignmentId}}",
+            "description": "Deletes one site assignment from a user.\n\nExample response: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

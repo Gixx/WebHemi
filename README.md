@@ -22,6 +22,7 @@ An old project on new foundation. Rewrite the blog engine based on Symfony.
 - [Admin RBAC and View Pages](docs/admin-rbac-and-view-pages.md)
 - [Host Ownership Verification Flow](docs/host-ownership-verification-flow.md)
 - [Flash Messaging Conventions](docs/flash-messaging-conventions.md)
+- [Postman Collection](docs/postman/webhemi-admin-api.postman_collection.json)
 - [QA Pipeline Commands](docs/qa-pipeline-commands.md)
 - [Xdebug WSL to PhpStorm Setup](docs/xdebug-wsl-phpstorm-setup.md)
 
