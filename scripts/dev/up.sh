@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-# Start Storybook, UI build-watch+sync, and Symfony local server.
+# Start Storybook, UI build-watch+sync, and Symfony local server (HTTPS + p12).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 PID_DIR="$ROOT/.dev/pids"
 LOG_DIR="$ROOT/.dev/logs"
+DOMAIN="${DOMAIN:-webhemi.local}"
+P12="$ROOT/webhemi-php/var/certs/${DOMAIN}.p12"
 mkdir -p "$PID_DIR" "$LOG_DIR"
 
 is_running() {
@@ -35,7 +37,7 @@ start_bg() {
   echo "[$name] pid $(cat "$pid_file") — log: $log_file"
 }
 
-# Initial UI build + sync so PHP has assets before the server starts
+# Initial UI build + sync (all TSX lives in webhemi-ui; PHP stays zero-Node)
 echo "[ui-sync] initial build..."
 (
   cd "$ROOT/webhemi-ui"
@@ -60,18 +62,23 @@ start_bg ui-watch \
       --debounce 400
   '
 
-# Symfony CLI server (daemon). --allow-http avoids forced HTTPS redirect for local hostnames.
-# Admin UI: http://127.0.0.1:8000/login or http://admin.webhemi.local:8000/login (after /etc/hosts)
+# Ensure wildcard cert exists (*.webhemi.local)
+if [[ ! -f "$P12" ]]; then
+  echo "[cert] missing $P12 — generating..."
+  bash "$ROOT/scripts/dev/generate-cert.sh"
+fi
+
 if command -v symfony >/dev/null 2>&1; then
-  echo "[symfony] starting daemon..."
+  echo "[symfony] starting daemon with p12 (${DOMAIN})..."
   symfony server:stop --dir="$ROOT/webhemi-php" >/dev/null 2>&1 || true
-  symfony server:start -d \
+  symfony serve -d \
     --dir="$ROOT/webhemi-php" \
     --port=8000 \
-    --allow-http \
-    --no-tls
-  echo "[symfony] http://127.0.0.1:8000  (login: /login , admin: /admin)"
+    --p12="$P12"
+  echo "[symfony] https://127.0.0.1:8000/login"
+  echo "[symfony] https://admin.${DOMAIN}:8000/login"
 else
+  echo "[symfony] CLI not found; falling back to php -S (HTTP only, no p12)"
   start_bg php-server \
     bash -c "cd webhemi-php && php -S 127.0.0.1:8000 -t public"
 fi
@@ -79,7 +86,7 @@ fi
 echo
 echo "Dev stack is up."
 echo "  Storybook:  http://127.0.0.1:6006"
-echo "  PHP app:    http://127.0.0.1:8000/login"
-echo "  Admin host: http://admin.webhemi.local:8000/login  (needs hosts entry — see docs/local-dev.md)"
+echo "  PHP app:    https://127.0.0.1:8000/login"
+echo "  Admin host: https://admin.${DOMAIN}:8000/login  (needs hosts entry — see docs/local-dev.md)"
 echo "  Logs:       $LOG_DIR"
 echo "  Stop with:  make down"
