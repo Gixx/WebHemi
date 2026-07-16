@@ -1,0 +1,42 @@
+# Enforce LF in the repository (checkout + commit)
+* text=auto eol=lf
+
+# Explicit text types
+*.sh text eol=lf
+*.bash text eol=lf
+Makefile text eol=lf
+*.mk text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.twig text eol=lf
+*.php text eol=lf
+*.xml text eol=lf
+*.neon text eol=lf
+*.dist text eol=lf
+*.env text eol=lf
+*.txt text eol=lf
+*.svg text eol=lf
+
+# Binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.zip binary
+*.phar binary
+*.sqlite binary
+*.db binary

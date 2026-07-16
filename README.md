@@ -73,32 +73,28 @@ If you already cloned without submodules:
 git submodule update --init --recursive
 ```
 
-### UI (Storybook / library build)
+### One-command local stack
 
 ```bash
-cd webhemi-ui
-npm install
-npm run storybook    # develop components
-npm run build        # dist/ for PHP sync or NPM publish
+# once: install deps + seed PHP (see webhemi-php/README.md)
+make up       # Storybook + UI watch→sync + Symfony
+make status
+make down
 ```
 
-### PHP engine
+| URL | Purpose |
+|-----|---------|
+| http://127.0.0.1:6006 | Storybook |
+| http://127.0.0.1:8000/login | Admin login |
+| http://127.0.0.1:8000/ | Site JSON stub (by design) |
 
-See [`webhemi-php/README.md`](webhemi-php/README.md). Typical flow:
+Custom hosts (`admin.webhemi.local`) and WSL notes: [`docs/local-dev.md`](docs/local-dev.md).
 
-```bash
-cd webhemi-php
-composer install
-composer run sync-ui   # copies ../webhemi-ui/dist into AssetMapper
-php bin/console doctrine:migrations:migrate -n
-php bin/console app:seed -n
-```
+### UI / PHP / JS separately
 
-Default seed (local): `admin@webhemi.local` / `ChangeMe!` — hosts `admin.webhemi.local` and `www.webhemi.local` (add to `/etc/hosts` for multi-domain smoke tests).
-
-### JS engine
-
-Not implemented yet. See [`webhemi-php/docs/webhemi-js-phase3-outline.md`](webhemi-php/docs/webhemi-js-phase3-outline.md) or [`webhemi-js/README.md`](webhemi-js/README.md).
+- UI: `cd webhemi-ui && npm install && npm run storybook` / `npm run build`
+- PHP: see [`webhemi-php/README.md`](webhemi-php/README.md)
+- JS: not implemented yet — [`webhemi-js/README.md`](webhemi-js/README.md)
 
 ---
 
@@ -117,6 +113,7 @@ Do not treat `.old/` as the source of truth — use the tag or submodule repos.
 
 | Document | Description |
 |----------|-------------|
+| [Local development](docs/local-dev.md) | `make up` / hosts / Makefile vs DDEV |
 | [Architecture & roadmap](docs/plan/WebHemi_Architecture_and_Roadmap.md) | Multi-repo design and implementation phases |
 | [webhemi-php README](webhemi-php/README.md) | PHP setup, sync-ui, QA |
 | [webhemi-ui README](webhemi-ui/README.md) | Storybook and library build |
