@@ -107,7 +107,7 @@ make sync-ui
 | Storybook + UI watch | Native Node processes | Extra service / sidecar |
 | Symfony | `symfony serve` + local p12 | nginx + PHP-FPM container |
 | Custom hostnames | Manual hosts file | Built-in `*.ddev.site` |
-| DB | SQLite file (default) | MySQL/Postgres easy |
+| DB | MariaDB `webhemi_dev` (default) | MySQL/Postgres easy |
 
 **Use Make now** for UI↔PHP sync ergonomics. Consider DDEV later for containerized PHP/DB.
 
