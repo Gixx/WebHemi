@@ -1,0 +1,14 @@
+---
+description: All project plans must live under docs/plan/
+alwaysApply: true
+---
+
+# Plans location
+
+Every plan, ADR-style design note, roadmap slice, or implementation plan for this repository belongs in [`docs/plan/`](docs/plan/).
+
+- Create or update plans as Markdown files under `docs/plan/` (English, like other hub docs).
+- Do **not** put plans in `.cursor/plans/`, repo root, `var/plan/`, or chat-only artifacts as the canonical copy.
+- If a plan was drafted elsewhere (e.g. Cursor plan UI), copy or move the durable version into `docs/plan/` and keep that path as source of truth.
+- Prefer clear filenames: `Topic_Name.md` or `topic-name.md` (match existing style such as `WebHemi_Architecture_and_Roadmap.md`).
+- Link new plans from the hub README docs table when they are long-lived architecture or roadmap docs.
