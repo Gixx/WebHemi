@@ -4,9 +4,14 @@ Integration plan for bringing the [webhemi-admin98](https://github.com/Gixx/webh
 
 ## Fixed decisions
 
-- **Target package:** all product UI lives in [`webhemi-ui`](../../webhemi-ui/) (`@webhemi/ui`). [webhemi-admin98](https://github.com/Gixx/webhemi-admin98) remains a **reference / sandbox** until Storybook parity; not a separate NPM dependency.
-- **Product concept to keep:** Admin theme (Win98) + swappable frontend themes. The current `src/shared` / `src/admin` atom–brick–page set is **replaceable**; it does not need to be preserved.
-- **Admin98 assets are admin-only:** everything the sandbox shows (icons, images, fonts, chrome/product styles, shell scripts) serves **only** the Admin theme. There is **no requirement** to share atoms, styles, or assets with frontend themes. Frontend themes stay a separate tree; do not design Win98 chrome as a “shared design system” layer.
+Canonical detail: **[Admin98_Integration_Contract.md](./Admin98_Integration_Contract.md)** (Phase 0 ADR). Summary:
+
+- **Target package:** all product UI lives in [`webhemi-ui`](../../webhemi-ui/) (`@webhemi/ui`). [webhemi-admin98](https://github.com/Gixx/webhemi-admin98) remains a **reference / sandbox** until Storybook parity; not a separate NPM dependency. UX parity matters; byte-identical markup does not.
+- **Product concept:** Admin theme (Win98) + swappable, **self-contained** frontend themes. No shared UI kit — each theme owns tokens, styles, and components. Thin `src/lib/` helpers (e.g. `cn`) are OK; UI atoms are not.
+- **Current trees are throwaway / relocatable:** today’s `src/admin/**` is a full rewrite target (not a restyle). Today’s `src/shared/components/*` move into `themes/default` (or are rewritten there) as Default work proceeds — Admin never imports them.
+- **Admin98 assets are admin-only:** icons, fonts, chrome/product styles, shell behavior serve **only** the Admin theme. Frontend themes do not import Admin chrome.
+- **Theme scope:** `[data-wh-theme="admin"]` on `<html>` only. `body.dashboard` / `.wh-admin` are **not** product contracts (sandbox may still use `body.dashboard` as a demo shell).
+- **Markup:** 98-compatible class names (`.window`, `.field-row`, …); no `wh-` rename wave initially.
 - **Delivery path:** unchanged — `npm run build` → `dist/` → PHP `bin/sync-ui.sh` / `composer run sync-ui` → AssetMapper + `react_component(...)` ([Local development](../local-dev.md)).
 - **Order:** styles → chrome atoms (Storybook) → product layout bricks → 1–2 real surfaces (Login + Control Panel) → desktop shell MVP → remaining admin pages into windows.
 
@@ -43,17 +48,19 @@ flowchart TB
 
 ---
 
-## Phase 0 — Integration contract (1–2 days)
+## Phase 0 — Integration contract (1–2 days) — **done**
 
-**Work:** short ADR / plan under hub or `webhemi-ui` docs: layers, markup contract, theme-scope rule, what stays in the sandbox.
+**Work:** ADR under hub `docs/plan/`: layers, markup contract, theme-scope rule, theme ownership, what stays in the sandbox; PHP `data-wh-theme` wiring.
 
 **Outputs:**
-- Chrome markup = current 98-compatible class names (`.window`, `.field-row`, `aria-label` title controls) — no `wh-` prefix rename initially.
-- Admin CSS applies only under `[data-wh-theme="admin"]` (or `body.dashboard` / `.wh-admin`).
-- Frontend themes do **not** import chrome SCSS.
+- Contract: [Admin98_Integration_Contract.md](./Admin98_Integration_Contract.md).
+- Chrome markup = 98-compatible class names (`.window`, `.field-row`, `aria-label` title controls) — no `wh-` prefix rename initially.
+- Admin CSS applies only under `[data-wh-theme="admin"]` (not `body.dashboard` / `.wh-admin`).
+- Frontend themes do **not** import Admin chrome SCSS; no shared UI layer.
+- PHP base layout: `<html data-wh-theme="admin">` (login + admin; site themes override later).
 
-**Hard parts:**
-- Existing Storybook toolbar (`data-wh-theme`) already exists ([`.storybook/preview.tsx`](../../webhemi-ui/.storybook/preview.tsx)) — align Win98 scope to it; do not invent a parallel system.
+**Hard parts (resolved in ADR):**
+- Storybook toolbar already uses `data-wh-theme` ([`.storybook/preview.tsx`](../../webhemi-ui/.storybook/preview.tsx)) — product scope aligns to it.
 - Trade dress / IP intentionally out of scope; this plan is architecture only.
 
 ---
@@ -94,7 +101,7 @@ Build: extend the current `build:css` entry in [`webhemi-ui/package.json`](../..
 
 Priority: Button, TextBox, Checkbox, Radio, Select, FieldRow/GroupBox, Window/TitleBar/StatusBar, Tabs, TreeView, SunkenPanel, Table, Progress, Slider.
 
-Stop using old [`src/shared/components/*`](../../webhemi-ui/src/shared/components/) for admin. Win98 React atoms live under `src/admin/` only — not under `shared/`. Frontend theme components are unrelated; no shared Button/Input/Checkbox with Admin.
+Stop using old [`src/shared/components/*`](../../webhemi-ui/src/shared/components/) for admin (and do not keep a shared UI kit long-term — Default owns its atoms under `themes/default`). Win98 React atoms live under `src/admin/` only. Frontend theme components are unrelated; no shared Button/Input/Checkbox with Admin.
 
 **Hard parts:**
 - **Dual source of truth:** `catalog.html` vs CSF stories — Storybook is canonical; sandbox catalog stays regression / manual reference until parity, then optional.
@@ -184,11 +191,11 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 ## Phase 7 — Cleanup and packaging
 
 **Work:**
-- Delete unused shared/admin modern components and stories.
+- Delete unused legacy admin components/stories; finish relocating former `shared` UI into `themes/default` (or remove if unused).
 - Storybook sidebar: **Admin / Atoms|Bricks|Components|Foundations** + **Themes / Default** (frontend).
 - Consider `dist` CSS split: `styles.css` = admin (default export for PHP); separate frontend theme CSS later if the site surface becomes React.
 - Sandbox: README pointer “canonical stories in webhemi-ui”; `catalog.html` optional visual regression or archive.
-- Hub README / architecture doc: Admin Theme = Win98 owned chrome.
+- Hub README / architecture doc: Admin Theme = Win98 owned chrome; themes are self-contained.
 
 **Hard parts:**
 - Public NPM breaking visual change (`@webhemi/ui`) — `0.x` is fine, but changelog is required.
@@ -221,7 +228,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 
 ## Phase checklist
 
-- [ ] Phase 0 — Integration contract
+- [x] Phase 0 — Integration contract
 - [ ] Phase 1 — Styles into `webhemi-ui` (scoped)
 - [ ] Phase 2 — React chrome atoms + Storybook
 - [ ] Phase 3 — Product layout bricks + ScrollableRegion

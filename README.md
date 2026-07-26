@@ -117,6 +117,7 @@ Do not treat `.old/` as the source of truth — use the tag or submodule repos.
 | [Local development](docs/local-dev.md) | `make up` / hosts / Makefile vs DDEV |
 | [Architecture & roadmap](docs/plan/WebHemi_Architecture_and_Roadmap.md) | Multi-repo design and implementation phases |
 | [Admin98 product integration](docs/plan/Admin98_Product_Integration.md) | Win98 admin tech-demo → `@webhemi/ui` + PHP |
+| [Admin98 integration contract](docs/plan/Admin98_Integration_Contract.md) | Phase 0 ADR: layers, theme scope, markup, no shared UI |
 | [webhemi-php README](webhemi-php/README.md) | PHP setup, sync-ui, QA |
 | [webhemi-ui README](webhemi-ui/README.md) | Storybook and library build |
 | [Host ownership flow](webhemi-php/docs/host-ownership-verification-flow.md) | Domain verification behaviour |
