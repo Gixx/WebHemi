@@ -96,9 +96,9 @@ Build: `vite.css.config.ts` (+ `sass`); Storybook imports the same SCSS entry. `
 - Global `button` / `input` → nested via `meta.load-css` under `[data-wh-theme="admin"]`.
 - No `body.dashboard` contract — product shell styles `body` under the theme scope.
 - Preflight omitted (`platform.css`); Default theme owns its body face in `themes/default/styles/tokens.css`.
-- Smoke story: `Admin/Foundations/CatalogSmoke` (representative catalog samples).
+- Smoke story: `Admin/Foundations/CatalogSmoke` (removed during Phase 3 Storybook cleanup; atom/brick stories are the regression surface).
 
-**Done when:** in Storybook with Admin theme, catalog samples visually approximate `catalog.html` (smoke) — see CatalogSmoke.
+**Done when:** in Storybook with Admin theme, chrome/product styles load under `[data-wh-theme="admin"]` and match admin98 catalog samples.
 
 ---
 
@@ -122,19 +122,33 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 
 ## Phase 3 — Product bricks (layouts, scrollbar)
 
-**Work:** React composition per admin98 `structure.html`:
-- `DialogWindow` (dialog-panel-layout)
-- `IconPanelWindow`
-- `WizardWindow`
-- `HeadingPanelWindow`
-- `ScrollableRegion` (+ admin98 `scrollbar.js` port)
-- later: `DesktopIcon`, `Taskbar`, `StartMenu` (storiable static even without shell)
+**Status:** done (`src/admin/bricks/`, Storybook `Admin/Bricks/*`).
 
-**Hard parts:**
-- Scrollbar is strongly DOM-coupled (viewport + `.sb-*`) — Storybook decorator + `useEffect` mount required.
-- Layout negative-margin / groove rules are fragile with flex/grid — visual snapshot or manual checklist vs the sandbox demo.
+**Delivered:**
+- `DialogWindow`, `IconPanelWindow`, `WizardWindow`, `HeadingPanelWindow`
+- `ScrollableRegion` + `useCustomScrollbar` / `attachCustomScrollbar` (admin98 `scrollbar.js` port)
+- `DesktopIcon` (product brick; Taskbar / StartMenu deferred to Phase 5)
+- `LoginForm` refactored onto `DialogWindow`
 
-**Done when:** Bricks / Components stories cover the four pane layouts.
+**Hard parts (resolved / noted):**
+- Scrollbar: React owns `.scrollable-viewport`; effect mounts `.sb-*` chrome only.
+- Layout negative-margin / groove rules — verify visually vs sandbox in Storybook.
+
+---
+
+## Phase 3b — Dynamic `accessKey` (chrome polish)
+
+**Status:** planned (detail: [AccessKey_Dynamize.md](./AccessKey_Dynamize.md)).
+
+**Why here:** chrome atoms and dialog bricks exist; Login / Control Panel (Phase 4) should consume the API instead of hand-rolled `<u>` markup. Deferred from Phase 3 fine-tuning so that work stays a focused chrome change.
+
+**Work:**
+- Helper: underline first matching letter (case-insensitive) in plain-string labels/button text
+- `Button`: `accessKey` → DOM attribute + auto `<u>` in string children
+- `FieldRow`: `accessKey` → attribute on the control; `<u>` on the associated `<label>` text (not on the wrapper `div`)
+- Stories + migrate `DialogWindow` stories / `LoginForm` off manual `<u>`
+
+**Done when:** Storybook Controls can set keys; login/dialog samples use the API; no double-wrapping of existing React-tree children.
 
 ---
 
@@ -217,6 +231,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 | 0–1 | 3–5 days | Theme-scope, Sass/Tailwind build parity |
 | 2 | 1–2 weeks | DOM contract in React, story backlog |
 | 3 | 3–5 days | Scrollbar + layout pixel fidelity |
+| 3b | 1–2 days | accessKey helper edge cases (non-string children) |
 | 4 | 3–5 days | PHP sync + Login parity |
 | 5 | 1.5–3 weeks | Window manager fidelity |
 | 6–7 | ongoing | Page migration, breaking cleanup |
@@ -238,7 +253,8 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 - [x] Phase 0 — Integration contract
 - [x] Phase 1 — Styles into `webhemi-ui` (scoped)
 - [x] Phase 2 — React chrome atoms + Storybook
-- [ ] Phase 3 — Product layout bricks + ScrollableRegion
+- [x] Phase 3 — Product layout bricks + ScrollableRegion + DesktopIcon
+- [ ] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
 - [ ] Phase 4 — Win98 Login + one Control Panel surface via PHP
 - [ ] Phase 5 — React AdminDesktop shell
 - [ ] Phase 6 — Migrate Sites/Hosts/… into windows
