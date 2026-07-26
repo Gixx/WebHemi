@@ -125,13 +125,13 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 **Status:** done (`src/admin/bricks/`, Storybook `Admin/Bricks/*`).
 
 **Delivered:**
-- `DialogWindow`, `IconPanelWindow`, `WizardWindow`, `HeadingPanelWindow`
-- `ScrollableRegion` + `useCustomScrollbar` / `attachCustomScrollbar` (admin98 `scrollbar.js` port)
-- `DesktopIcon` (product brick; Taskbar / StartMenu deferred to Phase 5)
+- `DialogWindow`, `IconPanelWindow`, `WizardWindow` (`HeadingPanelWindow` removed — rewrite later)
+- Custom scrollbar as **chrome capability** (`Scrollable`, `SunkenPanel`/`FieldBorder` `scrollable` prop, `useCustomScrollbar` / `attachCustomScrollbar`) — not a product brick
+- `SystemIcon` (product brick; desktop + icon panels; Taskbar / StartMenu deferred to Phase 5)
 - `LoginForm` refactored onto `DialogWindow`
 
 **Hard parts (resolved / noted):**
-- Scrollbar: React owns `.scrollable-viewport`; effect mounts `.sb-*` chrome only.
+- Scrollbar: chrome owns `.scrollable` / viewport; effect mounts `.sb-*` rails only (`SunkenPanel`/`FieldBorder` `scrollable` or `Scrollable` for layout hosts).
 - Layout negative-margin / groove rules — verify visually vs sandbox in Storybook.
 
 ---
@@ -196,7 +196,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 
 ## Phase 6 — Move existing admin pages in
 
-**Work:** put `SitesPage`, `HostsPage`, list views, etc. into Retro OS windows / `HeadingPanel` + table / form layouts. Routing:
+**Work:** put `SitesPage`, `HostsPage`, list views, etc. into Retro OS windows / heading-panel layout (rewritten brick) + table / form layouts. Routing:
 - short term: shell state + deep link query (`?window=sites`)
 - Symfony routes or wrapper Twigs that mount the same `AdminShell` with an initial window prop
 
@@ -253,7 +253,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 - [x] Phase 0 — Integration contract
 - [x] Phase 1 — Styles into `webhemi-ui` (scoped)
 - [x] Phase 2 — React chrome atoms + Storybook
-- [x] Phase 3 — Product layout bricks + ScrollableRegion + DesktopIcon
+- [x] Phase 3 — Product layout bricks + SystemIcon; scrollbar as chrome capability
 - [ ] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
 - [ ] Phase 4 — Retro OS Login + one Control Panel surface via PHP
 - [ ] Phase 5 — React AdminDesktop shell

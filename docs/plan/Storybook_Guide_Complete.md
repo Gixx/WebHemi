@@ -40,7 +40,12 @@ Already done earlier in the Guide UI: Storybook basics, Group your components, S
 
 ### 4. CI
 
-[`ci.yml`](../../webhemi-ui/.github/workflows/ci.yml): Playwright + Vitest + Chromatic (`CHROMATIC_PROJECT_TOKEN`). Token never in `package.json`.
+Split workflows (aligned with [Chromatic GitHub Actions](https://www.chromatic.com/docs/github-actions/)):
+
+- [`ci.yml`](../../webhemi-ui/.github/workflows/ci.yml) — typecheck, lint, build, Playwright + Vitest, `build-storybook`.
+- [`chromatic.yml`](../../webhemi-ui/.github/workflows/chromatic.yml) — Chromatic only on `push`, `fetch-depth: 0`, `exitZeroOnChanges: true`.
+
+`package.json`: `"chromatic": "chromatic --exit-zero-on-changes"`. Token via `CHROMATIC_PROJECT_TOKEN` only.
 
 ---
 
@@ -64,8 +69,8 @@ Open **Guide** in the sidebar, then:
 3. **Interactions** — same story → **Interactions** panel (play runs) → Guide → mark complete.
 4. **Accessibility** — sidebar testing widget → enable Accessibility → **Run tests** → Guide → mark complete.
 5. **Coverage** — testing widget → enable **Coverage** → Run tests → Guide → mark complete.
-6. **Visual tests** — after a Chromatic publish (CI push, or `CHROMATIC_PROJECT_TOKEN=… npm run chromatic`) → Guide → mark complete.
-7. **Automate tests in CI** — after the workflow is on the remote (or first green run) → Guide → **Mark as complete**.
+6. **Visual tests** — after a Chromatic publish (`Chromatic` workflow on push, or `CHROMATIC_PROJECT_TOKEN=… npm run chromatic`) → Guide → mark complete.
+7. **Automate tests in CI** — after `CI` + `Chromatic` workflows are green on push → Guide → **Mark as complete**.
 
 ### Document
 
