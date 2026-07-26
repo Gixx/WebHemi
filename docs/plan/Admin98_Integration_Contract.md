@@ -5,13 +5,13 @@
 **Parent plan:** [Admin98_Product_Integration.md](./Admin98_Product_Integration.md)  
 **Reference sandbox:** [webhemi-admin98](https://github.com/Gixx/webhemi-admin98) (local sibling or clone; not an NPM dependency)
 
-This document is the **integration contract** for bringing the Win98 admin tech demo into `@webhemi/ui` and WebHemi.PHP. Later phases implement against these rules; they do not renegotiate them without an ADR update.
+This document is the **integration contract** for bringing the Retro OS admin tech demo into `@webhemi/ui` and WebHemi.PHP. Later phases implement against these rules; they do not renegotiate them without an ADR update.
 
 ---
 
 ## Context
 
-WebHemi needs a real Admin Theme (Win98-inspired) plus independently swappable frontend (site) themes. The sandbox proved chrome atoms, product layouts, and a desktop shell. Product delivery must live in `webhemi-ui` and sync into PHP via AssetMapper — zero Node in production.
+WebHemi needs a real Admin Theme (Retro OS–inspired) plus independently swappable frontend (site) themes. The sandbox proved chrome atoms, product layouts, and a desktop shell. Product delivery must live in `webhemi-ui` and sync into PHP via AssetMapper — zero Node in production.
 
 Storybook already switches themes with `data-wh-theme` on `<html>`. The sandbox used a separate `body.dashboard` marker for shell layout. Keeping both as required contracts would create two parallel “this is admin” signals and fight the existing Storybook toolbar.
 
@@ -27,13 +27,13 @@ Canonical contract and phase plan live under the **hub** `docs/plan/`. Package R
 
 | Rule | Detail |
 |------|--------|
-| **Scope root** | Admin chrome CSS, Win98 tokens, and admin product styles apply **only** under `[data-wh-theme="admin"]` (set on `<html>`). |
+| **Scope root** | Admin chrome CSS, Retro OS tokens, and admin product styles apply **only** under `[data-wh-theme="admin"]` (set on `<html>`). |
 | **Not contracted** | `body.dashboard` and `.wh-admin` are **not** part of the product contract. |
 | **Storybook** | Keep the existing toolbar → `document.documentElement.setAttribute('data-wh-theme', theme)`. Do not invent a parallel theme system. |
 | **PHP** | Admin surfaces set `data-wh-theme="admin"` on `<html>` (wired in Phase 0). Future site templates use `default` (or another frontend theme id). |
 | **Login vs desktop** | Both use the same theme attribute. Layout differences (full-bleed login dialog vs shell with taskbar) live in **React / product CSS**, not a second body class. |
 
-**Why:** One switch aligns Storybook, CSS scoping, and PHP. Sandbox `body.dashboard` was a demo document shell; product shell behavior is re-expressed under the theme scope so Default frontend stories never inherit Win98 `button` / `input` rules.
+**Why:** One switch aligns Storybook, CSS scoping, and PHP. Sandbox `body.dashboard` was a demo document shell; product shell behavior is re-expressed under the theme scope so Default frontend stories never inherit Retro OS `button` / `input` rules.
 
 ### D3 — Markup contract (chrome)
 
@@ -53,10 +53,10 @@ Canonical contract and phase plan live under the **hub** `docs/plan/`. Package R
 |------|--------|
 | **Self-contained themes** | Every theme owns its tokens, styles, and React chrome/atoms/bricks. A third party should be able to add a frontend theme by copying the theme folder pattern without depending on Admin internals. |
 | **No shared UI kit** | `src/shared/components/*` is **not** the long-term model. Current shared atoms move into `themes/default` (or are rewritten there). Admin does **not** import Default components. |
-| **Admin rewrite** | Current `src/admin/**` (modern CMS layout, tokens, pages) is **throwaway**. Win98 Admin is a full rewrite under `src/admin/`, not an incremental restyle of Sidebar/TopBar/etc. |
+| **Admin rewrite** | Current `src/admin/**` (modern CMS layout, tokens, pages) is **throwaway**. Retro OS Admin is a full rewrite under `src/admin/`, not an incremental restyle of Sidebar/TopBar/etc. |
 | **Allowed non-theme code** | Thin infrastructure only, e.g. `src/lib/cn.ts` (clsx helper). No buttons, inputs, or theme CSS in `lib/`. |
 | **CSS entries** | Admin production CSS is theme-scoped and does not pull frontend theme chrome. Frontend themes do not import Admin chrome SCSS. |
-| **Timing** | Phase 0 documents this; **file moves / deletes happen in Phase 1+** so the live PHP admin keeps working until Win98 surfaces replace it (see parent plan Phase 4–7). |
+| **Timing** | Phase 0 documents this; **file moves / deletes happen in Phase 1+** so the live PHP admin keeps working until Retro OS surfaces replace it (see parent plan Phase 4–7). |
 
 ### D5 — Package and delivery
 
@@ -71,7 +71,7 @@ Canonical contract and phase plan live under the **hub** `docs/plan/`. Package R
 
 ```text
 [data-wh-theme="admin"]
-  ├── tokens          # Win98 / WebHemi admin CSS variables (+ @theme as needed)
+  ├── tokens          # Retro OS / WebHemi admin CSS variables (+ @theme as needed)
   ├── chrome          # Control look: button, window, field-row, tabs, …
   ├── product         # Shell + layouts: desktop, toolbar, pane layouts, scrollbar skin
   └── react           # Atoms → bricks → pages / AdminDesktop
@@ -98,7 +98,7 @@ After parity: README pointer that canonical stories live in `webhemi-ui`; catalo
 
 ### D8 — Explicitly out of scope (unchanged)
 
-- Making frontend themes Win98  
+- Making frontend themes Retro OS  
 - Sharing Admin chrome/icons/scripts with frontend themes  
 - Replacing `webhemi-js` / Payload admin  
 - Publishing admin98 as its own NPM package  
@@ -127,7 +127,7 @@ Styles now live under `webhemi-ui/src/admin/styles/` with `meta.load-css` scopin
 
 - One theme attribute for Storybook, CSS, and PHP.  
 - Clear rule for third-party frontend themes.  
-- Admin Win98 work is unblocked without preserving the modern admin tree.  
+- Admin Retro OS work is unblocked without preserving the modern admin tree.  
 - Sandbox remains a side-by-side UX checklist without blocking product-shaped markup.
 
 **Trade-offs**

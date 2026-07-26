@@ -1,13 +1,13 @@
 # Admin98 → WebHemi product integration
 
-Integration plan for bringing the [webhemi-admin98](https://github.com/Gixx/webhemi-admin98) Win98 tech demo into the real WebHemi product (`@webhemi/ui` + PHP AssetMapper).
+Integration plan for bringing the [webhemi-admin98](https://github.com/Gixx/webhemi-admin98) Retro OS tech demo into the real WebHemi product (`@webhemi/ui` + PHP AssetMapper).
 
 ## Fixed decisions
 
 Canonical detail: **[Admin98_Integration_Contract.md](./Admin98_Integration_Contract.md)** (Phase 0 ADR). Summary:
 
 - **Target package:** all product UI lives in [`webhemi-ui`](../../webhemi-ui/) (`@webhemi/ui`). [webhemi-admin98](https://github.com/Gixx/webhemi-admin98) remains a **reference / sandbox** until Storybook parity; not a separate NPM dependency. UX parity matters; byte-identical markup does not.
-- **Product concept:** Admin theme (Win98) + swappable, **self-contained** frontend themes. No shared UI kit — each theme owns tokens, styles, and components. Thin `src/lib/` helpers (e.g. `cn`) are OK; UI atoms are not.
+- **Product concept:** Admin theme (Retro OS) + swappable, **self-contained** frontend themes. No shared UI kit — each theme owns tokens, styles, and components. Thin `src/lib/` helpers (e.g. `cn`) are OK; UI atoms are not.
 - **Current trees are throwaway / relocatable:** today’s `src/admin/**` is a full rewrite target (not a restyle). Today’s `src/shared/components/*` move into `themes/default` (or are rewritten there) as Default work proceeds — Admin never imports them.
 - **Admin98 assets are admin-only:** icons, fonts, chrome/product styles, shell behavior serve **only** the Admin theme. Frontend themes do not import Admin chrome.
 - **Theme scope:** `[data-wh-theme="admin"]` on `<html>` only. `body.dashboard` / `.wh-admin` are **not** product contracts (sandbox may still use `body.dashboard` as a demo shell).
@@ -154,7 +154,7 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 
 ## Phase 4 — First product surfaces (hybrid MVP in PHP)
 
-**Work:** replace the current modern admin look with Win98 dialogs, **without** a full desktop yet:
+**Work:** replace the current modern admin look with Retro OS dialogs, **without** a full desktop yet:
 
 1. **Login** — `LoginPage` → `DialogWindow` + form atoms; keep the same props (`action`, CSRF, error) so Twig ([`templates/security/login.html.twig`](../../webhemi-php/templates/security/login.html.twig)) does not break.
 2. **One internal surface** — e.g. Settings or Control Panel `IconPanelWindow` (Sites/Hosts/… icons) linking to existing routes / opening windows later.
@@ -166,7 +166,7 @@ Export via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts) + PHP control
 - Login is not in the desktop shell today; full-bleed dialog vs `body.dashboard` background — use teal desktop background on login, no taskbar.
 - Old `AdminLayout` / Sidebar / TopBar **live in parallel** until all pages migrate — avoid a half-migrated layout on one page.
 
-**Done when:** `https://…/login` shows a Win98 dialog after sync; CSRF / error messaging still works.
+**Done when:** `https://…/login` shows a Retro OS dialog after sync; CSRF / error messaging still works.
 
 ---
 
@@ -196,7 +196,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 
 ## Phase 6 — Move existing admin pages in
 
-**Work:** put `SitesPage`, `HostsPage`, list views, etc. into Win98 windows / `HeadingPanel` + table / form layouts. Routing:
+**Work:** put `SitesPage`, `HostsPage`, list views, etc. into Retro OS windows / `HeadingPanel` + table / form layouts. Routing:
 - short term: shell state + deep link query (`?window=sites`)
 - Symfony routes or wrapper Twigs that mount the same `AdminShell` with an initial window prop
 
@@ -216,7 +216,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 - Storybook sidebar: **Admin / Atoms|Bricks|Components|Foundations** + **Themes / Default** (frontend).
 - Consider `dist` CSS split: `styles.css` = admin (default export for PHP); separate frontend theme CSS later if the site surface becomes React.
 - Sandbox: README pointer “canonical stories in webhemi-ui”; `catalog.html` optional visual regression or archive.
-- Hub README / architecture doc: Admin Theme = Win98 owned chrome; themes are self-contained.
+- Hub README / architecture doc: Admin Theme = Retro OS owned chrome; themes are self-contained.
 
 **Hard parts:**
 - Public NPM breaking visual change (`@webhemi/ui`) — `0.x` is fine, but changelog is required.
@@ -240,7 +240,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 
 ## Explicitly out of scope
 
-- Making frontend (site) themes Win98
+- Making frontend (site) themes Retro OS
 - Sharing admin98 chrome/icons/scripts with frontend themes (admin-only by design)
 - Replacing `webhemi-js` / Payload admin
 - Publishing admin98 as its own NPM package
@@ -255,7 +255,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 - [x] Phase 2 — React chrome atoms + Storybook
 - [x] Phase 3 — Product layout bricks + ScrollableRegion + DesktopIcon
 - [ ] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
-- [ ] Phase 4 — Win98 Login + one Control Panel surface via PHP
+- [ ] Phase 4 — Retro OS Login + one Control Panel surface via PHP
 - [ ] Phase 5 — React AdminDesktop shell
 - [ ] Phase 6 — Migrate Sites/Hosts/… into windows
 - [ ] Phase 7 — Remove legacy admin UI; docs/changelog; sandbox role update
