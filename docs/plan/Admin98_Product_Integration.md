@@ -102,21 +102,21 @@ Build: `vite.css.config.ts` (+ `sass`); Storybook imports the same SCSS entry. `
 
 ---
 
-## Phase 2 — React chrome atoms + Storybook Atoms
+## Phase 2 — React chrome atoms + Storybook Atoms — **done**
 
 **Work:** thin React wrappers per catalog section that **preserve the DOM contract** (e.g. checkbox: `input` immediately before `label`). Story sources: admin98 `catalog.html` examples + its atom catalog plan hierarchy.
 
-Priority: Button, TextBox, Checkbox, Radio, Select, FieldRow/GroupBox, Window/TitleBar/StatusBar, Tabs, TreeView, SunkenPanel, Table, Progress, Slider.
+**Delivered under** [`webhemi-ui/src/admin/chrome/`](../../webhemi-ui/src/admin/chrome/):
+Button, TextBox/TextArea, Checkbox, Radio, Select, FieldRow/GroupBox, Window/TitleBar/StatusBar, Tabs/`TabPanel`, TreeView, SunkenPanel/FieldBorder, Table + `useTableView`, Progress, Slider.
 
-Stop using old [`src/shared/components/*`](../../webhemi-ui/src/shared/components/) for admin (and do not keep a shared UI kit long-term — Default owns its atoms under `themes/default`). Win98 React atoms live under `src/admin/` only. Frontend theme components are unrelated; no shared Button/Input/Checkbox with Admin.
+Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. LoginForm composed from chrome + `dialog-panel-layout` (early Phase 4 surface). Package root exports Admin chrome `Button`/`Checkbox`/`Select` (shared duplicates not re-exported).
 
-**Hard parts:**
-- **Dual source of truth:** `catalog.html` vs CSF stories — Storybook is canonical; sandbox catalog stays regression / manual reference until parity, then optional.
-- **Adjacency CSS** (`input + label`) — FormField-style wrappers that break `+` selectors are forbidden; prefer exact DOM / fragments.
-- **Tabs nested `.window[role=tabpanel]`** — separate `TabPanel` component name, not `Window`.
-- Interactive table: port admin98 `tableView.js` as a React hook / small module.
+**Hard parts (handled):**
+- Adjacency: Checkbox/Radio are fragments (`input` + `label`); FieldRow wraps without breaking `+`.
+- `TabPanel` ≠ `Window` (same `.window` class, different component).
+- Interactive table: `useTableView` ports admin98 `tableView.js`.
 
-**Done when:** Admin / Atoms sidebar is populated; a11y addon smoke OK; switching theme leaves Default stories untouched.
+**Done when:** Admin / Atoms sidebar populated; Default stories stay on `data-wh-theme="default"` via preview section rule.
 
 ---
 
@@ -237,7 +237,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 
 - [x] Phase 0 — Integration contract
 - [x] Phase 1 — Styles into `webhemi-ui` (scoped)
-- [ ] Phase 2 — React chrome atoms + Storybook
+- [x] Phase 2 — React chrome atoms + Storybook
 - [ ] Phase 3 — Product layout bricks + ScrollableRegion
 - [ ] Phase 4 — Win98 Login + one Control Panel surface via PHP
 - [ ] Phase 5 — React AdminDesktop shell
