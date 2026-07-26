@@ -116,6 +116,9 @@ As of this ADR acceptance:
 
 No Admin98 SCSS/React port in Phase 0 (that is Phase 1+).
 
+## Phase 1 note
+
+Styles now live under `webhemi-ui/src/admin/styles/` with `meta.load-css` scoping to `[data-wh-theme="admin"]`. Production CSS is built via Vite (`vite.css.config.ts`), not the Tailwind CLI. See parent plan Phase 1.
 ---
 
 ## Consequences

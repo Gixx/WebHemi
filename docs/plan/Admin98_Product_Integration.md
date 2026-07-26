@@ -65,7 +65,7 @@ flowchart TB
 
 ---
 
-## Phase 1 — Move the style system into `webhemi-ui`
+## Phase 1 — Move the style system into `webhemi-ui` — **done**
 
 **Work:** copy / adapt:
 - tokens (`assets/style/abstract/tokens.css` in admin98 + `@theme`)
@@ -73,25 +73,32 @@ flowchart TB
 - product partials (layouts, scrollbar skin, desktop, toolbar) — initially as **CSS**, without React
 - icon / font assets
 
-Suggested layout:
+Layout:
 
 ```text
 webhemi-ui/src/admin/styles/
   tokens.css
-  chrome/          # ported SCSS
+  fonts.css
+  abstract/        # bevel mixins
+  chrome/          # ported SCSS + icons
   product/         # shell + layouts
-  entry.css        # theme-scoped import
+  entry.scss       # meta.load-css under [data-wh-theme="admin"]
+webhemi-ui/src/admin/assets/
+  fonts/ icons/    # inlined into dist/index.css (sync-ui copies CSS only)
+webhemi-ui/src/styles/
+  platform.css     # Tailwind theme+utilities, no Preflight
+  entry.js         # Vite CSS entry
 ```
 
-Build: extend the current `build:css` entry in [`webhemi-ui/package.json`](../../webhemi-ui/package.json); Storybook/Vite and the library build must compile Sass the same way (admin98 lesson: compile SCSS via Vite, not via Tailwind CSS `@import`).
+Build: `vite.css.config.ts` (+ `sass`); Storybook imports the same SCSS entry. `cssMinify: false` for `@media (not (hover))`.
 
-**Hard parts:**
-- **Global `button` / `input` selectors** — scoping is mandatory, or Default frontend stories become Win98.
-- **`cssMinify: false` / `(not (hover))` media** — lightningcss conflict; handle in the UI build too.
-- **Product `.sunken-panel` silver override** vs chrome white — Storybook decorator: “chrome only” vs “product”.
-- Preflight: off in admin98; shared `base.css` must be overridden or omitted under the admin entry.
+**Hard parts (handled):**
+- Global `button` / `input` → nested via `meta.load-css` under `[data-wh-theme="admin"]`.
+- No `body.dashboard` contract — product shell styles `body` under the theme scope.
+- Preflight omitted (`platform.css`); Default theme owns its body face in `themes/default/styles/tokens.css`.
+- Smoke story: `Admin/Foundations/CatalogSmoke` (representative catalog samples).
 
-**Done when:** in Storybook with Admin theme, catalog samples visually approximate `catalog.html` (smoke).
+**Done when:** in Storybook with Admin theme, catalog samples visually approximate `catalog.html` (smoke) — see CatalogSmoke.
 
 ---
 
@@ -229,7 +236,7 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 ## Phase checklist
 
 - [x] Phase 0 — Integration contract
-- [ ] Phase 1 — Styles into `webhemi-ui` (scoped)
+- [x] Phase 1 — Styles into `webhemi-ui` (scoped)
 - [ ] Phase 2 — React chrome atoms + Storybook
 - [ ] Phase 3 — Product layout bricks + ScrollableRegion
 - [ ] Phase 4 — Win98 Login + one Control Panel surface via PHP
