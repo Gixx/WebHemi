@@ -17,7 +17,7 @@ Plus:
 
 - **`.gitattributes`** — `* text=auto eol=lf` (and explicit patterns)
 - **`.editorconfig`** — `end_of_line = lf`
-- **`.githooks/pre-commit`** — fails if any staged file still contains `\r`
+- **`.githooks/pre-commit`** — fails if any staged **text** file still contains `\r` (binaries such as `.woff`, `.gif`, `.png` are skipped; they may contain legitimate CR bytes)
 
 After clone on a new machine:
 

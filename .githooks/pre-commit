@@ -1,10 +1,42 @@
 #!/usr/bin/env bash
 # Reject staged text files that still contain CR (CRLF).
+# Binary paths (fonts, images, …) are ignored — they may contain legitimate CR bytes.
 set -euo pipefail
+
+BINARY_EXT_RE='\.(png|jpe?g|gif|webp|ico|woff2?|ttf|eot|zip|gz|tar|sqlite|db|pdf|exe|dll|so|o|a|phar)$'
+
+is_binary_staged() {
+  local file="$1"
+  local lower
+  lower="$(printf '%s' "$file" | tr '[:upper:]' '[:lower:]')"
+
+  if [[ "$lower" =~ $BINARY_EXT_RE ]]; then
+    return 0
+  fi
+
+  local attr
+  attr="$(git check-attr binary -- "$file" 2>/dev/null || true)"
+  if [[ "$attr" == *": binary: set" ]]; then
+    return 0
+  fi
+
+  # NUL byte ⇒ binary (compare byte counts; do not pass NUL to grep argv)
+  local raw stripped
+  raw="$(head -c 8192 "$file" | wc -c)"
+  stripped="$(head -c 8192 "$file" | tr -d '\0' | wc -c)"
+  if [[ "$raw" != "$stripped" ]]; then
+    return 0
+  fi
+
+  return 1
+}
 
 crlf_files=()
 while IFS= read -r -d '' file; do
   [[ -f "$file" ]] || continue
+  if is_binary_staged "$file"; then
+    continue
+  fi
   if grep -qU $'\r' "$file" 2>/dev/null; then
     crlf_files+=("$file")
   fi
