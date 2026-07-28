@@ -106,7 +106,7 @@ Build: `vite.css.config.ts` (+ `sass`); Storybook imports the same SCSS entry. `
 
 **Work:** thin React wrappers per catalog section that **preserve the DOM contract** (e.g. checkbox: `input` immediately before `label`). Story sources: admin98 `catalog.html` examples + its atom catalog plan hierarchy.
 
-**Delivered under** [`webhemi-ui/src/admin/chrome/`](../../webhemi-ui/src/admin/chrome/):
+**Delivered under** [`webhemi-ui/src/admin/chrome/`](../../webhemi-ui/src/admin/chrome/) (one folder per atom + `_lib/` for shared helpers):
 Button, TextBox/TextArea, Checkbox, Radio, Select, FieldRow/GroupBox, Window/TitleBar/StatusBar, Tabs/`TabPanel`, TreeView, SunkenPanel/FieldBorder, Table + `useTableView`, Progress, Slider.
 
 Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. LoginForm composed from chrome + `dialog-panel-layout` (early Phase 4 surface). Package root exports Admin chrome `Button`/`Checkbox`/`Select` (shared duplicates not re-exported).
@@ -122,7 +122,7 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 
 ## Phase 3 — Product bricks (layouts, scrollbar)
 
-**Status:** done (`src/admin/bricks/`, Storybook `Admin/Bricks/*`).
+**Status:** done (`src/admin/bricks/` — one folder per brick + `_lib/`; Storybook `Admin/Bricks/*`).
 
 **Delivered:**
 - `DialogWindow`, `IconPanelWindow`, `WizardWindow` (`HeadingPanelWindow` removed — rewrite later)
@@ -138,7 +138,7 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 
 ## Phase 3b — Dynamic `accessKey` (chrome polish)
 
-**Status:** planned (detail: [AccessKey_Dynamize.md](./AccessKey_Dynamize.md)).
+**Status:** done (detail: [AccessKey_Dynamize.md](./AccessKey_Dynamize.md)).
 
 **Why here:** chrome atoms and dialog bricks exist; Login / Control Panel (Phase 4) should consume the API instead of hand-rolled `<u>` markup. Deferred from Phase 3 fine-tuning so that work stays a focused chrome change.
 
@@ -209,11 +209,29 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 
 ---
 
+## Phase 6b — Storybook MSW for Admin data surfaces
+
+**Status:** planned (later; after pages need fetch/list demos in Storybook).
+
+**Why here:** Phase 4–5 can stay props- and local-state-driven. When Sites/Hosts/… windows load or save over HTTP, Storybook needs **fake APIs** so atoms/bricks/surfaces stay reviewable without PHP.
+
+**Work (inspiration only — no vendor code):**
+- Add `msw` + `msw-storybook-addon`; initialize in `.storybook/preview` with `onUnhandledRequest: 'bypass'`
+- Co-locate handlers next to the Admin surface/feature (not in package `exports` / `dist`)
+- Stories declare `parameters.msw.handlers` for empty / populated / error cases
+- Keep PHP + Twig props as the production path until a deliberate API migration
+
+**Done when:** at least one list or save flow is demoable in Storybook via MSW without a running Symfony backend.
+
+**Out of scope for 6b:** replacing AssetMapper mounts; shipping mock workers in the published NPM package.
+
+---
+
 ## Phase 7 — Cleanup and packaging
 
 **Work:**
 - Delete unused legacy admin components/stories; finish relocating former `shared` UI into `themes/default` (or remove if unused).
-- Storybook sidebar: **Admin / Atoms|Bricks|Components|Foundations** + **Themes / Default** (frontend).
+- Storybook sidebar: **Admin / Atoms|Bricks|Components|Foundations** + **Themes / Default** (frontend). Sidebar order is pinned via `storySort` in `.storybook/preview.tsx` (extend the `order` array when adding sections).
 - Consider `dist` CSS split: `styles.css` = admin (default export for PHP); separate frontend theme CSS later if the site surface becomes React.
 - Sandbox: README pointer “canonical stories in webhemi-ui”; `catalog.html` optional visual regression or archive.
 - Hub README / architecture doc: Admin Theme = Retro OS owned chrome; themes are self-contained.
@@ -234,7 +252,9 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 | 3b | 1–2 days | accessKey helper edge cases (non-string children) |
 | 4 | 3–5 days | PHP sync + Login parity |
 | 5 | 1.5–3 weeks | Window manager fidelity |
-| 6–7 | ongoing | Page migration, breaking cleanup |
+| 6 | ongoing | Page migration |
+| 6b | 2–4 days | MSW handler fidelity vs real routes |
+| 7 | ongoing | Breaking cleanup |
 
 ---
 
@@ -254,8 +274,9 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 - [x] Phase 1 — Styles into `webhemi-ui` (scoped)
 - [x] Phase 2 — React chrome atoms + Storybook
 - [x] Phase 3 — Product layout bricks + SystemIcon; scrollbar as chrome capability
-- [ ] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
+- [x] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
 - [ ] Phase 4 — Retro OS Login + one Control Panel surface via PHP
 - [ ] Phase 5 — React AdminDesktop shell
 - [ ] Phase 6 — Migrate Sites/Hosts/… into windows
+- [ ] Phase 6b — Storybook MSW for Admin data surfaces
 - [ ] Phase 7 — Remove legacy admin UI; docs/changelog; sandbox role update

@@ -32,7 +32,7 @@ Already done earlier in the Guide UI: Storybook basics, Group your components, S
 
 ### 2. Interaction story
 
-[`IconPanelWindow.stories.tsx`](../../webhemi-ui/src/admin/bricks/IconPanelWindow.stories.tsx): `play` clicks **Sites**, asserts info + status bar.
+[`IconPanelWindow.stories.tsx`](../../webhemi-ui/src/admin/bricks/IconPanelWindow/IconPanelWindow.stories.tsx): `play` clicks **Sites**, asserts info + status bar.
 
 ### 3. Autodocs + MDX
 

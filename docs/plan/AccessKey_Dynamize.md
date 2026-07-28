@@ -23,7 +23,7 @@ flowchart LR
 
 ## Shared helper
 
-Add [`webhemi-ui/src/admin/chrome/underlineAccessKey.tsx`](../../webhemi-ui/src/admin/chrome/underlineAccessKey.tsx):
+Add [`webhemi-ui/src/admin/chrome/_lib/underlineAccessKey.tsx`](../../webhemi-ui/src/admin/chrome/_lib/underlineAccessKey.tsx):
 
 - `underlineAccessKey(text: string, key: string): ReactNode`
 - `applyAccessKeyToLabel(children: ReactNode, key: string): ReactNode` — map children; for `<label>` (intrinsic or props), underline string/`number` child text
@@ -33,30 +33,30 @@ Export from [`webhemi-ui/src/admin/chrome/index.ts`](../../webhemi-ui/src/admin/
 
 ## Button
 
-Update [`webhemi-ui/src/admin/chrome/Button.tsx`](../../webhemi-ui/src/admin/chrome/Button.tsx):
+Update [`webhemi-ui/src/admin/chrome/Button/Button.tsx`](../../webhemi-ui/src/admin/chrome/Button/Button.tsx):
 
 - Destructure `accessKey` from props (already on `ButtonHTMLAttributes`).
 - Pass `accessKey` through to `<button>`.
 - When `accessKey` is set and `children` is a string (and not `loading`), render `underlineAccessKey(children, accessKey)` instead of raw children.
 
-Story: add `accessKey` text control on [`Button.stories.tsx`](../../webhemi-ui/src/admin/chrome/Button.stories.tsx) (e.g. default `''` / example story `AccessKey` with `accessKey: 'o'`, children `OK`).
+Story: add `accessKey` text control on [`Button.stories.tsx`](../../webhemi-ui/src/admin/chrome/Button/Button.stories.tsx) (e.g. default `''` / example story `AccessKey` with `accessKey: 'o'`, children `OK`).
 
 ## FieldRow
 
-Update [`webhemi-ui/src/admin/chrome/FieldRow.tsx`](../../webhemi-ui/src/admin/chrome/FieldRow.tsx):
+Update [`webhemi-ui/src/admin/chrome/FieldRow/FieldRow.tsx`](../../webhemi-ui/src/admin/chrome/FieldRow/FieldRow.tsx):
 
 - Extend props: `Omit<HTMLAttributes<HTMLDivElement>, 'accessKey'> & { accessKey?: string; ... }`.
 - Do **not** put `accessKey` on the wrapper `div`.
 - When `accessKey` is set, map children: underline label text + clone control with `accessKey`.
 - Button-only rows (OK/Cancel): ignore — each `Button` owns its own key.
 
-Story: add `accessKey` control on LabelBeside / default FieldRow story in [`FieldRow.stories.tsx`](../../webhemi-ui/src/admin/chrome/FieldRow.stories.tsx).
+Story: add `accessKey` control on LabelBeside / default FieldRow story in [`FieldRow.stories.tsx`](../../webhemi-ui/src/admin/chrome/FieldRow/FieldRow.stories.tsx).
 
 ## Call-site cleanup
 
 Replace manual `<u>…</u>` + missing/partial keys with the API:
 
-- [`DialogWindow.stories.tsx`](../../webhemi-ui/src/admin/bricks/DialogWindow.stories.tsx) — buttons `accessKey`, field rows `accessKey` + plain label strings
+- [`DialogWindow.stories.tsx`](../../webhemi-ui/src/admin/bricks/DialogWindow/DialogWindow.stories.tsx) — buttons `accessKey`, field rows `accessKey` + plain label strings
 - [`LoginForm.tsx`](../../webhemi-ui/src/admin/components/LoginForm/LoginForm.tsx) — same for Email / Password labels (FieldRow `accessKey`)
 
 ## Out of scope
@@ -67,7 +67,7 @@ Replace manual `<u>…</u>` + missing/partial keys with the API:
 
 ## Implementation checklist
 
-- [ ] underlineAccessKey helper + label/control child mappers
-- [ ] Button: accessKey attr + string children underline; story control
-- [ ] FieldRow: accessKey on control, underline label; story control
-- [ ] Migrate DialogWindow stories + LoginForm off manual `<u>`
+- [x] underlineAccessKey helper + label/control child mappers
+- [x] Button: accessKey attr + string children underline; story control
+- [x] FieldRow: accessKey on control, underline label; story control
+- [x] Migrate DialogWindow stories + LoginForm off manual `<u>`
