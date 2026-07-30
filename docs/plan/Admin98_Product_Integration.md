@@ -13,7 +13,7 @@ Canonical detail: **[Admin98_Integration_Contract.md](./Admin98_Integration_Cont
 - **Theme scope:** `[data-wh-theme="admin"]` on `<html>` only. `body.dashboard` / `.wh-admin` are **not** product contracts (sandbox may still use `body.dashboard` as a demo shell).
 - **Markup:** 98-compatible class names (`.window`, `.field-row`, …); no `wh-` rename wave initially.
 - **Delivery path:** unchanged — `npm run build` → `dist/` → PHP `bin/sync-ui.sh` / `composer run sync-ui` → AssetMapper + `react_component(...)` ([Local development](../local-dev.md)).
-- **Order:** styles → chrome atoms (Storybook) → product layout bricks → 1–2 real surfaces (Login + Control Panel) → desktop shell MVP → remaining admin pages into windows.
+- **Order:** styles → chrome atoms (Storybook) → product layout bricks → AdminDesktop (Login already; site icons + Control Panel + stubs) → desktop shell MVP → remaining admin pages into windows.
 
 ```mermaid
 flowchart TB
@@ -84,10 +84,15 @@ webhemi-ui/src/admin/styles/
   product/         # shell + layouts
   entry.scss       # meta.load-css under [data-wh-theme="admin"]
 webhemi-ui/src/admin/assets/
-  fonts/ icons/    # inlined into dist/index.css (sync-ui copies CSS only)
+  system/          # banners, fixed system art
+  fonts/ icons/ logo/ chrome/icon/
 webhemi-ui/src/styles/
   platform.css     # Tailwind theme+utilities, no Preflight
   entry.js         # Vite CSS entry
+# PHP after sync-ui:
+#   assets/webhemi-ui/index.js     shared package
+#   assets/admin/index.css + …     Admin Theme CSS + graphics (stable names)
+#   assets/themes/<id>/            frontend themes (later)
 ```
 
 Build: `vite.css.config.ts` (+ `sass`); Storybook imports the same SCSS entry. `cssMinify: false` for `@media (not (hover))`.
@@ -152,21 +157,30 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 
 ---
 
-## Phase 4 — First product surfaces (hybrid MVP in PHP)
+## Phase 4 — First product surfaces (desktop MVP in PHP)
 
-**Work:** replace the current modern admin look with Retro OS dialogs, **without** a full desktop yet:
+**Status:** done.
 
-1. **Login** — `LoginPage` → `DialogWindow` + form atoms; keep the same props (`action`, CSRF, error) so Twig ([`templates/security/login.html.twig`](../../webhemi-php/templates/security/login.html.twig)) does not break.
-2. **One internal surface** — e.g. Settings or Control Panel `IconPanelWindow` (Sites/Hosts/… icons) linking to existing routes / opening windows later.
+**Scope change:** no hybrid with the modern `AdminLayout` UI. Post-login `/admin` is a Retro OS **desktop surface** (icons + openable windows). Full window manager (drag, taskbar, z-order persistence) remains **Phase 5**.
 
-Export via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts) + PHP controller re-exports with unchanged names (`LoginPage`, …).
+**Work:**
+
+1. **Login** — already Retro OS (`LoginPage` / `DialogWindow`); keep Twig props (`action`, CSRF, error).
+2. **`AdminDesktop` on `/admin`** — teal desktop with:
+   - one `SystemIcon kind="site"` per site from the DB (`id`, `name`, `slug`, …)
+   - one `SystemIcon kind="control-panel"` that opens Control Panel
+3. **Control Panel** — `IconPanelWindow` (Storybook Control Panel pattern): static admin icons; selection updates info/status; **Close** dismisses. No navigation to legacy CRUD pages.
+4. **Site open** — double-click / `onOpen` opens a **stub** `DialogWindow` (site title + short placeholder; Close / OK dismisses). Real site admin UI is Phase 6.
+5. **Legacy admin UI** — stop mounting `AdminLayout` / `SitesPage` / `HostsPage`. `/admin/sites` and `/admin/hosts` redirect to `admin_dashboard`. Delete leftover modern pages in Phase 7.
+
+Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts) + PHP `assets/react/controllers/AdminDesktop.js` + Twig `react_component`.
 
 **Hard parts:**
 - AssetMapper only sees built `dist` — local loop: UI build + `sync-ui` (or `make up` watch) is required.
-- Login is not in the desktop shell today; full-bleed dialog vs `body.dashboard` background — use teal desktop background on login, no taskbar.
-- Old `AdminLayout` / Sidebar / TopBar **live in parallel** until all pages migrate — avoid a half-migrated layout on one page.
+- Windows are absolutely positioned with simple cascade; no drag/resize/taskbar until Phase 5.
+- Title-bar **Close** must be wired with `onClick` (chrome `TitleBarControl` has no default behavior).
 
-**Done when:** `https://…/login` shows a Retro OS dialog after sync; CSRF / error messaging still works.
+**Done when:** after login, `/admin` shows site icons (when DB has sites) + Control Panel icon; Control Panel and site stub windows open and close; modern admin chrome is no longer the live `/admin` UI.
 
 ---
 
@@ -182,7 +196,7 @@ Export via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts) + PHP control
 
 Behavior sources: admin98 `windowHandler.js`, `desktop.js`, `taskbarHandler.js`, `iconHandler.js`.
 
-New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashboard` (and later other pages).
+Extend Phase 4 `AdminDesktop` into a real shell (`AdminShell` behavior): drag, resize, taskbar, Start menu, persistence. Still one React mount under `/admin`.
 
 **Hard parts:**
 - **Largest effort.** Pointer capture, grid-snap, cascade, bounded resize — regression-sensitive; keep the sandbox demo as a side-by-side checklist.
@@ -275,8 +289,8 @@ New top-level: e.g. `AdminDesktop` / `AdminShell`, mounted from PHP `AdminDashbo
 - [x] Phase 2 — React chrome atoms + Storybook
 - [x] Phase 3 — Product layout bricks + SystemIcon; scrollbar as chrome capability
 - [x] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
-- [ ] Phase 4 — Retro OS Login + one Control Panel surface via PHP
-- [ ] Phase 5 — React AdminDesktop shell
+- [x] Phase 4 — AdminDesktop (site icons + Control Panel + site stubs) via PHP; drop live AdminLayout
+- [ ] Phase 5 — React AdminDesktop shell (drag, taskbar, z-order, persistence)
 - [ ] Phase 6 — Migrate Sites/Hosts/… into windows
 - [ ] Phase 6b — Storybook MSW for Admin data surfaces
 - [ ] Phase 7 — Remove legacy admin UI; docs/changelog; sandbox role update
