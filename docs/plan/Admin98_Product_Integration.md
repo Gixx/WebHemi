@@ -112,7 +112,7 @@ Build: `vite.css.config.ts` (+ `sass`); Storybook imports the same SCSS entry. `
 **Work:** thin React wrappers per catalog section that **preserve the DOM contract** (e.g. checkbox: `input` immediately before `label`). Story sources: admin98 `catalog.html` examples + its atom catalog plan hierarchy.
 
 **Delivered under** [`webhemi-ui/src/admin/chrome/`](../../webhemi-ui/src/admin/chrome/) (one folder per atom + `_lib/` for shared helpers):
-Button, TextBox/TextArea, Checkbox, Radio, Select, FieldRow/GroupBox, Window/TitleBar/StatusBar, Tabs/`TabPanel`, TreeView, SunkenPanel/FieldBorder, Table + `useTableView`, Progress, Slider.
+Button, TextBox/TextArea, Checkbox, Radio, Select, FieldRow/GroupBox, Window/TitleBar/StatusBar, Tabs/`TabPanel`, TreeView, SunkenPanel/FieldBorder, Table + `useTableView`, Progress, Slider. (`SystemIcon` landed in Phase 3 as chrome atom.)
 
 Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. LoginForm composed from chrome + `dialog-panel-layout` (early Phase 4 surface). Package root exports Admin chrome `Button`/`Checkbox`/`Select` (shared duplicates not re-exported).
 
@@ -132,7 +132,7 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 **Delivered:**
 - `DialogWindow`, `IconPanelWindow`, `WizardWindow` (`HeadingPanelWindow` removed — rewrite later)
 - Custom scrollbar as **chrome capability** (`Scrollable`, `SunkenPanel`/`FieldBorder` `scrollable` prop, `useCustomScrollbar` / `attachCustomScrollbar`) — not a product brick
-- `SystemIcon` (product brick; desktop + icon panels; Taskbar / StartMenu deferred to Phase 5)
+- `SystemIcon` as **chrome atom** (desktop + icon panels; Taskbar / StartMenu deferred to Phase 5)
 - `LoginForm` refactored onto `DialogWindow`
 
 **Hard parts (resolved / noted):**
@@ -287,7 +287,7 @@ Extend Phase 4 `AdminDesktop` into a real shell (`AdminShell` behavior): drag, r
 - [x] Phase 0 — Integration contract
 - [x] Phase 1 — Styles into `webhemi-ui` (scoped)
 - [x] Phase 2 — React chrome atoms + Storybook
-- [x] Phase 3 — Product layout bricks + SystemIcon; scrollbar as chrome capability
+- [x] Phase 3 — Product layout bricks; SystemIcon as chrome atom; scrollbar as chrome capability
 - [x] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
 - [x] Phase 4 — AdminDesktop (site icons + Control Panel + site stubs) via PHP; drop live AdminLayout
 - [ ] Phase 5 — React AdminDesktop shell (drag, taskbar, z-order, persistence)
