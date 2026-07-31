@@ -85,7 +85,7 @@ webhemi-ui/src/admin/styles/
   entry.scss       # meta.load-css under [data-wh-theme="admin"]
 webhemi-ui/src/admin/assets/
   system/          # banners, fixed system art
-  fonts/ icons/ logo/ chrome/icon/
+  fonts/ icons/{system,explorer,toolbar}/ logo/ chrome/
 webhemi-ui/src/styles/
   platform.css     # Tailwind theme+utilities, no Preflight
   entry.js         # Vite CSS entry
@@ -134,6 +134,7 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 - Custom scrollbar as **chrome capability** (`Scrollable`, `SunkenPanel`/`FieldBorder` `scrollable` prop, `useCustomScrollbar` / `attachCustomScrollbar`) — not a product brick
 - `SystemIcon` as **chrome atom** (desktop + icon panels; Taskbar / StartMenu deferred to Phase 5)
 - `LoginForm` refactored onto `DialogWindow`
+- Next brick (in progress): [`FileExplorerWindow`](./FileExplorer_Window.md) — own brick, not an `IconPanelWindow` variant
 
 **Hard parts (resolved / noted):**
 - Scrollbar: chrome owns `.scrollable` / viewport; effect mounts `.sb-*` rails only (`SunkenPanel`/`FieldBorder` `scrollable` or `Scrollable` for layout hosts).

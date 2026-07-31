@@ -118,6 +118,7 @@ Do not treat `.old/` as the source of truth — use the tag or submodule repos.
 | [Architecture & roadmap](docs/plan/WebHemi_Architecture_and_Roadmap.md) | Multi-repo design and implementation phases |
 | [Admin98 product integration](docs/plan/Admin98_Product_Integration.md) | Retro OS admin tech-demo → `@webhemi/ui` + PHP |
 | [Admin98 integration contract](docs/plan/Admin98_Integration_Contract.md) | Phase 0 ADR: layers, theme scope, markup, no shared UI |
+| [FileExplorer window](docs/plan/FileExplorer_Window.md) | `FileExplorerWindow` brick: tree + toolbar + view modes |
 | [webhemi-php README](webhemi-php/README.md) | PHP setup, sync-ui, QA |
 | [webhemi-ui README](webhemi-ui/README.md) | Storybook and library build |
 | [Host ownership flow](webhemi-php/docs/host-ownership-verification-flow.md) | Domain verification behaviour |
