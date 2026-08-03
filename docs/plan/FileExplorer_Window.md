@@ -138,9 +138,25 @@ Until a handler exists, items stay **disabled** (same spirit as toolbar stubs). 
 - Toolbar SVG assets already under `assets/admin/icons/toolbar/` (UI + synced PHP) — no extra sync work
 - Close: title-bar Close + File → Close
 
+### Slice D — Delete → Recycle Bin (+ Undo) — **done**
+
+- Local forest edits in `SiteFileExplorer` (`explorerTreeOps`)
+- Delete moves selection into Recycle Bin; Delete inside trash removes permanently
+- Single-step Undo restores the last delete
+- Toolbar / File menu Delete & Edit Undo enable only when the action applies
+- Storybook: `Admin/Bricks/SiteFileExplorer` → `DeleteToRecycleBin`
+
+### Slice E — Cut / Copy / Paste clipboard — **done**
+
+- In-memory clipboard on `SiteFileExplorer` (cut moves on paste; copy keeps clipboard)
+- Paste into current location (not trash/settings); block paste into a cut folder's descendants
+- Cut item ghosted via `cutItemId` / `.is-cut`
+- Undo covers last paste as well as delete
+- Storybook: `CutCopyPaste`
+
 ### Later slices (unchanged backlog)
 
-- Drag-drop, clipboard, properties dialog
+- Drag-drop, properties dialog, Select All (multi-select)
 - Resizable splitter (v1: fixed tree width)
 - Extract `ExplorerMenuBar` into a reusable chrome `MenuBar` atom if other windows need it
 - PHP-supplied explorer tree (replace empty / demo forests)
