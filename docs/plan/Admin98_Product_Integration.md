@@ -134,7 +134,7 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 - Custom scrollbar as **chrome capability** (`Scrollable`, `SunkenPanel`/`FieldBorder` `scrollable` prop, `useCustomScrollbar` / `attachCustomScrollbar`) — not a product brick
 - `SystemIcon` as **chrome atom** (desktop + icon panels; Taskbar / StartMenu deferred to Phase 5)
 - `LoginForm` refactored onto `DialogWindow`
-- Next brick: [`FileExplorerWindow`](./FileExplorer_Window.md) — layout, navigation, menubar done; site open wired on AdminDesktop (empty tree until PHP data)
+- Next brick: [`FileExplorerWindow`](./FileExplorer_Window.md) — slices A–I done (nav, menubar, site open, delete/undo, clipboard, properties, splitter, multi-select, drag-drop); PHP tree + MenuBar extract remain
 
 **Hard parts (resolved / noted):**
 - Scrollbar: chrome owns `.scrollable` / viewport; effect mounts `.sb-*` rails only (`SunkenPanel`/`FieldBorder` `scrollable` or `Scrollable` for layout hosts).
@@ -187,25 +187,9 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 
 ## Phase 5 — Desktop shell MVP (React)
 
-**Work:** port sandbox shell behavior to React (do not iframe the demo):
-- window z-order, active/inactive title-bar
-- drag (title-bar), resize handles
-- minimize / maximize / close + taskbar task buttons
-- Start menu (Control Panel launch)
-- icon double-click → window
-- position / size persistence (`localStorage`) — product key namespace (`webhemi.admin.desktop…`)
+> **Slice plan:** [Admin98_Phase5_Desktop_Shell.md](./Admin98_Phase5_Desktop_Shell.md) (source of truth for A–F) — **done**.
 
-Behavior sources: admin98 `windowHandler.js`, `desktop.js`, `taskbarHandler.js`, `iconHandler.js`.
-
-Extend Phase 4 `AdminDesktop` into a real shell (`AdminShell` behavior): drag, resize, taskbar, Start menu, persistence. Still one React mount under `/admin`.
-
-**Hard parts:**
-- **Largest effort.** Pointer capture, grid-snap, cascade, bounded resize — regression-sensitive; keep the sandbox demo as a side-by-side checklist.
-- Nested tab `.window` vs shell `.window` — use `data-shell-window` / context; do not naively `closest('.window')`.
-- Symfony multi-page navigation vs single-page desktop: MVP = **one** React mount under `/admin`, inner “windows” = view state (no full reload per icon). Login may stay a separate URL.
-- Zero-Node prod: all shell JS must ship inside the `@webhemi/ui` bundle; no extra runtime script.
-
-**Done when:** demo-like: draggable windows, taskbar, Start → Control Panel, positions survive refresh.
+**Status:** done.
 
 ---
 
@@ -291,7 +275,7 @@ Extend Phase 4 `AdminDesktop` into a real shell (`AdminShell` behavior): drag, r
 - [x] Phase 3 — Product layout bricks; SystemIcon as chrome atom; scrollbar as chrome capability
 - [x] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
 - [x] Phase 4 — AdminDesktop (site icons + Control Panel + site stubs) via PHP; drop live AdminLayout
-- [ ] Phase 5 — React AdminDesktop shell (drag, taskbar, z-order, persistence)
+- [x] Phase 5 — React AdminDesktop shell (drag, taskbar, z-order, persistence)
 - [ ] Phase 6 — Migrate Sites/Hosts/… into windows
 - [ ] Phase 6b — Storybook MSW for Admin data surfaces
 - [ ] Phase 7 — Remove legacy admin UI; docs/changelog; sandbox role update

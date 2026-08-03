@@ -161,10 +161,33 @@ Until a handler exists, items stay **disabled** (same spirit as toolbar stubs). 
 - Fields: Type, Location (parent label), Size, Modified
 - Storybook: `Properties`
 
+### Slice G — Resizable tree/content splitter — **done**
+
+- `ExplorerSplitter` between tree and content (drag + ArrowLeft/Right/Home/End)
+- Uncontrolled by default; optional `treeWidth` / `onTreeWidthChange`
+- `treePaneResizable` to disable; min/max defaults 120–480px
+- Storybook: `FileExplorerWindow` → `Splitter`
+
+### Slice H — Multi-select + Select All — **done**
+
+- Content multi-select: click replace, Ctrl/Cmd toggle, Shift range
+- Edit → Select All selects the current listing
+- Delete / Cut / Copy operate on the full selection; Properties only when exactly one item
+- Status bar shows `N object(s) selected` while a selection is active
+- Storybook: `SelectAll`
+
+### Slice I — Drag-drop move — **done**
+
+- HTML5 DnD from content items (selection or single drag source)
+- Drop onto content folders or tree location nodes
+- Move uses same rules as cut + paste (`moveExplorerItems`); Undo restores
+- Drag-over highlight (`.is-drag-over`)
+- Storybook: `DragDropMove`
+
 ### Later slices (unchanged backlog)
 
-- Drag-drop, Select All (multi-select)
-- Resizable splitter (v1: fixed tree width)
 - Extract `ExplorerMenuBar` into a reusable chrome `MenuBar` atom if other windows need it
 - PHP-supplied explorer tree (replace empty / demo forests)
+
+
 
