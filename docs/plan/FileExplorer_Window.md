@@ -154,9 +154,17 @@ Until a handler exists, items stay **disabled** (same spirit as toolbar stubs). 
 - Undo covers last paste as well as delete
 - Storybook: `CutCopyPaste`
 
+### Slice F — Properties dialog — **done**
+
+- Read-only General sheet (`ExplorerPropertiesDialog`) for the selected item
+- Overlay centered on `SiteFileExplorer`; toolbar / File → Properties
+- Fields: Type, Location (parent label), Size, Modified
+- Storybook: `Properties`
+
 ### Later slices (unchanged backlog)
 
-- Drag-drop, properties dialog, Select All (multi-select)
+- Drag-drop, Select All (multi-select)
 - Resizable splitter (v1: fixed tree width)
 - Extract `ExplorerMenuBar` into a reusable chrome `MenuBar` atom if other windows need it
 - PHP-supplied explorer tree (replace empty / demo forests)
+
