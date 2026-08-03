@@ -13,7 +13,7 @@ Canonical detail: **[Admin98_Integration_Contract.md](./Admin98_Integration_Cont
 - **Theme scope:** `[data-wh-theme="admin"]` on `<html>` only. `body.dashboard` / `.wh-admin` are **not** product contracts (sandbox may still use `body.dashboard` as a demo shell).
 - **Markup:** 98-compatible class names (`.window`, `.field-row`, …); no `wh-` rename wave initially.
 - **Delivery path:** unchanged — `npm run build` → `dist/` → PHP `bin/sync-ui.sh` / `composer run sync-ui` → AssetMapper + `react_component(...)` ([Local development](../local-dev.md)).
-- **Order:** styles → chrome atoms (Storybook) → product layout bricks → AdminDesktop (Login already; site icons + Control Panel + stubs) → desktop shell MVP → remaining admin pages into windows.
+- **Order:** styles → chrome atoms (Storybook) → product layout bricks → AdminDesktop (Login already; site icons + Control Panel + stubs) → desktop shell MVP → admin windows via `/admin/api` (Sites, then Hosts).
 
 ```mermaid
 flowchart TB
@@ -193,32 +193,40 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 
 ---
 
-## Phase 6 — Move existing admin pages in
+## Phase 6 — Admin windows via API
 
-**Work:** put `SitesPage`, `HostsPage`, list views, etc. into Retro OS windows / heading-panel layout (rewritten brick) + table / form layouts. Routing:
-- short term: shell state + deep link query (`?window=sites`)
-- Symfony routes or wrapper Twigs that mount the same `AdminShell` with an initial window prop
+> **Slice plan:** [Admin98_Phase6_Admin_Windows.md](./Admin98_Phase6_Admin_Windows.md) (source of truth for A–F).
+
+**Status:** in progress (plan written; slices pending).
+
+**Decision:** API-first. Twig only boots `AdminDesktop` (bootstrap props + CSRF). Sites/Hosts CRUD is JSON under `/admin/api`. Legacy `SitesPage` / `HostsPage` / HTML CRUD routes are reference only — not the production path. PHP entity/repository/voter/domain services stay.
+
+**Work (summary):**
+1. Expand `/admin/api` with mutating Sites (then Hosts) + stable error envelope + CSRF on writes.
+2. Retro Sites/Hosts windows (chrome atoms + heading-panel), opened from Control Panel.
+3. Shell kinds `sites` / `hosts`; deep link `?window=sites`.
+4. First vertical slice = Sites list+create end-to-end; Hosts mirrors next.
 
 **Hard parts:**
-- Data fetch / form POST may still be server-centric — keep Twig+React props, or move gradually to API.
-- Modal vs Window: replace old `Modal` with native `.window` dialogs.
-- Auth / flash messages: status-bar or small message-dialog brick.
+- Session `fetch` + CSRF; permission checks (`site.list` / `site.edit`, …).
+- Refresh desktop site icons after create.
+- Modal vs Window: native `.window` / status-bar instead of legacy `FlashList` / `Modal`.
 
-**Done when:** current admin features are reachable from the shell; old AdminLayout can be removed.
+**Done when:** Sites + Hosts reachable from the shell via API; deep links work; old AdminLayout stack unused (delete in Phase 7).
 
 ---
 
 ## Phase 6b — Storybook MSW for Admin data surfaces
 
-**Status:** planned (later; after pages need fetch/list demos in Storybook).
+**Status:** planned (after Slice C needs fetch/save demos; may start minimal handlers earlier).
 
-**Why here:** Phase 4–5 can stay props- and local-state-driven. When Sites/Hosts/… windows load or save over HTTP, Storybook needs **fake APIs** so atoms/bricks/surfaces stay reviewable without PHP.
+**Why here:** Phase 4–5 stayed props-driven. Phase 6 production path is `/admin/api`; Storybook needs **fake APIs** so windows stay reviewable without PHP.
 
 **Work (inspiration only — no vendor code):**
 - Add `msw` + `msw-storybook-addon`; initialize in `.storybook/preview` with `onUnhandledRequest: 'bypass'`
 - Co-locate handlers next to the Admin surface/feature (not in package `exports` / `dist`)
 - Stories declare `parameters.msw.handlers` for empty / populated / error cases
-- Keep PHP + Twig props as the production path until a deliberate API migration
+- Handlers mirror the live `/admin/api` contract from Phase 6
 
 **Done when:** at least one list or save flow is demoable in Storybook via MSW without a running Symfony backend.
 
@@ -251,8 +259,8 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 | 3b | 1–2 days | accessKey helper edge cases (non-string children) |
 | 4 | 3–5 days | PHP sync + Login parity |
 | 5 | 1.5–3 weeks | Window manager fidelity |
-| 6 | ongoing | Page migration |
-| 6b | 2–4 days | MSW handler fidelity vs real routes |
+| 6 | ongoing | API + window migration (Sites first) |
+| 6b | 2–4 days | MSW handler fidelity vs `/admin/api` |
 | 7 | ongoing | Breaking cleanup |
 
 ---
@@ -276,6 +284,6 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 - [x] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
 - [x] Phase 4 — AdminDesktop (site icons + Control Panel + site stubs) via PHP; drop live AdminLayout
 - [x] Phase 5 — React AdminDesktop shell (drag, taskbar, z-order, persistence)
-- [ ] Phase 6 — Migrate Sites/Hosts/… into windows
+- [ ] Phase 6 — Sites/Hosts windows via `/admin/api` (see Admin98_Phase6_Admin_Windows.md)
 - [ ] Phase 6b — Storybook MSW for Admin data surfaces
 - [ ] Phase 7 — Remove legacy admin UI; docs/changelog; sandbox role update
