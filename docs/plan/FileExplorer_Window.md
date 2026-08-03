@@ -3,9 +3,9 @@
 > **Parent plan:** [Admin98_Product_Integration.md](./Admin98_Product_Integration.md)  
 > **Brick:** `FileExplorerWindow` — **own** product brick (`bricks/FileExplorerWindow/`), **not** an `IconPanelWindow` variant. The Control Panel icon-grid window stays separate; the explorer tree + toolbar + view modes get their own layout.
 
-## Scope (first slice)
+## Scope (first slice) — **done**
 
-Storybook-ready **layout brick** + fixture tree/list. Toolbar view switching works; Cut/Copy/Paste/Delete/Undo/Properties/Level-up: visual buttons + `on*` stub callbacks (no-op / action). **No** menu bar, **no** PHP/media API, **no** AdminDesktop wiring in this slice.
+Storybook-ready **layout brick** + fixture tree/list. Toolbar view switching works; Cut/Copy/Paste/Delete/Undo/Properties/Level-up: visual buttons + `on*` stub callbacks (no-op / action). **No** window menu bar, **no** PHP/media API, **no** AdminDesktop wiring in this slice.
 
 ## Reference UI
 
@@ -97,10 +97,42 @@ New product partial e.g. [`product/_explorer.scss`](../../webhemi-ui/src/admin/s
 - Export: [`bricks/index.ts`](../../webhemi-ui/src/admin/bricks/index.ts)
 - Short pointer: [Admin98_Product_Integration.md](./Admin98_Product_Integration.md)
 
-## Intentional omissions (next slice)
+---
 
-- Menu bar (File/Edit/View…) — `menu.svg` later
-- Tree ↔ content navigation / real level-up path stack
+## Next slices (one function → one commit)
+
+Implement **separately** so each can be reviewed before commit. Suggested order:
+
+### Slice A — Tree ↔ content navigation / level-up — **done**
+
+- Keep `locationId` (listing) separate from `selectedId` (content highlight)
+- Tree click → set location; content double-click on folder/location → enter; documents stay no-op open
+- Real **Up** via parent lookup (`findExplorerParent`); disabled on forest roots
+- Tree shows current `locationId` (`aria-current`); auto-expand ancestors when location changes
+- Storybook play covers enter folder + Up (`Navigation` story)
+
+### Slice B — Window menu bar (File / Edit / View / Help)
+
+Classic menubar **above** the toolbar (Win98 Explorer chrome). **Not** related to `menu.svg`.
+
+> **`menu.svg`:** Start-menu **button** icon on the taskbar (`#toolbar button.menu` → `icons/system/menu.svg`). Owned by Phase 5 shell / taskbar — **not** the explorer window menubar.
+
+#### Menu matrix (CMS-mapped, not full OS clone)
+
+| Menu | Items | Notes |
+|------|--------|--------|
+| **File** | New Folder, New Page, Open, Rename, Delete, Properties, Close | New Page = document under site tree; Delete → Recycle Bin; Close = window |
+| **Edit** | Undo, Cut, Copy, Paste, Select All | Mirror toolbar stubs until clipboard exists |
+| **View** | Large Icons, List, Details, Refresh, Status Bar | View modes = toolbar toggles; Refresh later with data |
+| **Help** | About File Explorer… | Optional; can ship last / stub |
+
+**Omit (OS-only, no product fit):** Favorites, Go, Map Network Drive, Format, Create Shortcut, Find Files.
+
+Until a handler exists, items stay **disabled** (same spirit as toolbar stubs). Menubar items should call the same `on*` handlers as the toolbar where they overlap.
+
+### Later slices (unchanged backlog)
+
 - Drag-drop, clipboard, properties dialog
 - AdminDesktop open wiring; PHP AssetMapper sync for toolbar assets (verify at implementation time)
 - Resizable splitter (v1: fixed tree width)
+- Menu bar asset/chrome atom if needed (separate from Start `menu.svg`)

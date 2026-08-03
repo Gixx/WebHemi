@@ -134,7 +134,7 @@ Storybook: **Admin/Atoms/** + Foundations CatalogSmoke rewritten to use atoms. L
 - Custom scrollbar as **chrome capability** (`Scrollable`, `SunkenPanel`/`FieldBorder` `scrollable` prop, `useCustomScrollbar` / `attachCustomScrollbar`) — not a product brick
 - `SystemIcon` as **chrome atom** (desktop + icon panels; Taskbar / StartMenu deferred to Phase 5)
 - `LoginForm` refactored onto `DialogWindow`
-- Next brick (in progress): [`FileExplorerWindow`](./FileExplorer_Window.md) — own brick, not an `IconPanelWindow` variant
+- Next brick: [`FileExplorerWindow`](./FileExplorer_Window.md) — layout slice done; navigation then menubar as separate commits (see that plan)
 
 **Hard parts (resolved / noted):**
 - Scrollbar: chrome owns `.scrollable` / viewport; effect mounts `.sb-*` rails only (`SunkenPanel`/`FieldBorder` `scrollable` or `Scrollable` for layout hosts).
