@@ -111,7 +111,7 @@ Implement **separately** so each can be reviewed before commit. Suggested order:
 - Tree shows current `locationId` (`aria-current`); auto-expand ancestors when location changes
 - Storybook play covers enter folder + Up (`Navigation` story)
 
-### Slice B — Window menu bar (File / Edit / View / Help)
+### Slice B — Window menu bar (File / Edit / View / Help) — **done**
 
 Classic menubar **above** the toolbar (Win98 Explorer chrome). **Not** related to `menu.svg`.
 
@@ -128,11 +128,19 @@ Classic menubar **above** the toolbar (Win98 Explorer chrome). **Not** related t
 
 **Omit (OS-only, no product fit):** Favorites, Go, Map Network Drive, Format, Create Shortcut, Find Files.
 
-Until a handler exists, items stay **disabled** (same spirit as toolbar stubs). Menubar items should call the same `on*` handlers as the toolbar where they overlap.
+Until a handler exists, items stay **disabled** (same spirit as toolbar stubs). Menubar items call the same `on*` handlers as the toolbar where they overlap. Implemented as brick-local `ExplorerMenuBar` (chrome atom extraction later if other windows need it). Storybook: `MenuBar` play.
+
+### Slice C — AdminDesktop open wiring — **done**
+
+- Site desktop icon → `SiteFileExplorer` (stateful `FileExplorerWindow` host) instead of stub `DialogWindow`
+- Default forest: `buildEmptySiteExplorerTree` (empty roots until PHP nav/media API)
+- Storybook uses `buildDemoSiteExplorerTree` (Acme fixture remapped per site)
+- Toolbar SVG assets already under `assets/admin/icons/toolbar/` (UI + synced PHP) — no extra sync work
+- Close: title-bar Close + File → Close
 
 ### Later slices (unchanged backlog)
 
 - Drag-drop, clipboard, properties dialog
-- AdminDesktop open wiring; PHP AssetMapper sync for toolbar assets (verify at implementation time)
 - Resizable splitter (v1: fixed tree width)
-- Menu bar asset/chrome atom if needed (separate from Start `menu.svg`)
+- Extract `ExplorerMenuBar` into a reusable chrome `MenuBar` atom if other windows need it
+- PHP-supplied explorer tree (replace empty / demo forests)
