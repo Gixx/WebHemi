@@ -197,22 +197,23 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 
 > **Slice plan:** [Admin98_Phase6_Admin_Windows.md](./Admin98_Phase6_Admin_Windows.md) (source of truth for A–F).
 
-**Status:** in progress (plan written; slices pending).
+**Status:** in progress (Slices A–C + E done; D deferred; F pending).
 
 **Decision:** API-first. Twig only boots `AdminDesktop` (bootstrap props + CSRF). Sites/Hosts CRUD is JSON under `/admin/api`. Legacy `SitesPage` / `HostsPage` / HTML CRUD routes are reference only — not the production path. PHP entity/repository/voter/domain services stay.
 
 **Work (summary):**
 1. Expand `/admin/api` with mutating Sites (then Hosts) + stable error envelope + CSRF on writes.
 2. Retro Sites/Hosts windows (chrome atoms + heading-panel), opened from Control Panel.
-3. Shell kinds `sites` / `hosts`; deep link `?window=sites`.
+3. Shell kinds `sites` / `hosts` (deep links deferred — separate acceptance criteria later).
 4. First vertical slice = Sites list+create end-to-end; Hosts mirrors next.
+5. Host ownership verify/assign (pending → verified → active): [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) — after Slice E; not blocking F.
 
 **Hard parts:**
 - Session `fetch` + CSRF; permission checks (`site.list` / `site.edit`, …).
 - Refresh desktop site icons after create.
 - Modal vs Window: native `.window` / status-bar instead of legacy `FlashList` / `Modal`.
 
-**Done when:** Sites + Hosts reachable from the shell via API; deep links work; old AdminLayout stack unused (delete in Phase 7).
+**Done when:** Sites + Hosts reachable from the shell via API; old AdminLayout stack unused (delete in Phase 7).
 
 ---
 
@@ -286,4 +287,5 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 - [x] Phase 5 — React AdminDesktop shell (drag, taskbar, z-order, persistence)
 - [ ] Phase 6 — Sites/Hosts windows via `/admin/api` (see Admin98_Phase6_Admin_Windows.md)
 - [ ] Phase 6b — Storybook MSW for Admin data surfaces
+- [ ] Host ownership verify/assign — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md)
 - [ ] Phase 7 — Remove legacy admin UI; docs/changelog; sandbox role update

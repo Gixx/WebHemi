@@ -40,7 +40,7 @@ A multi-repository platform where:
 | **Multi-domain** | Multiple hostnames per site; request host drives routing context |
 | **Surfaces** | `admin`, `site`, and `api` — same host model, different entry points |
 | **RBAC** | Roles and permission strings (e.g. `site.list`, `host.verify`) |
-| **Host ownership** | File-based verification for `site` surface hosts (pending → verified → active) |
+| **Host ownership** | File probe: pending → verified → assign to site → active ([plan](docs/plan/Host_Ownership_Verification.md)) |
 
 The legacy Symfony monolith (Twig admin, inline CSS) is **retired**. Admin UI comes only from `@webhemi/ui`.
 
@@ -121,7 +121,8 @@ Do not treat `.old/` as the source of truth — use the tag or submodule repos.
 | [FileExplorer window](docs/plan/FileExplorer_Window.md) | `FileExplorerWindow` brick: tree + toolbar + view modes |
 | [webhemi-php README](webhemi-php/README.md) | PHP setup, sync-ui, QA |
 | [webhemi-ui README](webhemi-ui/README.md) | Storybook and library build |
-| [Host ownership flow](webhemi-php/docs/host-ownership-verification-flow.md) | Domain verification behaviour |
+| [Host ownership verification](docs/plan/Host_Ownership_Verification.md) | pending → verified → assign → active; probe + API/UI slices |
+| [Host ownership probe (PHP)](webhemi-php/docs/host-ownership-verification-flow.md) | File probe mechanics (`HostOwnershipVerifier`) |
 
 ---
 

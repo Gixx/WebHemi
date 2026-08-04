@@ -45,7 +45,7 @@ flowchart LR
 - Keep public export **`AdminDesktop`** (PHP React controller unchanged as the shell mount).
 - New UI under `webhemi-ui/src/admin/` — prefer **window surface** (brick or `pages/`) composed from chrome atoms (`Table`, `FieldRow`, `Button`, `TextBox`, `StatusBar`, heading-panel layout). Do **not** extend `AdminLayout` / shared modern form stack.
 - Small **`admin/api`** client helper (base path, credentials, CSRF header, typed envelopes) — not a second NPM entry.
-- Shell window ids: `sites`, `hosts` (stable for persistence / deep link).
+- Shell window ids: `sites`, `hosts` (stable for persistence).
 
 ## JSON contract (minimal)
 
@@ -103,21 +103,30 @@ HTTP: `401` / `403` / `404` / `422` / `409` as appropriate. No HTML error pages 
 
 **Done when:** from `/admin`, Control Panel → Sites shows DB sites and can create one without leaving the shell.
 
-### Slice D — Deep link `?window=sites` — pending
+### Slice D — Deep link `?window=…` — **deferred**
 
-- On mount, if `window=sites` (and later `hosts`), open/raise that shell window once.
-- Replace URL without reload optional (`history.replaceState`) so refresh + persistence stay sane.
-- Start menu: optional “Sites” entry (or keep CP as primary entry until Hosts exists).
+Skipped for now (only `sites` would have shipped; not useful until a full deep-link acceptance criteria exists). Not part of Hosts (Slice E). Revisit after admin windows are complete.
 
-### Slice E — Hosts (API + window + shell) — pending
+### Slice E — Hosts (API + window + shell) — **done**
 
 - Mirror A–C for hosts: `POST /admin/api/hosts`, Retro Hosts window, kind `hosts`, Control Panel open, refresh as needed.
-- Reuse verification domain service later (`host.verify`); first Hosts slice = list + create only unless verify is cheap to expose as `POST …/verify`.
+- First Hosts slice = list + create only (verify / assign deferred — see [Host_Ownership_Verification.md](./Host_Ownership_Verification.md)).
+- No deep links in this slice.
+- PHP: `CreateHostInput`, `HostCreator`, `HostApiMapper`, CSRF + `host.edit`.
+- UI: `HostsWindow` / `HostFormDialog`; shell `HOSTS_WINDOW_ID`; Sites form **Add…** opens Hosts.
+- Storybook: `Admin/Components/HostsWindow`, `OpenHostsWindow`.
+- **Temporary create contract:** `siteId` required on create; ownership probe not wired. Replaced by H1–H3 in the ownership plan.
 
 ### Slice F — Operator feedback — pending
 
 - Status-bar messages and/or small message `.window` dialog for API errors / success (replace legacy `FlashList` role).
 - Consistent handling of `401` (redirect login) vs `403`/`422` in-window.
+
+### Follow-up — Host ownership (H1–H3)
+
+> **Plan:** [Host_Ownership_Verification.md](./Host_Ownership_Verification.md)
+
+pending → verify → verified → assign to site → active. Uses existing `HostOwnershipVerifier`.
 
 ## Explicitly deferred
 
@@ -127,8 +136,10 @@ HTTP: `401` / `403` / `404` / `422` / `409` as appropriate. No HTML error pages 
 - Deleting legacy modern pages/routes (Phase 7 cleanup, unless a slice is blocked by confusion — then delete early with checklist).
 - Full MSW package setup (Phase 6b); Slice C may add minimal handlers only as needed.
 - SPA router / leaving AssetMapper shell mount.
+- Deep links (`?window=…`) — deferred until a dedicated acceptance criteria; not in Hosts.
+- Host ownership verify/assign lifecycle — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) (H1–H3); not part of Slice E/F MVP.
 
-## Phase 6 status — **in progress** (Slices A–C done; D–F pending)
+## Phase 6 status — **in progress** (Slices A–C + E done; D deferred; F pending)
 
 **Near-term done when:** Sites list+create works end-to-end from the shell via API (Slice C).  
-**Phase done when:** Sites + Hosts reachable from Control Panel via API; deep links work; legacy CRUD pages unused and scheduled for Phase 7 delete.
+**Phase done when:** Sites + Hosts reachable from Control Panel via API; legacy CRUD pages unused and scheduled for Phase 7 delete.
