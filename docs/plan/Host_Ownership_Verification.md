@@ -50,47 +50,44 @@ Do **not** reimplement the probe in React. UI only triggers API + shows result.
 
 | Area | Today (Slice E) | Target |
 |------|-----------------|--------|
-| Create body | `siteId` **required** | `siteId` **omitted** on create; optional later only via assign |
-| Create status | always `pending` (OK) but already has site | `pending`, **no** site FK until assign |
-| Verify API | missing (`admin_hosts_verify` redirects) | `POST /admin/api/hosts/{id}/verify` + `host.verify` + CSRF |
-| Assign | create-time only | explicit assign (or Hosts edit) when `verified` → `active` |
-| Sites Hosts tab | any host checkbox | only `verified` (unassigned) + already assigned to this site |
-| Entity | `site` ManyToOne **nullable: false** | site must become **nullable** until assign (migration) |
+| Create body | `siteId` **optional** (landed) | keep omit-on-create; assign later when verified |
+| Create status | `pending`; site may be null | same; probe before assign |
+| Verify API | `POST /admin/api/hosts/{id}/verify` (landed) | unchanged |
+| Assign | `POST …/assign` + PATCH rules (landed) | unchanged |
+| Sites Hosts tab | assigned table + Assign verified-unassigned + Remove (landed) | unchanged |
+| Entity | `site` ManyToOne **nullable** (landed) | unchanged |
 
 ## Acceptance criteria
 
-- [ ] Operator can create a hostname from Hosts window without choosing a site; row shows `pending`.
-- [ ] **Verify** action (Hosts window) calls API; on success status becomes `verified`; on failure stays `pending` with clear error (Slice F feedback OK).
-- [ ] Sites → Hosts (or Hosts assign) only lists **verified, unassigned** hosts plus hosts already on that site; cannot assign `pending`.
-- [ ] Assigning a verified host to a site sets status `active` and sets the site FK.
-- [ ] Probe uses existing `HostOwnershipVerifier`; no duplicate client-side HTTP check.
-- [ ] Permission: verify requires `host.verify`; create/assign require `host.edit` (assign may also need `site.edit` — decide in implement slice).
-- [ ] Storybook: Hosts list states `pending` / `verified` / `active`; Verify + Assign plays with mocked API (MSW optional / 6b).
+- [x] Operator can create a hostname from Hosts window without choosing a site; row shows `pending` (Site column `—`).
+- [x] **Verify** action (Hosts window) calls API; on success status becomes `verified`; on failure stays `pending` with clear error (Error MessageDialog + chord).
+- [x] Sites → Hosts (or Hosts assign) only lists **verified, unassigned** hosts plus hosts already on that site; cannot assign `pending`.
+- [x] Assigning a verified host to a site sets status `active` and sets the site FK.
+- [x] Probe uses existing `HostOwnershipVerifier`; no duplicate client-side HTTP check.
+- [x] Permission: verify requires `host.verify`; create/assign require `host.edit` (assign may also need `site.edit` — decide in implement slice).
+- [x] Storybook: Hosts Verify play; Sites Assign play for verified-unassigned (MSW optional / 6b).
 
 ## Suggested implementation slices
 
-### H1 — Schema + create without site
+### H1 — Schema + create without site — **done** (partial vs original bullet)
 
-- Make `SiteHost::$site` nullable (Doctrine migration).
-- `CreateHostInput`: drop required `siteId`; keep `host`, `surface`, `active?`.
-- `HostCreator`: persist with `status=pending`, no site.
-- Adjust GET mapper (`siteId` / names null-safe).
-- Update Hosts UI create form: no Site select on New (surface + hostname only).
-- Unit tests.
+- `SiteHost::$site` nullable + migration; create/update/unassign API; Hosts UI Site select **None**; Site column `—`.
+- Remaining for full H1 intent: optionally hide Site on **New** (still available so operators can assign early until H3).
 
-### H2 — Verify API + Hosts UI action
+### H2 — Verify API + Hosts UI action — **done**
 
 - `POST /admin/api/hosts/{id}/verify` (`host.verify`, CSRF).
-- Load host; if not `pending` (or allow re-verify from `verified` only when unassigned — MVP: `pending` only), run verifier; set `verified` or return error envelope.
-- Hosts window: **Verify** enabled for selected `pending` row; refresh list.
-- Storybook play + PHP unit/integration as appropriate.
+- Load host; MVP: `pending` only; run `HostOwnershipVerifier`; set `verified` or `422` envelope.
+- Hosts window: **Verify** enabled for selected `pending` row; Error MessageDialog on failure; refresh list on success.
+- Storybook plays + PHP unit tests.
 
-### H3 — Assign verified → active
+### H3 — Assign verified → active — **done**
 
-- `POST /admin/api/hosts/{id}/assign` body `{ siteId }` (or PATCH); require status `verified` and null site; set site + `active`.
-- Wire Sites `SiteFormDialog` Hosts tab: checkboxes = verified-unassigned ∪ this site’s hosts; **Add…** still opens Hosts for create/verify.
-- Reject assign of `pending` with `422`.
-- After assign, Sites host counts / desktop refresh as today.
+- `POST /admin/api/hosts/{id}/assign` body `{ siteId }` (`host.edit`, CSRF); require `verified` + null site → set site + `active`.
+- PATCH host `siteId` uses the same assign rules.
+- Sites Hosts tab: Assign select (verified-unassigned) + Assign; Remove unassigns.
+- Hosts Edit: Site select locked while `pending`.
+- Storybook play + PHP unit tests.
 
 ### H4 — Docs + seed alignment
 
@@ -102,10 +99,10 @@ Do **not** reimplement the probe in React. UI only triggers API + shows result.
 
 - DNS TXT alternative to file probe.
 - Automatic verify on create (always operator-triggered for MVP).
-- Detach host from site / demote `active` → `verified`.
+- Demote `active` → `verified` on unassign (landed with unassign).
 - Deep links to Hosts / Verify.
 - Changing how request host resolves tenants beyond requiring `active` + site (routing follow-up).
 
 ## Status
 
-**Planned** — not started. Phase 6 Slice E remains list+create with current (temporary) `siteId`-on-create API until H1 replaces it.
+**H1–H3 done** for happy path (create → verify → assign → active). H4 docs/seed alignment still open.

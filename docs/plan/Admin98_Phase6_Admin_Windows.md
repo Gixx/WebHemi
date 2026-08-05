@@ -115,19 +115,19 @@ Skipped for now (only `sites` would have shipped; not useful until a full deep-l
 - PHP: `CreateHostInput`, `HostCreator`, `HostApiMapper`, CSRF + `host.edit`.
 - UI: `HostsWindow` / `HostFormDialog`; shell `HOSTS_WINDOW_ID`; Sites form **Add…** opens Hosts.
 - Storybook: `Admin/Components/HostsWindow`, `OpenHostsWindow`.
-- **Temporary create contract:** `siteId` required on create; ownership probe not wired. Replaced by H1–H3 in the ownership plan.
+**Temporary create contract (Slice E):** superseded in part — hosts may be created **without** `siteId`; Sites Hosts tab lists assigned hosts only (Name/Status) with Remove = unassign. Verify API + Hosts **Verify** (H2) landed; assign-to-site (H3) remains in [Host_Ownership_Verification.md](./Host_Ownership_Verification.md).
 
 ### Slice F — Operator feedback — pending
 
 - Status-bar messages and/or small message `.window` dialog for API errors / success (replace legacy `FlashList` role).
 - Consistent handling of `401` (redirect login) vs `403`/`422` in-window.
+- Load/verify/save errors already use Error MessageDialog + chord in Sites/Hosts; Slice F may add success / richer status-bar copy.
 
 ### Follow-up — Host ownership (H1–H3)
 
 > **Plan:** [Host_Ownership_Verification.md](./Host_Ownership_Verification.md)
 
-pending → verify → verified → assign to site → active. Uses existing `HostOwnershipVerifier`.
-
+pending → verify → verified → assign to site → active. Uses existing `HostOwnershipVerifier`. **H1–H3 done;** H4 docs/seed open.
 ## Explicitly deferred
 
 - Roles / Permissions / Users / Settings / Themes windows (CP icons remain inert or stub dialog).
