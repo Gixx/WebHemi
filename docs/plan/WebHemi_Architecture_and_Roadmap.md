@@ -134,7 +134,7 @@ webhemi-js/
    * For local development on Symfony, you can configure your assetmapper directory helper to point directly to the local folder of `webhemi-ui/dist` instead of the remote CDN.
 
 ### Phase 5: Distribution & Comparison
-* 1. Package WebHemi.PHP as a clean zip/git release with a database installer.
+* 1. Package WebHemi.PHP as a clean zip/git release with a database installer (wizard: locale, DB, primary domain → protected main site/host + Hello world + path-based `/admin`). Detail: [`Installer_and_Protected_Base_Site.md`](./Installer_and_Protected_Base_Site.md).
 * 2. Verify that WebHemi.PHP production environments require absolutely zero Node.js setups.
 * 3. Audit performance metrics between both stacks.
 

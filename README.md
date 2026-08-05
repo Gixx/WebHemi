@@ -123,6 +123,7 @@ Do not treat `.old/` as the source of truth — use the tag or submodule repos.
 | [webhemi-ui README](webhemi-ui/README.md) | Storybook and library build |
 | [Host ownership verification](docs/plan/Host_Ownership_Verification.md) | pending → verified → assign → active; probe + API/UI slices |
 | [Host ownership probe (PHP)](webhemi-php/docs/host-ownership-verification-flow.md) | File probe mechanics (`HostOwnershipVerifier`) |
+| [Installer & protected base site](docs/plan/Installer_and_Protected_Base_Site.md) | Late-phase setup wizard; path-based `/admin`; undeletable main site/host |
 
 ---
 
