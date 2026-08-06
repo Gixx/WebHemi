@@ -133,13 +133,18 @@ pending → verify → verified → assign to site → active. Uses existing `Ho
 ## Explicitly deferred
 
 - Roles / Permissions / Users / Settings / Themes windows (CP icons remain inert or stub dialog).
-- Editing/deleting sites beyond create+list (follow-up once list UX settles).
 - Dropping Twig bootstrap `sites` prop entirely (can keep for first paint; API remains source of truth after Sites opens / after create).
 - Deleting legacy modern pages/routes (Phase 7 cleanup, unless a slice is blocked by confusion — then delete early with checklist).
 - Full MSW package setup (Phase 6b); Slice C may add minimal handlers only as needed.
 - SPA router / leaving AssetMapper shell mount.
 - Deep links (`?window=…`) — deferred until a dedicated acceptance criteria; not in Hosts.
 - Host ownership verify/assign lifecycle — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) (H1–H4 done); not part of Slice E/F MVP.
+
+### Follow-up — Sites & Hosts full CRUD — **done**
+
+> **Plan:** [Sites_Hosts_Full_CRUD.md](./Sites_Hosts_Full_CRUD.md)
+
+GET-by-id, PATCH, DELETE for Sites and Hosts; UI edit/delete with confirm modal; site delete blocked while hosts assigned.
 
 ## Phase 6 status — **in progress** (Slices A–C + E + F done; D deferred)
 

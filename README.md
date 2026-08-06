@@ -40,7 +40,7 @@ A multi-repository platform where:
 | **Multi-domain** | Multiple hostnames per site; request host drives routing context |
 | **Surfaces** | `admin`, `site`, and `api` — same host model, different entry points |
 | **RBAC** | Roles and permission strings (e.g. `site.list`, `host.verify`) |
-| **Host ownership** | File probe: pending → verified → assign to site → active ([plan](docs/plan/Host_Ownership_Verification.md)); local `app:seed` skips probe and seeds active hosts |
+| **Host ownership** | File probe: pending → verified → assign to site; Status = Enabled/Disabled ([plan](docs/plan/Host_Ownership_Verification.md)); local `app:seed` skips probe |
 
 The legacy Symfony monolith (Twig admin, inline CSS) is **retired**. Admin UI comes only from `@webhemi/ui`.
 
@@ -124,6 +124,7 @@ Do not treat `.old/` as the source of truth — use the tag or submodule repos.
 | [Host ownership verification](docs/plan/Host_Ownership_Verification.md) | pending → verified → assign → active; probe + API/UI slices |
 | [Host ownership probe (PHP)](webhemi-php/docs/host-ownership-verification-flow.md) | File probe mechanics (`HostOwnershipVerifier`) |
 | [Installer & protected base site](docs/plan/Installer_and_Protected_Base_Site.md) | Late-phase setup wizard; path-based `/admin`; undeletable main site/host |
+| [Sites & Hosts full CRUD](docs/plan/Sites_Hosts_Full_CRUD.md) | PATCH/DELETE (and GET-by-id) for Sites + Hosts; UI edit/delete wire-up |
 
 ---
 

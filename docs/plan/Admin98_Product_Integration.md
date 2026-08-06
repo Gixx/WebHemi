@@ -197,7 +197,7 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 
 > **Slice plan:** [Admin98_Phase6_Admin_Windows.md](./Admin98_Phase6_Admin_Windows.md) (source of truth for A–F).
 
-**Status:** in progress (Slices A–C + E done; D deferred; F pending).
+**Status:** in progress (Slices A–C + E + F done; D deferred; Sites/Hosts full CRUD done — see [Sites_Hosts_Full_CRUD.md](./Sites_Hosts_Full_CRUD.md)).
 
 **Decision:** API-first. Twig only boots `AdminDesktop` (bootstrap props + CSRF). Sites/Hosts CRUD is JSON under `/admin/api`. Legacy `SitesPage` / `HostsPage` / HTML CRUD routes are reference only — not the production path. PHP entity/repository/voter/domain services stay.
 
@@ -285,7 +285,7 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 - [x] Phase 3b — Dynamic accessKey (Button + FieldRow); see AccessKey_Dynamize.md
 - [x] Phase 4 — AdminDesktop (site icons + Control Panel + site stubs) via PHP; drop live AdminLayout
 - [x] Phase 5 — React AdminDesktop shell (drag, taskbar, z-order, persistence)
-- [ ] Phase 6 — Sites/Hosts windows via `/admin/api` (see Admin98_Phase6_Admin_Windows.md)
+- [x] Phase 6 — Sites/Hosts windows via `/admin/api` (see Admin98_Phase6_Admin_Windows.md)
 - [ ] Phase 6b — Storybook MSW for Admin data surfaces
-- [ ] Host ownership verify/assign — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md)
+- [x] Host ownership verify/assign — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md)
 - [ ] Phase 7 — Remove legacy admin UI; docs/changelog; sandbox role update
