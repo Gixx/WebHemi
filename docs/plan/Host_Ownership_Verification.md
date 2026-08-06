@@ -89,11 +89,11 @@ Do **not** reimplement the probe in React. UI only triggers API + shows result.
 - Hosts Edit: Site select locked while `pending`.
 - Storybook play + PHP unit tests.
 
-### H4 — Docs + seed alignment
+### H4 — Docs + seed alignment — **done**
 
-- Update `webhemi-php/docs/host-ownership-verification-flow.md` to point here for product rules.
-- Seed hosts: either `active` with site (fixtures) or document that seed skips probe (dev only).
-- Hub README capability row: pending → verified → active via assign.
+- `webhemi-php/docs/host-ownership-verification-flow.md` points here for product rules; documents probe + **dev seed skip**.
+- `app:seed` upserts fixture hosts as `active` + assigned to `main` (idempotent status/site); README notes probe skip.
+- Hub README capability row: pending → verified → assign → active; seed exception called out.
 
 ## Explicitly out of scope (until criteria expand)
 
@@ -105,4 +105,4 @@ Do **not** reimplement the probe in React. UI only triggers API + shows result.
 
 ## Status
 
-**H1–H3 done** for happy path (create → verify → assign → active). H4 docs/seed alignment still open.
+**H1–H4 done** — happy path (create → verify → assign → active) plus docs/seed alignment.

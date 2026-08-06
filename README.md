@@ -40,7 +40,7 @@ A multi-repository platform where:
 | **Multi-domain** | Multiple hostnames per site; request host drives routing context |
 | **Surfaces** | `admin`, `site`, and `api` — same host model, different entry points |
 | **RBAC** | Roles and permission strings (e.g. `site.list`, `host.verify`) |
-| **Host ownership** | File probe: pending → verified → assign to site → active ([plan](docs/plan/Host_Ownership_Verification.md)) |
+| **Host ownership** | File probe: pending → verified → assign to site → active ([plan](docs/plan/Host_Ownership_Verification.md)); local `app:seed` skips probe and seeds active hosts |
 
 The legacy Symfony monolith (Twig admin, inline CSS) is **retired**. Admin UI comes only from `@webhemi/ui`.
 

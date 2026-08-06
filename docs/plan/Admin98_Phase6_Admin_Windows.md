@@ -117,17 +117,19 @@ Skipped for now (only `sites` would have shipped; not useful until a full deep-l
 - Storybook: `Admin/Components/HostsWindow`, `OpenHostsWindow`.
 **Temporary create contract (Slice E):** superseded in part — hosts may be created **without** `siteId`; Sites Hosts tab lists assigned hosts only (Name/Status) with Remove = unassign. Verify API + Hosts **Verify** (H2) landed; assign-to-site (H3) remains in [Host_Ownership_Verification.md](./Host_Ownership_Verification.md).
 
-### Slice F — Operator feedback — pending
+### Slice F — Operator feedback — **done**
 
-- Status-bar messages and/or small message `.window` dialog for API errors / success (replace legacy `FlashList` role).
-- Consistent handling of `401` (redirect login) vs `403`/`422` in-window.
-- Load/verify/save errors already use Error MessageDialog + chord in Sites/Hosts; Slice F may add success / richer status-bar copy.
+> **Detail:** [Admin98_Phase6_Slice_F_Operator_Feedback.md](./Admin98_Phase6_Slice_F_Operator_Feedback.md)
 
-### Follow-up — Host ownership (H1–H3)
+- Success → middle status-bar field (`statusMessage`, auto-clear 4s / selection / next mutate).
+- Failures → Error MessageDialog + chord (including `formError` when the form is closed — Assign/Unassign).
+- 401 → existing dialog → OK → `/login`.
+
+### Follow-up — Host ownership (H1–H4) — **done**
 
 > **Plan:** [Host_Ownership_Verification.md](./Host_Ownership_Verification.md)
 
-pending → verify → verified → assign to site → active. Uses existing `HostOwnershipVerifier`. **H1–H3 done;** H4 docs/seed open.
+pending → verify → verified → assign to site → active. Uses existing `HostOwnershipVerifier`. Docs/seed aligned (local `app:seed` skips probe).
 ## Explicitly deferred
 
 - Roles / Permissions / Users / Settings / Themes windows (CP icons remain inert or stub dialog).
@@ -137,9 +139,9 @@ pending → verify → verified → assign to site → active. Uses existing `Ho
 - Full MSW package setup (Phase 6b); Slice C may add minimal handlers only as needed.
 - SPA router / leaving AssetMapper shell mount.
 - Deep links (`?window=…`) — deferred until a dedicated acceptance criteria; not in Hosts.
-- Host ownership verify/assign lifecycle — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) (H1–H3); not part of Slice E/F MVP.
+- Host ownership verify/assign lifecycle — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) (H1–H4 done); not part of Slice E/F MVP.
 
-## Phase 6 status — **in progress** (Slices A–C + E done; D deferred; F pending)
+## Phase 6 status — **in progress** (Slices A–C + E + F done; D deferred)
 
 **Near-term done when:** Sites list+create works end-to-end from the shell via API (Slice C).  
 **Phase done when:** Sites + Hosts reachable from Control Panel via API; legacy CRUD pages unused and scheduled for Phase 7 delete.
