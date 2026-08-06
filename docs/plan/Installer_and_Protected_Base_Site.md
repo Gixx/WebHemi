@@ -1,7 +1,6 @@
 # Installer, protected base site/host, and path-based admin
 
-> **Horizon:** late / distribution phase — not current Admin98 work.  
-> **Related:** [Architecture & roadmap](./WebHemi_Architecture_and_Roadmap.md) (Phase 5 packaging), [Host ownership](./Host_Ownership_Verification.md), multi-tenant Sites/Hosts.
+> **Horizon:** phases 9–13 in [`CURRENT.md`](./CURRENT.md). This file holds design detail.
 
 ## Intent
 

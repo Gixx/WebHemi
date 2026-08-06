@@ -1,5 +1,6 @@
 # Admin98 Phase 5 — Desktop shell MVP
 
+> **Status:** done — see [`CURRENT.md`](./CURRENT.md).  
 > **Parent plan:** [Admin98_Product_Integration.md](./Admin98_Product_Integration.md)  
 > **Surface:** extend Phase 4 [`AdminDesktop`](../../webhemi-ui/src/admin/pages/AdminDesktop.tsx) into real shell behavior (drag, taskbar, Start, persistence).  
 > **Rhythm:** one slice → one commit (same as FileExplorer).

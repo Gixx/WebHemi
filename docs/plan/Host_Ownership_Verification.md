@@ -1,5 +1,6 @@
 # Host ownership verification (pending → verified → assign)
 
+> **Status:** done — see [`CURRENT.md`](./CURRENT.md). Naming: Verification + Enabled/Disabled (no ownership `active`).  
 > **Parent:** [Admin98_Phase6_Admin_Windows.md](./Admin98_Phase6_Admin_Windows.md) (Hosts follow-up after Slice E)  
 > **Domain service (exists):** [`HostOwnershipVerifier`](../../webhemi-php/src/SiteHost/Verification/HostOwnershipVerifier.php)  
 > **Legacy note:** [`webhemi-php/docs/host-ownership-verification-flow.md`](../../webhemi-php/docs/host-ownership-verification-flow.md) — probe mechanics still valid; **lifecycle / assignment rules below supersede** older “create with site / admin→active skip” product rules.

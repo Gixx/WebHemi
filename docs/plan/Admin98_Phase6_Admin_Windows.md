@@ -1,5 +1,6 @@
 # Admin98 Phase 6 — Admin windows via API
 
+> **Status:** mostly done — remaining work is in [`CURRENT.md`](./CURRENT.md) (deep links = Phase 1, MSW = Phase 2, CP windows = Phases 4–8).  
 > **Parent plan:** [Admin98_Product_Integration.md](./Admin98_Product_Integration.md)  
 > **Surface:** open real admin CRUD from the Retro OS shell (Control Panel → Sites, later Hosts, …), backed by `/admin/api/*`.  
 > **Rhythm:** one slice → one commit (same as Phase 5 / FileExplorer).

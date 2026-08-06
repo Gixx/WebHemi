@@ -54,7 +54,7 @@ The legacy Symfony monolith (Twig admin, inline CSS) is **retired**. Admin UI co
 | [`webhemi-php/`](webhemi-php/) | [Gixx/webhemi-php](https://github.com/Gixx/webhemi-php) | Symfony CMS engine |
 | [`webhemi-js/`](webhemi-js/) | [Gixx/webhemi-js](https://github.com/Gixx/webhemi-js) | Next + Payload (outline only for now) |
 
-Architecture and roadmap: [`docs/plan/WebHemi_Architecture_and_Roadmap.md`](docs/plan/WebHemi_Architecture_and_Roadmap.md)
+Architecture detail: [`docs/plan/WebHemi_Architecture_and_Roadmap.md`](docs/plan/WebHemi_Architecture_and_Roadmap.md) · **Where we are:** [`docs/plan/CURRENT.md`](docs/plan/CURRENT.md)
 
 ---
 
@@ -114,17 +114,15 @@ Do not treat `.old/` as the source of truth — use the tag or submodule repos.
 
 | Document | Description |
 |----------|-------------|
+| [**Current progress**](docs/plan/CURRENT.md) | **Start here** — done vs next phases (renumbered) |
 | [Local development](docs/local-dev.md) | `make up` / hosts / Makefile vs DDEV |
-| [Architecture & roadmap](docs/plan/WebHemi_Architecture_and_Roadmap.md) | Multi-repo design and implementation phases |
-| [Admin98 product integration](docs/plan/Admin98_Product_Integration.md) | Retro OS admin tech-demo → `@webhemi/ui` + PHP |
-| [Admin98 integration contract](docs/plan/Admin98_Integration_Contract.md) | Phase 0 ADR: layers, theme scope, markup, no shared UI |
-| [FileExplorer window](docs/plan/FileExplorer_Window.md) | `FileExplorerWindow` brick: tree + toolbar + view modes |
+| [Architecture & roadmap](docs/plan/WebHemi_Architecture_and_Roadmap.md) | Multi-repo design (long-horizon) |
+| [Admin98 product integration](docs/plan/Admin98_Product_Integration.md) | Historical phase narrative 0–7 |
 | [webhemi-php README](webhemi-php/README.md) | PHP setup, sync-ui, QA |
 | [webhemi-ui README](webhemi-ui/README.md) | Storybook and library build |
-| [Host ownership verification](docs/plan/Host_Ownership_Verification.md) | pending → verified → assign → active; probe + API/UI slices |
-| [Host ownership probe (PHP)](webhemi-php/docs/host-ownership-verification-flow.md) | File probe mechanics (`HostOwnershipVerifier`) |
-| [Installer & protected base site](docs/plan/Installer_and_Protected_Base_Site.md) | Late-phase setup wizard; path-based `/admin`; undeletable main site/host |
-| [Sites & Hosts full CRUD](docs/plan/Sites_Hosts_Full_CRUD.md) | PATCH/DELETE (and GET-by-id) for Sites + Hosts; UI edit/delete wire-up |
+| [Host ownership probe (PHP)](webhemi-php/docs/host-ownership-verification-flow.md) | File probe mechanics |
+
+Other `docs/plan/*` files are detail / ADR notes; status lives in [CURRENT.md](docs/plan/CURRENT.md).
 
 ---
 

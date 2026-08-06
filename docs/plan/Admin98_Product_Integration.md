@@ -1,5 +1,7 @@
 # Admin98 → WebHemi product integration
 
+> **Status & next work:** maintain only in [`CURRENT.md`](./CURRENT.md). This file is the historical phase narrative (0–7).
+
 Integration plan for bringing the [webhemi-admin98](https://github.com/Gixx/webhemi-admin98) Retro OS tech demo into the real WebHemi product (`@webhemi/ui` + PHP AssetMapper).
 
 ## Fixed decisions

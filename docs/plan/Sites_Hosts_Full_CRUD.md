@@ -1,7 +1,6 @@
 # Sites & Hosts full CRUD (PATCH + DELETE)
 
-> **Parent:** [Admin98_Phase6_Admin_Windows.md](./Admin98_Phase6_Admin_Windows.md)  
-> **Status:** done
+> **Status:** done — see [`CURRENT.md`](./CURRENT.md). This note is the API/UI contract reference.
 
 ## API
 
