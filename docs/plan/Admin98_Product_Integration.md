@@ -1,6 +1,7 @@
 # Admin98 → WebHemi product integration
 
-> **Status & next work:** maintain only in [`CURRENT.md`](./CURRENT.md). This file is the historical phase narrative (0–7).
+> **Status & next work:** maintain only in [`CURRENT.md`](./CURRENT.md). This file is the historical phase narrative (0–7).  
+> **Legacy admin delete:** [`CURRENT.md`](./CURRENT.md) **Phase 1** (was Phase 7 UI half) — [Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md).
 
 Integration plan for bringing the [webhemi-admin98](https://github.com/Gixx/webhemi-admin98) Retro OS tech demo into the real WebHemi product (`@webhemi/ui` + PHP AssetMapper).
 
@@ -290,4 +291,4 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 - [x] Phase 6 — Sites/Hosts windows via `/admin/api` (see Admin98_Phase6_Admin_Windows.md)
 - [ ] Phase 6b — Storybook MSW for Admin data surfaces
 - [x] Host ownership verify/assign — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md)
-- [ ] Phase 7 — Remove legacy admin UI; docs/changelog; sandbox role update
+- [x] Phase 7 — Remove legacy admin UI — **done** (was CURRENT Phase 1); [Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md)

@@ -2,7 +2,7 @@
 
 > **For new chat sessions:** read this file first.  
 > Detailed ADRs / slice notes remain under `docs/plan/` for history; **status and next work are only maintained here.**  
-> Last updated: 2026-08-06.
+> Last updated: 2026-08-08.
 
 ---
 
@@ -28,12 +28,13 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 - Bootstrap Doctrine migrations restored from pre-hub monolith (fresh `migrate` path)
 - Entity methods: `setVerification` / `setIsEnabled` (not status/active)
 - Late-horizon plans written: installer + protected base site; path-based `/admin` heritage noted
+- **Legacy Tailwind admin removed** — `AdminLayout` / `SitesPage` / `HostsPage` / list views + orphan Twig; redirects kept ([Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md))
 
 ---
 
 ## Remaining (renumbered phases)
 
-Former “Phase 6 Slice D”, “6b”, “Phase 7”, installer P0… are **flattened**: each item below is its own phase, numbered from **1**.  
+Former “Phase 6 Slice D”, “6b”, installer P0… are **flattened**: each item below is its own phase, numbered from **1**.  
 Do them in order unless a note says otherwise.
 
 ### Phase 1 — Deep links `?window=…`
@@ -44,59 +45,55 @@ Open Sites/Hosts (and later windows) from a query string. Was Phase 6 Slice D (d
 
 `msw` + storybook addon; handlers co-located with Admin surfaces; at least one list/save demo without PHP. Was Phase 6b.
 
-### Phase 3 — Remove legacy admin UI
-
-Delete unused Twig/modern AdminLayout stacks and obsolete stories; finish themes/default ownership; changelog for `@webhemi/ui` if visuals break. Was Phase 7 cleanup (UI half).
-
-### Phase 4 — Control Panel: Users window
+### Phase 3 — Control Panel: Users window
 
 API + Retro window + shell kind (same pattern as Sites/Hosts).
 
-### Phase 5 — Control Panel: Roles window
+### Phase 4 — Control Panel: Roles window
 
 Same pattern; respect read-only seeded roles where applicable.
 
-### Phase 6 — Control Panel: Permissions window
+### Phase 5 — Control Panel: Permissions window
 
 List (and edit if product requires); tie to RBAC seed.
 
-### Phase 7 — Control Panel: Settings window
+### Phase 6 — Control Panel: Settings window
 
 Product settings surface (scope TBD when starting).
 
-### Phase 8 — Control Panel: Themes window
+### Phase 7 — Control Panel: Themes window
 
 Admin Theme / site theme picker (scope TBD; do not confuse with frontend Default theme work).
 
-### Phase 9 — Path-based admin restore
+### Phase 8 — Path-based admin restore
 
 Port monolith behavior: `/admin` on site host = admin surface; optional `admin.*` → canonical site `/admin` redirect. Prerequisite for single-domain install. See [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md).
 
-### Phase 10 — Protected base site + host
+### Phase 9 — Protected base site + host
 
 Installer-created (or seeded) main site/host cannot be deleted or disabled. Schema flag + API/UI guards.
 
-### Phase 11 — Installer wizard
+### Phase 10 — Installer wizard
 
 WordPress-style first-run: language, DB, primary domain, admin user → migrations → protected main site/host. Lock when done.
 
-### Phase 12 — Hello world public site
+### Phase 11 — Hello world public site
 
 Minimal frontend on `/` for the base site after install.
 
-### Phase 13 — Packaging / distribution
+### Phase 12 — Packaging / distribution
 
 Zip/git release of WebHemi.PHP; document zero-Node production. Aligns with architecture roadmap packaging.
 
-### Phase 14 — File Explorer: PHP tree API
+### Phase 13 — File Explorer: PHP tree API
 
 Replace empty/demo explorer forest with real nav/media (or equivalent) from Symfony.
 
-### Phase 15 — File Explorer: shared MenuBar chrome (optional)
+### Phase 14 — File Explorer: shared MenuBar chrome (optional)
 
 Extract `ExplorerMenuBar` to a reusable chrome atom if other windows need it.
 
-### Phase 16 — webhemi-js engine (later)
+### Phase 15 — webhemi-js engine (later)
 
 Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
 
@@ -110,9 +107,10 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
 | [Admin98_Integration_Contract.md](./Admin98_Integration_Contract.md) | ADR / contract |
 | [Admin98_Phase5_Desktop_Shell.md](./Admin98_Phase5_Desktop_Shell.md) | Shell slices A–F (done) |
 | [Admin98_Phase6_Admin_Windows.md](./Admin98_Phase6_Admin_Windows.md) | Windows slices A–F + follow-ups (mostly done) |
+| [Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md) | Legacy Tailwind admin delete (**done**) |
 | [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) | Ownership rules (done; naming note) |
 | [Sites_Hosts_Full_CRUD.md](./Sites_Hosts_Full_CRUD.md) | CRUD contract (done) |
-| [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Detail for phases 9–13 |
+| [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Detail for phases 8–12 |
 | [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP API open |
 | [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP / Nelmio / nonce plan (report-only → enforce; parallel to product phases) |
 | [WebHemi_Architecture_and_Roadmap.md](./WebHemi_Architecture_and_Roadmap.md) | Multi-repo / dual-engine vision |

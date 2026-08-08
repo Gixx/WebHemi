@@ -1,6 +1,6 @@
 # Admin98 Phase 6 — Admin windows via API
 
-> **Status:** mostly done — remaining work is in [`CURRENT.md`](./CURRENT.md) (deep links = Phase 1, MSW = Phase 2, CP windows = Phases 4–8).  
+> **Status:** mostly done — remaining work is in [`CURRENT.md`](./CURRENT.md) (deep links = Phase 1, MSW = Phase 2, CP windows = Phases 3–7).  
 > **Parent plan:** [Admin98_Product_Integration.md](./Admin98_Product_Integration.md)  
 > **Surface:** open real admin CRUD from the Retro OS shell (Control Panel → Sites, later Hosts, …), backed by `/admin/api/*`.  
 > **Rhythm:** one slice → one commit (same as Phase 5 / FileExplorer).
@@ -9,7 +9,7 @@
 
 - **API-first.** The live admin UI is React (`AdminDesktop`). Twig only boots the shell (and may pass bootstrap props such as desktop site icons + CSRF). List/create/update/delete go through JSON under `/admin/api`.
 - **PHP keep:** entities, repositories, voters/permissions, domain services (e.g. host verification).  
-- **PHP discard (Phase 7, or sooner once replaced):** legacy HTML CRUD routes (`admin_sites` / `admin_hosts` redirects), Twig `sites.html.twig` / `hosts.html.twig`, modern `SitesPage` / `HostsPage` / `AdminLayout` stack. Use them as **behavior reference** only.
+- **PHP discard (done):** legacy HTML CRUD Twig + modern `SitesPage` / `HostsPage` / `AdminLayout` stack removed — [Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md); redirect routes kept for bookmarks.
 - **First vertical slice: Sites.** Hosts mirrors the same pattern next. Other Control Panel icons stay selection-only or open a short “not implemented” dialog until their slices.
 - **Storybook:** props-driven window UI first; MSW handlers land with the first fetch/save stories (feeds Phase 6b).
 
@@ -135,8 +135,8 @@ pending → verify → verified → assign to site → active. Uses existing `Ho
 
 - Roles / Permissions / Users / Settings / Themes windows (CP icons remain inert or stub dialog).
 - Dropping Twig bootstrap `sites` prop entirely (can keep for first paint; API remains source of truth after Sites opens / after create).
-- Deleting legacy modern pages/routes (Phase 7 cleanup, unless a slice is blocked by confusion — then delete early with checklist).
-- Full MSW package setup (Phase 6b); Slice C may add minimal handlers only as needed.
+- Deleting legacy modern pages/routes — done in CURRENT Phase 1 ([Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md)).
+- Full MSW package setup (CURRENT Phase 3 / former 6b); Slice C may add minimal handlers only as needed.
 - SPA router / leaving AssetMapper shell mount.
 - Deep links (`?window=…`) — deferred until a dedicated acceptance criteria; not in Hosts.
 - Host ownership verify/assign lifecycle — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) (H1–H4 done); not part of Slice E/F MVP.
@@ -150,4 +150,4 @@ GET-by-id, PATCH, DELETE for Sites and Hosts; UI edit/delete with confirm modal;
 ## Phase 6 status — **in progress** (Slices A–C + E + F done; D deferred)
 
 **Near-term done when:** Sites list+create works end-to-end from the shell via API (Slice C).  
-**Phase done when:** Sites + Hosts reachable from Control Panel via API; legacy CRUD pages unused and scheduled for Phase 7 delete.
+**Phase done when:** Sites + Hosts reachable from Control Panel via API; legacy CRUD pages deleted ([Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md)).

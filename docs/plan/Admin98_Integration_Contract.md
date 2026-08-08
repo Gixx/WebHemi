@@ -140,7 +140,7 @@ Styles now live under `webhemi-ui/src/admin/styles/` with `meta.load-css` scopin
 
 - Phase 1: scoped style system under `webhemi-ui/src/admin/styles/`.  
 - Relocate or rewrite former `shared` atoms into `themes/default` as Default work proceeds.  
-- Delete legacy admin UI in Phase 7.
+- Delete legacy admin UI — **CURRENT Phase 1** (was Phase 7); see [Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md).
 
 ---
 
