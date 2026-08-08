@@ -64,7 +64,7 @@ Public API (all modes):
 | Condition | Behavior |
 |-----------|----------|
 | `adminAccess=domain` and request hits Main site-host `/admin…` | Redirect to admin host (same path suffix after `/admin` → admin host path) |
-| `adminAccess=domain` and request hits admin host `/admin…` | Redirect to canonical host-local path (`/admin/login` → `/login`, `/admin` → `/`) |
+| `adminAccess=domain` and request hits admin host `/admin…` (UI only) | Redirect to canonical host-local path (`/admin/login` → `/login`, `/admin` → `/`). **`/admin/api…` is not redirected** (SPA `fetch` + `redirect:manual`) |
 | `adminAccess=path` and request hits a live admin host | Redirect to Main site-host `/admin…` |
 | Non–main site host `/admin…` | Redirect to **canonical** admin entry (Main path or admin host), or 404 if Main cannot be resolved — prefer redirect |
 | `admin.othersite…` | Must not exist (Main-only surface); if present in bad data → 404 |
@@ -137,7 +137,7 @@ When `access.admin = domain`, protected admin API is served on the admin host at
 3. **Main-only `admin` surface** — **done** (`HostAdminSurfaceRules`, assign/update guards, Hosts form locks surface when site ≠ `main`).
 4. **HostContext / redirect matrix** — **done** (`AdminEntryResolver`, domain path rewriter, redirect subscriber, `ReservedPaths`; domain falls back to path without healthy admin host).
 5. **Auth split** — **done** (`admin` / `frontend` firewalls with separate contexts; `/admin/login` + `/admin/logout`; site `/login` + `/logout`; domain admin host `/login`→`/admin/login` rewrite; path-mode admin host maps login/logout onto Main `/admin/…`).
-6. **Settings window** — edit `access.admin` with domain option gated on admin host health; delete-host listener resets to path.
+6. **Settings window** — **done** (Control Panel Settings; GroupBox “Admin access” + path/domain radios; GET/PATCH `/admin/api/settings`; reset to path when admin host lost). Detail: [Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md).
 
 ---
 

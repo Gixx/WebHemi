@@ -39,7 +39,7 @@ Do them in order unless a note says otherwise.
 
 ### Phase 1 — Admin access mode + reserved paths
 
-Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostContext redirects; drop `api` host surface; Main-only `admin` surface; reserved `/admin`, `/api`, `/login`, `/register`; dual admin vs frontend auth (**auth split done** — see ADR slice 5). Remaining in this phase: **Settings window** (ADR slice 6). Detail: [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md). Bring forward before deep links so the canonical admin entry is stable.
+Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostContext redirects; drop `api` host surface; Main-only `admin` surface; reserved `/admin`, `/api`, `/login`, `/register`; dual admin vs frontend auth; **Settings window** for access mode. Detail: [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) · [Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md). **Phase 1 complete.**
 
 ### Phase 2 — Deep links `?window=…`
 
