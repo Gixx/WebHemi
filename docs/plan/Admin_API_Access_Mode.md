@@ -133,7 +133,7 @@ When `access.admin = domain`, protected admin API is served on the admin host at
 
 1. **Config reader + default `var/config/webhemi.yaml`** — **done** (`WebhemiConfigLoader`, `config/webhemi.yaml.dist`, seed ensures domain file for local admin host).
 2. **Drop `api` surface** — **done** (enum, Create/UpdateHostInput, Hosts UI, migration `api`→`site`).
-3. **Main-only `admin` surface** — API + Hosts form rules.
+3. **Main-only `admin` surface** — **done** (`HostAdminSurfaceRules`, assign/update guards, Hosts form locks surface when site ≠ `main`).
 4. **HostContext / redirect matrix** — path vs domain; reserved-path awareness hooks.
 5. **Auth split** — frontend vs admin login routes + separate session cookies.
 6. **Settings window** — edit `access.admin` with domain option gated on admin host health; delete-host listener resets to path.
