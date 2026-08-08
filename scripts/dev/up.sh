@@ -75,7 +75,7 @@ if command -v symfony >/dev/null 2>&1; then
     --dir="$ROOT/webhemi-php" \
     --port=8000 \
     --p12="$P12"
-  echo "[symfony] https://127.0.0.1:8000/login"
+  echo "[symfony] https://127.0.0.1:8000/admin/login"
   echo "[symfony] https://admin.${DOMAIN}:8000/login"
 else
   echo "[symfony] CLI not found; falling back to php -S (HTTP only, no p12)"
@@ -86,7 +86,7 @@ fi
 echo
 echo "Dev stack is up."
 echo "  Storybook:  http://127.0.0.1:6006"
-echo "  PHP app:    https://127.0.0.1:8000/login"
+echo "  PHP app:    https://127.0.0.1:8000/admin/login"
 echo "  Admin host: https://admin.${DOMAIN}:8000/login  (needs hosts entry — see docs/local-dev.md)"
 echo "  Logs:       $LOG_DIR"
 echo "  Stop with:  make down"

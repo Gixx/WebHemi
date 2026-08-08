@@ -13,7 +13,7 @@ help:
 	@echo ""
 	@echo "URLs after make up:"
 	@echo "  Storybook  http://127.0.0.1:6006"
-	@echo "  Login      https://127.0.0.1:8000/login"
+	@echo "  Login      https://127.0.0.1:8000/admin/login"
 	@echo "  Admin      https://admin.webhemi.local:8000/login"
 	@echo "  See docs/local-dev.md for hosts + certificate setup"
 

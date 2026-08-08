@@ -14,8 +14,9 @@ make down
 | URL | What you get |
 |-----|----------------|
 | http://127.0.0.1:6006 | Storybook (`webhemi-ui`) |
-| https://127.0.0.1:8000/login | Admin login (React UI) |
-| https://admin.webhemi.local:8000/login | Same admin via seeded host |
+| https://127.0.0.1:8000/admin/login | Admin login (path mode / IP) |
+| https://admin.webhemi.local:8000/login | Admin login (domain mode; rewritten to `/admin/login`) |
+| https://www.webhemi.local:8000/login | Frontend (site) login stub |
 | https://www.webhemi.local:8000/ | Site JSON stub (by design) |
 
 Logs and PIDs live under `.dev/` (gitignored).
@@ -56,7 +57,7 @@ Settings → Privacy & Security → Certificates → Authorities → Import
 
 ## Why `/` is JSON
 
-`/` is the **site** home controller and currently returns JSON context. Use **`/login`** or **`/admin`** for the control panel.
+`/` is the **site** home controller and currently returns JSON context. Use **`/admin`** or **`/admin/login`** for the control panel (or `admin.webhemi.local` in domain mode).
 
 ## Hosts file (`admin.webhemi.local`)
 
