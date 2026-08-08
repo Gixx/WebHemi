@@ -116,8 +116,8 @@ When `access.admin = domain`, protected admin API is served on the admin host at
 
 ### Protected Main site / host
 
-- Main site + its primary **site** host: not deletable / not disableable (existing installer plan).
-- Admin surface host: **not** permanently protected; optional; delete → `adminAccess=path`.
+- Main site + its primary **site** host: not deletable / not disableable; Main slug locked (`is_protected` flags — [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md)).
+- Admin surface host: **not** permanently protected; optional; delete / demote / disable / unassign while `access.admin=domain` → confirm (path fallback + re-login) → `adminAccess=path` + session invalidate.
 
 ---
 

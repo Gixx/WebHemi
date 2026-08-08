@@ -71,7 +71,7 @@ Admin Theme / site theme picker (scope TBD; do not confuse with frontend Default
 
 ### Phase 9 — Protected base site + host
 
-Installer-created (or seeded) main site + primary **site** host cannot be deleted or disabled. Admin surface host is optional (not permanently protected). See [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md).
+**Flags slice done** (API/UI): Main site + primary www host use `is_protected`; delete/disable/slug(unassign/surface) locked. Admin surface host remains optional/unprotected. Installer still later. See [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) · [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md).
 
 ### Phase 10 — Installer wizard
 

@@ -58,8 +58,8 @@ Shared helper e.g. `AdminAccessModeResetter::resetToPathIfNeeded()`:
 
 Wire from:
 
-- `HostDeleter` after remove/flush
-- `HostUpdater` after flush when the change could drop health (disabled, surface≠admin, unassigned from Main, verification no longer verified)
+- `HostDeleter` after remove/flush — returns whether reset happened; DELETE `/hosts/{id}` responds with JSON `{ deleted, sessionEnded?, loginUrl?, accessModeReset? }` and invalidates the session when reset (same re-login pattern as Settings PATCH). Hosts UI shows an escalated warning confirm when deleting the admin-surface host while `access.admin=domain`.
+- `HostUpdater` / `HostUnassigner` — same session-end payload on PATCH `/hosts/{id}` and POST unassign when the healthy Main admin host is lost (surface→site, disable, unassign). Host/Site forms warn before those edits.
 
 Runtime routing fallback stays as today (no yaml write required for requests to keep working).
 

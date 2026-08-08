@@ -53,7 +53,7 @@ Order follows [`CURRENT.md`](./CURRENT.md); refine when scheduling.
 | Slice | Notes |
 |-------|--------|
 | Access mode | Config file + routing/redirects + drop `api` surface — [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) |
-| Protected base flags | Schema + API/UI guards for main site + primary site host |
+| Protected base flags | **Done** (API/UI) — [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md); installer still later |
 | Installer wizard | Locale, DB, primary domain, admin user; migrations; protected main pair; path admin; lock installer |
 | Hello world site | Minimal public theme on `/` |
 | Packaging | Zip/release; Node not required in production |
