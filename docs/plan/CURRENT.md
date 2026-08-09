@@ -31,6 +31,7 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 - **Legacy Tailwind admin removed** — `AdminLayout` / `SitesPage` / `HostsPage` / list views + orphan Twig; redirects kept ([Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md))
 - **Admin deep links** — `?window=` / `?id=` opens Sites/Hosts/site explorer (+ CP/Settings); legacy `/admin/sites|hosts` redirect with query ([Deep_Links.md](./Deep_Links.md))
 - **Context menu chrome** — `ContextMenu`/`MenuPopup` + ExplorerMenuBar icon/check gutters ([Admin_Context_Menu.md](./Admin_Context_Menu.md)); product `onContextMenu` wiring later
+- **Storybook MSW** — `/admin/api` handlers + AdminDesktop list/create demos without PHP ([Storybook_MSW.md](./Storybook_MSW.md))
 
 ---
 
@@ -49,7 +50,7 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 ### Phase 3 — Storybook MSW for `/admin/api`
 
-`msw` + storybook addon; handlers co-located with Admin surfaces; at least one list/save demo without PHP. Was Phase 6b.
+**Complete.** `msw` + storybook addon; handlers in `webhemi-ui/src/admin/api/msw/`; AdminDesktop list/create demos without PHP. Detail: [Storybook_MSW.md](./Storybook_MSW.md). Was Phase 6b.
 
 ### Phase 4 — Control Panel: Users window
 
@@ -114,6 +115,7 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
 | [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) | Ownership rules (done; naming note) |
 | [Sites_Hosts_Full_CRUD.md](./Sites_Hosts_Full_CRUD.md) | CRUD contract (done) |
 | [Deep_Links.md](./Deep_Links.md) | Admin `?window=` / `?id=` deep links (**done**) |
+| [Storybook_MSW.md](./Storybook_MSW.md) | Storybook MSW for `/admin/api` (**done**) |
 | [Admin_Context_Menu.md](./Admin_Context_Menu.md) | Context menu chrome + optional menu icons (slice A done) |
 | [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR |
 | [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP API open |

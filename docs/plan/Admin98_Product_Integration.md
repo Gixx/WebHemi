@@ -222,7 +222,7 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 
 ## Phase 6b — Storybook MSW for Admin data surfaces
 
-**Status:** planned (after Slice C needs fetch/save demos; may start minimal handlers earlier).
+**Status:** done — see [Storybook_MSW.md](./Storybook_MSW.md) / CURRENT Phase 3.
 
 **Why here:** Phase 4–5 stayed props-driven. Phase 6 production path is `/admin/api`; Storybook needs **fake APIs** so windows stay reviewable without PHP.
 
@@ -289,6 +289,6 @@ Export `AdminDesktop` via [`admin/index.ts`](../../webhemi-ui/src/admin/index.ts
 - [x] Phase 4 — AdminDesktop (site icons + Control Panel + site stubs) via PHP; drop live AdminLayout
 - [x] Phase 5 — React AdminDesktop shell (drag, taskbar, z-order, persistence)
 - [x] Phase 6 — Sites/Hosts windows via `/admin/api` (see Admin98_Phase6_Admin_Windows.md)
-- [ ] Phase 6b — Storybook MSW for Admin data surfaces
+- [x] Phase 6b — Storybook MSW for Admin data surfaces
 - [x] Host ownership verify/assign — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md)
 - [x] Phase 7 — Remove legacy admin UI — **done** (was CURRENT Phase 1); [Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md)
