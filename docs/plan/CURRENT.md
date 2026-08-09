@@ -2,7 +2,7 @@
 
 > **For new chat sessions:** read this file first.  
 > Detailed ADRs / slice notes remain under `docs/plan/` for history; **status and next work are only maintained here.**  
-> Last updated: 2026-08-08.
+> Last updated: 2026-08-09.
 
 ---
 
@@ -29,6 +29,7 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 - Entity methods: `setVerification` / `setIsEnabled` (not status/active)
 - Late-horizon plans written: installer + protected base site; path-based `/admin` heritage noted
 - **Legacy Tailwind admin removed** — `AdminLayout` / `SitesPage` / `HostsPage` / list views + orphan Twig; redirects kept ([Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md))
+- **Admin deep links** — `?window=` / `?id=` opens Sites/Hosts/site explorer (+ CP/Settings); legacy `/admin/sites|hosts` redirect with query ([Deep_Links.md](./Deep_Links.md))
 
 ---
 
@@ -43,7 +44,7 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 ### Phase 2 — Deep links `?window=…`
 
-Open Sites/Hosts (and site explorer) from a query string with full entity support (`?id=`). Was Phase 6 Slice D. Acceptance criteria after Phase 1 entry URL is settled (shareable query on canonical admin URL).
+**Complete.** Open Sites/Hosts (and site explorer) from `?window=` with entity support (`?id=`). Detail: [Deep_Links.md](./Deep_Links.md). Was Phase 6 Slice D.
 
 ### Phase 3 — Storybook MSW for `/admin/api`
 
@@ -111,6 +112,7 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
 | [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) | Admin path/domain, reserved paths, dual auth, no `api` surface |
 | [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) | Ownership rules (done; naming note) |
 | [Sites_Hosts_Full_CRUD.md](./Sites_Hosts_Full_CRUD.md) | CRUD contract (done) |
+| [Deep_Links.md](./Deep_Links.md) | Admin `?window=` / `?id=` deep links (**done**) |
 | [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR |
 | [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP API open |
 | [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP / Nelmio / nonce plan (report-only → enforce; parallel to product phases) |

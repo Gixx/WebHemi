@@ -1,6 +1,6 @@
 # Admin98 Phase 6 — Admin windows via API
 
-> **Status:** mostly done — remaining work is in [`CURRENT.md`](./CURRENT.md) (deep links = Phase 1, MSW = Phase 2, CP windows = Phases 3–7).  
+> **Status:** mostly done — remaining work is in [`CURRENT.md`](./CURRENT.md) (MSW = Phase 3, CP windows = Phases 4–8). Deep links done ([Deep_Links.md](./Deep_Links.md)).  
 > **Parent plan:** [Admin98_Product_Integration.md](./Admin98_Product_Integration.md)  
 > **Surface:** open real admin CRUD from the Retro OS shell (Control Panel → Sites, later Hosts, …), backed by `/admin/api/*`.  
 > **Rhythm:** one slice → one commit (same as Phase 5 / FileExplorer).
@@ -104,9 +104,9 @@ HTTP: `401` / `403` / `404` / `422` / `409` as appropriate. No HTML error pages 
 
 **Done when:** from `/admin`, Control Panel → Sites shows DB sites and can create one without leaving the shell.
 
-### Slice D — Deep link `?window=…` — **deferred**
+### Slice D — Deep link `?window=…` — **done**
 
-Skipped for now (only `sites` would have shipped; not useful until a full deep-link acceptance criteria exists). Not part of Hosts (Slice E). Revisit after admin windows are complete.
+See [Deep_Links.md](./Deep_Links.md) / CURRENT Phase 2. Sites/Hosts/site explorer (+ CP/Settings) via `?window=` / `?id=`.
 
 ### Slice E — Hosts (API + window + shell) — **done**
 
@@ -138,7 +138,7 @@ pending → verify → verified → assign to site → active. Uses existing `Ho
 - Deleting legacy modern pages/routes — done in CURRENT Phase 1 ([Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md)).
 - Full MSW package setup (CURRENT Phase 3 / former 6b); Slice C may add minimal handlers only as needed.
 - SPA router / leaving AssetMapper shell mount.
-- Deep links (`?window=…`) — deferred until a dedicated acceptance criteria; not in Hosts.
+- Deep links (`?window=…`) — done; see [Deep_Links.md](./Deep_Links.md).
 - Host ownership verify/assign lifecycle — [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) (H1–H4 done); not part of Slice E/F MVP.
 
 ### Follow-up — Sites & Hosts full CRUD — **done**
