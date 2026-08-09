@@ -1,15 +1,23 @@
-.PHONY: up down status sync-ui cert help
+.PHONY: up down status sync-ui cert test help php ui
+
+# Extra goals for `make test php` / `make test ui` (no-op targets).
+php ui:
+	@:
 
 help:
 	@echo "WebHemi hub — local development"
 	@echo ""
-	@echo "  make up       Start Storybook, UI watch→sync, Symfony HTTPS (p12)"
-	@echo "  make down     Stop all of the above"
-	@echo "  make status   Show process status"
-	@echo "  make sync-ui  One-shot UI build + sync into webhemi-php"
-	@echo "  make cert     Generate *.webhemi.local PKCS#12 (Symfony CA)"
+	@echo "  make up         Start Storybook, UI watch→sync, Symfony HTTPS (p12)"
+	@echo "  make down       Stop all of the above"
+	@echo "  make status     Show process status"
+	@echo "  make sync-ui    One-shot UI build + sync into webhemi-php"
+	@echo "  make cert       Generate *.webhemi.local PKCS#12 (Symfony CA)"
+	@echo "  make test       Run PHP + UI tests"
+	@echo "  make test php   PHPUnit (webhemi-php)"
+	@echo "  make test ui    typecheck, lint, Storybook Vitest, Chromatic"
 	@echo ""
 	@echo "Node/npm only in webhemi-ui. webhemi-php stays Composer + AssetMapper."
+	@echo "Chromatic needs CHROMATIC_PROJECT_TOKEN in hub .env (see docs/local-dev.md)."
 	@echo ""
 	@echo "URLs after make up:"
 	@echo "  Storybook  http://127.0.0.1:6006"
@@ -32,3 +40,7 @@ sync-ui:
 
 cert:
 	@bash scripts/dev/generate-cert.sh
+
+# Usage: make test | make test php | make test ui
+test:
+	@bash scripts/test/run.sh $(word 2,$(MAKECMDGOALS))

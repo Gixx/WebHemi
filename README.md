@@ -80,6 +80,8 @@ git submodule update --init --recursive
 make up       # Storybook + UI watch→sync + Symfony
 make status
 make down
+make test php # PHPUnit
+make test ui  # typecheck, lint, Storybook Vitest, Chromatic
 ```
 
 | URL | Purpose |

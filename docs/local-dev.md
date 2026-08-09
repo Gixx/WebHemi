@@ -9,7 +9,21 @@ make cert    # once: *.webhemi.local PKCS#12 signed by Symfony CA
 make up      # Storybook + UI watch/sync + Symfony HTTPS
 make status
 make down
+make test php   # PHPUnit
+make test ui    # typecheck, lint, Storybook Vitest, Chromatic
+make test       # both
 ```
+
+### Chromatic token (for `make test ui`)
+
+Chromatic publishes from your machine; set the project token once:
+
+```bash
+# hub root .env (gitignored)
+echo 'CHROMATIC_PROJECT_TOKEN=chpt_…' >> .env
+```
+
+Copy the token from Chromatic → project → Manage → Configure. Same secret as GitHub Actions `CHROMATIC_PROJECT_TOKEN`.
 
 | URL | What you get |
 |-----|----------------|

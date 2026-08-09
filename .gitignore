@@ -3,3 +3,6 @@
 /.claude/
 /.dev/
 /demo/
+.env
+.env.*
+!.env.example
