@@ -30,7 +30,7 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 - Late-horizon plans written: installer + protected base site; path-based `/admin` heritage noted
 - **Legacy Tailwind admin removed** — `AdminLayout` / `SitesPage` / `HostsPage` / list views + orphan Twig; redirects kept ([Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md))
 - **Admin deep links** — `?window=` / `?id=` opens Sites/Hosts/site explorer (+ CP/Settings); legacy `/admin/sites|hosts` redirect with query ([Deep_Links.md](./Deep_Links.md))
-- **Context menu chrome (Storybook)** — `Admin/Atoms/ContextMenu` + shared menu item model (optional icons; checkable = ✓ only) ([Admin_Context_Menu.md](./Admin_Context_Menu.md)); product wiring later
+- **Context menu chrome** — `ContextMenu`/`MenuPopup` + ExplorerMenuBar icon/check gutters ([Admin_Context_Menu.md](./Admin_Context_Menu.md)); product `onContextMenu` wiring later
 
 ---
 

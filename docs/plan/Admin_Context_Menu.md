@@ -1,6 +1,6 @@
 # Admin context menu (+ optional menu icons)
 
-> **Status:** slice A done (Storybook chrome); B (menubar icons) + C (product wiring) later.  
+> **Status:** slices A–B done (Storybook chrome + ExplorerMenuBar icons); C (product wiring) later.  
 > **Parent:** [CURRENT.md](./CURRENT.md) · related [FileExplorer_Window.md](./FileExplorer_Window.md) (MenuBar extract / Phase 14).  
 > **Language:** English only.
 
@@ -16,8 +16,8 @@ Also lock a gap from the explorer **window menubar**: every menu item may carry 
 |------|--------|
 | Optional icon | Non-checkable command items **may** have an icon; omission is valid |
 | Checkable items | Toggle / radio rows that show a **checkmark** (`menuitemcheckbox` / `menuitemradio` / `checked`) **never** have an icon |
-| Leading gutter | **One** leading column: either **check** (✓) **or** **icon** — not both stacked. Checkable menus use check-only (no icon column). Command menus reserve an icon column when any item has an icon (empty cell if a row has none) |
-| Pure check menus | View-style menus (only check/radio items) → check column only; **no** icon column |
+| Leading gutter | **One** leading column: either **check** (✓) **or** **icon** — not both stacked. If **any** row is checkable → check column (command rows get an empty check cell; no icons). Else if any command has an icon → icon column. Else none |
+| Pure / mixed check menus | View-style (check/radio, optionally plain commands like Refresh) → check column only; **no** icon column |
 | Icon size | Small toolbar/menu glyph (~16×16), not desktop `SystemIcon` (32+) |
 | Separators | No icon / no check |
 | Submenus | Allowed in the model (chevron); nested open behavior can be stubbed in v1 stories |
@@ -61,7 +61,7 @@ Invariant: `checked` / checkbox / radio ⇒ no `icon`. Implementation may type t
 3. Positioning helper stub: fixed coords / `openAt(x,y)` for stories; collision clamp optional.
 4. Docs note: window menubar icon gap; model shared.
 
-### B — Backfill window menu icons
+### B — Backfill window menu icons — **done**
 
 1. Extend `ExplorerMenuBar` item type + CSS icon column (File → Open, Edit cut/copy/paste, etc. where glyphs already exist under `admin/assets/icons/toolbar/`).
 2. Prefer extracting shared popup/item renderer if duplication hurts; otherwise thin duplicate CSS with same class names until Phase 14 extract.
