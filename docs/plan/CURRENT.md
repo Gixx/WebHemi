@@ -63,7 +63,7 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 ### Phase 5 — Control Panel: Roles window
 
-Full CRUD (create / edit / delete, attach permissions). **Admin** and **Site Admin** locked (no delete/edit). Seed those two; custom roles for testing. Depends on Phase 3b / Phase 4 permissions catalog.
+**Complete.** Full CRUD (create / edit / delete, attach permissions). **Admin** and **Site Admin** locked (no delete/edit). Seed those two; custom roles for testing. Depends on Phase 3b / Phase 4 permissions catalog. Detail: [Roles_Window.md](./Roles_Window.md).
 
 ### Phase 6 — Control Panel: Users window
 
@@ -122,6 +122,7 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
 | [Deep_Links.md](./Deep_Links.md) | Admin `?window=` / `?id=` deep links (**done**) |
 | [Storybook_MSW.md](./Storybook_MSW.md) | Storybook MSW for `/admin/api` (**done**) |
 | [Permissions_Window.md](./Permissions_Window.md) | CP Permissions CRUD (**done**, Phase 4) |
+| [Roles_Window.md](./Roles_Window.md) | CP Roles CRUD (**done**, Phase 5) |
 | [RBAC_Reset.md](./RBAC_Reset.md) | RBAC reset: Admin + Site Admin baseline before CP user windows |
 | [Admin_Context_Menu.md](./Admin_Context_Menu.md) | Context menu chrome + optional menu icons (slice A done) |
 | [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR |

@@ -22,6 +22,8 @@ Shareable URLs on the canonical admin entry open (and focus) shell windows, with
 | `?window=settings` | Open/raise Settings |
 | `?window=permissions` | Open/raise Permissions |
 | `?window=permissions&id={n}` | Permissions + select permission `n` when listed |
+| `?window=roles` | Open/raise Roles |
+| `?window=roles&id={n}` | Roles + select role `n` when listed |
 | Unknown `window` / invalid `id` | Ignored (no toast) |
 
 Rules:
