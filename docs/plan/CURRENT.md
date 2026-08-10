@@ -57,17 +57,17 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 **R1–R3 done.** Protected **Admin** + **Site Admin**; empty permission seed; rewritten voter. Admin = full CP + all sites; Site Admin = per-site interior via `site_assignment`. R4 = CP CRUD windows. Detail: [RBAC_Reset.md](./RBAC_Reset.md).
 
-### Phase 4 — Control Panel: Users window
+### Phase 4 — Control Panel: Permissions window
 
-API + Retro window + shell kind (same pattern as Sites/Hosts). Depends on Phase 3b.
+**Complete.** Full CRUD (create / edit / delete). Seed catalog may be empty; operators add permissions for testing. Readonly flags deferred. Depends on Phase 3b. Detail: [Permissions_Window.md](./Permissions_Window.md).
 
 ### Phase 5 — Control Panel: Roles window
 
-Full CRUD (create / edit / delete, attach permissions). **Admin** and **Site Admin** locked (no delete/edit). Seed those two; custom roles for testing. Depends on Phase 3b.
+Full CRUD (create / edit / delete, attach permissions). **Admin** and **Site Admin** locked (no delete/edit). Seed those two; custom roles for testing. Depends on Phase 3b / Phase 4 permissions catalog.
 
-### Phase 6 — Control Panel: Permissions window
+### Phase 6 — Control Panel: Users window
 
-Full CRUD (create / edit / delete). Seed catalog may be empty; operators add permissions for testing. Readonly flags / default-readonly roles deferred. Depends on Phase 3b.
+API + Retro window + shell kind (same pattern as Sites/Hosts). Global roles + `site_assignment`. Depends on Phase 3b / Phase 5 roles.
 
 ### Phase 7 — Control Panel: Settings window
 
@@ -121,6 +121,7 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
 | [Sites_Hosts_Full_CRUD.md](./Sites_Hosts_Full_CRUD.md) | CRUD contract (done) |
 | [Deep_Links.md](./Deep_Links.md) | Admin `?window=` / `?id=` deep links (**done**) |
 | [Storybook_MSW.md](./Storybook_MSW.md) | Storybook MSW for `/admin/api` (**done**) |
+| [Permissions_Window.md](./Permissions_Window.md) | CP Permissions CRUD (**done**, Phase 4) |
 | [RBAC_Reset.md](./RBAC_Reset.md) | RBAC reset: Admin + Site Admin baseline before CP user windows |
 | [Admin_Context_Menu.md](./Admin_Context_Menu.md) | Context menu chrome + optional menu icons (slice A done) |
 | [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR |

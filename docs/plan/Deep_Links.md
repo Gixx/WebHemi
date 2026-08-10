@@ -20,6 +20,8 @@ Shareable URLs on the canonical admin entry open (and focus) shell windows, with
 | `?window=site-{n}` | Alias for `site` + id `n` |
 | `?window=control-panel` | Open/raise Control Panel |
 | `?window=settings` | Open/raise Settings |
+| `?window=permissions` | Open/raise Permissions |
+| `?window=permissions&id={n}` | Permissions + select permission `n` when listed |
 | Unknown `window` / invalid `id` | Ignored (no toast) |
 
 Rules:

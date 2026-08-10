@@ -1,6 +1,6 @@
 # RBAC reset — Admin + Site Admin baseline
 
-> **Status:** R1–R3 done (2026-08-09); R4 = CP windows.  
+> **Status:** R1–R3 done (2026-08-09); R4 Permissions done; Roles/Users next.  
 > **Parent:** [CURRENT.md](./CURRENT.md).  
 > **Language:** English only.
 
