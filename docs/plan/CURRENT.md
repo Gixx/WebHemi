@@ -67,7 +67,7 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 ### Phase 6 — Control Panel: Users window
 
-API + Retro window + shell kind (same pattern as Sites/Hosts). Global roles + `site_assignment`. Depends on Phase 3b / Phase 5 roles.
+**Complete.** API + Retro window + shell kind. Global roles + `site_assignment`. Password on create only; self-delete / last-Admin locks. Depends on Phase 3b / Phase 5 roles. Detail: [Users_Window.md](./Users_Window.md).
 
 ### Phase 7 — Control Panel: Settings window
 
@@ -123,6 +123,8 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
 | [Storybook_MSW.md](./Storybook_MSW.md) | Storybook MSW for `/admin/api` (**done**) |
 | [Permissions_Window.md](./Permissions_Window.md) | CP Permissions CRUD (**done**, Phase 4) |
 | [Roles_Window.md](./Roles_Window.md) | CP Roles CRUD (**done**, Phase 5) |
+| [Users_Window.md](./Users_Window.md) | CP Users CRUD (**done**, Phase 6) |
+| [Users_RBAC_and_My_Account.md](./Users_RBAC_and_My_Account.md) | Users permissions + Start My Account (**done**) |
 | [RBAC_Reset.md](./RBAC_Reset.md) | RBAC reset: Admin + Site Admin baseline before CP user windows |
 | [Admin_Context_Menu.md](./Admin_Context_Menu.md) | Context menu chrome + optional menu icons (slice A done) |
 | [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR |

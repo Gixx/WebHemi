@@ -1,6 +1,6 @@
 # RBAC reset — Admin + Site Admin baseline
 
-> **Status:** R1–R3 done; R4 Permissions + Roles done; Users next.  
+> **Status:** R1–R3 done; R4 Permissions + Roles + Users done.  
 > **Parent:** [CURRENT.md](./CURRENT.md).  
 > **Language:** English only.
 
@@ -105,7 +105,7 @@ Seed Roles = `[Admin, Site Admin]`, Permissions = `[]`; still add custom rows fo
 | `site.edit`, `site.delete` | allow | deny | `has(permission)` only |
 | `site.list`, future `content.*` / site-interior | allow | allow | `has(permission)` only |
 
-Live Admin API still uses dotted `#[IsGranted]` names; with an empty seed catalog only Admin passes host/settings/site.edit. Site Admin passes `site.list` (and future interior codes) on assigned sites.
+Live Admin API still uses dotted `#[IsGranted]` names; with an empty seed catalog only Admin passes host/settings/site.edit. Site Admin passes `site.list` (and future interior codes) on assigned sites. Custom roles grant via `has(permission)` on site assignments **or global** `user_role`. `user.*` stays in `ADMIN_ONLY_PREFIXES` so Site Admin does not auto-gain Users CP; operators assign catalog codes to custom roles.
 
 Column `rbac_role.is_read_only` / `rbac_permission.is_read_only` = product **protected** lock (mapped on entities).
 
