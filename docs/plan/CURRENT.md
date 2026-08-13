@@ -35,6 +35,7 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 - **RBAC reset (R1–R3)** — protected Admin + Site Admin; empty permission seed; voter rewrite ([RBAC_Reset.md](./RBAC_Reset.md))
 - **Settings window** — `access.admin` path \| domain; GET/PATCH `/admin/api/settings`; host-loss reset to path ([Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md); shipped with Phase 1)
 - **Settings: Symfony debug toolbar** — GroupBox + checkbox; editable in `dev`/`stage` only ([Settings_Symfony_Debug_Toolbar.md](./Settings_Symfony_Debug_Toolbar.md))
+- **Protected Main site + primary www host** — `is_protected` flags; API 409 + Sites/Hosts UI locks ([Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md))
 
 ---
 
@@ -75,37 +76,37 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 **Complete** (same work as Phase 1 Settings slice). `access.admin` path \| domain; domain gated on healthy Main admin host; auto-reset to path on host loss. Detail: [Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md) · [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md).
 
-### Phase 8 — Control Panel: Themes window
+### Phase 8 — Protected base site + host
 
-Admin Theme / site theme picker (scope TBD; do not confuse with frontend Default theme work).
+**Complete.** Main site + primary www host use `is_protected`; delete/disable/slug (site) and delete/disable/unassign/surface (host) locked; admin-surface host remains unprotected. Detail: [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) · [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md).
 
-### Phase 9 — Protected base site + host
-
-**Flags slice done** (API/UI): Main site + primary www host use `is_protected`; delete/disable/slug(unassign/surface) locked. Admin surface host remains optional/unprotected. Installer still later. See [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) · [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md).
-
-### Phase 10 — Installer wizard
-
-WordPress-style first-run: language, DB, primary domain, admin user → migrations → protected main site/host with **path** admin. Lock when done.
-
-### Phase 11 — Hello world public site
+### Phase 9 — Hello world public site
 
 Minimal frontend on `/` for the base site after install.
 
-### Phase 12 — Packaging / distribution
+### Phase 10 — Packaging / distribution
 
 Zip/git release of WebHemi.PHP; document zero-Node production. Aligns with architecture roadmap packaging.
 
-### Phase 13 — File Explorer: PHP tree API
+### Phase 11 — File Explorer: PHP tree API
 
 Replace empty/demo explorer forest with real nav/media (or equivalent) from Symfony. Honor reserved paths.
 
-### Phase 14 — File Explorer: shared MenuBar chrome (optional)
+### Phase 12 — File Explorer: shared MenuBar chrome (optional)
 
 Extract `ExplorerMenuBar` to a reusable chrome atom if other windows need it.
 
-### Phase 15 — webhemi-js engine (later)
+### Phase 13 — webhemi-js engine (later)
 
 Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
+
+### Phase 14 — Control Panel: Themes window (deferred)
+
+Admin Theme / site theme picker (scope TBD; do not confuse with frontend Default theme work). **Parked near end** until product approach is clear.
+
+### Phase 15 — Installer wizard (deferred)
+
+WordPress-style first-run: language, DB, primary domain, admin user → migrations → protected main site/host with **path** admin. Lock when done. **Parked at end** until ready to schedule — was formerly Phase 9.
 
 ---
 
@@ -131,7 +132,8 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
 | [Settings_Symfony_Debug_Toolbar.md](./Settings_Symfony_Debug_Toolbar.md) | Settings Symfony debug toolbar (**done**) |
 | [RBAC_Reset.md](./RBAC_Reset.md) | RBAC reset: Admin + Site Admin baseline before CP user windows |
 | [Admin_Context_Menu.md](./Admin_Context_Menu.md) | Context menu chrome + optional menu icons (slice A done) |
-| [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR |
+| [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR (**installer deferred**, Phase 15) |
+| [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) | `is_protected` Main site + www host guards (**done**, Phase 8) |
 | [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP API open |
 | [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP / Nelmio / nonce plan (report-only → enforce; parallel to product phases) |
 | [WebHemi_Architecture_and_Roadmap.md](./WebHemi_Architecture_and_Roadmap.md) | Multi-repo / dual-engine vision |

@@ -1,7 +1,7 @@
 # Protected Main site and primary www host
 
-> **Status:** done (API/UI flags); installer still later.  
-> **Parent:** [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) · [CURRENT.md](./CURRENT.md) Phase 9.  
+> **Status:** done (API/UI flags).  
+> **Parent:** [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) · [CURRENT.md](./CURRENT.md) Phase 8.  
 > **Language:** English only.
 
 ## Product rules (locked)
@@ -56,8 +56,9 @@ flowchart TD
 
 ## Docs when done
 
-- Mark flags slice done in [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) and [CURRENT.md](./CURRENT.md) Phase 9 (installer still open).
-- Touch [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) protected Main line if needed.
+- Mark flags slice done in [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) and [CURRENT.md](./CURRENT.md) Phase 8 (**done**).
+- Touch [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) protected Main line if needed (**done**).
+- Installer wizard remains a later deferred phase in [CURRENT.md](./CURRENT.md).
 
 ## Out of scope
 
