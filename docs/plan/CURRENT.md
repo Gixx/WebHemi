@@ -2,7 +2,7 @@
 
 > **For new chat sessions:** read this file first.  
 > Detailed ADRs / slice notes remain under `docs/plan/` for history; **status and next work are only maintained here.**  
-> Last updated: 2026-08-09.
+> Last updated: 2026-08-13.
 
 ---
 
@@ -33,6 +33,8 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 - **Context menu chrome** — `ContextMenu`/`MenuPopup` + ExplorerMenuBar icon/check gutters ([Admin_Context_Menu.md](./Admin_Context_Menu.md)); product `onContextMenu` wiring later
 - **Storybook MSW** — `/admin/api` handlers + AdminDesktop list/create demos without PHP ([Storybook_MSW.md](./Storybook_MSW.md))
 - **RBAC reset (R1–R3)** — protected Admin + Site Admin; empty permission seed; voter rewrite ([RBAC_Reset.md](./RBAC_Reset.md))
+- **Settings window** — `access.admin` path \| domain; GET/PATCH `/admin/api/settings`; host-loss reset to path ([Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md); shipped with Phase 1)
+- **Settings: Symfony debug toolbar** — GroupBox + checkbox; editable in `dev`/`stage` only ([Settings_Symfony_Debug_Toolbar.md](./Settings_Symfony_Debug_Toolbar.md))
 
 ---
 
@@ -71,7 +73,7 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 ### Phase 7 — Control Panel: Settings window
 
-Edit `var/config/webhemi.yaml` (at least `access.admin`, gated on admin host health). See [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md).
+**Complete** (same work as Phase 1 Settings slice). `access.admin` path \| domain; domain gated on healthy Main admin host; auto-reset to path on host loss. Detail: [Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md) · [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md).
 
 ### Phase 8 — Control Panel: Themes window
 
@@ -125,6 +127,8 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
 | [Roles_Window.md](./Roles_Window.md) | CP Roles CRUD (**done**, Phase 5) |
 | [Users_Window.md](./Users_Window.md) | CP Users CRUD (**done**, Phase 6) |
 | [Users_RBAC_and_My_Account.md](./Users_RBAC_and_My_Account.md) | Users permissions + Start My Account (**done**) |
+| [Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md) | CP Settings: `access.admin` path \| domain (**done**, Phase 1 / 7) |
+| [Settings_Symfony_Debug_Toolbar.md](./Settings_Symfony_Debug_Toolbar.md) | Settings Symfony debug toolbar (**done**) |
 | [RBAC_Reset.md](./RBAC_Reset.md) | RBAC reset: Admin + Site Admin baseline before CP user windows |
 | [Admin_Context_Menu.md](./Admin_Context_Menu.md) | Context menu chrome + optional menu icons (slice A done) |
 | [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR |

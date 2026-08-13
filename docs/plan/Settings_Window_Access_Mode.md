@@ -8,6 +8,8 @@
 
 ADR slice 6 only: **`access.admin` path | domain**. No path editing, no themes/users tabs.
 
+Follow-up (**done**): Symfony debug toolbar checkbox — [Settings_Symfony_Debug_Toolbar.md](./Settings_Symfony_Debug_Toolbar.md).
+
 **UI (first cut):** Settings window body is one **GroupBox** (`legend`: `Admin access`) containing one **FieldRow** with Radio `domain` and Radio `path`. Domain radio disabled when `domainAvailable` is false.
 
 ```mermaid
