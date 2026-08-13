@@ -1,6 +1,6 @@
 # FileExplorerWindow brick
 
-> **Status:** slices A–I done; remaining = [`CURRENT.md`](./CURRENT.md) Phases 14–15 (PHP tree API, optional MenuBar extract).  
+> **Status:** slices A–I done; PHP tree API lands in [`CURRENT.md`](./CURRENT.md) **Phase 10** (Site content), after Phase 9 Hello world. Optional MenuBar extract = Phase 12. Content model: [Site_Content_Model.md](./Site_Content_Model.md).  
 > **Parent plan:** [Admin98_Product_Integration.md](./Admin98_Product_Integration.md)  
 > **Brick:** `FileExplorerWindow` — **own** product brick (`bricks/FileExplorerWindow/`), **not** an `IconPanelWindow` variant. The Control Panel icon-grid window stays separate; the explorer tree + toolbar + view modes get their own layout.
 

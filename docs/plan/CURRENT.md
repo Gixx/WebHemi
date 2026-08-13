@@ -36,6 +36,7 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 - **Settings window** — `access.admin` path \| domain; GET/PATCH `/admin/api/settings`; host-loss reset to path ([Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md); shipped with Phase 1)
 - **Settings: Symfony debug toolbar** — GroupBox + checkbox; editable in `dev`/`stage` only ([Settings_Symfony_Debug_Toolbar.md](./Settings_Symfony_Debug_Toolbar.md))
 - **Protected Main site + primary www host** — `is_protected` flags; API 409 + Sites/Hosts UI locks ([Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md))
+- **Site content model (ADR draft)** — explorer Site/Media/Trash/Settings; publication + hidden; media hash; soft-delete ([Site_Content_Model.md](./Site_Content_Model.md))
 
 ---
 
@@ -43,6 +44,8 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 
 Former “Phase 6 Slice D”, “6b”, installer P0… are **flattened**: each item below is its own phase, numbered from **1**.  
 Do them in order unless a note says otherwise.
+
+**Next up (locked):** Phase 9 Hello world → Phase 10 Site content. Do not start Phase 10 until Phase 9 is done.
 
 ### Phase 1 — Admin access mode + reserved paths
 
@@ -82,15 +85,15 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 ### Phase 9 — Hello world public site
 
-Minimal frontend on `/` for the base site after install.
+**Next.** Minimal frontend on `/` for the base site (theme stub / static welcome). No CMS tree yet. Detail later as needed; must not block on [Site_Content_Model.md](./Site_Content_Model.md).
 
-### Phase 10 — Packaging / distribution
+### Phase 10 — Site content (CMS interior)
+
+**After Phase 9.** Implement the content model: site tree, media library, recycle bin, site settings, publication (`draft` / `published` / `scheduled`) + `hidden`, explorer PHP tree API, then public resolve for folders/documents/redirects. Detail: [Site_Content_Model.md](./Site_Content_Model.md). Absorbs the former “File Explorer: PHP tree API” work.
+
+### Phase 11 — Packaging / distribution
 
 Zip/git release of WebHemi.PHP; document zero-Node production. Aligns with architecture roadmap packaging.
-
-### Phase 11 — File Explorer: PHP tree API
-
-Replace empty/demo explorer forest with real nav/media (or equivalent) from Symfony. Honor reserved paths.
 
 ### Phase 12 — File Explorer: shared MenuBar chrome (optional)
 
@@ -106,7 +109,7 @@ Admin Theme / site theme picker (scope TBD; do not confuse with frontend Default
 
 ### Phase 15 — Installer wizard (deferred)
 
-WordPress-style first-run: language, DB, primary domain, admin user → migrations → protected main site/host with **path** admin. Lock when done. **Parked at end** until ready to schedule — was formerly Phase 9.
+WordPress-style first-run: language, DB, primary domain, admin user → migrations → protected main site/host with **path** admin. Lock when done. **Parked at end** until ready to schedule.
 
 ---
 
@@ -134,7 +137,8 @@ WordPress-style first-run: language, DB, primary domain, admin user → migratio
 | [Admin_Context_Menu.md](./Admin_Context_Menu.md) | Context menu chrome + optional menu icons (slice A done) |
 | [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR (**installer deferred**, Phase 15) |
 | [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) | `is_protected` Main site + www host guards (**done**, Phase 8) |
-| [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP API open |
+| [Site_Content_Model.md](./Site_Content_Model.md) | Site tree / media / trash / settings + publication/hidden (**Phase 10**, after Hello world) |
+| [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP tree API under Phase 10 |
 | [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP / Nelmio / nonce plan (report-only → enforce; parallel to product phases) |
 | [WebHemi_Architecture_and_Roadmap.md](./WebHemi_Architecture_and_Roadmap.md) | Multi-repo / dual-engine vision |
 
