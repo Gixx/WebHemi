@@ -147,14 +147,15 @@ After Phase 9 Hello world. Order inside Phase 10:
 
 ## Open decisions
 
-- Direct URL to `hidden` + `published` nodes: allow (unlisted) vs 404  
-- Whether folders have publication status or only inherit/visibility flags  
+- ~~Direct URL to `hidden` + `published` nodes~~ → **allow (unlisted)** — locked Slice 1  
+- ~~Whether folders have publication status~~ → **yes** (same fields; default may become `published` later)  
 - Locale: single optional `locale` root vs one folder per language under site root  
-- Trash restore naming collisions  
-- Scheduled publish: cron vs lazy evaluate on request  
+- Trash restore naming collisions → **block with message** (Slice 1)  
+- Scheduled publish: cron vs lazy evaluate on request → defer to public routing  
 
 ## Related
 
+- [Site_Content_Slice1.md](./Site_Content_Slice1.md) — schema + admin APIs (done)  
 - [FileExplorer_Window.md](./FileExplorer_Window.md) — UI brick + forest  
 - [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) — protected Main pair  
 - [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) — reserved paths  
