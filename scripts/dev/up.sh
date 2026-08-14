@@ -77,6 +77,8 @@ if command -v symfony >/dev/null 2>&1; then
     --p12="$P12"
   echo "[symfony] https://127.0.0.1:8000/admin/login"
   echo "[symfony] https://admin.${DOMAIN}:8000/login"
+  echo "[symfony] https://www.${DOMAIN}:8000/  (site Hello world)"
+  echo "[symfony] https://www.${DOMAIN}:8000/api/site"
 else
   echo "[symfony] CLI not found; falling back to php -S (HTTP only, no p12)"
   start_bg php-server \
@@ -86,7 +88,9 @@ fi
 echo
 echo "Dev stack is up."
 echo "  Storybook:  http://127.0.0.1:6006"
-echo "  PHP app:    https://127.0.0.1:8000/admin/login"
+echo "  PHP admin:  https://127.0.0.1:8000/admin/login"
 echo "  Admin host: https://admin.${DOMAIN}:8000/login  (needs hosts entry — see docs/local-dev.md)"
+echo "  Site home:  https://www.${DOMAIN}:8000/"
+echo "  Site API:   https://www.${DOMAIN}:8000/api/site"
 echo "  Logs:       $LOG_DIR"
 echo "  Stop with:  make down"

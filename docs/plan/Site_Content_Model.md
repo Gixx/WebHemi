@@ -8,9 +8,9 @@
 
 Finish the **admin site interior** as far as product design allows before a rich public frontend. The existing File Explorer forest already sketches four roots — **Site**, **Media library**, **Recycle Bin**, **Settings**. This note locks the data model and MVP boundaries so the PHP tree API and later public routing share one contract.
 
-**Phase order (locked):** [CURRENT.md](./CURRENT.md) **Phase 9 Hello world** first (minimal `/`), then **Phase 10** implements this ADR. Do not start schema/explorer content APIs until Hello world is done.
+**Phase order (locked):** [CURRENT.md](./CURRENT.md) **Phase 9 Hello world** first (theme-aware `/` + thin public API — [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md)), then **Phase 10** implements this ADR. Do not start schema/explorer content APIs until Hello world is done.
 
-Hello world stays minimal/static; **rich content is Phase 10** guided by this ADR.
+Hello world stays stub/static (no CMS tree); **rich content is Phase 10** guided by this ADR.
 
 ## Explorer forest (product UI)
 
@@ -140,7 +140,7 @@ After Phase 9 Hello world. Order inside Phase 10:
 ## Out of scope (this ADR)
 
 - Choosing WYSIWYG vendor  
-- Themes Control Panel window  
+- Themes Control Panel window / zip install — [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) (Phase 14)  
 - Full installer wizard  
 - Implementing filter_list virtual trees  
 - Dual-engine Payload collections (later map to this model)
@@ -158,3 +158,4 @@ After Phase 9 Hello world. Order inside Phase 10:
 - [FileExplorer_Window.md](./FileExplorer_Window.md) — UI brick + forest  
 - [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) — protected Main pair  
 - [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) — reserved paths  
+- [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) — site theme resolve + Hello world seams (Phase 9) 

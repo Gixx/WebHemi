@@ -120,6 +120,7 @@ Do not treat `.old/` as the source of truth — use the tag or submodule repos.
 | [**Current progress**](docs/plan/CURRENT.md) | **Start here** — done vs next phases (renumbered) |
 | [Local development](docs/local-dev.md) | `make up` / hosts / Makefile vs DDEV |
 | [Architecture & roadmap](docs/plan/WebHemi_Architecture_and_Roadmap.md) | Multi-repo design (long-horizon) |
+| [Frontend sites & themes](docs/plan/Frontend_Sites_and_Themes.md) | Multi-site public stack + swappable themes (Phase 9 / 14) |
 | [Admin98 product integration](docs/plan/Admin98_Product_Integration.md) | Historical phase narrative 0–7 |
 | [webhemi-php README](webhemi-php/README.md) | PHP setup, sync-ui, QA |
 | [webhemi-ui README](webhemi-ui/README.md) | Storybook and library build |

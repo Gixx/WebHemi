@@ -31,7 +31,8 @@ Copy the token from Chromatic → project → Manage → Configure. Same secret 
 | https://127.0.0.1:8000/admin/login | Admin login (path mode / IP) |
 | https://admin.webhemi.local:8000/login | Admin login (domain mode; rewritten to `/admin/login`) |
 | https://www.webhemi.local:8000/login | Frontend (site) login stub |
-| https://www.webhemi.local:8000/ | Site JSON stub (by design) |
+| https://www.webhemi.local:8000/ | Public site home (shipped `default` theme Hello world) |
+| https://www.webhemi.local:8000/api/site | Thin public site API (Host → Site + theme) |
 
 Logs and PIDs live under `.dev/` (gitignored).
 Certificate files live under `webhemi-php/var/certs/` (gitignored via `var/`).
@@ -71,7 +72,7 @@ Settings → Privacy & Security → Certificates → Authorities → Import
 
 ## Why `/` is JSON
 
-`/` is the **site** home controller and currently returns JSON context. Use **`/admin`** or **`/admin/login`** for the control panel (or `admin.webhemi.local` in domain mode).
+`/` is the **site** home (theme-aware Hello world). Use **`/admin`** or **`/admin/login`** for the control panel (or `admin.webhemi.local` in domain mode).
 
 ## Hosts file (`admin.webhemi.local`)
 
