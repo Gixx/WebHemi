@@ -157,6 +157,7 @@ After Phase 9 Hello world. Order inside Phase 10:
 
 - [Site_Content_Slice1.md](./Site_Content_Slice1.md) — schema + admin APIs (done)  
 - [Site_Content_Slice2.md](./Site_Content_Slice2.md) — explorer forest + mutation wiring (done)  
+- [Site_Content_Slice3.md](./Site_Content_Slice3.md) — site-interior Settings surface (done)  
 - [FileExplorer_Window.md](./FileExplorer_Window.md) — UI brick + forest  
 - [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) — protected Main pair  
 - [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) — reserved paths  
