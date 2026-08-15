@@ -133,7 +133,7 @@ After Phase 9 Hello world. Order inside Phase 10:
 2. **Explorer PHP tree** — replace fixture forest  
 3. **Site settings surface** — activate Settings root  
 4. **Document editor** — Lexical WYSIWYG + custom block placeholders — [Site_Content_Slice4.md](./Site_Content_Slice4.md)  
-5. **Public routing** — resolve folder indexes + `.html` leaves + redirects; honor reserved paths; render Lexical JSON / blocks in theme  
+5. **Public routing** — resolve folder indexes + `.html` leaves + redirects; honor reserved paths; render Lexical JSON / blocks in theme — [Site_Content_Slice5.md](./Site_Content_Slice5.md)  
 6. **filter_list / gallery / file_list** — phase 2 folder types (after Phase 10 MVP)  
 7. **Installer** — seed empty protected tree + locale optional (still deferred, CURRENT Phase 15)
 
@@ -152,7 +152,7 @@ After Phase 9 Hello world. Order inside Phase 10:
 - ~~WYSIWYG vendor~~ → **Lexical** (MIT); TipTap not free for us — locked Slice 4  
 - Locale: single optional `locale` root vs one folder per language under site root  
 - Trash restore naming collisions → **block with message** (Slice 1)  
-- Scheduled publish: cron vs lazy evaluate on request → defer to public routing  
+- Scheduled publish: cron vs lazy evaluate on request → **request-time** (Slice 5)  
 - Whether to keep column name `body` for Lexical JSON vs rename to `body_json` — prefer reuse `body` unless migration needed  
 
 ## Related
@@ -161,6 +161,7 @@ After Phase 9 Hello world. Order inside Phase 10:
 - [Site_Content_Slice2.md](./Site_Content_Slice2.md) — explorer forest + mutation wiring (done)  
 - [Site_Content_Slice3.md](./Site_Content_Slice3.md) — site-interior Settings surface (done)  
 - [Site_Content_Slice4.md](./Site_Content_Slice4.md) — Lexical document editor + custom blocks (done)  
+- [Site_Content_Slice5.md](./Site_Content_Slice5.md) — public routing + Lexical/theme render (done)  
 - [FileExplorer_Window.md](./FileExplorer_Window.md) — UI brick + forest  
 - [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) — protected Main pair  
 - [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) — reserved paths  

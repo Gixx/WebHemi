@@ -47,7 +47,7 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 Former “Phase 6 Slice D”, “6b”, installer P0… are **flattened**: each item below is its own phase, numbered from **1**.  
 Do them in order unless a note says otherwise.
 
-**Next up (locked):** Phase 10 Site content (next slice after Lexical document editor). Phase 9 Hello world is done.
+**Next up (locked):** Phase 10 Site content — remaining polish / Slice 2 deferrals, or Phase 11 packaging. Slice 5 public routing done ([Site_Content_Slice5.md](./Site_Content_Slice5.md)).
 
 ### Phase 1 — Admin access mode + reserved paths
 
@@ -91,7 +91,7 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 ### Phase 10 — Site content (CMS interior)
 
-**In progress.** Slices 1–4 done. Slice 4: Lexical editor, JSON `body`, accordion placeholders — [Site_Content_Slice4.md](./Site_Content_Slice4.md). Detail: [Site_Content_Model.md](./Site_Content_Model.md) · [Site_Content_Slice1.md](./Site_Content_Slice1.md) · [Site_Content_Slice2.md](./Site_Content_Slice2.md) · [Site_Content_Slice3.md](./Site_Content_Slice3.md) · [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
+**In progress.** Slices 1–5 done. Slice 5: public routing + Lexical/accordion theme render — [Site_Content_Slice5.md](./Site_Content_Slice5.md). Detail: [Site_Content_Model.md](./Site_Content_Model.md) · [Site_Content_Slice1.md](./Site_Content_Slice1.md) · [Site_Content_Slice2.md](./Site_Content_Slice2.md) · [Site_Content_Slice3.md](./Site_Content_Slice3.md) · [Site_Content_Slice4.md](./Site_Content_Slice4.md) · [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
 
 ### Phase 11 — Packaging / distribution
 
@@ -144,6 +144,7 @@ WordPress-style first-run: language, DB, primary domain, admin user → migratio
 | [Site_Content_Slice2.md](./Site_Content_Slice2.md) | Phase 10 Slice 2: explorer forest + mutation wiring (**done**; copy/media-move deferred) |
 | [Site_Content_Slice3.md](./Site_Content_Slice3.md) | Phase 10 Slice 3: site-interior Settings surface (**done**) |
 | [Site_Content_Slice4.md](./Site_Content_Slice4.md) | Phase 10 Slice 4: Lexical document editor + custom blocks (**done**) |
+| [Site_Content_Slice5.md](./Site_Content_Slice5.md) | Phase 10 Slice 5: public routing + Lexical/theme render (**done**) |
 | [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) | Dual site API/UI, N sites, shipped + `var/themes` (**Phase 9** seams; **Phase 14** Themes CP) |
 | [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP tree API under Phase 10 |
 | [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP / Nelmio / nonce plan (report-only → enforce; parallel to product phases) |

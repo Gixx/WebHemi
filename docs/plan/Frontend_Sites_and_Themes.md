@@ -128,7 +128,7 @@ flowchart LR
 
 ### Phase 10 — Site content
 
-Uses the same Site (and later theme hooks for indexes/templates). Theme **assignment** already exists; public resolve picks templates from the active theme. Detail: [Site_Content_Model.md](./Site_Content_Model.md).
+Uses the same Site (and later theme hooks for indexes/templates). Theme **assignment** already exists; public resolve picks templates from the active theme. Slice 5: [Site_Content_Slice5.md](./Site_Content_Slice5.md). Detail: [Site_Content_Model.md](./Site_Content_Model.md).
 
 ### Phase 14 — Control Panel: Themes window
 

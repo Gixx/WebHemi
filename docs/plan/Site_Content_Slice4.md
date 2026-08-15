@@ -18,7 +18,7 @@ Open site **documents** in a rich editor window: standard rich text plus **custo
 | Custom blocks | `DecoratorBlockNode`: canvas = placeholder chip; Edit… → config dialog |
 | First custom block | **Accordion** (MVP schema below); more block types later |
 | Admin chrome | Lexical `ContentEditable` + thin toolbar under `[data-wh-theme="admin"]`; no Lexical playground skin |
-| Public HTML | Slice 5: theme/Twig (or later JS) renders from stored JSON / derived HTML — not required for Slice 4 |
+| Public HTML | Slice 5: theme/Twig renders from stored JSON — [Site_Content_Slice5.md](./Site_Content_Slice5.md) |
 
 ## What shipped
 
@@ -40,12 +40,12 @@ Open site **documents** in a rich editor window: standard rich text plus **custo
 
 ## Accordion MVP
 
-Serialized node type `wh-accordion` with `blockId` + `items: [{ id, title, body }]` (plain text bodies). Public accordion markup is out of scope.
+Accordion: Twig partial from `wh-accordion` props. Public markup: [Site_Content_Slice5.md](./Site_Content_Slice5.md).
 
 ## Out of scope (unchanged)
 
 - TipTap / paid editor stacks  
-- Public accordion (and other block) theme rendering  
+- Public accordion (and other block) theme rendering → **Slice 5**  
 - Nested Lexical inside accordion item bodies  
 - Collaborative editing, comments  
 - Media embed block  
