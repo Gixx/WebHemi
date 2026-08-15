@@ -132,14 +132,14 @@ After Phase 9 Hello world. Order inside Phase 10:
 1. **Schema + APIs** — nodes, media blobs/refs, soft-delete, publication + hidden  
 2. **Explorer PHP tree** — replace fixture forest  
 3. **Site settings surface** — activate Settings root  
-4. **Document editor** — MVP document create/edit (WYSIWYG scope TBD)  
-5. **Public routing** — resolve folder indexes + `.html` leaves + redirects; honor reserved paths  
+4. **Document editor** — Lexical WYSIWYG + custom block placeholders — [Site_Content_Slice4.md](./Site_Content_Slice4.md)  
+5. **Public routing** — resolve folder indexes + `.html` leaves + redirects; honor reserved paths; render Lexical JSON / blocks in theme  
 6. **filter_list / gallery / file_list** — phase 2 folder types (after Phase 10 MVP)  
 7. **Installer** — seed empty protected tree + locale optional (still deferred, CURRENT Phase 15)
 
 ## Out of scope (this ADR)
 
-- Choosing WYSIWYG vendor  
+- ~~Choosing WYSIWYG vendor~~ → **Lexical** ([Site_Content_Slice4.md](./Site_Content_Slice4.md))  
 - Themes Control Panel window / zip install — [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) (Phase 14)  
 - Full installer wizard  
 - Implementing filter_list virtual trees  
@@ -149,15 +149,18 @@ After Phase 9 Hello world. Order inside Phase 10:
 
 - ~~Direct URL to `hidden` + `published` nodes~~ → **allow (unlisted)** — locked Slice 1  
 - ~~Whether folders have publication status~~ → **yes** (same fields; default may become `published` later)  
+- ~~WYSIWYG vendor~~ → **Lexical** (MIT); TipTap not free for us — locked Slice 4  
 - Locale: single optional `locale` root vs one folder per language under site root  
 - Trash restore naming collisions → **block with message** (Slice 1)  
 - Scheduled publish: cron vs lazy evaluate on request → defer to public routing  
+- Whether to keep column name `body` for Lexical JSON vs rename to `body_json` — prefer reuse `body` unless migration needed  
 
 ## Related
 
 - [Site_Content_Slice1.md](./Site_Content_Slice1.md) — schema + admin APIs (done)  
 - [Site_Content_Slice2.md](./Site_Content_Slice2.md) — explorer forest + mutation wiring (done)  
 - [Site_Content_Slice3.md](./Site_Content_Slice3.md) — site-interior Settings surface (done)  
+- [Site_Content_Slice4.md](./Site_Content_Slice4.md) — Lexical document editor + custom blocks (done)  
 - [FileExplorer_Window.md](./FileExplorer_Window.md) — UI brick + forest  
 - [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) — protected Main pair  
 - [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) — reserved paths  

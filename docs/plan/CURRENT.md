@@ -47,7 +47,7 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 Former “Phase 6 Slice D”, “6b”, installer P0… are **flattened**: each item below is its own phase, numbered from **1**.  
 Do them in order unless a note says otherwise.
 
-**Next up (locked):** Phase 10 Site content (Slice 3 done → Slice 4 document editor). Phase 9 Hello world is done.
+**Next up (locked):** Phase 10 Site content (next slice after Lexical document editor). Phase 9 Hello world is done.
 
 ### Phase 1 — Admin access mode + reserved paths
 
@@ -91,7 +91,7 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 ### Phase 10 — Site content (CMS interior)
 
-**In progress.** Slices 1–3 done (schema/APIs, explorer forest + mutations, site settings surface). Next: Slice 4 document editor. Detail: [Site_Content_Model.md](./Site_Content_Model.md) · [Site_Content_Slice1.md](./Site_Content_Slice1.md) · [Site_Content_Slice2.md](./Site_Content_Slice2.md) · [Site_Content_Slice3.md](./Site_Content_Slice3.md) · [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
+**In progress.** Slices 1–4 done. Slice 4: Lexical editor, JSON `body`, accordion placeholders — [Site_Content_Slice4.md](./Site_Content_Slice4.md). Detail: [Site_Content_Model.md](./Site_Content_Model.md) · [Site_Content_Slice1.md](./Site_Content_Slice1.md) · [Site_Content_Slice2.md](./Site_Content_Slice2.md) · [Site_Content_Slice3.md](./Site_Content_Slice3.md) · [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
 
 ### Phase 11 — Packaging / distribution
 
@@ -143,6 +143,7 @@ WordPress-style first-run: language, DB, primary domain, admin user → migratio
 | [Site_Content_Slice1.md](./Site_Content_Slice1.md) | Phase 10 Slice 1: schema + admin content/media APIs (**done**) |
 | [Site_Content_Slice2.md](./Site_Content_Slice2.md) | Phase 10 Slice 2: explorer forest + mutation wiring (**done**; copy/media-move deferred) |
 | [Site_Content_Slice3.md](./Site_Content_Slice3.md) | Phase 10 Slice 3: site-interior Settings surface (**done**) |
+| [Site_Content_Slice4.md](./Site_Content_Slice4.md) | Phase 10 Slice 4: Lexical document editor + custom blocks (**done**) |
 | [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) | Dual site API/UI, N sites, shipped + `var/themes` (**Phase 9** seams; **Phase 14** Themes CP) |
 | [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP tree API under Phase 10 |
 | [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP / Nelmio / nonce plan (report-only → enforce; parallel to product phases) |
