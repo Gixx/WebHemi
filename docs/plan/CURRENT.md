@@ -2,7 +2,7 @@
 
 > **For new chat sessions:** read this file first.  
 > Detailed ADRs / slice notes remain under `docs/plan/` for history; **status and next work are only maintained here.**  
-> Last updated: 2026-08-14.
+> Last updated: 2026-08-15.
 
 ---
 
@@ -47,7 +47,7 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 Former “Phase 6 Slice D”, “6b”, installer P0… are **flattened**: each item below is its own phase, numbered from **1**.  
 Do them in order unless a note says otherwise.
 
-**Next up (locked):** Phase 10 Site content (Slice 1 schema/APIs done → Slice 2 explorer tree). Phase 9 Hello world is done.
+**Next up (locked):** Phase 10 Site content (Slice 2 done → Slice 3 site settings). Phase 9 Hello world is done.
 
 ### Phase 1 — Admin access mode + reserved paths
 
@@ -91,7 +91,7 @@ Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostC
 
 ### Phase 10 — Site content (CMS interior)
 
-**In progress.** Slice 1 done: `content_node` / `media_asset` schema + site-scoped admin APIs (CRUD, soft-delete/restore/purge, media upload + hash). Next: Slice 2 explorer PHP tree. Detail: [Site_Content_Model.md](./Site_Content_Model.md) · [Site_Content_Slice1.md](./Site_Content_Slice1.md) · [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
+**In progress.** Slice 1 done. Slice 2 done for forest load + core mutations (create folder/page, rename, soft-delete/restore/purge, node move); copy and media move deferred. Next: Slice 3 site settings surface. Detail: [Site_Content_Model.md](./Site_Content_Model.md) · [Site_Content_Slice1.md](./Site_Content_Slice1.md) · [Site_Content_Slice2.md](./Site_Content_Slice2.md) · [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
 
 ### Phase 11 — Packaging / distribution
 
@@ -141,6 +141,7 @@ WordPress-style first-run: language, DB, primary domain, admin user → migratio
 | [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) | `is_protected` Main site + www host guards (**done**, Phase 8) |
 | [Site_Content_Model.md](./Site_Content_Model.md) | Site tree / media / trash / settings + publication/hidden (**Phase 10**) |
 | [Site_Content_Slice1.md](./Site_Content_Slice1.md) | Phase 10 Slice 1: schema + admin content/media APIs (**done**) |
+| [Site_Content_Slice2.md](./Site_Content_Slice2.md) | Phase 10 Slice 2: explorer forest + mutation wiring (**done**; copy/media-move deferred) |
 | [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) | Dual site API/UI, N sites, shipped + `var/themes` (**Phase 9** seams; **Phase 14** Themes CP) |
 | [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP tree API under Phase 10 |
 | [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP / Nelmio / nonce plan (report-only → enforce; parallel to product phases) |

@@ -1,0 +1,28 @@
+---
+description: Always run repo QA (composer qa / UI checks) before handing PHP or UI work to the user for commit
+alwaysApply: true
+---
+
+# QA before handoff
+
+Before telling the user work is ready to commit (or drafting commit messages as a handoff), **run that repo’s QA and fix failures**. Do not leave this to the pre-commit hook.
+
+## webhemi-php
+
+1. `composer fix` (if style/rector likely dirty)
+2. `composer run qa` (same suite as `.githooks/pre-commit`)
+3. Fix until green; re-stage auto-fixed files (`phpcbf` / cs-fixer / rector)
+4. Never stage Windows `*:Zone.Identifier` junk
+
+## webhemi-ui
+
+At minimum before handoff:
+
+1. `npm run typecheck`
+2. `npm run lint`
+
+Prefer `make test ui` when Chromatic token / full Storybook Vitest is available.
+
+## Hub docs-only
+
+No PHP/UI QA required for pure `docs/plan/` edits.

@@ -1,6 +1,6 @@
 # Phase 10 Slice 1 — Content schema + admin APIs
 
-> **Status:** implemented (schema + admin APIs). Explorer wiring = Slice 2.  
+> **Status:** implemented (schema + admin APIs). Explorer wiring = [Site_Content_Slice2.md](./Site_Content_Slice2.md) (in progress).  
 > **Parent:** [Site_Content_Model.md](./Site_Content_Model.md) · [CURRENT.md](./CURRENT.md) Phase 10.  
 > **Language:** English only.
 
