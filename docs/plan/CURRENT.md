@@ -39,6 +39,7 @@ Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
 - **Site content model (ADR draft)** — explorer Site/Media/Trash/Settings; publication + hidden; media hash; soft-delete ([Site_Content_Model.md](./Site_Content_Model.md))
 - **Frontend sites + themes (ADR)** — dual site API/UI, N Host→Site, shipped + `var/themes` packages; Phase 9 seams ([Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md))
 - **Phase 9 Hello world** — Host→Site→theme resolve; shipped `default` theme on `/`; `GET /api/site`; Site.`themeId` ([Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md))
+- **My Account profile** — Start → My Account tabs (Personal data + Security); avatar default/Gravatar/upload+crop; `app_user` profile fields + `app_user_link` ([My_Account_Profile.md](./My_Account_Profile.md))
 
 ---
 

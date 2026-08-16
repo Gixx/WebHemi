@@ -9,7 +9,7 @@
 **Separate Start → My Account** (not the Users management window).
 
 - Users stays under Control Panel (management UI; every admin session may open it, list filtered).
-- Start → **My Account** opens a slim self-only surface: Set Password (3 fields) now; later public profile fields under `user.view` / self.
+- Start → **My Account** opens a tabbed self profile: **Personal data** (avatar, fields, links) + **Security** (password). Detail: [My_Account_Profile.md](./My_Account_Profile.md).
 - Avoids Site Admins / limited operators seeing a one-row “Users” manager from Start.
 
 ## Permission model
@@ -39,6 +39,8 @@ Edit **self** (roles / site assignments): needs `user.edit` or Admin. Self may c
 
 ## Out of scope
 
-- Defining “public” profile fields for `user.view`
-- Full My Account profile editor
+- ~~Defining “public” profile fields for `user.view`~~ → see [My_Account_Profile.md](./My_Account_Profile.md) (self profile shipped)
+- ~~Full My Account profile editor~~ → shipped
 - Seeding default `user.*` catalog rows (operators create as today)
+- CP Users Change Settings showing the same profile editor
+- Public site rendering of profile/avatar
