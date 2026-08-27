@@ -33,7 +33,9 @@
 - Lexical document editor + accordion custom block
 - Public CMS routing + Lexical/accordion theme render
 - Desktop icon drag: grid snap, nearest-free collision, localStorage (`webhemi.admin.desktop.icons.v1`)
-- Explorer server-side copy-paste (deep node copy; media move still open)
+- Explorer server-side copy-paste (deep node copy)
+- Media library organization: DnD reparent (`PATCH folderNodeId`); Copy/DnD into site tree as `media_ref` links
+- Media Library upload: File → Upload…, OS drag-and-drop, pale yellow hint; images/video/audio/PDF/Office
 
 ---
 
@@ -43,9 +45,9 @@ Absolute order. Every item is its own phase (no slices / sub-phases). Do in sequ
 
 **Next up:** Phase 1.
 
-### Phase 1 — Media library move / reparent
+### Phase 1 — Media library delete + embed usage
 
-Move media assets between media folders (API + explorer DnD / paste). Detail: [Site_Content_Slice2.md](./Site_Content_Slice2.md).
+Before soft-deleting a library asset: detect `media_ref` links vs Lexical embeds; cascade/confirm when embeds would go null. Detail: [Media_Library_Organization.md](./Media_Library_Organization.md).
 
 ### Phase 2 — Context menu product wiring
 
@@ -120,10 +122,11 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work. D
 | [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) | `is_protected` guards (**done**) |
 | [Site_Content_Model.md](./Site_Content_Model.md) | Content ADR (MVP done; locale/gallery = Phases 6–7) |
 | [Site_Content_Slice1.md](./Site_Content_Slice1.md) | Schema + admin APIs (**done**) |
-| [Site_Content_Slice2.md](./Site_Content_Slice2.md) | Explorer wiring + copy (**done**; media-move = Phase 1) |
+| [Site_Content_Slice2.md](./Site_Content_Slice2.md) | Explorer wiring + copy + media org (**done**) |
 | [Site_Content_Slice3.md](./Site_Content_Slice3.md) | Site Settings surface (**done**) |
 | [Site_Content_Slice4.md](./Site_Content_Slice4.md) | Lexical editor (**done**) |
 | [Site_Content_Slice5.md](./Site_Content_Slice5.md) | Public routing + theme render (**done**) |
+| [Media_Library_Organization.md](./Media_Library_Organization.md) | Media DnD + site `media_ref` (**done**); delete/embed = Phase 1 |
 | [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) | Themes seams (**done**; Themes CP = Phase 5) |
 | [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer brick (**done**; MenuBar extract = Phase 10) |
 | [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP plan (Phase 3) |
