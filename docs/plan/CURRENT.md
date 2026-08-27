@@ -1,154 +1,135 @@
 # WebHemi — current progress (single source of truth)
 
 > **For new chat sessions:** read this file first.  
-> Detailed ADRs / slice notes remain under `docs/plan/` for history; **status and next work are only maintained here.**  
-> Last updated: 2026-08-15.
+> Detailed ADRs / notes remain under `docs/plan/` for history; **status and next work are only maintained here.**  
+> Last updated: 2026-08-27.
 
 ---
 
 ## Done
 
-Simple checklist of what already shipped (Admin98 + Sites/Hosts path).
-
 - Integration contract (layers, theme scope, no shared Admin↔theme UI)
 - Admin styles in `webhemi-ui` (scoped Retro OS / Admin Theme)
-- Chrome atoms + Storybook (`Admin/Atoms/*`)
-- Product layout bricks + SystemIcon + scrollbar
-- Dynamic `accessKey` (Button + FieldRow)
-- Field label ownership / FieldRow conventions
-- Storybook Guide items marked complete (as applicable)
-- AdminDesktop product surface in PHP (Login + desktop mount; live AdminLayout dropped)
+- Chrome atoms + Storybook; layout bricks, SystemIcon, scrollbar
+- Dynamic `accessKey`, FieldRow label conventions, Storybook Guide
+- AdminDesktop in PHP (Login + desktop mount); legacy Tailwind admin removed
 - Desktop shell: registry, drag, taskbar, Start menu, resize/maximize, persistence
-- File Explorer brick (slices A–I): nav, menubar, site open, delete/undo, clipboard, properties, splitter, multi-select, drag-drop
-- Sites window + `/admin/api` Sites list/create (Phase 6 A–C)
-- Hosts window + `/admin/api` Hosts list/create
-- Host ownership: create unassigned → verify → assign; Verification (`pending`|`verified`) + Status Enabled/Disabled
-- Operator feedback (Slice F): success in status bar; errors in MessageDialog; confirm delete
-- Sites & Hosts full CRUD: GET-by-id, PATCH, DELETE; site delete blocked while hosts assigned
-- Bootstrap Doctrine migrations restored from pre-hub monolith (fresh `migrate` path)
-- Entity methods: `setVerification` / `setIsEnabled` (not status/active)
-- Late-horizon plans written: installer + protected base site; path-based `/admin` heritage noted
-- **Legacy Tailwind admin removed** — `AdminLayout` / `SitesPage` / `HostsPage` / list views + orphan Twig; redirects kept ([Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md))
-- **Admin deep links** — `?window=` / `?id=` opens Sites/Hosts/site explorer (+ CP/Settings); legacy `/admin/sites|hosts` redirect with query ([Deep_Links.md](./Deep_Links.md))
-- **Context menu chrome** — `ContextMenu`/`MenuPopup` + ExplorerMenuBar icon/check gutters ([Admin_Context_Menu.md](./Admin_Context_Menu.md)); product `onContextMenu` wiring later
-- **Storybook MSW** — `/admin/api` handlers + AdminDesktop list/create demos without PHP ([Storybook_MSW.md](./Storybook_MSW.md))
-- **RBAC reset (R1–R3)** — protected Admin + Site Admin; empty permission seed; voter rewrite ([RBAC_Reset.md](./RBAC_Reset.md))
-- **Settings window** — `access.admin` path \| domain; GET/PATCH `/admin/api/settings`; host-loss reset to path ([Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md); shipped with Phase 1)
-- **Settings: Symfony debug toolbar** — GroupBox + checkbox; editable in `dev`/`stage` only ([Settings_Symfony_Debug_Toolbar.md](./Settings_Symfony_Debug_Toolbar.md))
-- **Protected Main site + primary www host** — `is_protected` flags; API 409 + Sites/Hosts UI locks ([Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md))
-- **Site content model (ADR draft)** — explorer Site/Media/Trash/Settings; publication + hidden; media hash; soft-delete ([Site_Content_Model.md](./Site_Content_Model.md))
-- **Frontend sites + themes (ADR)** — dual site API/UI, N Host→Site, shipped + `var/themes` packages; Phase 9 seams ([Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md))
-- **Phase 9 Hello world** — Host→Site→theme resolve; shipped `default` theme on `/`; `GET /api/site`; Site.`themeId` ([Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md))
-- **My Account profile** — Start → My Account tabs (Personal data + Security); avatar default/Gravatar/upload+crop; `app_user` profile fields + `app_user_link` ([My_Account_Profile.md](./My_Account_Profile.md))
+- File Explorer brick: nav, menubar, site open, delete/undo, clipboard, properties, splitter, multi-select, drag-drop
+- Sites & Hosts full CRUD, ownership verify→assign, operator feedback (status bar / MessageDialog)
+- Bootstrap Doctrine migrations restored; entity `setVerification` / `setIsEnabled`
+- Admin deep links (`?window=` / `?id=`)
+- Context menu chrome (Storybook + ExplorerMenuBar icons); product `onContextMenu` wiring still open
+- Storybook MSW for `/admin/api`
+- RBAC baseline: protected Admin + Site Admin, empty permission seed, voter rewrite
+- Control Panel: Permissions, Roles, Users (full CRUD)
+- Users RBAC rules + Start → My Account; My Account profile (avatar, links, Security)
+- Settings: `access.admin` path \| domain; Symfony debug toolbar toggle
+- Admin access mode + reserved paths + dual admin/frontend auth
+- Protected Main site + primary www host (`is_protected` guards)
+- Frontend sites/themes seams; Hello world Host→Site→theme resolve; `GET /api/site`
+- Site content schema + admin content/media APIs (soft-delete, publication, hidden)
+- Explorer live forest + mutations (cut/move; New Folder/Page, trash, restore)
+- Site-interior Settings surface
+- Lexical document editor + accordion custom block
+- Public CMS routing + Lexical/accordion theme render
+- Desktop icon drag: grid snap, nearest-free collision, localStorage (`webhemi.admin.desktop.icons.v1`)
 
 ---
 
-## Remaining (renumbered phases)
+## Remaining
 
-Former “Phase 6 Slice D”, “6b”, installer P0… are **flattened**: each item below is its own phase, numbered from **1**.  
-Do them in order unless a note says otherwise.
+Absolute order. Every item is its own phase (no slices / sub-phases). Do in sequence unless you deliberately reorder and renumber here.
 
-**Next up (locked):** Phase 10 Site content — remaining polish / Slice 2 deferrals, or Phase 11 packaging. Slice 5 public routing done ([Site_Content_Slice5.md](./Site_Content_Slice5.md)).
+**Next up:** Phase 1.
 
-### Phase 1 — Admin access mode + reserved paths
+### Phase 1 — Explorer copy-paste
 
-Install-global `var/config/webhemi.yaml` (`access.admin`: path \| domain); HostContext redirects; drop `api` host surface; Main-only `admin` surface; reserved `/admin`, `/api`, `/login`, `/register`; dual admin vs frontend auth; **Settings window** for access mode. Detail: [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) · [Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md). **Phase 1 complete.**
+Server-side copy (and enable Copy / paste-copy in the explorer). Cut/move already ships. Detail: [Site_Content_Slice2.md](./Site_Content_Slice2.md) · [Site_Content_Model.md](./Site_Content_Model.md).
 
-### Phase 2 — Deep links `?window=…`
+### Phase 2 — Media library move / reparent
 
-**Complete.** Open Sites/Hosts (and site explorer) from `?window=` with entity support (`?id=`). Detail: [Deep_Links.md](./Deep_Links.md). Was Phase 6 Slice D.
+Move media assets between media folders (API + explorer DnD / paste). Detail: [Site_Content_Slice2.md](./Site_Content_Slice2.md).
 
-### Phase 3 — Storybook MSW for `/admin/api`
+### Phase 3 — Context menu product wiring
 
-**Complete.** `msw` + storybook addon; handlers in `webhemi-ui/src/admin/api/msw/`; AdminDesktop list/create demos without PHP. Detail: [Storybook_MSW.md](./Storybook_MSW.md). Was Phase 6b.
+Wire `onContextMenu` on desktop, explorer, Sites/Hosts rows, taskbar, etc. Chrome atom already exists. Detail: [Admin_Context_Menu.md](./Admin_Context_Menu.md).
 
-### Phase 3b — RBAC reset (before Users / Roles / Permissions)
+### Phase 4 — Content Security Policy
 
-**R1–R3 done.** Protected **Admin** + **Site Admin**; empty permission seed; rewritten voter. Admin = full CP + all sites; Site Admin = per-site interior via `site_assignment`. R4 = CP CRUD windows. Detail: [RBAC_Reset.md](./RBAC_Reset.md).
+NelmioSecurityBundle: report-only → enforce; nonces for AssetMapper / admin boot; later public-site policy. Detail: [Content_Security_Policy.md](./Content_Security_Policy.md).
 
-### Phase 4 — Control Panel: Permissions window
+### Phase 5 — Packaging / distribution
 
-**Complete.** Full CRUD (create / edit / delete). Seed catalog may be empty; operators add permissions for testing. Readonly flags deferred. Depends on Phase 3b. Detail: [Permissions_Window.md](./Permissions_Window.md).
+Zip/git release of WebHemi.PHP; document zero-Node production and `var/themes` / shipped theme paths. Aligns with [WebHemi_Architecture_and_Roadmap.md](./WebHemi_Architecture_and_Roadmap.md).
 
-### Phase 5 — Control Panel: Roles window
+### Phase 6 — Control Panel: Themes window
 
-**Complete.** Full CRUD (create / edit / delete, attach permissions). **Admin** and **Site Admin** locked (no delete/edit). Seed those two; custom roles for testing. Depends on Phase 3b / Phase 4 permissions catalog. Detail: [Roles_Window.md](./Roles_Window.md).
+List shipped + `var/themes`; zip upload + validation; per-Site theme assignment. Admin theme is not an installable row. Detail: [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
 
-### Phase 6 — Control Panel: Users window
+### Phase 7 — Locale / multi-language folder trees
 
-**Complete.** API + Retro window + shell kind. Global roles + `site_assignment`. Password on create only; self-delete / last-Admin locks. Depends on Phase 3b / Phase 5 roles. Detail: [Users_Window.md](./Users_Window.md).
+`locale` folder type and language-tree rules (hreflang / `lang`). Detail: [Site_Content_Model.md](./Site_Content_Model.md).
 
-### Phase 7 — Control Panel: Settings window
+### Phase 8 — Folder types: gallery, file_list, filter_list
 
-**Complete** (same work as Phase 1 Settings slice). `access.admin` path \| domain; domain gated on healthy Main admin host; auto-reset to path on host loss. Detail: [Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md) · [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md).
+Index/view modes and virtual `filter_list` children after MVP folder support. Detail: [Site_Content_Model.md](./Site_Content_Model.md).
 
-### Phase 8 — Protected base site + host
+### Phase 9 — Permission readonly flags
 
-**Complete.** Main site + primary www host use `is_protected`; delete/disable/slug (site) and delete/disable/unassign/surface (host) locked; admin-surface host remains unprotected. Detail: [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) · [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md).
+Mark deliberate permissions readonly in API + Permissions UI; then decide default-readonly custom roles. Detail: [RBAC_Reset.md](./RBAC_Reset.md) · [Permissions_Window.md](./Permissions_Window.md).
 
-### Phase 9 — Hello world public site
+### Phase 10 — Sites list filtered for non-Admin
 
-**Complete.** Multi-site- and theme-aware stub: Host → Site → theme resolve; shipped `default` theme; welcome on `/` with `data-wh-theme`; thin site-scoped `GET /api/site`. No CMS tree, no zip upload. Detail: [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
+Operators without Admin see only sites they are assigned to. Detail: [RBAC_Reset.md](./RBAC_Reset.md) · [Users_Window.md](./Users_Window.md).
 
-### Phase 10 — Site content (CMS interior)
+### Phase 11 — Shared MenuBar chrome
 
-**In progress.** Slices 1–5 done. Slice 5: public routing + Lexical/accordion theme render — [Site_Content_Slice5.md](./Site_Content_Slice5.md). Detail: [Site_Content_Model.md](./Site_Content_Model.md) · [Site_Content_Slice1.md](./Site_Content_Slice1.md) · [Site_Content_Slice2.md](./Site_Content_Slice2.md) · [Site_Content_Slice3.md](./Site_Content_Slice3.md) · [Site_Content_Slice4.md](./Site_Content_Slice4.md) · [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
+Extract `ExplorerMenuBar` to a reusable chrome atom if other windows need it. Detail: [FileExplorer_Window.md](./FileExplorer_Window.md).
 
-### Phase 11 — Packaging / distribution
+### Phase 12 — Installer wizard
 
-Zip/git release of WebHemi.PHP; document zero-Node production. Aligns with architecture roadmap packaging.
+WordPress-style first-run: language, DB, primary domain, admin user → migrations → protected main site/host with path admin; lock when done. Detail: [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md).
 
-### Phase 12 — File Explorer: shared MenuBar chrome (optional)
+### Phase 13 — webhemi-js engine
 
-Extract `ExplorerMenuBar` to a reusable chrome atom if other windows need it.
-
-### Phase 13 — webhemi-js engine (later)
-
-Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work.
-
-### Phase 14 — Control Panel: Themes window (deferred)
-
-List shipped + `var/themes`; zip upload + validation; per-Site theme assignment. Admin theme is **not** an installable row. Detail: [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md). **Parked near end** after Phase 9 seams exist.
-
-### Phase 15 — Installer wizard (deferred)
-
-WordPress-style first-run: language, DB, primary domain, admin user → migrations → protected main site/host with **path** admin. Lock when done. **Parked at end** until ready to schedule.
+Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work. Detail: [WebHemi_Architecture_and_Roadmap.md](./WebHemi_Architecture_and_Roadmap.md).
 
 ---
 
 ## Detail docs (reference only)
 
 | File | Role |
-|------|------|
-| [Admin98_Product_Integration.md](./Admin98_Product_Integration.md) | Original phase narrative 0–7 |
+|------|-------|
+| [Admin98_Product_Integration.md](./Admin98_Product_Integration.md) | Original phase narrative (historical) |
 | [Admin98_Integration_Contract.md](./Admin98_Integration_Contract.md) | ADR / contract |
-| [Admin98_Phase5_Desktop_Shell.md](./Admin98_Phase5_Desktop_Shell.md) | Shell slices A–F (done) |
-| [Admin98_Phase6_Admin_Windows.md](./Admin98_Phase6_Admin_Windows.md) | Windows slices A–F + follow-ups (mostly done) |
+| [Admin98_Phase5_Desktop_Shell.md](./Admin98_Phase5_Desktop_Shell.md) | Shell MVP + icon drag (**done**) |
+| [Admin98_Phase6_Admin_Windows.md](./Admin98_Phase6_Admin_Windows.md) | Windows slices + follow-ups (mostly done) |
 | [Remove_Legacy_Admin_UI.md](./Remove_Legacy_Admin_UI.md) | Legacy Tailwind admin delete (**done**) |
-| [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) | Admin path/domain, reserved paths, dual auth, no `api` surface |
-| [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) | Ownership rules (done; naming note) |
-| [Sites_Hosts_Full_CRUD.md](./Sites_Hosts_Full_CRUD.md) | CRUD contract (done) |
-| [Deep_Links.md](./Deep_Links.md) | Admin `?window=` / `?id=` deep links (**done**) |
-| [Storybook_MSW.md](./Storybook_MSW.md) | Storybook MSW for `/admin/api` (**done**) |
-| [Permissions_Window.md](./Permissions_Window.md) | CP Permissions CRUD (**done**, Phase 4) |
-| [Roles_Window.md](./Roles_Window.md) | CP Roles CRUD (**done**, Phase 5) |
-| [Users_Window.md](./Users_Window.md) | CP Users CRUD (**done**, Phase 6) |
-| [Users_RBAC_and_My_Account.md](./Users_RBAC_and_My_Account.md) | Users permissions + Start My Account (**done**) |
-| [Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md) | CP Settings: `access.admin` path \| domain (**done**, Phase 1 / 7) |
-| [Settings_Symfony_Debug_Toolbar.md](./Settings_Symfony_Debug_Toolbar.md) | Settings Symfony debug toolbar (**done**) |
-| [RBAC_Reset.md](./RBAC_Reset.md) | RBAC reset: Admin + Site Admin baseline before CP user windows |
-| [Admin_Context_Menu.md](./Admin_Context_Menu.md) | Context menu chrome + optional menu icons (slice A done) |
-| [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main; defers to access-mode ADR (**installer deferred**, Phase 15) |
-| [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) | `is_protected` Main site + www host guards (**done**, Phase 8) |
-| [Site_Content_Model.md](./Site_Content_Model.md) | Site tree / media / trash / settings + publication/hidden (**Phase 10**) |
-| [Site_Content_Slice1.md](./Site_Content_Slice1.md) | Phase 10 Slice 1: schema + admin content/media APIs (**done**) |
-| [Site_Content_Slice2.md](./Site_Content_Slice2.md) | Phase 10 Slice 2: explorer forest + mutation wiring (**done**; copy/media-move deferred) |
-| [Site_Content_Slice3.md](./Site_Content_Slice3.md) | Phase 10 Slice 3: site-interior Settings surface (**done**) |
-| [Site_Content_Slice4.md](./Site_Content_Slice4.md) | Phase 10 Slice 4: Lexical document editor + custom blocks (**done**) |
-| [Site_Content_Slice5.md](./Site_Content_Slice5.md) | Phase 10 Slice 5: public routing + Lexical/theme render (**done**) |
-| [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) | Dual site API/UI, N sites, shipped + `var/themes` (**Phase 9** seams; **Phase 14** Themes CP) |
-| [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer slices A–I (done); PHP tree API under Phase 10 |
-| [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP / Nelmio / nonce plan (report-only → enforce; parallel to product phases) |
+| [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) | Admin path/domain, reserved paths, dual auth |
+| [Host_Ownership_Verification.md](./Host_Ownership_Verification.md) | Ownership rules (**done**) |
+| [Sites_Hosts_Full_CRUD.md](./Sites_Hosts_Full_CRUD.md) | CRUD contract (**done**) |
+| [Deep_Links.md](./Deep_Links.md) | Admin deep links (**done**) |
+| [Storybook_MSW.md](./Storybook_MSW.md) | Storybook MSW (**done**) |
+| [Permissions_Window.md](./Permissions_Window.md) | CP Permissions (**done**; readonly = Phase 9) |
+| [Roles_Window.md](./Roles_Window.md) | CP Roles (**done**) |
+| [Users_Window.md](./Users_Window.md) | CP Users (**done**) |
+| [Users_RBAC_and_My_Account.md](./Users_RBAC_and_My_Account.md) | Users permissions + My Account (**done**) |
+| [My_Account_Profile.md](./My_Account_Profile.md) | My Account personal data + Security (**done**) |
+| [Settings_Window_Access_Mode.md](./Settings_Window_Access_Mode.md) | CP Settings access mode (**done**) |
+| [Settings_Symfony_Debug_Toolbar.md](./Settings_Symfony_Debug_Toolbar.md) | Settings debug toolbar (**done**) |
+| [RBAC_Reset.md](./RBAC_Reset.md) | RBAC baseline (**done**; filters/readonly = Phases 9–10) |
+| [Admin_Context_Menu.md](./Admin_Context_Menu.md) | Context menu chrome (**done**; product wiring = Phase 3) |
+| [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) | Installer + protected main (installer = Phase 12) |
+| [Protected_Main_Base_Guards.md](./Protected_Main_Base_Guards.md) | `is_protected` guards (**done**) |
+| [Site_Content_Model.md](./Site_Content_Model.md) | Content ADR (MVP done; locale/gallery = Phases 7–8) |
+| [Site_Content_Slice1.md](./Site_Content_Slice1.md) | Schema + admin APIs (**done**) |
+| [Site_Content_Slice2.md](./Site_Content_Slice2.md) | Explorer wiring (**done**; copy/media-move = Phases 1–2) |
+| [Site_Content_Slice3.md](./Site_Content_Slice3.md) | Site Settings surface (**done**) |
+| [Site_Content_Slice4.md](./Site_Content_Slice4.md) | Lexical editor (**done**) |
+| [Site_Content_Slice5.md](./Site_Content_Slice5.md) | Public routing + theme render (**done**) |
+| [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) | Themes seams (**done**; Themes CP = Phase 6) |
+| [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer brick (**done**; MenuBar extract = Phase 11) |
+| [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP plan (Phase 4) |
 | [WebHemi_Architecture_and_Roadmap.md](./WebHemi_Architecture_and_Roadmap.md) | Multi-repo / dual-engine vision |
 
-When status changes, **update this file** (move a bullet from Remaining → Done, renumber only if you deliberately reorder work).
+When status changes, **update this file** (move a phase into Done as a short bullet, renumber Remaining from 1).

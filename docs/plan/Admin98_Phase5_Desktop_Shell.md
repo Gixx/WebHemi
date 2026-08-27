@@ -50,7 +50,7 @@ flowchart TB
 
 - Pointer capture on title-bar (ignore controls clicks); threshold ~4px (admin98 `DRAG_THRESHOLD_PX`).
 - Clamp to `.dashboard` bounds (account for taskbar height once C lands; until then full viewport).
-- No HTML5 `draggable` on windows (use pointer events; keep icon drag separate if ever needed).
+- No HTML5 `draggable` on windows (use pointer events). Desktop icon drag: separate shell modules (`DesktopIcon` / `DesktopIconLayer`) — **done** (CURRENT Done).
 - Storybook: `TitleBarDrag`
 
 ### Slice C — Taskbar + minimize/restore — **done**

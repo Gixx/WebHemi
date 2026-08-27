@@ -24,10 +24,11 @@ Review Admin data windows in Storybook **without** a running Symfony backend, by
 |-------|----------|
 | `MswOpenSitesWindow` | List Sites via MSW |
 | `MswCreateSite` | New Site → POST → row appears |
-| `MswSitesListEmpty` | Empty list copy |
 | `MswSitesListError` | 500 list error dialog |
 
 Stories use `apiCsrfToken` (real `createAdminApiClient` + `fetch`), **not** the injected `sitesApi` mock.
+
+There is no empty-sites demo: after install the product always has at least one protected main site.
 
 ## Out of scope
 
