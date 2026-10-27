@@ -2,7 +2,7 @@
 
 > **For new chat sessions:** read this file first.  
 > Detailed ADRs / notes remain under `docs/plan/` for history; **status and next work are only maintained here.**  
-> Last updated: 2026-10-27.
+> Last updated: 2026-10-27 (API-first themes ADR).
 
 ---
 
@@ -37,6 +37,7 @@
 - Media library organization: DnD reparent (`PATCH folderNodeId`); Copy/DnD into site tree as `media_ref` links
 - Media Library upload: File → Upload…, OS drag-and-drop, pale yellow hint; images/video/audio/PDF/Office
 - Media library delete + embed usage: usage API, cascade soft-delete `media_ref`s, confirm when in use, Lexical embed scan stub
+- Design: public site **API-first themes** (SPA + Twig bridge, self-contained packages, asset allowlist) — [Public_Site_API_First_Themes.md](./Public_Site_API_First_Themes.md)
 
 ---
 
@@ -45,6 +46,8 @@
 Absolute order. Every item is its own phase (no slices / sub-phases). Do in sequence unless you deliberately reorder and renumber here.
 
 **Next up:** Phase 1.
+
+Design note: Themes CP and public `/api` growth must follow [Public_Site_API_First_Themes.md](./Public_Site_API_First_Themes.md) (Twig/SPA both API-backed). Slice 5 Twig-direct render is interim until the bridge + API slices land.
 
 ### Phase 1 — Context menu product wiring
 
@@ -60,7 +63,7 @@ Zip/git release of WebHemi.PHP; document zero-Node production and `var/themes` /
 
 ### Phase 4 — Control Panel: Themes window
 
-List shipped + `var/themes`; zip upload + validation; per-Site theme assignment. Admin theme is not an installable row. Detail: [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md).
+List shipped + `var/themes`; zip upload + validation (incl. public asset allowlist rules); per-Site theme assignment. Admin theme is not an installable row. Detail: [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) · [Public_Site_API_First_Themes.md](./Public_Site_API_First_Themes.md).
 
 ### Phase 5 — Locale / multi-language folder trees
 
@@ -125,6 +128,7 @@ Next.js + Payload outline; consume `@webhemi/ui`. Not blocking PHP admin work. D
 | [Site_Content_Slice5.md](./Site_Content_Slice5.md) | Public routing + theme render (**done**) |
 | [Media_Library_Organization.md](./Media_Library_Organization.md) | Media DnD + site `media_ref` + delete/embed usage (**done**) |
 | [Frontend_Sites_and_Themes.md](./Frontend_Sites_and_Themes.md) | Themes seams (**done**; Themes CP = Phase 4) |
+| [Public_Site_API_First_Themes.md](./Public_Site_API_First_Themes.md) | API-first public themes: SPA + Twig bridge, asset allowlist (**design**) |
 | [FileExplorer_Window.md](./FileExplorer_Window.md) | Explorer brick (**done**; MenuBar extract = Phase 9) |
 | [Content_Security_Policy.md](./Content_Security_Policy.md) | CSP plan (Phase 2) |
 | [WebHemi_Architecture_and_Roadmap.md](./WebHemi_Architecture_and_Roadmap.md) | Multi-repo / dual-engine vision |

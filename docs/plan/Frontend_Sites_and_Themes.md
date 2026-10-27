@@ -1,7 +1,8 @@
 # Frontend sites and themes
 
-> **Status:** accepted design (2026-08-14); Phase 9 Hello world **implemented** (seams live); zip / Themes CP remain Phase 14.  
+> **Status:** accepted design (2026-08-14); Phase 9 Hello world **implemented** (seams live); zip / Themes CP = CURRENT Phase 4.  
 > **Parent:** [CURRENT.md](./CURRENT.md) · [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) · [Admin98_Integration_Contract.md](./Admin98_Integration_Contract.md).  
+> **Evolution:** Long-term render/data contract → [Public_Site_API_First_Themes.md](./Public_Site_API_First_Themes.md) (API-first SPA + Twig bridge; this doc keeps Host → Site → package seams).  
 > **Language:** English only.
 
 ## Intent
@@ -132,6 +133,8 @@ Uses the same Site (and later theme hooks for indexes/templates). Theme **assign
 
 ### Phase 14 — Control Panel: Themes window
 
+> CURRENT numbering: **Phase 4**. Implement against [Public_Site_API_First_Themes.md](./Public_Site_API_First_Themes.md) (package kinds, asset allowlist).
+
 - List shipped + `var/themes` packages (from manifests).
 - Upload zip → validate → extract under `var/themes/<id>/`.
 - Enable/disable or delete uploaded themes (block delete if any Site still assigned — or force reassign; pick in impl).
@@ -159,8 +162,9 @@ Uses the same Site (and later theme hooks for indexes/templates). Theme **assign
 
 ## Related
 
+- [Public_Site_API_First_Themes.md](./Public_Site_API_First_Themes.md) — API-first SPA + Twig bridge, asset allowlist  
 - [Admin_API_Access_Mode.md](./Admin_API_Access_Mode.md) — dual API, reserved paths, Host → Site `/api`  
 - [Admin98_Integration_Contract.md](./Admin98_Integration_Contract.md) — `data-wh-theme`, self-contained themes  
 - [Site_Content_Model.md](./Site_Content_Model.md) — CMS after Hello world  
 - [Installer_and_Protected_Base_Site.md](./Installer_and_Protected_Base_Site.md) — protected Main pair  
-- [CURRENT.md](./CURRENT.md) — Phase 9 / 10 / 14 status  
+- [CURRENT.md](./CURRENT.md) — status / Themes CP phase  
